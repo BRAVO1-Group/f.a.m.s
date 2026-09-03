@@ -14,16 +14,339 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      activities: {
+        Row: {
+          activity_date: string
+          arrival_time: string | null
+          attachments: Json
+          challenges: string | null
+          created_at: string
+          departure_time: string | null
+          description: string
+          id: string
+          internship_id: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          skills_gained: string[]
+          solutions: string | null
+          status: Database["public"]["Enums"]["activity_status"]
+          student_id: string
+          submitted_at: string | null
+          supervisor_feedback: string | null
+          title: string
+          tools_used: string[]
+          updated_at: string
+        }
+        Insert: {
+          activity_date?: string
+          arrival_time?: string | null
+          attachments?: Json
+          challenges?: string | null
+          created_at?: string
+          departure_time?: string | null
+          description?: string
+          id?: string
+          internship_id?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          skills_gained?: string[]
+          solutions?: string | null
+          status?: Database["public"]["Enums"]["activity_status"]
+          student_id: string
+          submitted_at?: string | null
+          supervisor_feedback?: string | null
+          title: string
+          tools_used?: string[]
+          updated_at?: string
+        }
+        Update: {
+          activity_date?: string
+          arrival_time?: string | null
+          attachments?: Json
+          challenges?: string | null
+          created_at?: string
+          departure_time?: string | null
+          description?: string
+          id?: string
+          internship_id?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          skills_gained?: string[]
+          solutions?: string | null
+          status?: Database["public"]["Enums"]["activity_status"]
+          student_id?: string
+          submitted_at?: string | null
+          supervisor_feedback?: string | null
+          title?: string
+          tools_used?: string[]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activities_internship_id_fkey"
+            columns: ["internship_id"]
+            isOneToOne: false
+            referencedRelation: "internships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attendance: {
+        Row: {
+          attendance_date: string
+          check_in: string | null
+          check_out: string | null
+          created_at: string
+          id: string
+          internship_id: string | null
+          notes: string | null
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          attendance_date?: string
+          check_in?: string | null
+          check_out?: string | null
+          created_at?: string
+          id?: string
+          internship_id?: string | null
+          notes?: string | null
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          attendance_date?: string
+          check_in?: string | null
+          check_out?: string | null
+          created_at?: string
+          id?: string
+          internship_id?: string | null
+          notes?: string | null
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_internship_id_fkey"
+            columns: ["internship_id"]
+            isOneToOne: false
+            referencedRelation: "internships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      internships: {
+        Row: {
+          created_at: string
+          department: string | null
+          end_date: string
+          id: string
+          organization_id: string | null
+          position: string
+          required_days: number
+          start_date: string
+          status: Database["public"]["Enums"]["internship_status"]
+          student_id: string
+          supervisor_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          department?: string | null
+          end_date: string
+          id?: string
+          organization_id?: string | null
+          position?: string
+          required_days?: number
+          start_date: string
+          status?: Database["public"]["Enums"]["internship_status"]
+          student_id: string
+          supervisor_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          department?: string | null
+          end_date?: string
+          id?: string
+          organization_id?: string | null
+          position?: string
+          required_days?: number
+          start_date?: string
+          status?: Database["public"]["Enums"]["internship_status"]
+          student_id?: string
+          supervisor_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "internships_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          link: string | null
+          message: string
+          read: boolean
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind?: string
+          link?: string | null
+          message?: string
+          read?: boolean
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          link?: string | null
+          message?: string
+          read?: boolean
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      organizations: {
+        Row: {
+          address: string | null
+          contact_email: string | null
+          contact_person: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          industry: string | null
+          name: string
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          contact_email?: string | null
+          contact_person?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          industry?: string | null
+          name: string
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          contact_email?: string | null
+          contact_person?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          industry?: string | null
+          name?: string
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          course: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          institution: string | null
+          phone: string | null
+          student_number: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          course?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id: string
+          institution?: string | null
+          phone?: string | null
+          student_number?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          course?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          institution?: string | null
+          phone?: string | null
+          student_number?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
+      supervises: {
+        Args: { _student: string; _supervisor: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      activity_status: "draft" | "submitted" | "approved" | "needs_correction"
+      app_role:
+        | "student"
+        | "supervisor"
+        | "org_admin"
+        | "uni_admin"
+        | "system_admin"
+      internship_status: "pending" | "active" | "completed" | "terminated"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +473,16 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      activity_status: ["draft", "submitted", "approved", "needs_correction"],
+      app_role: [
+        "student",
+        "supervisor",
+        "org_admin",
+        "uni_admin",
+        "system_admin",
+      ],
+      internship_status: ["pending", "active", "completed", "terminated"],
+    },
   },
 } as const
