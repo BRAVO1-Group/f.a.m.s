@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Loader2, Plus, Search, Send, Sparkles, Trash2 } from "lucide-react";
+import { FilePenLine, Loader2, Plus, Search, Send, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -381,7 +381,7 @@ function LogbookPage() {
                 {aiLoading ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
-                  <Sparkles className="size-4" />
+                  <FilePenLine className="size-4" />
                 )}
                 Improve with AI
               </Button>

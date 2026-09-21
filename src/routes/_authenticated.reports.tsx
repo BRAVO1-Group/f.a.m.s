@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Download, FileText, Loader2, Printer, Sparkles } from "lucide-react";
+import { Download, FileOutput, FileText, Loader2, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -158,7 +158,7 @@ ${items || "<p>No activities recorded.</p>"}
 
       <div className="flex flex-wrap gap-2">
         <Button onClick={generateSummary} disabled={aiLoading}>
-          {aiLoading ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+          {aiLoading ? <Loader2 className="size-4 animate-spin" /> : <FileOutput className="size-4" />}
           Generate summary with AI
         </Button>
         <Button variant="outline" onClick={printPdf}>
