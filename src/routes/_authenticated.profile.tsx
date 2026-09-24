@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -8,10 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { supabase } from "@/integrations/supabase/client";
 import { useAppUser } from "@/lib/app-user";
 import { ROLE_LABELS } from "@/lib/auth";
+import { DEMO_USERS, internships, organizations } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
@@ -19,9 +17,7 @@ export const Route = createFileRoute("/_authenticated/profile")({
       { title: "My Profile — InternTrack" },
       { name: "description", content: "Manage your internship profile details and placement." },
       { property: "og:title", content: "My Profile — InternTrack" },
-      { property: "og:description", content: "Keep your internship details up to date." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ProfilePage,
@@ -29,79 +25,43 @@ export const Route = createFileRoute("/_authenticated/profile")({
 
 function ProfilePage() {
   const { userId, email, role, roles } = useAppUser();
-  const qc = useQueryClient();
+  const demoUser = DEMO_USERS.find((u) => u.id === userId);
+  const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
-    full_name: "",
-    phone: "",
-    institution: "",
-    course: "",
-    student_number: "",
-  });
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["profile", userId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  const internship = useQuery({
-    queryKey: ["my-internship-full", userId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("internships")
-        .select("*, organizations(name, industry, address, contact_person, contact_email)")
-        .eq("student_id", userId)
-        .order("start_date", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
-    },
+    full_name: demoUser?.full_name ?? "",
+    phone: demoUser?.phone ?? "",
+    institution: demoUser?.institution ?? "",
+    course: demoUser?.course ?? "",
+    student_number: demoUser?.student_number ?? "",
   });
 
   useEffect(() => {
-    if (!data) return;
-    setForm({
-      full_name: data.full_name ?? "",
-      phone: data.phone ?? "",
-      institution: data.institution ?? "",
-      course: data.course ?? "",
-      student_number: data.student_number ?? "",
-    });
-  }, [data]);
+    if (demoUser) {
+      setForm({
+        full_name: demoUser.full_name,
+        phone: demoUser.phone,
+        institution: demoUser.institution,
+        course: demoUser.course,
+        student_number: demoUser.student_number,
+      });
+    }
+  }, [userId]);
 
-  const save = useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase
-        .from("profiles")
-        .update({
-          full_name: form.full_name.trim(),
-          phone: form.phone.trim() || null,
-          institution: form.institution.trim() || null,
-          course: form.course.trim() || null,
-          student_number: form.student_number.trim() || null,
-        })
-        .eq("id", userId);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["profile", userId] });
-      toast.success("Profile updated");
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
+  async function save() {
+    setSaving(true);
+    await new Promise((r) => setTimeout(r, 600));
+    // Update the in-memory user
+    const idx = DEMO_USERS.findIndex((u) => u.id === userId);
+    if (idx >= 0) {
+      const u = DEMO_USERS[idx]!;
+      DEMO_USERS[idx] = { id: u.id, email: u.email, role: u.role, roles: u.roles, full_name: form.full_name.trim(), phone: form.phone.trim(), institution: form.institution.trim(), course: form.course.trim(), student_number: form.student_number.trim() };
+    }
+    setSaving(false);
+    toast.success("Profile updated");
+  }
 
-  const org = internship.data?.organizations as
-    | { name: string; industry: string | null; address: string | null; contact_person: string | null; contact_email: string | null }
-    | null
-    | undefined;
+  const myInternship = internships.find((i) => i.student_id === userId);
+  const org = myInternship ? organizations.find((o) => o.id === myInternship.organization_id) : null;
 
   return (
     <div className="space-y-6">
@@ -117,62 +77,56 @@ function ProfilePage() {
             <CardDescription>{email}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {isLoading ? (
-              <Skeleton className="h-56 rounded-xl" />
-            ) : (
-              <>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="name">Full name</Label>
-                    <Input
-                      id="name"
-                      value={form.full_name}
-                      onChange={(e) => setForm({ ...form, full_name: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="phone">Phone</Label>
-                    <Input
-                      id="phone"
-                      value={form.phone}
-                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="inst">Institution</Label>
-                    <Input
-                      id="inst"
-                      value={form.institution}
-                      onChange={(e) => setForm({ ...form, institution: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="course">Course / programme</Label>
-                    <Input
-                      id="course"
-                      value={form.course}
-                      onChange={(e) => setForm({ ...form, course: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="sn">Student number</Label>
-                    <Input
-                      id="sn"
-                      value={form.student_number}
-                      onChange={(e) => setForm({ ...form, student_number: e.target.value })}
-                    />
-                  </div>
-                </div>
-                <Button disabled={save.isPending} onClick={() => save.mutate()}>
-                  {save.isPending ? (
-                    <Loader2 className="size-4 animate-spin" />
-                  ) : (
-                    <Save className="size-4" />
-                  )}
-                  Save changes
-                </Button>
-              </>
-            )}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label htmlFor="name">Full name</Label>
+                <Input
+                  id="name"
+                  value={form.full_name}
+                  onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  id="phone"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="inst">Institution</Label>
+                <Input
+                  id="inst"
+                  value={form.institution}
+                  onChange={(e) => setForm({ ...form, institution: e.target.value })}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="course">Course / programme</Label>
+                <Input
+                  id="course"
+                  value={form.course}
+                  onChange={(e) => setForm({ ...form, course: e.target.value })}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="sn">Student number</Label>
+                <Input
+                  id="sn"
+                  value={form.student_number}
+                  onChange={(e) => setForm({ ...form, student_number: e.target.value })}
+                />
+              </div>
+            </div>
+            <Button disabled={saving} onClick={save}>
+              {saving ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Save className="size-4" />
+              )}
+              Save changes
+            </Button>
           </CardContent>
         </Card>
 
@@ -196,23 +150,21 @@ function ProfilePage() {
               <CardTitle className="text-base">Internship placement</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
-              {internship.isLoading ? (
-                <Skeleton className="h-24 rounded-xl" />
-              ) : internship.data ? (
+              {myInternship ? (
                 <>
                   <p className="font-medium">{org?.name ?? "Organization pending"}</p>
-                  <p className="text-muted-foreground">{internship.data.position || "Position TBC"}</p>
+                  <p className="text-muted-foreground">{myInternship.position || "Position TBC"}</p>
                   <p className="text-muted-foreground">
-                    {internship.data.start_date} → {internship.data.end_date}
+                    {myInternship.start_date} → {myInternship.end_date}
                   </p>
-                  {internship.data.department ? (
-                    <p className="text-muted-foreground">Dept: {internship.data.department}</p>
+                  {myInternship.department ? (
+                    <p className="text-muted-foreground">Dept: {myInternship.department}</p>
                   ) : null}
                   {org?.contact_person ? (
                     <p className="text-muted-foreground">Contact: {org.contact_person}</p>
                   ) : null}
                   <Badge variant="outline" className="capitalize">
-                    {internship.data.status}
+                    {myInternship.status}
                   </Badge>
                 </>
               ) : (

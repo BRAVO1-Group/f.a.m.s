@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+/**
+ * PROTOTYPE / DEMO MODE — auth.tsx
+ * All auth hooks return mock data from the demo session stored in sessionStorage.
+ * No Supabase calls are made.
+ */
+import { useState, useEffect } from "react";
+import { DEMO_USERS, type MockUser } from "@/lib/mock-data";
 
 export type AppRole = "student" | "supervisor" | "org_admin" | "uni_admin" | "system_admin";
 
@@ -13,58 +16,59 @@ export const ROLE_LABELS: Record<AppRole, string> = {
   system_admin: "System Administrator",
 };
 
-export function useSession() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+const SESSION_KEY = "demo_user_id";
 
+export function getDemoUser(): MockUser | null {
+  const id = sessionStorage.getItem(SESSION_KEY);
+  if (!id) return null;
+  return DEMO_USERS.find((u) => u.id === id) ?? null;
+}
+
+export function setDemoUser(id: string) {
+  sessionStorage.setItem(SESSION_KEY, id);
+}
+
+export function clearDemoUser() {
+  sessionStorage.removeItem(SESSION_KEY);
+}
+
+// ── Drop-in replacement hooks ────────────────────────────────────────────────
+
+export function useSession() {
+  const [user, setUser] = useState<MockUser | null>(getDemoUser);
+  const [loading] = useState(false);
+
+  // listen for storage events so navigation works
   useEffect(() => {
-    let active = true;
-    supabase.auth.getSession().then(({ data }) => {
-      if (!active) return;
-      setUser(data.session?.user ?? null);
-      setLoading(false);
-    });
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => {
-      active = false;
-      sub.subscription.unsubscribe();
-    };
+    const handler = () => setUser(getDemoUser());
+    window.addEventListener("demo-auth-change", handler);
+    return () => window.removeEventListener("demo-auth-change", handler);
   }, []);
 
   return { user, loading };
 }
 
 export function useProfile(userId: string | undefined) {
-  return useQuery({
-    queryKey: ["profile", userId],
-    enabled: !!userId,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId!)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
-    },
-  });
+  const user = DEMO_USERS.find((u) => u.id === userId);
+  return {
+    data: user
+      ? {
+          id: user.id,
+          full_name: user.full_name,
+          email: user.email,
+          phone: user.phone,
+          institution: user.institution,
+          course: user.course,
+          student_number: user.student_number,
+        }
+      : null,
+    isLoading: false,
+  };
 }
 
 export function useRoles(userId: string | undefined) {
-  return useQuery({
-    queryKey: ["roles", userId],
-    enabled: !!userId,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", userId!);
-      if (error) throw error;
-      return (data ?? []).map((r) => r.role as AppRole);
-    },
-  });
+  const user = DEMO_USERS.find((u) => u.id === userId);
+  return { data: user?.roles ?? [], isLoading: false };
 }
 
 export function primaryRole(roles: AppRole[] | undefined): AppRole {
@@ -74,11 +78,9 @@ export function primaryRole(roles: AppRole[] | undefined): AppRole {
 }
 
 export function useSignOut() {
-  const queryClient = useQueryClient();
-  return async () => {
-    await queryClient.cancelQueries();
-    queryClient.clear();
-    await supabase.auth.signOut();
+  return () => {
+    clearDemoUser();
+    window.dispatchEvent(new Event("demo-auth-change"));
     window.location.href = "/auth";
   };
 }

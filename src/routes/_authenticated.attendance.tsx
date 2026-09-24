@@ -1,12 +1,11 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CalendarCheck, LogIn, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -15,8 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { supabase } from "@/integrations/supabase/client";
 import { useAppUser } from "@/lib/app-user";
+import { attendance, internships, uid } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_authenticated/attendance")({
   head: () => ({
@@ -24,15 +23,13 @@ export const Route = createFileRoute("/_authenticated/attendance")({
       { title: "Attendance — InternTrack" },
       { name: "description", content: "Digital check-in and check-out with attendance history." },
       { property: "og:title", content: "Attendance — InternTrack" },
-      { property: "og:description", content: "Track internship attendance with timestamps." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: AttendancePage,
 });
 
-const today = () => new Date().toISOString().slice(0, 10);
+const todayStr = () => new Date().toISOString().slice(0, 10);
 
 function fmt(ts: string | null) {
   if (!ts) return "—";
@@ -46,74 +43,42 @@ function hours(a: string | null, b: string | null) {
 
 function AttendancePage() {
   const { userId } = useAppUser();
-  const qc = useQueryClient();
+  const [, forceUpdate] = useState(0);
+  const refresh = () => forceUpdate((n) => n + 1);
 
-  const internship = useQuery({
-    queryKey: ["my-internship", userId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("internships")
-        .select("id, required_days")
-        .eq("student_id", userId)
-        .order("start_date", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
-    },
-  });
+  const myInternship = internships.find((i) => i.student_id === userId);
+  const rows = attendance
+    .filter((a) => a.student_id === userId)
+    .sort((a, b) => (a.attendance_date < b.attendance_date ? 1 : -1));
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["attendance", userId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("attendance")
-        .select("*")
-        .eq("student_id", userId)
-        .order("attendance_date", { ascending: false });
-      if (error) throw error;
-      return data ?? [];
-    },
-  });
-
-  const rows = data ?? [];
-  const todayRow = rows.find((r) => r.attendance_date === today());
-  const required = internship.data?.required_days ?? 60;
+  const todayRow = rows.find((r) => r.attendance_date === todayStr());
+  const required = myInternship?.required_days ?? 60;
   const daysPresent = rows.filter((r) => r.check_in).length;
   const rate = Math.min(100, Math.round((daysPresent / Math.max(required, 1)) * 100));
 
-  const checkIn = useMutation({
-    mutationFn: async () => {
-      const payload = {
-        student_id: userId,
-        internship_id: internship.data?.id ?? null,
-        attendance_date: today(),
-        check_in: new Date().toISOString(),
-      };
-      const { error } = await supabase.from("attendance").insert(payload);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["attendance", userId] });
-      toast.success("Checked in");
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
+  function checkIn() {
+    if (todayRow) return;
+    attendance.unshift({
+      id: uid(),
+      student_id: userId,
+      internship_id: myInternship?.id ?? "intern-1",
+      attendance_date: todayStr(),
+      check_in: new Date().toISOString(),
+      check_out: null,
+    });
+    refresh();
+    toast.success("Checked in");
+  }
 
-  const checkOut = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from("attendance")
-        .update({ check_out: new Date().toISOString() })
-        .eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["attendance", userId] });
-      toast.success("Checked out");
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
+  function checkOut(id: string) {
+    const idx = attendance.findIndex((a) => a.id === id);
+    if (idx >= 0) {
+      const rec = attendance[idx]!;
+      attendance[idx] = { id: rec.id, student_id: rec.student_id, internship_id: rec.internship_id, attendance_date: rec.attendance_date, check_in: rec.check_in, check_out: new Date().toISOString() };
+    }
+    refresh();
+    toast.success("Checked out");
+  }
 
   return (
     <div className="space-y-6">
@@ -158,15 +123,14 @@ function AttendancePage() {
           </CardHeader>
           <CardContent>
             {!todayRow ? (
-              <Button className="w-full" disabled={checkIn.isPending} onClick={() => checkIn.mutate()}>
+              <Button className="w-full" onClick={checkIn}>
                 <LogIn className="size-4" /> Check in
               </Button>
             ) : !todayRow.check_out ? (
               <Button
                 className="w-full"
                 variant="outline"
-                disabled={checkOut.isPending}
-                onClick={() => checkOut.mutate(todayRow.id)}
+                onClick={() => checkOut(todayRow.id)}
               >
                 <LogOut className="size-4" /> Check out
               </Button>
@@ -186,9 +150,7 @@ function AttendancePage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {isLoading ? (
-            <Skeleton className="h-40 rounded-xl" />
-          ) : rows.length === 0 ? (
+          {rows.length === 0 ? (
             <p className="py-6 text-center text-sm text-muted-foreground">
               No attendance recorded yet.
             </p>

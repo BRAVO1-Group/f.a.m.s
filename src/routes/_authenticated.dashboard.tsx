@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
 import {
   Activity,
   CalendarCheck,
@@ -21,10 +20,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Skeleton } from "@/components/ui/skeleton";
-import { supabase } from "@/integrations/supabase/client";
 import { useAppUser } from "@/lib/app-user";
 import { ROLE_LABELS } from "@/lib/auth";
+import { activities, attendance, internships } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -32,9 +30,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
       { title: "Dashboard — InternTrack" },
       { name: "description", content: "Live internship progress, attendance and approvals." },
       { property: "og:title", content: "Dashboard — InternTrack" },
-      { property: "og:description", content: "Track internship progress in real time." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: DashboardPage,
@@ -71,92 +67,37 @@ function DashboardPage() {
   const { userId, role, name } = useAppUser();
   const isStudent = role === "student";
 
-  const student = useQuery({
-    queryKey: ["dashboard", "student", userId],
-    enabled: isStudent,
-    queryFn: async () => {
-      const [internship, activities, attendance] = await Promise.all([
-        supabase
-          .from("internships")
-          .select("*, organizations(name)")
-          .eq("student_id", userId)
-          .order("start_date", { ascending: false })
-          .limit(1)
-          .maybeSingle(),
-        supabase
-          .from("activities")
-          .select("id,title,status,activity_date,skills_gained")
-          .eq("student_id", userId)
-          .order("activity_date", { ascending: false }),
-        supabase.from("attendance").select("attendance_date,check_in,check_out").eq("student_id", userId),
-      ]);
-      if (internship.error) throw internship.error;
-      if (activities.error) throw activities.error;
-      if (attendance.error) throw attendance.error;
-      return {
-        internship: internship.data,
-        activities: activities.data ?? [],
-        attendance: attendance.data ?? [],
-      };
-    },
-  });
-
-  const staff = useQuery({
-    queryKey: ["dashboard", "staff", userId, role],
-    enabled: !isStudent,
-    queryFn: async () => {
-      const [internships, pending, recent] = await Promise.all([
-        supabase.from("internships").select("id,status,student_id"),
-        supabase.from("activities").select("id").eq("status", "submitted"),
-        supabase
-          .from("activities")
-          .select("id,title,status,activity_date,student_id")
-          .order("activity_date", { ascending: false })
-          .limit(8),
-      ]);
-      if (internships.error) throw internships.error;
-      if (pending.error) throw pending.error;
-      if (recent.error) throw recent.error;
-      return {
-        internships: internships.data ?? [],
-        pending: pending.data?.length ?? 0,
-        recent: recent.data ?? [],
-      };
-    },
-  });
-
-  const loading = isStudent ? student.isLoading : staff.isLoading;
-
-  if (loading) {
-    return (
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-24 rounded-xl" />
-        ))}
-      </div>
-    );
-  }
-
   if (isStudent) {
-    const acts = student.data?.activities ?? [];
+    const myInternship = internships.find((i) => i.student_id === userId);
+    const acts = activities.filter((a) => a.student_id === userId);
+    const myAttendance = attendance.filter((a) => a.student_id === userId);
+
     const approved = acts.filter((a) => a.status === "approved").length;
     const submitted = acts.filter((a) => a.status === "submitted").length;
-    const required = student.data?.internship?.required_days ?? 60;
-    const presentDays = (student.data?.attendance ?? []).filter((a) => a.check_in).length;
+    const required = myInternship?.required_days ?? 60;
+    const presentDays = myAttendance.filter((a) => a.check_in).length;
     const attendanceRate = Math.min(100, Math.round((presentDays / Math.max(required, 1)) * 100));
     const completion = Math.min(100, Math.round((approved / Math.max(required, 1)) * 100));
-    const skills = new Set(acts.flatMap((a) => a.skills_gained ?? []));
+    const skills = new Set(acts.flatMap((a) => a.skills_gained));
 
-    const byWeek = new Map<string, number>();
+    const byDay = new Map<string, number>();
     acts.forEach((a) => {
       const d = new Date(a.activity_date);
       const key = `${d.getMonth() + 1}/${d.getDate()}`;
-      byWeek.set(key, (byWeek.get(key) ?? 0) + 1);
+      byDay.set(key, (byDay.get(key) ?? 0) + 1);
     });
-    const chart = Array.from(byWeek.entries())
+    const chart = Array.from(byDay.entries())
       .slice(0, 10)
       .reverse()
       .map(([day, count]) => ({ day, count }));
+
+    // org name join
+    const orgName =
+      myInternship
+        ? (["TechCorp Kenya Ltd", "Safaricom PLC", "Kenya Commercial Bank"][
+            ["org-1", "org-2", "org-3"].indexOf(myInternship.organization_id)
+          ] ?? "your organization")
+        : null;
 
     return (
       <div className="space-y-6">
@@ -164,11 +105,8 @@ function DashboardPage() {
           <p className="text-sm opacity-80">Welcome back</p>
           <h1 className="font-display text-2xl font-semibold sm:text-3xl">{name}</h1>
           <p className="mt-2 max-w-xl text-sm opacity-90">
-            {student.data?.internship
-              ? `${student.data.internship.position} at ${
-                  (student.data.internship as { organizations?: { name?: string } }).organizations
-                    ?.name ?? "your organization"
-                }`
+            {myInternship
+              ? `${myInternship.position} at ${orgName}`
               : "No internship record yet — an administrator will assign one to you."}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -243,9 +181,6 @@ function DashboardPage() {
                     </Badge>
                   </div>
                 ))}
-                {acts.length === 0 ? (
-                  <p className="text-muted-foreground">Your recent entries will appear here.</p>
-                ) : null}
               </div>
               <Button asChild variant="outline" size="sm" className="w-full">
                 <Link to="/reports">Generate report</Link>
@@ -257,8 +192,14 @@ function DashboardPage() {
     );
   }
 
-  const internships = staff.data?.internships ?? [];
-  const active = internships.filter((i) => i.status === "active").length;
+  // Staff dashboard
+  const allInternships = internships;
+  const active = allInternships.filter((i) => i.status === "active").length;
+  const pending = activities.filter((a) => a.status === "submitted").length;
+  const recent = activities
+    .slice()
+    .sort((a, b) => (a.activity_date < b.activity_date ? 1 : -1))
+    .slice(0, 8);
 
   return (
     <div className="space-y-6">
@@ -268,13 +209,13 @@ function DashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard icon={Users} label="Interns" value={internships.length} hint={`${active} active`} />
-        <StatCard icon={ClipboardList} label="Pending review" value={staff.data?.pending ?? 0} />
-        <StatCard icon={Activity} label="Recent entries" value={staff.data?.recent.length ?? 0} />
+        <StatCard icon={Users} label="Interns" value={allInternships.length} hint={`${active} active`} />
+        <StatCard icon={ClipboardList} label="Pending review" value={pending} />
+        <StatCard icon={Activity} label="Recent entries" value={recent.length} />
         <StatCard
           icon={CheckCircle2}
           label="Completed"
-          value={internships.filter((i) => i.status === "completed").length}
+          value={allInternships.filter((i) => i.status === "completed").length}
         />
       </div>
 
@@ -289,7 +230,7 @@ function DashboardPage() {
           </Button>
         </CardHeader>
         <CardContent className="space-y-2">
-          {(staff.data?.recent ?? []).map((a) => (
+          {recent.map((a) => (
             <div
               key={a.id}
               className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border p-3 text-sm"
@@ -303,7 +244,7 @@ function DashboardPage() {
               </div>
             </div>
           ))}
-          {(staff.data?.recent.length ?? 0) === 0 ? (
+          {recent.length === 0 ? (
             <p className="text-sm text-muted-foreground">No submissions yet.</p>
           ) : null}
         </CardContent>
