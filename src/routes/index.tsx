@@ -1,16 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  ArrowUpRight,
-  BookOpen,
-  CalendarCheck,
-  CheckCircle2,
-  FileBarChart,
-  FilePenLine,
-  GraduationCap,
-  Quote,
-  ShieldCheck,
-  Users,
-} from "lucide-react";
+import { CheckCircle2, GraduationCap, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -39,38 +28,42 @@ export const Route = createFileRoute("/")({
 
 const FEATURES = [
   {
-    icon: BookOpen,
     title: "Digital logbook",
     body: "Daily activities with tools used, skills gained, challenges and evidence — searchable and timestamped.",
+    image:
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80",
   },
   {
-    icon: CalendarCheck,
     title: "Attendance tracking",
     body: "Digital check-in and check-out with automatic timestamps and attendance percentage.",
+    image:
+      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=80",
   },
   {
-    icon: Users,
     title: "Supervisor review",
     body: "Approve, request corrections and leave feedback on every submitted entry.",
+    image:
+      "https://images.unsplash.com/photo-1552581234-26160f608093?auto=format&fit=crop&w=900&q=80",
   },
   {
-    icon: FileBarChart,
     title: "Automatic reports",
     body: "Weekly, monthly and final internship reports generated from real logbook data.",
+    image:
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80",
   },
   {
-    icon: FilePenLine,
     title: "AI writing assistant",
     body: "Turn rough notes into professional, well-structured activity descriptions.",
+    image:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
   },
   {
-    icon: ShieldCheck,
     title: "Role-based security",
     body: "Students, supervisors, organizations and university admins each see only what they should.",
+    image:
+      "https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=900&q=80",
   },
 ];
-
-const FEATURE_ACCENTS = ["bg-info/10 text-info", "bg-success/10 text-success", "bg-warning/15 text-warning-foreground", "bg-accent/15 text-accent-foreground", "bg-primary/10 text-primary", "bg-destructive/10 text-destructive"];
 
 function Landing() {
   return (
@@ -170,16 +163,11 @@ function Landing() {
           </p>
         </div>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((f, index) => (
-            <Card key={f.title} className="group border-border/70 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated">
+          {FEATURES.map((f) => (
+            <Card key={f.title} className="group overflow-hidden border-border/70 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated">
+              <img src={f.image} alt={f.title} className="h-44 w-full object-cover" />
               <CardContent className="p-6">
-                <div className={`flex size-11 items-center justify-center rounded-xl ${FEATURE_ACCENTS[index]}`}>
-                  <f.icon className="size-5" />
-                </div>
-                <div className="mt-5 flex items-start justify-between gap-3">
-                  <h3 className="text-base font-semibold">{f.title}</h3>
-                  <ArrowUpRight className="size-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
-                </div>
+                <h3 className="text-base font-semibold">{f.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
               </CardContent>
             </Card>

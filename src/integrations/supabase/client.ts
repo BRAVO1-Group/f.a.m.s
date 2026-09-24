@@ -27,21 +27,172 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
   };
 }
 
+const demoRows: Record<string, any[]> = {
+  profiles: [
+    {
+      id: 'demo-user',
+      full_name: 'Demo Student',
+      email: 'student@interntrack.demo',
+      institution: 'Northbridge University',
+      course: 'Software Engineering',
+    },
+  ],
+  user_roles: [{ user_id: 'demo-user', role: 'student' }],
+  organizations: [
+    { id: 'demo-org', name: 'Northbridge Health Labs', industry: 'Healthcare', address: '5 Innovation Rd', contact_person: 'A. Musa', contact_email: 'info@northbridge.demo' },
+  ],
+  internships: [
+    {
+      id: 'demo-internship',
+      student_id: 'demo-user',
+      organization_id: 'demo-org',
+      status: 'active',
+      title: 'Software Engineering Intern',
+      start_date: '2026-09-01',
+      end_date: '2026-12-15',
+      required_days: 18,
+    },
+  ],
+  activities: [
+    {
+      id: 'activity-1',
+      student_id: 'demo-user',
+      title: 'Built KPI dashboard',
+      status: 'approved',
+      activity_date: '2026-09-20',
+      skills_gained: ['UI design', 'Data analysis'],
+      tools_used: ['React', 'Figma'],
+      submitted_at: '2026-09-21T12:00:00.000Z',
+    },
+    {
+      id: 'activity-2',
+      student_id: 'demo-user',
+      title: 'Reviewed deployment checklist',
+      status: 'submitted',
+      activity_date: '2026-09-22',
+      skills_gained: ['Documentation'],
+      tools_used: ['Notion'],
+      submitted_at: '2026-09-23T08:30:00.000Z',
+    },
+  ],
+  attendance: [
+    {
+      id: 'attendance-1',
+      student_id: 'demo-user',
+      attendance_date: '2026-09-20',
+      check_in: '2026-09-20T08:00:00.000Z',
+      check_out: '2026-09-20T16:00:00.000Z',
+    },
+  ],
+};
+
+function createFallbackQuery(table: string) {
+  const filters: Record<string, unknown> = {};
+  let single = false;
+  let limit: number | undefined;
+  let action: 'select' | 'insert' | 'update' | 'delete' = 'select';
+  let pendingValues: unknown = null;
+
+  const resolve = () => {
+    const rows = (demoRows[table] ?? []).filter((row) =>
+      Object.entries(filters).every(([key, value]) => row[key] === value),
+    );
+
+    const finalRows = typeof limit === 'number' ? rows.slice(0, limit) : rows;
+
+    if (action === 'update') {
+      return {
+        data: pendingValues,
+        error: null,
+      };
+    }
+
+    if (action === 'delete') {
+      return {
+        data: null,
+        error: null,
+      };
+    }
+
+    return {
+      data: single ? finalRows[0] ?? null : finalRows,
+      error: null,
+    };
+  };
+
+  const builder = {
+    select: () => {
+      action = 'select';
+      return builder;
+    },
+    eq: (field: string, value: unknown) => {
+      filters[field] = value;
+      return builder;
+    },
+    order: () => builder,
+    limit: (value: number) => {
+      limit = value;
+      return builder;
+    },
+    maybeSingle: () => {
+      single = true;
+      return Promise.resolve(resolve());
+    },
+    single: () => {
+      single = true;
+      return Promise.resolve(resolve());
+    },
+    insert: (values: unknown) => {
+      action = 'insert';
+      return Promise.resolve({ data: values, error: null });
+    },
+    update: (values: unknown) => {
+      action = 'update';
+      pendingValues = values;
+      return builder;
+    },
+    delete: () => {
+      action = 'delete';
+      return builder;
+    },
+    then: (onFulfilled?: ((value: unknown) => unknown) | null, onRejected?: ((reason?: unknown) => unknown) | null) =>
+      Promise.resolve(resolve()).then(onFulfilled, onRejected),
+    catch: (onRejected?: ((reason?: unknown) => unknown) | null) => Promise.resolve(resolve()).catch(onRejected),
+    finally: (onFinally?: (() => void) | null) => Promise.resolve(resolve()).finally(onFinally),
+  };
+
+  return builder;
+}
+
+function createFallbackAuth() {
+  return {
+    getSession: async () => ({ data: { session: null }, error: null }),
+    getUser: async () => ({ data: { user: null }, error: null }),
+    signInWithPassword: async () => ({ data: { user: null, session: null }, error: null }),
+    signUp: async () => ({ data: { user: null, session: null }, error: null }),
+    signOut: async () => ({ error: null }),
+    setSession: async () => ({ data: { session: null }, error: null }),
+    onAuthStateChange: () => ({
+      data: {
+        subscription: {
+          unsubscribe: () => undefined,
+        },
+      },
+    }),
+  };
+}
 
 function createSupabaseClient() {
-  // Use import.meta.env for client-side (Vite build-time replacement)
-  // Fall back to process.env for SSR (server-side rendering)
   const SUPABASE_URL = import.meta.env['VITE_SUPABASE_URL'] || process.env['SUPABASE_URL'];
-  const SUPABASE_PUBLISHABLE_KEY = import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'] || process.env['SUPABASE_PUBLISHABLE_KEY'];
+  const SUPABASE_PUBLISHABLE_KEY =
+    import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'] || process.env['SUPABASE_PUBLISHABLE_KEY'];
 
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-    const missing = [
-      ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
-      ...(!SUPABASE_PUBLISHABLE_KEY ? ['SUPABASE_PUBLISHABLE_KEY'] : []),
-    ];
-    const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Connect Supabase in Lovable Cloud.`;
-    console.error(`[Supabase] ${message}`);
-    throw new Error(message);
+    console.warn('[Supabase] No backend credentials found. Running in demo mode without the API layer.');
+    return {
+      auth: createFallbackAuth(),
+      from: createFallbackQuery,
+    } as any;
   }
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
