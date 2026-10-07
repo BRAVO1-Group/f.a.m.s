@@ -9,7 +9,6 @@
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind-v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-8.1-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Zero Backend Required](https://img.shields.io/badge/Backend-Zero%20Config%20Required-success?style=for-the-badge)](https://github.com/shaficmukama0-hash/intern-flow)
-[![Built with Lovable](https://img.shields.io/badge/Built_with-Lovable-FF3366?style=for-the-badge&logo=heart&logoColor=white)](https://lovable.dev)
 
 <p align="center">
   <b>A sleek, interactive frontend starter template for student logbooks, mentorship portals, and internship tracking.</b><br/>

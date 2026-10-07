@@ -1,6 +1,6 @@
 /**
  * PROTOTYPE / DEMO MODE
- * All data is mocked in-memory. No Supabase or network calls are made.
+ * All data is mocked in-memory. Runs entirely in the client with no network or database calls.
  */
 
 import type { AppRole } from "@/lib/auth";

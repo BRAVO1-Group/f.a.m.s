@@ -1,7 +1,7 @@
 /**
  * PROTOTYPE / DEMO MODE — auth.tsx
  * All auth hooks return mock data from the demo session stored in sessionStorage.
- * No Supabase calls are made.
+ * Runs entirely in the client with zero backend or database dependencies.
  */
 import { useState, useEffect } from "react";
 import { DEMO_USERS, type MockUser } from "@/lib/mock-data";
