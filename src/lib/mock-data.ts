@@ -35,6 +35,7 @@ export type MockActivity = {
   supervisor_feedback: string | null;
   reviewed_by: string | null;
   reviewed_at: string | null;
+  attachments?: string[];
 };
 
 export type MockAttendance = {
@@ -66,6 +67,47 @@ export type MockInternship = {
   end_date: string;
   required_days: number;
   status: "active" | "completed" | "pending";
+};
+
+export type MockMilestoneTask = {
+  id: string;
+  title: string;
+  completed: boolean;
+};
+
+export type MockMilestone = {
+  id: string;
+  student_id: string;
+  internship_id: string;
+  phase: string;
+  title: string;
+  description: string;
+  target_week: string;
+  status: "not_started" | "in_progress" | "under_review" | "completed";
+  skills: string[];
+  tasks: MockMilestoneTask[];
+  supervisor_feedback: string | null;
+  completed_at: string | null;
+};
+
+export type MockEvaluation = {
+  id: string;
+  student_id: string;
+  supervisor_id: string;
+  internship_id: string;
+  evaluation_date: string;
+  period: "Mid-Term" | "Final Assessment";
+  ratings: {
+    technical: number;
+    punctuality: number;
+    communication: number;
+    problem_solving: number;
+  };
+  overall_score: number;
+  grade: string;
+  recommendation: "full_time_offer" | "commendation" | "satisfactory" | "needs_improvement";
+  comments: string;
+  supervisor_name: string;
 };
 
 // ── Demo users ──────────────────────────────────────────────────────────────
@@ -518,6 +560,127 @@ export const userRoles: { user_id: string; role: AppRole }[] = [
   { user_id: "org-admin-1", role: "org_admin" },
   { user_id: "uni-admin-1", role: "uni_admin" },
   { user_id: "uni-admin-1", role: "system_admin" },
+];
+
+// ── Milestones & Weekly Roadmap ─────────────────────────────────────────────
+export const milestones: MockMilestone[] = [
+  {
+    id: "m-1",
+    student_id: "student-1",
+    internship_id: "intern-1",
+    phase: "Phase 1: Orientation & Architecture",
+    title: "Development Environment & Codebase Onboarding",
+    description:
+      "Set up local toolchains, review system architecture, and configure coding standards.",
+    target_week: "Weeks 1 - 2",
+    status: "completed",
+    skills: ["Git & GitHub", "Docker", "Architecture Review"],
+    tasks: [
+      { id: "t-1", title: "Clone repository and verify local environment build", completed: true },
+      { id: "t-2", title: "Complete security clearance & credentials setup", completed: true },
+      { id: "t-3", title: "Submit first introductory pull request to verify CI", completed: true },
+    ],
+    supervisor_feedback: "Successfully completed onboarding ahead of schedule with zero blockers.",
+    completed_at: "2026-09-08T16:00:00Z",
+  },
+  {
+    id: "m-2",
+    student_id: "student-1",
+    internship_id: "intern-1",
+    phase: "Phase 2: Core Feature Implementation",
+    title: "UI Design System & State Architecture",
+    description:
+      "Design reusable UI components, integrate responsive viewports, and implement mock state.",
+    target_week: "Weeks 3 - 6",
+    status: "in_progress",
+    skills: ["React 19", "Tailwind CSS v4", "Radix UI", "TanStack Router"],
+    tasks: [
+      {
+        id: "t-4",
+        title: "Implement Radix dialog and tabs in logbook review queue",
+        completed: true,
+      },
+      { id: "t-5", title: "Build responsive stats dashboard with Recharts", completed: true },
+      { id: "t-6", title: "Complete accessibility and screen-reader audit", completed: false },
+    ],
+    supervisor_feedback:
+      "Great eye for UX details. Ensure mobile responsiveness is checked thoroughly.",
+    completed_at: null,
+  },
+  {
+    id: "m-3",
+    student_id: "student-1",
+    internship_id: "intern-1",
+    phase: "Phase 3: Integration & Testing",
+    title: "Performance Optimization & Automated Validation",
+    description:
+      "Optimize bundle sizes, implement unit test suites, and conduct cross-browser stress tests.",
+    target_week: "Weeks 7 - 9",
+    status: "not_started",
+    skills: ["Performance Profiling", "Vitest", "Bundle Analysis"],
+    tasks: [
+      { id: "t-7", title: "Audit bundle size using Vite visualizer", completed: false },
+      { id: "t-8", title: "Write component unit tests for critical form inputs", completed: false },
+      { id: "t-9", title: "Conduct peer review session with senior mentor", completed: false },
+    ],
+    supervisor_feedback: null,
+    completed_at: null,
+  },
+  {
+    id: "m-4",
+    student_id: "student-1",
+    internship_id: "intern-1",
+    phase: "Phase 4: Capstone & Final Evaluation",
+    title: "Internship Capstone Presentation & Defense",
+    description:
+      "Compile final logbook reports, submit portfolio deliverables, and present capstone to department.",
+    target_week: "Weeks 10 - 12",
+    status: "not_started",
+    skills: ["Technical Presentation", "Technical Writing", "Portfolio Delivery"],
+    tasks: [
+      {
+        id: "t-10",
+        title: "Generate and export final verified logbook dossier (PDF)",
+        completed: false,
+      },
+      {
+        id: "t-11",
+        title: "Deliver 20-minute capstone demonstration to engineering team",
+        completed: false,
+      },
+      {
+        id: "t-12",
+        title: "Complete institutional exit interview & feedback rubric",
+        completed: false,
+      },
+    ],
+    supervisor_feedback: null,
+    completed_at: null,
+  },
+];
+
+// ── Supervisor Evaluations ──────────────────────────────────────────────────
+export const evaluations: MockEvaluation[] = [
+  {
+    id: "eval-1",
+    student_id: "student-1",
+    supervisor_id: "supervisor-1",
+    internship_id: "intern-1",
+    evaluation_date: "2026-09-20",
+    period: "Mid-Term",
+    ratings: {
+      technical: 5,
+      punctuality: 5,
+      communication: 4,
+      problem_solving: 5,
+    },
+    overall_score: 4.8,
+    grade: "A (Distinction)",
+    recommendation: "full_time_offer",
+    comments:
+      "Alice has exceeded expectations in frontend engineering. Her work on UI design systems and self-directed problem solving has been exemplary.",
+    supervisor_name: "James Otieno",
+  },
 ];
 
 // ── Helpers ──────────────────────────────────────────────────────────────────

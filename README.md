@@ -68,9 +68,11 @@ Test all persona views directly in the browser! Switch roles with a single click
 
 ### 📖 1. Digital Logbook View
 
-- **Rich Activity Form**: Inputs for date, arrival/departure timestamps, tools used, skills gained, challenges, and solutions.
+- **Rich Activity Form**: Inputs for date, arrival/departure timestamps, tools used, skills gained, challenges, solutions, and work attachments.
+- **⚡ Quick Starter Templates**: 1-click presets for Frontend Components, API Caching, Bug Triage, and Sprint Planning.
+- **📄 Work Evidence & Attachments**: Simulated file attachment dropzone with previews and file chips.
 - **Dynamic UI Tags**: Color-coded badges for `Draft`, `Submitted`, `Approved` ✅, and `Changes Requested` ⚠️.
-- **Instant Search & Filter**: Filter client-side entries in real time by search query or status.
+- **Instant Search & Filter**: Filter client-side entries in real time by search query, tools, or status.
 
 ### 🤖 2. Simulated AI Writing Assistant UI
 
@@ -91,18 +93,30 @@ Test all persona views directly in the browser! Switch roles with a single click
 
 </details>
 
-### ⏱️ 3. Attendance Clock-In Widget
+### 🎯 3. Milestones & 12-Week Roadmap (`/milestones`)
 
-- Interactive **Check In** / **Check Out** toggle buttons.
-- Client-side attendance rate progress bar and session timestamp history.
+- **Structured Phases**: Tracks progression across 4 phases (Orientation, Core Implementation, Integration, Capstone).
+- **Interactive Checklists**: Students and mentors can check off required milestone deliverables.
+- **Mentor Sign-Offs**: Displays supervisor feedback notes on validated milestones.
 
-### 📊 4. Analytics & Metric Cards
+### 🏆 4. Supervisor Performance Rubric & AI Appraisals (`/review`)
 
-- **Recharts Charts**: Pre-configured responsive charts for activity trends and approval status.
-- Skill tags cloud dynamically aggregated from completed log entries.
-- Milestone progress gauges displaying progress toward required internship days.
+- **Multi-Pillar Rubric**: Evaluates interns across Technical Execution, Punctuality, Teamwork, and Problem Solving (1-5 stars).
+- **Dynamic Grading**: Calculates composite grade (`A+ Outstanding`, `A Distinction`, `B+ Proficient`).
+- **AI Recommendation Draft**: Generates customized appraisal narratives and employment recommendation letters.
 
-### 📑 5. Printable Report View
+### ⏱️ 5. Attendance & Turnstile Verification (`/attendance`)
+
+- **QR Code Turnstile Scanner**: Simulated optical entrance badge scanner.
+- **GPS Geofence Indicator**: Verified office coordinates and perimeter badge.
+- **Active Shift Tracker**: Real-time shift status with attendance history and completion rate.
+
+### 📊 6. Analytics & Competency Matrix (`/dashboard`)
+
+- **Recharts Charts**: Pre-configured responsive charts for activity volume trends.
+- **Competency Progression Matrix**: Visual skill mastery gauges mapped against curriculum standards.
+
+### 📑 7. Printable Report Dossier (`/reports`)
 
 - Pre-styled print template for Weekly, Monthly, and Final Internship dossiers.
 - Standard CSS print stylesheets for clean browser PDF export.
@@ -111,17 +125,18 @@ Test all persona views directly in the browser! Switch roles with a single click
 
 ## 🗺️ Route Map
 
-| Route         | Role Preview    | Screen Description                                            |
-| :------------ | :-------------- | :------------------------------------------------------------ |
-| `/`           | Public          | Marketing landing page with hero, feature grid, and stats     |
-| `/auth`       | Public          | Demo persona selection & login interface                      |
-| `/dashboard`  | Authenticated   | Overview stats cards, activity status chart & quick links     |
-| `/logbook`    | Student View    | Logbook entry creator, AI polish tool, and activity list      |
-| `/attendance` | Student View    | Clock-in card, attendance log table & percentage card         |
-| `/review`     | Supervisor View | Review queue for approving or requesting revisions on entries |
-| `/reports`    | All Roles       | Formatted reports ready for browser printing or PDF saving    |
-| `/profile`    | All Roles       | Student details card, institution profile & placement status  |
-| `/admin`      | Admin View      | Institutional directory, intern roster & company filters      |
+| Route         | Role Preview    | Screen Description                                             |
+| :------------ | :-------------- | :------------------------------------------------------------- |
+| `/`           | Public          | Marketing landing page with hero, feature grid, and stats      |
+| `/auth`       | Public          | Demo persona selection & login interface                       |
+| `/dashboard`  | Authenticated   | Competency matrix, activity volume charts & stats cards        |
+| `/logbook`    | Student View    | Quick templates, AI polish tool, evidence chips & log entries  |
+| `/milestones` | All Roles       | 12-week curriculum roadmap & interactive task deliverables     |
+| `/attendance` | Student View    | QR scanner simulator, GPS geofence verification & history      |
+| `/review`     | Supervisor View | Activity triage queue & 4-pillar performance evaluation rubric |
+| `/reports`    | All Roles       | Formatted reports ready for browser printing or PDF saving     |
+| `/profile`    | All Roles       | Student details card, institution profile & placement status   |
+| `/admin`      | Admin View      | Institutional directory, intern roster & company filters       |
 
 ---
 
