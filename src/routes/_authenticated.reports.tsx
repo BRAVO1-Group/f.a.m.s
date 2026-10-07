@@ -67,7 +67,9 @@ function ReportsPage() {
     const summaryText = `During this ${period} period, the intern completed ${rows.length} activities, of which ${approved} received supervisor approval. Key work included: ${rows
       .slice(0, 3)
       .map((r) => r.title)
-      .join("; ")}. Skills developed include ${skills.slice(0, 5).join(", ")}. The intern demonstrated consistent engagement and professional growth throughout the reporting period.`;
+      .join(
+        "; ",
+      )}. Skills developed include ${skills.slice(0, 5).join(", ")}. The intern demonstrated consistent engagement and professional growth throughout the reporting period.`;
     setSummary(summaryText);
     setAiLoading(false);
     toast.success("Summary generated (simulated)");
@@ -139,7 +141,11 @@ ${items || "<p>No activities recorded.</p>"}
 
       <div className="flex flex-wrap gap-2">
         <Button onClick={generateSummary} disabled={aiLoading}>
-          {aiLoading ? <Loader2 className="size-4 animate-spin" /> : <FileOutput className="size-4" />}
+          {aiLoading ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <FileOutput className="size-4" />
+          )}
           Generate summary with AI
         </Button>
         <Button variant="outline" onClick={printPdf}>

@@ -14,7 +14,10 @@ export const Route = createFileRoute("/_authenticated/review")({
   head: () => ({
     meta: [
       { title: "Review Queue — InternTrack" },
-      { name: "description", content: "Review, approve and give feedback on intern activity reports." },
+      {
+        name: "description",
+        content: "Review, approve and give feedback on intern activity reports.",
+      },
       { property: "og:title", content: "Review Queue — InternTrack" },
       { property: "og:type", content: "website" },
     ],
@@ -44,7 +47,25 @@ function ReviewPage() {
     const idx = activities.findIndex((a) => a.id === id);
     if (idx >= 0) {
       const a = activities[idx]!;
-      activities[idx] = { id: a.id, student_id: a.student_id, internship_id: a.internship_id, activity_date: a.activity_date, arrival_time: a.arrival_time, departure_time: a.departure_time, title: a.title, description: a.description, tools_used: a.tools_used, skills_gained: a.skills_gained, challenges: a.challenges, solutions: a.solutions, submitted_at: a.submitted_at, status, supervisor_feedback: feedback[id]?.trim() || null, reviewed_by: userId, reviewed_at: new Date().toISOString() };
+      activities[idx] = {
+        id: a.id,
+        student_id: a.student_id,
+        internship_id: a.internship_id,
+        activity_date: a.activity_date,
+        arrival_time: a.arrival_time,
+        departure_time: a.departure_time,
+        title: a.title,
+        description: a.description,
+        tools_used: a.tools_used,
+        skills_gained: a.skills_gained,
+        challenges: a.challenges,
+        solutions: a.solutions,
+        submitted_at: a.submitted_at,
+        status,
+        supervisor_feedback: feedback[id]?.trim() || null,
+        reviewed_by: userId,
+        reviewed_at: new Date().toISOString(),
+      };
     }
     setFeedback((prev) => {
       const next = { ...prev };
@@ -136,10 +157,7 @@ function ReviewPage() {
                       onChange={(e) => setFeedback({ ...feedback, [a.id]: e.target.value })}
                     />
                     <div className="flex flex-wrap gap-2">
-                      <Button
-                        size="sm"
-                        onClick={() => decide(a.id, "approved")}
-                      >
+                      <Button size="sm" onClick={() => decide(a.id, "approved")}>
                         <Check className="size-4" /> Approve
                       </Button>
                       <Button

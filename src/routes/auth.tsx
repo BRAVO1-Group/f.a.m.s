@@ -67,7 +67,9 @@ function AuthPage() {
                   <p className="font-semibold text-sm leading-none">{user.full_name}</p>
                   <p className="mt-1 truncate text-xs text-muted-foreground">{user.email}</p>
                   {user.institution ? (
-                    <p className="mt-0.5 truncate text-xs text-muted-foreground/70">{user.institution}</p>
+                    <p className="mt-0.5 truncate text-xs text-muted-foreground/70">
+                      {user.institution}
+                    </p>
                   ) : null}
                 </div>
                 <Badge variant="secondary" className="shrink-0 capitalize">

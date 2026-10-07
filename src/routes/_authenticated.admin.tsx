@@ -46,7 +46,10 @@ export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
       { title: "Administration — InternTrack" },
-      { name: "description", content: "Manage students, organizations, supervisors and placements." },
+      {
+        name: "description",
+        content: "Manage students, organizations, supervisors and placements.",
+      },
       { property: "og:title", content: "Administration — InternTrack" },
       { property: "og:type", content: "website" },
     ],
@@ -62,7 +65,13 @@ function AdminPage() {
   const [placeOpen, setPlaceOpen] = useState(false);
   const [savingOrg, setSavingOrg] = useState(false);
   const [savingPlace, setSavingPlace] = useState(false);
-  const [org, setOrg] = useState<Omit<MockOrganization, "id">>({ name: "", industry: "", address: "", contact_person: "", contact_email: "" });
+  const [org, setOrg] = useState<Omit<MockOrganization, "id">>({
+    name: "",
+    industry: "",
+    address: "",
+    contact_person: "",
+    contact_email: "",
+  });
   const [place, setPlace] = useState<Omit<MockInternship, "id" | "status">>({
     student_id: "",
     organization_id: "",
@@ -126,7 +135,10 @@ function AdminPage() {
         <Stat label="Students" value={students.length} />
         <Stat label="Supervisors" value={supervisors.length} />
         <Stat label="Organizations" value={organizations.length} />
-        <Stat label="Active placements" value={internships.filter((i) => i.status === "active").length} />
+        <Stat
+          label="Active placements"
+          value={internships.filter((i) => i.status === "active").length}
+        />
       </div>
 
       <Tabs defaultValue="students">
@@ -291,10 +303,26 @@ function AdminPage() {
           </DialogHeader>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Name" value={org.name} onChange={(v) => setOrg({ ...org, name: v })} />
-            <Field label="Industry" value={org.industry} onChange={(v) => setOrg({ ...org, industry: v })} />
-            <Field label="Address" value={org.address} onChange={(v) => setOrg({ ...org, address: v })} />
-            <Field label="Contact person" value={org.contact_person} onChange={(v) => setOrg({ ...org, contact_person: v })} />
-            <Field label="Contact email" value={org.contact_email} onChange={(v) => setOrg({ ...org, contact_email: v })} />
+            <Field
+              label="Industry"
+              value={org.industry}
+              onChange={(v) => setOrg({ ...org, industry: v })}
+            />
+            <Field
+              label="Address"
+              value={org.address}
+              onChange={(v) => setOrg({ ...org, address: v })}
+            />
+            <Field
+              label="Contact person"
+              value={org.contact_person}
+              onChange={(v) => setOrg({ ...org, contact_person: v })}
+            />
+            <Field
+              label="Contact email"
+              value={org.contact_email}
+              onChange={(v) => setOrg({ ...org, contact_email: v })}
+            />
           </div>
           <DialogFooter>
             <Button disabled={savingOrg || !org.name.trim()} onClick={createOrg}>
@@ -309,12 +337,17 @@ function AdminPage() {
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>New placement</DialogTitle>
-            <DialogDescription>Assign a student to an organization and supervisor.</DialogDescription>
+            <DialogDescription>
+              Assign a student to an organization and supervisor.
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5 sm:col-span-2">
               <Label>Student</Label>
-              <Select value={place.student_id} onValueChange={(v) => setPlace({ ...place, student_id: v })}>
+              <Select
+                value={place.student_id}
+                onValueChange={(v) => setPlace({ ...place, student_id: v })}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select student" />
                 </SelectTrigger>
@@ -329,7 +362,10 @@ function AdminPage() {
             </div>
             <div className="space-y-1.5">
               <Label>Organization</Label>
-              <Select value={place.organization_id} onValueChange={(v) => setPlace({ ...place, organization_id: v })}>
+              <Select
+                value={place.organization_id}
+                onValueChange={(v) => setPlace({ ...place, organization_id: v })}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
@@ -344,7 +380,10 @@ function AdminPage() {
             </div>
             <div className="space-y-1.5">
               <Label>Supervisor</Label>
-              <Select value={place.supervisor_id} onValueChange={(v) => setPlace({ ...place, supervisor_id: v })}>
+              <Select
+                value={place.supervisor_id}
+                onValueChange={(v) => setPlace({ ...place, supervisor_id: v })}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
@@ -357,7 +396,11 @@ function AdminPage() {
                 </SelectContent>
               </Select>
             </div>
-            <Field label="Position" value={place.position} onChange={(v) => setPlace({ ...place, position: v })} />
+            <Field
+              label="Position"
+              value={place.position}
+              onChange={(v) => setPlace({ ...place, position: v })}
+            />
             <div className="space-y-1.5">
               <Label>Required days</Label>
               <Input
@@ -368,11 +411,19 @@ function AdminPage() {
             </div>
             <div className="space-y-1.5">
               <Label>Start date</Label>
-              <Input type="date" value={place.start_date} onChange={(e) => setPlace({ ...place, start_date: e.target.value })} />
+              <Input
+                type="date"
+                value={place.start_date}
+                onChange={(e) => setPlace({ ...place, start_date: e.target.value })}
+              />
             </div>
             <div className="space-y-1.5">
               <Label>End date</Label>
-              <Input type="date" value={place.end_date} onChange={(e) => setPlace({ ...place, end_date: e.target.value })} />
+              <Input
+                type="date"
+                value={place.end_date}
+                onChange={(e) => setPlace({ ...place, end_date: e.target.value })}
+              />
             </div>
           </div>
           <DialogFooter>
@@ -386,7 +437,15 @@ function AdminPage() {
   );
 }
 
-function Field({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+function Field({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
   return (
     <div className="space-y-1.5">
       <Label>{label}</Label>

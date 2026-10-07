@@ -70,7 +70,14 @@ const FEATURES = [
   },
 ];
 
-const FEATURE_ACCENTS = ["bg-info/10 text-info", "bg-success/10 text-success", "bg-warning/15 text-warning-foreground", "bg-accent/15 text-accent-foreground", "bg-primary/10 text-primary", "bg-destructive/10 text-destructive"];
+const FEATURE_ACCENTS = [
+  "bg-info/10 text-info",
+  "bg-success/10 text-success",
+  "bg-warning/15 text-warning-foreground",
+  "bg-accent/15 text-accent-foreground",
+  "bg-primary/10 text-primary",
+  "bg-destructive/10 text-destructive",
+];
 
 function Landing() {
   return (
@@ -144,7 +151,9 @@ function Landing() {
                     <p className="font-display text-sm font-semibold">Week 06 progress</p>
                     <p className="mt-1 text-xs text-muted-foreground">Logbook up to date</p>
                   </div>
-                  <div className="flex size-10 items-center justify-center rounded-full bg-success/15 text-sm font-bold text-success">84%</div>
+                  <div className="flex size-10 items-center justify-center rounded-full bg-success/15 text-sm font-bold text-success">
+                    84%
+                  </div>
                 </div>
                 <div className="mt-3 h-2 overflow-hidden rounded-full bg-secondary">
                   <div className="h-full w-[84%] rounded-full bg-success" />
@@ -162,8 +171,12 @@ function Landing() {
       <section className="mx-auto max-w-6xl px-5 py-20">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="font-display text-xs font-bold uppercase tracking-[0.2em] text-primary">One connected workspace</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight">Everything an internship programme needs</h2>
+            <p className="font-display text-xs font-bold uppercase tracking-[0.2em] text-primary">
+              One connected workspace
+            </p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight">
+              Everything an internship programme needs
+            </h2>
           </div>
           <p className="max-w-sm text-sm leading-relaxed text-muted-foreground sm:text-right">
             No more lost logbooks, delayed updates or last-minute report writing.
@@ -171,9 +184,14 @@ function Landing() {
         </div>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((f, index) => (
-            <Card key={f.title} className="group border-border/70 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated">
+            <Card
+              key={f.title}
+              className="group border-border/70 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated"
+            >
               <CardContent className="p-6">
-                <div className={`flex size-11 items-center justify-center rounded-xl ${FEATURE_ACCENTS[index]}`}>
+                <div
+                  className={`flex size-11 items-center justify-center rounded-xl ${FEATURE_ACCENTS[index]}`}
+                >
                   <f.icon className="size-5" />
                 </div>
                 <div className="mt-5 flex items-start justify-between gap-3">
@@ -193,7 +211,9 @@ function Landing() {
           <p className="max-w-3xl font-display text-xl font-medium leading-relaxed text-foreground sm:text-2xl">
             “The easiest way to turn everyday internship work into a clear record of growth.”
           </p>
-          <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">InternTrack</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            InternTrack
+          </span>
         </div>
       </section>
 

@@ -50,7 +50,10 @@ export const improveText = createServerFn({ method: "POST" })
       const json = (await res.json()) as {
         choices?: Array<{ message?: { content?: string } }>;
       };
-      return { text: json.choices?.[0]?.message?.content?.trim() ?? "", error: null as string | null };
+      return {
+        text: json.choices?.[0]?.message?.content?.trim() ?? "",
+        error: null as string | null,
+      };
     } catch {
       return { text: "", error: "The AI assistant is unavailable right now." };
     }

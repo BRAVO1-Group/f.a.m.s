@@ -54,20 +54,34 @@ function ProfilePage() {
     const idx = DEMO_USERS.findIndex((u) => u.id === userId);
     if (idx >= 0) {
       const u = DEMO_USERS[idx]!;
-      DEMO_USERS[idx] = { id: u.id, email: u.email, role: u.role, roles: u.roles, full_name: form.full_name.trim(), phone: form.phone.trim(), institution: form.institution.trim(), course: form.course.trim(), student_number: form.student_number.trim() };
+      DEMO_USERS[idx] = {
+        id: u.id,
+        email: u.email,
+        role: u.role,
+        roles: u.roles,
+        full_name: form.full_name.trim(),
+        phone: form.phone.trim(),
+        institution: form.institution.trim(),
+        course: form.course.trim(),
+        student_number: form.student_number.trim(),
+      };
     }
     setSaving(false);
     toast.success("Profile updated");
   }
 
   const myInternship = internships.find((i) => i.student_id === userId);
-  const org = myInternship ? organizations.find((o) => o.id === myInternship.organization_id) : null;
+  const org = myInternship
+    ? organizations.find((o) => o.id === myInternship.organization_id)
+    : null;
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-2xl font-semibold">My profile</h1>
-        <p className="text-sm text-muted-foreground">Your details and current internship placement.</p>
+        <p className="text-sm text-muted-foreground">
+          Your details and current internship placement.
+        </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -120,11 +134,7 @@ function ProfilePage() {
               </div>
             </div>
             <Button disabled={saving} onClick={save}>
-              {saving ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <Save className="size-4" />
-              )}
+              {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
               Save changes
             </Button>
           </CardContent>

@@ -23,7 +23,10 @@ export const Route = createFileRoute("/_authenticated/logbook")({
   head: () => ({
     meta: [
       { title: "Digital Logbook — InternTrack" },
-      { name: "description", content: "Record daily internship activities and submit for approval." },
+      {
+        name: "description",
+        content: "Record daily internship activities and submit for approval.",
+      },
       { property: "og:title", content: "Digital Logbook — InternTrack" },
       { property: "og:type", content: "website" },
     ],
@@ -86,7 +89,7 @@ function LogbookPage() {
           a.tools_used.join(" ").toLowerCase().includes(q),
       )
       .sort((a, b) => (a.activity_date < b.activity_date ? 1 : -1));
-  }, [data, search, /* forceUpdate dep via , */ ]);
+  }, [data, search /* forceUpdate dep via , */]);
 
   function saveDraft(submit: boolean) {
     if (!draft.title.trim()) {
@@ -103,8 +106,14 @@ function LogbookPage() {
       departure_time: draft.departure_time || null,
       title: draft.title.trim(),
       description: draft.description.trim(),
-      tools_used: draft.tools_used.split(",").map((s) => s.trim()).filter(Boolean),
-      skills_gained: draft.skills_gained.split(",").map((s) => s.trim()).filter(Boolean),
+      tools_used: draft.tools_used
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      skills_gained: draft.skills_gained
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
       challenges: draft.challenges.trim() || null,
       solutions: draft.solutions.trim() || null,
       status: submit ? "submitted" : "draft",
@@ -135,7 +144,25 @@ function LogbookPage() {
     const idx = activities.findIndex((a) => a.id === id);
     if (idx >= 0) {
       const a = activities[idx]!;
-      activities[idx] = { id: a.id, student_id: a.student_id, internship_id: a.internship_id, activity_date: a.activity_date, arrival_time: a.arrival_time, departure_time: a.departure_time, title: a.title, description: a.description, tools_used: a.tools_used, skills_gained: a.skills_gained, challenges: a.challenges, solutions: a.solutions, status: "submitted", submitted_at: new Date().toISOString(), supervisor_feedback: a.supervisor_feedback, reviewed_by: a.reviewed_by, reviewed_at: a.reviewed_at };
+      activities[idx] = {
+        id: a.id,
+        student_id: a.student_id,
+        internship_id: a.internship_id,
+        activity_date: a.activity_date,
+        arrival_time: a.arrival_time,
+        departure_time: a.departure_time,
+        title: a.title,
+        description: a.description,
+        tools_used: a.tools_used,
+        skills_gained: a.skills_gained,
+        challenges: a.challenges,
+        solutions: a.solutions,
+        status: "submitted",
+        submitted_at: new Date().toISOString(),
+        supervisor_feedback: a.supervisor_feedback,
+        reviewed_by: a.reviewed_by,
+        reviewed_at: a.reviewed_at,
+      };
     }
     refresh();
     toast.success("Sent to your supervisor");

@@ -74,7 +74,14 @@ function AttendancePage() {
     const idx = attendance.findIndex((a) => a.id === id);
     if (idx >= 0) {
       const rec = attendance[idx]!;
-      attendance[idx] = { id: rec.id, student_id: rec.student_id, internship_id: rec.internship_id, attendance_date: rec.attendance_date, check_in: rec.check_in, check_out: new Date().toISOString() };
+      attendance[idx] = {
+        id: rec.id,
+        student_id: rec.student_id,
+        internship_id: rec.internship_id,
+        attendance_date: rec.attendance_date,
+        check_in: rec.check_in,
+        check_out: new Date().toISOString(),
+      };
     }
     refresh();
     toast.success("Checked out");
@@ -127,11 +134,7 @@ function AttendancePage() {
                 <LogIn className="size-4" /> Check in
               </Button>
             ) : !todayRow.check_out ? (
-              <Button
-                className="w-full"
-                variant="outline"
-                onClick={() => checkOut(todayRow.id)}
-              >
+              <Button className="w-full" variant="outline" onClick={() => checkOut(todayRow.id)}>
                 <LogOut className="size-4" /> Check out
               </Button>
             ) : (
