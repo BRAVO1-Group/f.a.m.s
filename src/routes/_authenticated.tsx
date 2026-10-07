@@ -34,7 +34,7 @@ function AuthenticatedLayout() {
 
   return (
     <AppUserProvider value={{ userId: user.id, email, name, role, roles: roles ?? [role] }}>
-      <AppShell role={role} name={name} email={email}>
+      <AppShell role={role} roles={roles ?? [role]} name={name} email={email}>
         <Outlet />
       </AppShell>
     </AppUserProvider>

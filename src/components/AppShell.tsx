@@ -49,7 +49,12 @@ const NAV: NavItem[] = [
     roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
   },
   { to: "/attendance", label: "Attendance", icon: CalendarCheck, roles: ["student"] },
-  { to: "/reports", label: "Reports", icon: FileBarChart, roles: ["student"] },
+  {
+    to: "/reports",
+    label: "Reports",
+    icon: FileBarChart,
+    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+  },
   {
     to: "/review",
     label: "Review Queue",
@@ -73,18 +78,21 @@ const NAV: NavItem[] = [
 export function AppShell({
   children,
   role,
+  roles,
   name,
   email,
 }: {
   children: ReactNode;
   role: AppRole;
+  roles?: AppRole[];
   name: string;
   email: string;
 }) {
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const signOut = useSignOut();
-  const items = NAV.filter((i) => i.roles.includes(role));
+  const effectiveRoles = roles && roles.length > 0 ? roles : [role];
+  const items = NAV.filter((i) => i.roles.some((r) => effectiveRoles.includes(r)));
   const initials =
     (name || email)
       .split(" ")
@@ -215,8 +223,16 @@ export function AppShell({
                     <DropdownMenuItem
                       key={user.id}
                       onClick={() => {
+                        const targetRoles =
+                          user.roles && user.roles.length > 0 ? user.roles : [user.role];
+                        const targetAllowedRoutes = NAV.filter((i) =>
+                          i.roles.some((r) => targetRoles.includes(r)),
+                        ).map((i) => i.to);
                         setDemoUser(user.id);
                         window.dispatchEvent(new Event("demo-auth-change"));
+                        if (!targetAllowedRoutes.includes(pathname)) {
+                          window.location.href = "/dashboard";
+                        }
                       }}
                       className={cn(
                         "flex items-center justify-between py-2 text-xs cursor-pointer",
