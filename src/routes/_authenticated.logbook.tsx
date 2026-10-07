@@ -3,6 +3,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   FilePenLine,
   Loader2,
+  Maximize2,
+  Minimize2,
   Paperclip,
   Plus,
   Search,
@@ -13,6 +15,7 @@ import {
   Zap,
 } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,6 +31,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAppUser } from "@/lib/app-user";
+import { RoleGuard } from "@/components/RoleGuard";
 import { activities, internships, uid, type MockActivity } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_authenticated/logbook")({
@@ -160,6 +164,7 @@ function LogbookPage() {
   const [search, setSearch] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [customAttach, setCustomAttach] = useState("");
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [, forceUpdate] = useState(0);
   const refresh = () => forceUpdate((n) => n + 1);
 
@@ -301,353 +306,467 @@ function LogbookPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="font-display text-2xl font-semibold">Digital Logbook</h1>
-          <p className="text-sm text-muted-foreground">
-            Record what you did each day, attach work evidence, and submit for supervisor approval.
-          </p>
+    <RoleGuard allowedRoles={["student"]}>
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="font-display text-2xl font-semibold">Digital Logbook</h1>
+            <p className="text-sm text-muted-foreground">
+              Record what you did each day, attach work evidence, and submit for supervisor
+              approval.
+            </p>
+          </div>
+          <Button
+            onClick={() => {
+              setDraft(emptyDraft());
+              setOpen(true);
+            }}
+          >
+            <Plus className="size-4" /> New entry
+          </Button>
         </div>
-        <Button
-          onClick={() => {
-            setDraft(emptyDraft());
-            setOpen(true);
-          }}
-        >
-          <Plus className="size-4" /> New entry
-        </Button>
-      </div>
 
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          className="pl-9"
-          placeholder="Search activities, tools, or attachments…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+        <div className="relative max-w-md">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            className="pl-9"
+            placeholder="Search activities, tools, or attachments…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
 
-      {filtered.length === 0 ? (
-        <Card className="shadow-xs">
-          <CardContent className="p-8 text-center text-sm text-muted-foreground">
-            No entries yet. Click "New entry" to record your first activity.
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-3">
-          {filtered.map((a) => (
-            <Card key={a.id} className="shadow-xs">
-              <CardHeader className="pb-3">
-                <div className="flex flex-wrap items-start justify-between gap-2">
-                  <div>
-                    <CardTitle className="text-base">{a.title}</CardTitle>
-                    <CardDescription>
-                      {a.activity_date}
-                      {a.arrival_time ? ` · ${a.arrival_time.slice(0, 5)}` : ""}
-                      {a.departure_time ? `–${a.departure_time.slice(0, 5)}` : ""}
-                    </CardDescription>
+        {filtered.length === 0 ? (
+          <Card className="shadow-xs">
+            <CardContent className="p-8 text-center text-sm text-muted-foreground">
+              No entries yet. Click "New entry" to record your first activity.
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-3">
+            {filtered.map((a) => (
+              <Card key={a.id} className="shadow-xs">
+                <CardHeader className="pb-3">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div>
+                      <CardTitle className="text-base">{a.title}</CardTitle>
+                      <CardDescription>
+                        {a.activity_date}
+                        {a.arrival_time ? ` · ${a.arrival_time.slice(0, 5)}` : ""}
+                        {a.departure_time ? `–${a.departure_time.slice(0, 5)}` : ""}
+                      </CardDescription>
+                    </div>
+                    <Badge variant={STATUS_VARIANT[a.status] ?? "secondary"}>
+                      {a.status === "approved"
+                        ? "Approved ✅"
+                        : a.status === "needs_correction"
+                          ? "Revision Required ⚠️"
+                          : a.status}
+                    </Badge>
                   </div>
-                  <Badge variant={STATUS_VARIANT[a.status] ?? "secondary"}>
-                    {a.status === "approved"
-                      ? "Approved ✅"
-                      : a.status === "needs_correction"
-                        ? "Revision Required ⚠️"
-                        : a.status}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                <p className="whitespace-pre-line text-muted-foreground">{a.description}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {a.tools_used.map((t) => (
-                    <Badge key={t} variant="outline">
-                      {t}
-                    </Badge>
-                  ))}
-                  {a.skills_gained.map((s) => (
-                    <Badge key={s} variant="secondary">
-                      {s}
-                    </Badge>
-                  ))}
-                </div>
-
-                {/* Attachments preview */}
-                {a.attachments && a.attachments.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-2 pt-1">
-                    <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
-                      <Paperclip className="size-3" /> Evidence:
-                    </span>
-                    {a.attachments.map((file) => (
-                      <span
-                        key={file}
-                        className="inline-flex items-center gap-1 rounded border border-border/80 bg-accent/20 px-2 py-0.5 text-xs text-foreground"
-                      >
-                        📄 {file}
-                      </span>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm">
+                  <p className="whitespace-pre-line text-muted-foreground">{a.description}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {a.tools_used.map((t) => (
+                      <Badge key={t} variant="outline">
+                        {t}
+                      </Badge>
+                    ))}
+                    {a.skills_gained.map((s) => (
+                      <Badge key={s} variant="secondary">
+                        {s}
+                      </Badge>
                     ))}
                   </div>
-                )}
 
-                {a.supervisor_feedback ? (
-                  <p className="rounded-lg bg-muted p-3 text-xs">
-                    <span className="font-medium text-foreground">Supervisor feedback: </span>
-                    {a.supervisor_feedback}
-                  </p>
-                ) : null}
+                  {/* Attachments preview */}
+                  {a.attachments && a.attachments.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+                        <Paperclip className="size-3" /> Evidence:
+                      </span>
+                      {a.attachments.map((file) => (
+                        <span
+                          key={file}
+                          className="inline-flex items-center gap-1 rounded border border-border/80 bg-accent/20 px-2 py-0.5 text-xs text-foreground"
+                        >
+                          📄 {file}
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
-                {a.status === "draft" || a.status === "needs_correction" ? (
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setDraft({
-                          id: a.id,
-                          activity_date: a.activity_date,
-                          arrival_time: a.arrival_time?.slice(0, 5) ?? "",
-                          departure_time: a.departure_time?.slice(0, 5) ?? "",
-                          title: a.title,
-                          description: a.description,
-                          tools_used: a.tools_used.join(", "),
-                          skills_gained: a.skills_gained.join(", "),
-                          challenges: a.challenges ?? "",
-                          solutions: a.solutions ?? "",
-                          attachments: a.attachments ?? [],
-                        });
-                        setOpen(true);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button size="sm" onClick={() => submitExisting(a.id)}>
-                      <Send className="size-4" /> Submit
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-destructive"
-                      onClick={() => deleteEntry(a.id)}
-                    >
-                      <Trash2 className="size-4" />
-                    </Button>
-                  </div>
-                ) : null}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+                  {a.supervisor_feedback ? (
+                    <p className="rounded-lg bg-muted p-3 text-xs">
+                      <span className="font-medium text-foreground">Supervisor feedback: </span>
+                      {a.supervisor_feedback}
+                    </p>
+                  ) : null}
 
-      {/* New/Edit Activity Dialog */}
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>
-              {draft.id ? "Edit Activity Entry" : "New Daily Activity Entry"}
-            </DialogTitle>
-            <DialogDescription>
-              Record your work, use quick templates, and attach deliverables for supervisor
-              approval.
-            </DialogDescription>
-          </DialogHeader>
-
-          {/* Quick Starter Templates Toolbar */}
-          <div className="rounded-lg border border-border/80 bg-accent/15 p-3">
-            <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
-              <span className="flex items-center gap-1.5 text-foreground">
-                <Zap className="size-3.5 text-amber-500" />
-                Quick Starter Templates
-              </span>
-              <span className="text-[10px] text-muted-foreground">
-                Auto-populates realistic data
-              </span>
-            </div>
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {TEMPLATES.map((tmpl) => (
-                <Button
-                  key={tmpl.name}
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={() => applyTemplate(tmpl)}
-                  className="h-7 text-xs font-medium"
-                >
-                  <span className="mr-1">{tmpl.icon}</span> {tmpl.name}
-                </Button>
-              ))}
-            </div>
+                  {a.status === "draft" || a.status === "needs_correction" ? (
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setDraft({
+                            id: a.id,
+                            activity_date: a.activity_date,
+                            arrival_time: a.arrival_time?.slice(0, 5) ?? "",
+                            departure_time: a.departure_time?.slice(0, 5) ?? "",
+                            title: a.title,
+                            description: a.description,
+                            tools_used: a.tools_used.join(", "),
+                            skills_gained: a.skills_gained.join(", "),
+                            challenges: a.challenges ?? "",
+                            solutions: a.solutions ?? "",
+                            attachments: a.attachments ?? [],
+                          });
+                          setOpen(true);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                      <Button size="sm" onClick={() => submitExisting(a.id)}>
+                        <Send className="size-4" /> Submit
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-destructive"
+                        onClick={() => deleteEntry(a.id)}
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </div>
+                  ) : null}
+                </CardContent>
+              </Card>
+            ))}
           </div>
+        )}
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="space-y-1.5">
-              <Label htmlFor="date">Date</Label>
-              <Input
-                id="date"
-                type="date"
-                value={draft.activity_date}
-                onChange={(e) => setDraft({ ...draft, activity_date: e.target.value })}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="in">Arrival</Label>
-              <Input
-                id="in"
-                type="time"
-                value={draft.arrival_time}
-                onChange={(e) => setDraft({ ...draft, arrival_time: e.target.value })}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="out">Departure</Label>
-              <Input
-                id="out"
-                type="time"
-                value={draft.departure_time}
-                onChange={(e) => setDraft({ ...draft, departure_time: e.target.value })}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="title">Activity Title</Label>
-            <Input
-              id="title"
-              value={draft.title}
-              placeholder="e.g. Implemented Responsive UI & Auth Components"
-              onChange={(e) => setDraft({ ...draft, title: e.target.value })}
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="desc">Detailed Description</Label>
-              <Button type="button" size="sm" variant="ghost" onClick={runAi} disabled={aiLoading}>
-                {aiLoading ? (
-                  <Loader2 className="size-4 animate-spin" />
-                ) : (
-                  <FilePenLine className="size-4" />
-                )}
-                <Sparkles className="size-3.5 text-amber-500" />
-                Improve with AI
-              </Button>
-            </div>
-            <Textarea
-              id="desc"
-              rows={4}
-              value={draft.description}
-              placeholder="What tasks did you complete today, and what was the deliverable outcome?"
-              onChange={(e) => setDraft({ ...draft, description: e.target.value })}
-            />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
-              <Label htmlFor="tools">Tools / Tech Stack (comma separated)</Label>
-              <Input
-                id="tools"
-                value={draft.tools_used}
-                placeholder="React 19, Tailwind CSS v4, TypeScript"
-                onChange={(e) => setDraft({ ...draft, tools_used: e.target.value })}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="skills">Skills Gained (comma separated)</Label>
-              <Input
-                id="skills"
-                value={draft.skills_gained}
-                placeholder="UI Architecture, Performance Optimization"
-                onChange={(e) => setDraft({ ...draft, skills_gained: e.target.value })}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="ch">Challenges Encountered</Label>
-              <Textarea
-                id="ch"
-                rows={2}
-                value={draft.challenges}
-                placeholder="Obstacles or unexpected blockers..."
-                onChange={(e) => setDraft({ ...draft, challenges: e.target.value })}
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="sol">Solutions Applied</Label>
-              <Textarea
-                id="sol"
-                rows={2}
-                value={draft.solutions}
-                placeholder="How you overcame the challenges..."
-                onChange={(e) => setDraft({ ...draft, solutions: e.target.value })}
-              />
-            </div>
-          </div>
-
-          {/* Work Evidence & File Attachments */}
-          <div className="space-y-2 rounded-lg border border-border/80 bg-muted/30 p-3">
-            <div className="flex items-center justify-between text-xs font-semibold">
-              <span className="flex items-center gap-1.5 text-foreground">
-                <Paperclip className="size-3.5 text-primary" />
-                Work Evidence & Screenshots (Simulated)
-              </span>
-              <span className="text-[10px] text-muted-foreground">
-                Click samples or type custom
-              </span>
-            </div>
-
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {SAMPLE_ATTACHMENTS.map((sample) => (
-                <button
-                  key={sample}
-                  type="button"
-                  onClick={() => addAttachment(sample)}
-                  className="rounded border border-border bg-background px-2 py-0.5 text-[11px] font-medium text-foreground hover:bg-accent"
-                >
-                  + {sample}
-                </button>
-              ))}
-            </div>
-
-            {/* Attached files list */}
-            {draft.attachments.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 pt-2">
-                {draft.attachments.map((file) => (
-                  <span
-                    key={file}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-foreground"
-                  >
-                    📄 {file}
-                    <button
-                      type="button"
-                      onClick={() => removeAttachment(file)}
-                      className="text-muted-foreground hover:text-destructive"
-                    >
-                      <X className="size-3" />
-                    </button>
-                  </span>
-                ))}
-              </div>
+        {/* New/Edit Activity Dialog */}
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent
+            fullscreen={isFullscreen}
+            className={cn(
+              "flex flex-col p-0 overflow-hidden duration-200",
+              isFullscreen
+                ? "h-dvh w-screen max-w-none max-h-none rounded-none border-none"
+                : "w-[95vw] max-w-5xl max-h-[90vh] border shadow-2xl rounded-xl",
             )}
-          </div>
+          >
+            {/* Fixed Header */}
+            <DialogHeader className="px-6 py-4 border-b border-border/70 bg-background shrink-0 text-left">
+              <div className="flex items-center justify-between gap-4 pr-8">
+                <div>
+                  <DialogTitle className="text-lg sm:text-xl font-bold flex items-center gap-2">
+                    <span>{draft.id ? "Edit Activity Entry" : "New Daily Activity Entry"}</span>
+                    <Badge
+                      variant="outline"
+                      className="text-[11px] font-normal text-muted-foreground hidden sm:inline-flex"
+                    >
+                      {isFullscreen ? "Fullscreen Mode" : "Windowed"}
+                    </Badge>
+                  </DialogTitle>
+                  <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                    Record daily hours, tasks, tools, and attach deliverable evidence for supervisor
+                    review.
+                  </DialogDescription>
+                </div>
 
-          <DialogFooter className="gap-2 sm:gap-2">
-            <Button
-              variant="outline"
-              disabled={!draft.title.trim()}
-              onClick={() => saveDraft(false)}
-            >
-              Save as Draft
-            </Button>
-            <Button
-              disabled={!draft.title.trim() || draft.description.trim().length < 3}
-              onClick={() => saveDraft(true)}
-            >
-              <Send className="size-4" />
-              Submit for Approval
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsFullscreen((prev) => !prev)}
+                  className="h-8 gap-1.5 text-xs font-medium cursor-pointer shrink-0"
+                  title={isFullscreen ? "Exit Fullscreen (Restore window)" : "Expand to Fullscreen"}
+                >
+                  {isFullscreen ? (
+                    <>
+                      <Minimize2 className="size-3.5" />
+                      <span className="hidden sm:inline">Exit Fullscreen</span>
+                    </>
+                  ) : (
+                    <>
+                      <Maximize2 className="size-3.5" />
+                      <span className="hidden sm:inline">Scale to Fullscreen</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+            </DialogHeader>
+
+            {/* Scrollable Form Body */}
+            <div className="overflow-y-auto flex-1 min-h-0 px-6 py-5">
+              <div
+                className={cn(
+                  "grid grid-cols-1 gap-6",
+                  isFullscreen
+                    ? "lg:grid-cols-2 lg:gap-8 max-w-7xl mx-auto"
+                    : "md:grid-cols-2 md:gap-6",
+                )}
+              >
+                {/* Left Column */}
+                <div className="space-y-4">
+                  {/* Quick Starter Templates Toolbar */}
+                  <div className="rounded-lg border border-border/80 bg-accent/15 p-3">
+                    <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
+                      <span className="flex items-center gap-1.5 text-foreground">
+                        <Zap className="size-3.5 text-amber-500" />
+                        Quick Starter Templates
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">
+                        Auto-populates realistic data
+                      </span>
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {TEMPLATES.map((tmpl) => (
+                        <Button
+                          key={tmpl.name}
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={() => applyTemplate(tmpl)}
+                          className="h-7 text-xs font-medium cursor-pointer hover:bg-background"
+                        >
+                          <span className="mr-1">{tmpl.icon}</span> {tmpl.name}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid gap-3 grid-cols-3">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="date" className="text-xs font-semibold">
+                        Date
+                      </Label>
+                      <Input
+                        id="date"
+                        type="date"
+                        value={draft.activity_date}
+                        onChange={(e) => setDraft({ ...draft, activity_date: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="in" className="text-xs font-semibold">
+                        Arrival
+                      </Label>
+                      <Input
+                        id="in"
+                        type="time"
+                        value={draft.arrival_time}
+                        onChange={(e) => setDraft({ ...draft, arrival_time: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="out" className="text-xs font-semibold">
+                        Departure
+                      </Label>
+                      <Input
+                        id="out"
+                        type="time"
+                        value={draft.departure_time}
+                        onChange={(e) => setDraft({ ...draft, departure_time: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="title" className="text-xs font-semibold">
+                      Activity Title
+                    </Label>
+                    <Input
+                      id="title"
+                      value={draft.title}
+                      placeholder="e.g. Implemented Responsive UI & Auth Components"
+                      onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="desc" className="text-xs font-semibold">
+                        Detailed Description
+                      </Label>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={runAi}
+                        disabled={aiLoading}
+                        className="h-7 text-xs cursor-pointer text-muted-foreground hover:text-foreground"
+                      >
+                        {aiLoading ? (
+                          <Loader2 className="size-3.5 animate-spin" />
+                        ) : (
+                          <FilePenLine className="size-3.5" />
+                        )}
+                        <Sparkles className="size-3 text-amber-500" />
+                        Improve with AI
+                      </Button>
+                    </div>
+                    <Textarea
+                      id="desc"
+                      rows={isFullscreen ? 8 : 5}
+                      value={draft.description}
+                      placeholder="What tasks did you complete today, and what was the deliverable outcome?"
+                      onChange={(e) => setDraft({ ...draft, description: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                {/* Right Column */}
+                <div className="space-y-4">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="tools" className="text-xs font-semibold">
+                        Tools / Tech Stack
+                      </Label>
+                      <Input
+                        id="tools"
+                        value={draft.tools_used}
+                        placeholder="React 19, Tailwind CSS v4, TypeScript"
+                        onChange={(e) => setDraft({ ...draft, tools_used: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="skills" className="text-xs font-semibold">
+                        Skills Gained
+                      </Label>
+                      <Input
+                        id="skills"
+                        value={draft.skills_gained}
+                        placeholder="UI Architecture, Performance Optimization"
+                        onChange={(e) => setDraft({ ...draft, skills_gained: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="ch" className="text-xs font-semibold">
+                        Challenges Encountered
+                      </Label>
+                      <Textarea
+                        id="ch"
+                        rows={isFullscreen ? 4 : 3}
+                        value={draft.challenges}
+                        placeholder="Obstacles or unexpected blockers..."
+                        onChange={(e) => setDraft({ ...draft, challenges: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="sol" className="text-xs font-semibold">
+                        Solutions Applied
+                      </Label>
+                      <Textarea
+                        id="sol"
+                        rows={isFullscreen ? 4 : 3}
+                        value={draft.solutions}
+                        placeholder="How you overcame the challenges..."
+                        onChange={(e) => setDraft({ ...draft, solutions: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Work Evidence & File Attachments */}
+                  <div className="space-y-2 rounded-lg border border-border/80 bg-muted/30 p-3">
+                    <div className="flex items-center justify-between text-xs font-semibold">
+                      <span className="flex items-center gap-1.5 text-foreground">
+                        <Paperclip className="size-3.5 text-primary" />
+                        Work Evidence & Deliverables
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">
+                        Click samples or type custom
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {SAMPLE_ATTACHMENTS.map((sample) => (
+                        <button
+                          key={sample}
+                          type="button"
+                          onClick={() => addAttachment(sample)}
+                          className="rounded border border-border bg-background px-2 py-0.5 text-[11px] font-medium text-foreground hover:bg-accent cursor-pointer"
+                        >
+                          + {sample}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Attached files list */}
+                    {draft.attachments.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-2">
+                        {draft.attachments.map((file) => (
+                          <span
+                            key={file}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-foreground"
+                          >
+                            📄 {file}
+                            <button
+                              type="button"
+                              onClick={() => removeAttachment(file)}
+                              className="text-muted-foreground hover:text-destructive cursor-pointer"
+                            >
+                              <X className="size-3" />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Fixed Footer */}
+            <DialogFooter className="px-6 py-3.5 border-t border-border/70 bg-muted/40 shrink-0 flex flex-row items-center justify-between gap-2">
+              <div className="text-xs text-muted-foreground hidden sm:block">
+                {draft.title.trim() && draft.description.trim().length >= 3 ? (
+                  <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                    ✓ Ready to submit
+                  </span>
+                ) : (
+                  <span>Required: title & at least 3 characters description</span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 ml-auto">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setOpen(false)}
+                  className="cursor-pointer text-xs sm:text-sm"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={!draft.title.trim()}
+                  onClick={() => saveDraft(false)}
+                  className="cursor-pointer text-xs sm:text-sm"
+                >
+                  Save as Draft
+                </Button>
+                <Button
+                  type="button"
+                  disabled={!draft.title.trim() || draft.description.trim().length < 3}
+                  onClick={() => saveDraft(true)}
+                  className="cursor-pointer text-xs sm:text-sm"
+                >
+                  <Send className="size-4" />
+                  Submit for Approval
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </RoleGuard>
   );
 }
