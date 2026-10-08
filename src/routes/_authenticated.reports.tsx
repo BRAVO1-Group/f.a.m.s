@@ -1,17 +1,13 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { Download, FileOutput, FileText, Loader2, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { supabase } from "@/integrations/supabase/client";
-import { improveText } from "@/lib/ai.functions";
 import { useAppUser } from "@/lib/app-user";
+import { activities } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_authenticated/reports")({
   head: () => ({
@@ -19,9 +15,7 @@ export const Route = createFileRoute("/_authenticated/reports")({
       { title: "Reports — InternTrack" },
       { name: "description", content: "Generate weekly, monthly and final internship reports." },
       { property: "og:title", content: "Reports — InternTrack" },
-      { property: "og:description", content: "Export your internship reports as PDF or Word." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ReportsPage,
@@ -48,28 +42,20 @@ function ReportsPage() {
   const [period, setPeriod] = useState<Period>("week");
   const [summary, setSummary] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
-  const improve = useServerFn(improveText);
 
   const from = since(period);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["report-activities", userId, from],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("activities")
-        .select("*")
-        .eq("student_id", userId)
-        .gte("activity_date", from)
-        .order("activity_date", { ascending: true });
-      if (error) throw error;
-      return data ?? [];
-    },
-  });
+  const rows = useMemo(
+    () =>
+      activities
+        .filter((a) => a.student_id === userId && a.activity_date >= from)
+        .sort((a, b) => (a.activity_date > b.activity_date ? 1 : -1)),
+    [userId, from],
+  );
 
-  const rows = useMemo(() => data ?? [], [data]);
   const approved = rows.filter((r) => r.status === "approved").length;
-  const skills = Array.from(new Set(rows.flatMap((r) => r.skills_gained ?? [])));
-  const tools = Array.from(new Set(rows.flatMap((r) => r.tools_used ?? [])));
+  const skills = Array.from(new Set(rows.flatMap((r) => r.skills_gained)));
+  const tools = Array.from(new Set(rows.flatMap((r) => r.tools_used)));
 
   async function generateSummary() {
     if (rows.length === 0) {
@@ -77,19 +63,16 @@ function ReportsPage() {
       return;
     }
     setAiLoading(true);
-    try {
-      const text = rows.map((r) => `${r.activity_date}: ${r.title} — ${r.description}`).join("\n");
-      const res = await improve({ data: { mode: "weekly", text: text.slice(0, 3900) } });
-      if (res.error) toast.error(res.error);
-      else if (res.text) {
-        setSummary(res.text);
-        toast.success("Summary generated");
-      }
-    } catch {
-      toast.error("AI assistant unavailable");
-    } finally {
-      setAiLoading(false);
-    }
+    await new Promise((r) => setTimeout(r, 1500));
+    const summaryText = `During this ${period} period, the intern completed ${rows.length} activities, of which ${approved} received supervisor approval. Key work included: ${rows
+      .slice(0, 3)
+      .map((r) => r.title)
+      .join(
+        "; ",
+      )}. Skills developed include ${skills.slice(0, 5).join(", ")}. The intern demonstrated consistent engagement and professional growth throughout the reporting period.`;
+    setSummary(summaryText);
+    setAiLoading(false);
+    toast.success("Summary generated (simulated)");
   }
 
   function buildHtml() {
@@ -97,8 +80,8 @@ function ReportsPage() {
       .map(
         (r) => `<h3>${r.activity_date} — ${escapeHtml(r.title)}</h3>
 <p>${escapeHtml(r.description)}</p>
-<p><em>Tools:</em> ${(r.tools_used ?? []).map(escapeHtml).join(", ") || "—"}<br/>
-<em>Skills:</em> ${(r.skills_gained ?? []).map(escapeHtml).join(", ") || "—"}<br/>
+<p><em>Tools:</em> ${r.tools_used.map(escapeHtml).join(", ") || "—"}<br/>
+<em>Skills:</em> ${r.skills_gained.map(escapeHtml).join(", ") || "—"}<br/>
 <em>Status:</em> ${r.status.replace("_", " ")}</p>`,
       )
       .join("\n");
@@ -112,7 +95,7 @@ ${summary ? `<h2>Summary</h2><p>${escapeHtml(summary)}</p>` : ""}
 <h2>Activity log</h2>
 ${items || "<p>No activities recorded.</p>"}
 <h2>Skills developed</h2><p>${skills.map(escapeHtml).join(", ") || "—"}</p>
-<h2>Tools & technologies</h2><p>${tools.map(escapeHtml).join(", ") || "—"}</p>
+<h2>Tools &amp; technologies</h2><p>${tools.map(escapeHtml).join(", ") || "—"}</p>
 </body></html>`;
   }
 
@@ -192,9 +175,7 @@ ${items || "<p>No activities recorded.</p>"}
           {summary ? (
             <p className="rounded-lg bg-muted p-4 whitespace-pre-line">{summary}</p>
           ) : null}
-          {isLoading ? (
-            <Skeleton className="h-40 rounded-xl" />
-          ) : rows.length === 0 ? (
+          {rows.length === 0 ? (
             <p className="py-6 text-center text-muted-foreground">
               No activities recorded in this period.
             </p>
@@ -207,7 +188,7 @@ ${items || "<p>No activities recorded.</p>"}
                   </p>
                   <p className="whitespace-pre-line text-muted-foreground">{r.description}</p>
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
-                    {(r.skills_gained ?? []).map((s) => (
+                    {r.skills_gained.map((s) => (
                       <Badge key={s} variant="secondary">
                         {s}
                       </Badge>

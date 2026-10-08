@@ -3,21 +3,34 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   BookOpen,
   CalendarCheck,
+  Check,
+  ChevronDown,
   ClipboardList,
   FileBarChart,
   GraduationCap,
   LayoutDashboard,
   LogOut,
   Menu,
+  Milestone,
   Shield,
+  Sparkles,
   User as UserIcon,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { ROLE_LABELS, useSignOut, type AppRole } from "@/lib/auth";
+import { ROLE_LABELS, setDemoUser, useSignOut, type AppRole } from "@/lib/auth";
+import { DEMO_USERS } from "@/lib/mock-data";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; roles: AppRole[] };
 
@@ -29,8 +42,19 @@ const NAV: NavItem[] = [
     roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
   },
   { to: "/logbook", label: "Digital Logbook", icon: BookOpen, roles: ["student"] },
+  {
+    to: "/milestones",
+    label: "Milestones Roadmap",
+    icon: Milestone,
+    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+  },
   { to: "/attendance", label: "Attendance", icon: CalendarCheck, roles: ["student"] },
-  { to: "/reports", label: "Reports", icon: FileBarChart, roles: ["student"] },
+  {
+    to: "/reports",
+    label: "Reports",
+    icon: FileBarChart,
+    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+  },
   {
     to: "/review",
     label: "Review Queue",
@@ -54,18 +78,21 @@ const NAV: NavItem[] = [
 export function AppShell({
   children,
   role,
+  roles,
   name,
   email,
 }: {
   children: ReactNode;
   role: AppRole;
+  roles?: AppRole[];
   name: string;
   email: string;
 }) {
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const signOut = useSignOut();
-  const items = NAV.filter((i) => i.roles.includes(role));
+  const effectiveRoles = roles && roles.length > 0 ? roles : [role];
+  const items = NAV.filter((i) => i.roles.some((r) => effectiveRoles.includes(r)));
   const initials =
     (name || email)
       .split(" ")
@@ -154,13 +181,77 @@ export function AppShell({
       )}
 
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-border bg-card/80 px-4 py-3 backdrop-blur lg:px-8">
-          <button className="lg:hidden" onClick={() => setOpen(true)} aria-label="Open navigation">
-            <Menu className="size-5" />
-          </button>
-          <Badge variant="secondary" className="font-medium">
-            {ROLE_LABELS[role]} workspace
-          </Badge>
+        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card/80 px-4 py-3 backdrop-blur lg:px-8">
+          <div className="flex items-center gap-3">
+            <button
+              className="lg:hidden"
+              onClick={() => setOpen(true)}
+              aria-label="Open navigation"
+            >
+              <Menu className="size-5" />
+            </button>
+            <div className="hidden items-center gap-2 sm:flex">
+              <Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary">
+                {ROLE_LABELS[role]}
+              </Badge>
+              <span className="text-xs text-muted-foreground">Workspace</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium shadow-xs transition-colors hover:bg-accent focus:outline-hidden"
+                >
+                  <Sparkles className="size-3.5 text-amber-500" />
+                  <span className="hidden sm:inline text-muted-foreground">Switch Role:</span>
+                  <span className="font-semibold text-foreground">{name || email}</span>
+                  <ChevronDown className="size-3 text-muted-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64">
+                <DropdownMenuLabel className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+                  <Sparkles className="size-3.5 text-amber-500" />
+                  Instant Persona Switcher
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {DEMO_USERS.map((user) => {
+                  const isCurrent = user.email === email;
+                  return (
+                    <DropdownMenuItem
+                      key={user.id}
+                      onClick={() => {
+                        const targetRoles =
+                          user.roles && user.roles.length > 0 ? user.roles : [user.role];
+                        const targetAllowedRoutes = NAV.filter((i) =>
+                          i.roles.some((r) => targetRoles.includes(r)),
+                        ).map((i) => i.to);
+                        setDemoUser(user.id);
+                        window.dispatchEvent(new Event("demo-auth-change"));
+                        if (!targetAllowedRoutes.includes(pathname)) {
+                          window.location.href = "/dashboard";
+                        }
+                      }}
+                      className={cn(
+                        "flex items-center justify-between py-2 text-xs cursor-pointer",
+                        isCurrent && "bg-accent/70 font-medium",
+                      )}
+                    >
+                      <div className="min-w-0 pr-2">
+                        <p className="truncate font-medium text-foreground">{user.full_name}</p>
+                        <p className="truncate text-[10px] text-muted-foreground">
+                          {ROLE_LABELS[user.role]}
+                        </p>
+                      </div>
+                      {isCurrent && <Check className="size-4 text-primary shrink-0" />}
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </header>
         <main className="px-4 py-6 lg:px-8 lg:py-8">{children}</main>
       </div>
