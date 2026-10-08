@@ -19,13 +19,6 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const ROLE_ICONS: Record<string, string> = {
-  student: "🎓",
-  supervisor: "👔",
-  org_admin: "🏢",
-  uni_admin: "🏛️",
-};
-
 function AuthPage() {
   const navigate = useNavigate();
 
@@ -62,7 +55,14 @@ function AuthPage() {
                 onClick={() => signInAs(user.id)}
                 className="group flex w-full items-center gap-4 rounded-xl border border-border bg-card p-4 text-left transition-all hover:border-primary/40 hover:bg-primary/5 hover:shadow-card focus:outline-none focus:ring-2 focus:ring-primary/50"
               >
-                <span className="text-3xl">{ROLE_ICONS[user.role] ?? "👤"}</span>
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 font-display text-lg font-semibold text-primary">
+                  {user.full_name
+                    .split(" ")
+                    .map((part) => part[0])
+                    .slice(0, 2)
+                    .join("")
+                    .toUpperCase()}
+                </span>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm leading-none">{user.full_name}</p>
                   <p className="mt-1 truncate text-xs text-muted-foreground">{user.email}</p>

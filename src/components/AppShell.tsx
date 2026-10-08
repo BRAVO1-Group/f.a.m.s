@@ -13,7 +13,6 @@ import {
   Menu,
   Milestone,
   Shield,
-  Sparkles,
   User as UserIcon,
   X,
 } from "lucide-react";
@@ -117,7 +116,7 @@ export function AppShell({
           <div>
             <p className="font-display text-base font-semibold leading-none">InternTrack</p>
             <p className="mt-1 text-[11px] uppercase tracking-widest text-sidebar-foreground/60">
-              Smart Logbook
+              INTERNSHIP WORKSPACE
             </p>
           </div>
           <button
@@ -194,7 +193,6 @@ export function AppShell({
               <Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary">
                 {ROLE_LABELS[role]}
               </Badge>
-              <span className="text-xs text-muted-foreground">Workspace</span>
             </div>
           </div>
 
@@ -205,16 +203,14 @@ export function AppShell({
                   type="button"
                   className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium shadow-xs transition-colors hover:bg-accent focus:outline-hidden"
                 >
-                  <Sparkles className="size-3.5 text-amber-500" />
-                  <span className="hidden sm:inline text-muted-foreground">Switch Role:</span>
+                  <span className="hidden sm:inline text-muted-foreground">Change profile</span>
                   <span className="font-semibold text-foreground">{name || email}</span>
                   <ChevronDown className="size-3 text-muted-foreground" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64">
-                <DropdownMenuLabel className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
-                  <Sparkles className="size-3.5 text-amber-500" />
-                  Instant Persona Switcher
+                <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground">
+                  Demo profiles
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {DEMO_USERS.map((user) => {
