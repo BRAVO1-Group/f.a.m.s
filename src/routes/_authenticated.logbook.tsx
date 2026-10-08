@@ -1,7 +1,5 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { FilePenLine, Loader2, Plus, Search, Send, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -18,10 +16,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Skeleton } from "@/components/ui/skeleton";
-import { supabase } from "@/integrations/supabase/client";
-import { improveText } from "@/lib/ai.functions";
 import { useAppUser } from "@/lib/app-user";
+import { activities, internships, uid, type MockActivity } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_authenticated/logbook")({
   head: () => ({
@@ -32,9 +28,7 @@ export const Route = createFileRoute("/_authenticated/logbook")({
         content: "Record daily internship activities and submit for approval.",
       },
       { property: "og:title", content: "Digital Logbook — InternTrack" },
-      { property: "og:description", content: "Your searchable digital internship logbook." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: LogbookPage,
@@ -74,115 +68,105 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "
 
 function LogbookPage() {
   const { userId } = useAppUser();
-  const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Draft>(emptyDraft());
   const [search, setSearch] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
-  const improve = useServerFn(improveText);
+  const [, forceUpdate] = useState(0);
+  const refresh = () => forceUpdate((n) => n + 1);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["activities", userId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("activities")
-        .select("*")
-        .eq("student_id", userId)
-        .order("activity_date", { ascending: false });
-      if (error) throw error;
-      return data ?? [];
-    },
-  });
-
-  const internship = useQuery({
-    queryKey: ["my-internship", userId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("internships")
-        .select("id")
-        .eq("student_id", userId)
-        .order("start_date", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  const save = useMutation({
-    mutationFn: async ({ d, submit }: { d: Draft; submit: boolean }) => {
-      const payload = {
-        student_id: userId,
-        internship_id: internship.data?.id ?? null,
-        activity_date: d.activity_date,
-        arrival_time: d.arrival_time || null,
-        departure_time: d.departure_time || null,
-        title: d.title.trim(),
-        description: d.description.trim(),
-        tools_used: d.tools_used
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-        skills_gained: d.skills_gained
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-        challenges: d.challenges.trim() || null,
-        solutions: d.solutions.trim() || null,
-        status: (submit ? "submitted" : "draft") as "submitted" | "draft",
-        submitted_at: submit ? new Date().toISOString() : null,
-      };
-      const res = d.id
-        ? await supabase.from("activities").update(payload).eq("id", d.id)
-        : await supabase.from("activities").insert(payload);
-      if (res.error) throw res.error;
-    },
-    onSuccess: (_r, vars) => {
-      qc.invalidateQueries({ queryKey: ["activities", userId] });
-      setOpen(false);
-      setDraft(emptyDraft());
-      toast.success(vars.submit ? "Submitted for supervisor approval" : "Saved as draft");
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  const remove = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from("activities").delete().eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["activities", userId] });
-      toast.success("Entry deleted");
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  const submitExisting = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from("activities")
-        .update({ status: "submitted", submitted_at: new Date().toISOString() })
-        .eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["activities", userId] });
-      toast.success("Sent to your supervisor");
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
+  const myInternship = internships.find((i) => i.student_id === userId);
+  const data = activities.filter((a) => a.student_id === userId);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return data ?? [];
-    return (data ?? []).filter(
-      (a) =>
-        a.title.toLowerCase().includes(q) ||
-        a.description.toLowerCase().includes(q) ||
-        (a.tools_used ?? []).join(" ").toLowerCase().includes(q),
-    );
-  }, [data, search]);
+    if (!q) return data.slice().sort((a, b) => (a.activity_date < b.activity_date ? 1 : -1));
+    return data
+      .filter(
+        (a) =>
+          a.title.toLowerCase().includes(q) ||
+          a.description.toLowerCase().includes(q) ||
+          a.tools_used.join(" ").toLowerCase().includes(q),
+      )
+      .sort((a, b) => (a.activity_date < b.activity_date ? 1 : -1));
+  }, [data, search /* forceUpdate dep via , */]);
+
+  function saveDraft(submit: boolean) {
+    if (!draft.title.trim()) {
+      toast.error("Title is required.");
+      return;
+    }
+    const idx = activities.findIndex((a) => a.id === draft.id);
+    const entry: MockActivity = {
+      id: draft.id ?? uid(),
+      student_id: userId,
+      internship_id: myInternship?.id ?? "intern-1",
+      activity_date: draft.activity_date,
+      arrival_time: draft.arrival_time || null,
+      departure_time: draft.departure_time || null,
+      title: draft.title.trim(),
+      description: draft.description.trim(),
+      tools_used: draft.tools_used
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      skills_gained: draft.skills_gained
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      challenges: draft.challenges.trim() || null,
+      solutions: draft.solutions.trim() || null,
+      status: submit ? "submitted" : "draft",
+      submitted_at: submit ? new Date().toISOString() : null,
+      supervisor_feedback: null,
+      reviewed_by: null,
+      reviewed_at: null,
+    };
+    if (idx >= 0) {
+      activities[idx] = entry;
+    } else {
+      activities.unshift(entry);
+    }
+    setOpen(false);
+    setDraft(emptyDraft());
+    refresh();
+    toast.success(submit ? "Submitted for supervisor approval" : "Saved as draft");
+  }
+
+  function deleteEntry(id: string) {
+    const idx = activities.findIndex((a) => a.id === id);
+    if (idx >= 0) activities.splice(idx, 1);
+    refresh();
+    toast.success("Entry deleted");
+  }
+
+  function submitExisting(id: string) {
+    const idx = activities.findIndex((a) => a.id === id);
+    if (idx >= 0) {
+      const a = activities[idx]!;
+      activities[idx] = {
+        id: a.id,
+        student_id: a.student_id,
+        internship_id: a.internship_id,
+        activity_date: a.activity_date,
+        arrival_time: a.arrival_time,
+        departure_time: a.departure_time,
+        title: a.title,
+        description: a.description,
+        tools_used: a.tools_used,
+        skills_gained: a.skills_gained,
+        challenges: a.challenges,
+        solutions: a.solutions,
+        status: "submitted",
+        submitted_at: new Date().toISOString(),
+        supervisor_feedback: a.supervisor_feedback,
+        reviewed_by: a.reviewed_by,
+        reviewed_at: a.reviewed_at,
+      };
+    }
+    refresh();
+    toast.success("Sent to your supervisor");
+  }
 
   async function runAi() {
     if (draft.description.trim().length < 3) {
@@ -190,20 +174,13 @@ function LogbookPage() {
       return;
     }
     setAiLoading(true);
-    try {
-      const res = await improve({
-        data: { mode: "activity", text: draft.description, context: draft.title || undefined },
-      });
-      if (res.error) toast.error(res.error);
-      else if (res.text) {
-        setDraft((d) => ({ ...d, description: res.text }));
-        toast.success("Description improved");
-      }
-    } catch {
-      toast.error("AI assistant unavailable");
-    } finally {
-      setAiLoading(false);
-    }
+    await new Promise((r) => setTimeout(r, 1200));
+    const improved =
+      draft.description.trim() +
+      " This task was completed successfully, demonstrating strong technical aptitude and problem-solving skills. The outcome contributed meaningfully to the team's sprint objectives.";
+    setDraft((d) => ({ ...d, description: improved }));
+    setAiLoading(false);
+    toast.success("Description improved (simulated)");
   }
 
   return (
@@ -235,16 +212,10 @@ function LogbookPage() {
         />
       </div>
 
-      {isLoading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-28 rounded-xl" />
-          ))}
-        </div>
-      ) : filtered.length === 0 ? (
+      {filtered.length === 0 ? (
         <Card className="shadow-card">
           <CardContent className="p-8 text-center text-sm text-muted-foreground">
-            No entries yet. Click “New entry” to record your first activity.
+            No entries yet. Click "New entry" to record your first activity.
           </CardContent>
         </Card>
       ) : (
@@ -269,12 +240,12 @@ function LogbookPage() {
               <CardContent className="space-y-3 text-sm">
                 <p className="whitespace-pre-line text-muted-foreground">{a.description}</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {(a.tools_used ?? []).map((t) => (
+                  {a.tools_used.map((t) => (
                     <Badge key={t} variant="outline">
                       {t}
                     </Badge>
                   ))}
-                  {(a.skills_gained ?? []).map((s) => (
+                  {a.skills_gained.map((s) => (
                     <Badge key={s} variant="secondary">
                       {s}
                     </Badge>
@@ -299,8 +270,8 @@ function LogbookPage() {
                           departure_time: a.departure_time?.slice(0, 5) ?? "",
                           title: a.title,
                           description: a.description,
-                          tools_used: (a.tools_used ?? []).join(", "),
-                          skills_gained: (a.skills_gained ?? []).join(", "),
+                          tools_used: a.tools_used.join(", "),
+                          skills_gained: a.skills_gained.join(", "),
                           challenges: a.challenges ?? "",
                           solutions: a.solutions ?? "",
                         });
@@ -309,14 +280,14 @@ function LogbookPage() {
                     >
                       Edit
                     </Button>
-                    <Button size="sm" onClick={() => submitExisting.mutate(a.id)}>
+                    <Button size="sm" onClick={() => submitExisting(a.id)}>
                       <Send className="size-4" /> Submit
                     </Button>
                     <Button
                       size="sm"
                       variant="ghost"
                       className="text-destructive"
-                      onClick={() => remove.mutate(a.id)}
+                      onClick={() => deleteEntry(a.id)}
                     >
                       <Trash2 className="size-4" />
                     </Button>
@@ -438,22 +409,16 @@ function LogbookPage() {
           <DialogFooter className="gap-2 sm:gap-2">
             <Button
               variant="outline"
-              disabled={save.isPending || !draft.title.trim()}
-              onClick={() => save.mutate({ d: draft, submit: false })}
+              disabled={!draft.title.trim()}
+              onClick={() => saveDraft(false)}
             >
               Save draft
             </Button>
             <Button
-              disabled={
-                save.isPending || !draft.title.trim() || draft.description.trim().length < 3
-              }
-              onClick={() => save.mutate({ d: draft, submit: true })}
+              disabled={!draft.title.trim() || draft.description.trim().length < 3}
+              onClick={() => saveDraft(true)}
             >
-              {save.isPending ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <Send className="size-4" />
-              )}
+              <Send className="size-4" />
               Submit for approval
             </Button>
           </DialogFooter>
