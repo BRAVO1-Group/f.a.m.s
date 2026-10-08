@@ -20,65 +20,65 @@ System Users
 
 Students should have a personal dashboard where they can:
 
- Create and manage their internship profile.
+Create and manage their internship profile.
 
- View internship company details.
+View internship company details.
 
- Record daily activities digitally.
+Record daily activities digitally.
 
- Submit daily reports.
+Submit daily reports.
 
- Upload evidence of completed work (images, documents, screenshots).
+Upload evidence of completed work (images, documents, screenshots).
 
- Track attendance.
+Track attendance.
 
- View supervisor feedback.
+View supervisor feedback.
 
- Generate weekly and final internship reports.
+Generate weekly and final internship reports.
 
 Daily Activity Entry Form:
 
 Students should record:
 
- Date
+Date
 
- Arrival time
+Arrival time
 
- Departure time
+Departure time
 
- Activity title
+Activity title
 
- Detailed description of work done
+Detailed description of work done
 
- Tools/technologies used
+Tools/technologies used
 
- Skills acquired
+Skills acquired
 
- Challenges faced
+Challenges faced
 
- Solutions provided
+Solutions provided
 
- Attachments/evidence
+Attachments/evidence
 
- Submit for supervisor approval
+Submit for supervisor approval
 
 2. Supervisor Dashboard
 
 Supervisors should be able to:
 
- View assigned students.
+View assigned students.
 
- Monitor daily activities.
+Monitor daily activities.
 
- Review submitted reports.
+Review submitted reports.
 
- Approve or reject activities.
+Approve or reject activities.
 
- Add comments and recommendations.
+Add comments and recommendations.
 
- Track attendance.
+Track attendance.
 
- Evaluate student performance.
+Evaluate student performance.
 
 Supervisor actions:
 
@@ -90,41 +90,41 @@ Supervisor actions:
 
 The university admin should manage:
 
- Students
+Students
 
- Internship organizations
+Internship organizations
 
- Supervisors
+Supervisors
 
- Internship periods
+Internship periods
 
- Assessment reports
+Assessment reports
 
 Features:
 
- View internship progress statistics.
+View internship progress statistics.
 
- Monitor student participation.
+Monitor student participation.
 
- Download reports.
+Download reports.
 
- Identify inactive students.
+Identify inactive students.
 
- Generate internship completion summaries.
+Generate internship completion summaries.
 
 4. Organization/Company Dashboard
 
 Companies should be able to:
 
- Register interns.
+Register interns.
 
- Assign supervisors.
+Assign supervisors.
 
- Monitor intern progress.
+Monitor intern progress.
 
- Review completed tasks.
+Review completed tasks.
 
- Submit final evaluations.
+Submit final evaluations.
 
 Core System Features
 
@@ -134,67 +134,67 @@ Replace physical logbooks with a smart digital version.
 
 Features:
 
- Automatic date recording.
+Automatic date recording.
 
- Search previous activities.
+Search previous activities.
 
- Edit before approval.
+Edit before approval.
 
- Approval history.
+Approval history.
 
- Activity timeline.
+Activity timeline.
 
 Attendance Management
 
 Implement:
 
- Digital check-in/check-out.
+Digital check-in/check-out.
 
- Automatic timestamps.
+Automatic timestamps.
 
- Attendance history.
+Attendance history.
 
- Attendance percentage calculation.
+Attendance percentage calculation.
 
 Optional advanced features:
 
- QR code attendance.
+QR code attendance.
 
- GPS verification.
+GPS verification.
 
- Face verification.
+Face verification.
 
 Report Generation
 
 The system should automatically generate:
 
- Daily reports
+Daily reports
 
- Weekly reports
+Weekly reports
 
- Monthly reports
+Monthly reports
 
- Final internship report
+Final internship report
 
 Export formats:
 
- PDF
+PDF
 
- Word document
+Word document
 
 Performance Monitoring
 
 Dashboard analytics:
 
- Internship completion percentage.
+Internship completion percentage.
 
- Number of activities completed.
+Number of activities completed.
 
- Skills developed.
+Skills developed.
 
- Attendance rate.
+Attendance rate.
 
- Supervisor ratings.
+Supervisor ratings.
 
 Use charts and visual statistics.
 
@@ -214,13 +214,13 @@ AI improves:
 
 AI should help with:
 
- Activity descriptions.
+Activity descriptions.
 
- Weekly summaries.
+Weekly summaries.
 
- Skill identification.
+Skill identification.
 
- Report formatting.
+Report formatting.
 
 Notification System
 
@@ -228,115 +228,115 @@ The system should notify users about:
 
 Students:
 
- Pending approvals.
+Pending approvals.
 
- Supervisor comments.
+Supervisor comments.
 
- Missing reports.
+Missing reports.
 
 Supervisors:
 
- New submissions.
+New submissions.
 
- Pending evaluations.
+Pending evaluations.
 
 Security Requirements
 
 Implement:
 
- Secure authentication.
+Secure authentication.
 
- Role-based access control.
+Role-based access control.
 
- Data privacy.
+Data privacy.
 
- Password encryption.
+Password encryption.
 
- Backup system.
+Backup system.
 
 User roles:
 
- Student
+Student
 
- Supervisor
+Supervisor
 
- Organization Admin
+Organization Admin
 
- University Admin
+University Admin
 
- System Administrator
+System Administrator
 
 UI/UX Requirements
 
 Design style:
 
- Modern professional dashboard.
+Modern professional dashboard.
 
- Clean academic/business appearance.
+Clean academic/business appearance.
 
- Responsive design.
+Responsive design.
 
- Mobile-friendly interface.
+Mobile-friendly interface.
 
 Include:
 
- Sidebar navigation.
+Sidebar navigation.
 
- Dashboard cards.
+Dashboard cards.
 
- Progress charts.
+Progress charts.
 
- Activity timeline.
+Activity timeline.
 
- Calendar view.
+Calendar view.
 
- Profile management.
+Profile management.
 
 Recommended Technology Stack
 
 Frontend:
 
- React.js / Next.js
+React.js / Next.js
 
- Tailwind CSS
+Tailwind CSS
 
 Backend:
 
- Laravel API / Django / NestJS
+Laravel API / Django / NestJS
 
 Database:
 
- PostgreSQL / MySQL
+PostgreSQL / MySQL
 
 Authentication:
 
- JWT / Laravel Sanctum
+JWT / Laravel Sanctum
 
 Storage:
 
- Cloudinary / Firebase Storage
+Cloudinary / Firebase Storage
 
 Deployment:
 
- Vercel + Cloud hosting
+Vercel + Cloud hosting
 
 Expected Outcome
 
 The final system should provide a complete digital solution that improves internship management by:
 
- Reducing dependence on paper logbooks.
+Reducing dependence on paper logbooks.
 
- Improving communication between students and supervisors.
+Improving communication between students and supervisors.
 
- Providing real-time internship monitoring.
+Providing real-time internship monitoring.
 
- Increasing accuracy and transparency of internship records.
+Increasing accuracy and transparency of internship records.
 
- Making final report preparation faster and easier.
+Making final report preparation faster and easier.
 
 Project Category: Education Technology / Internship Management System
 
-Target Users: Universities, Internship Organizations, Supervisors, and Students.      create it and we see
+Target Users: Universities, Internship Organizations, Supervisors, and Students. create it and we see
 
 This project was built with [Lovable](https://lovable.dev).
 

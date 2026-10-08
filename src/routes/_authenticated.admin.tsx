@@ -40,9 +40,15 @@ export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
       { title: "Administration — InternTrack" },
-      { name: "description", content: "Manage students, organizations, supervisors and placements." },
+      {
+        name: "description",
+        content: "Manage students, organizations, supervisors and placements.",
+      },
       { property: "og:title", content: "Administration — InternTrack" },
-      { property: "og:description", content: "Monitor internship progress across your institution." },
+      {
+        property: "og:description",
+        content: "Monitor internship progress across your institution.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -55,7 +61,13 @@ function AdminPage() {
   const qc = useQueryClient();
   const [orgOpen, setOrgOpen] = useState(false);
   const [placeOpen, setPlaceOpen] = useState(false);
-  const [org, setOrg] = useState({ name: "", industry: "", address: "", contact_person: "", contact_email: "" });
+  const [org, setOrg] = useState({
+    name: "",
+    industry: "",
+    address: "",
+    contact_person: "",
+    contact_email: "",
+  });
   const [place, setPlace] = useState({
     student_id: "",
     organization_id: "",
@@ -178,7 +190,10 @@ function AdminPage() {
         <Stat label="Students" value={students.length} />
         <Stat label="Supervisors" value={supervisors.length} />
         <Stat label="Organizations" value={orgs.data?.length ?? 0} />
-        <Stat label="Active placements" value={(internships.data ?? []).filter((i) => i.status === "active").length} />
+        <Stat
+          label="Active placements"
+          value={(internships.data ?? []).filter((i) => i.status === "active").length}
+        />
       </div>
 
       <Tabs defaultValue="students">
@@ -350,8 +365,16 @@ function AdminPage() {
           </DialogHeader>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Name" value={org.name} onChange={(v) => setOrg({ ...org, name: v })} />
-            <Field label="Industry" value={org.industry} onChange={(v) => setOrg({ ...org, industry: v })} />
-            <Field label="Address" value={org.address} onChange={(v) => setOrg({ ...org, address: v })} />
+            <Field
+              label="Industry"
+              value={org.industry}
+              onChange={(v) => setOrg({ ...org, industry: v })}
+            />
+            <Field
+              label="Address"
+              value={org.address}
+              onChange={(v) => setOrg({ ...org, address: v })}
+            />
             <Field
               label="Contact person"
               value={org.contact_person}
@@ -378,7 +401,9 @@ function AdminPage() {
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>New placement</DialogTitle>
-            <DialogDescription>Assign a student to an organization and supervisor.</DialogDescription>
+            <DialogDescription>
+              Assign a student to an organization and supervisor.
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5 sm:col-span-2">
@@ -470,7 +495,8 @@ function AdminPage() {
               disabled={createPlacement.isPending || !place.student_id}
               onClick={() => createPlacement.mutate()}
             >
-              {createPlacement.isPending ? <Loader2 className="size-4 animate-spin" /> : null} Create
+              {createPlacement.isPending ? <Loader2 className="size-4 animate-spin" /> : null}{" "}
+              Create
             </Button>
           </DialogFooter>
         </DialogContent>

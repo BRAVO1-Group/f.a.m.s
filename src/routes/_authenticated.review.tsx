@@ -16,9 +16,15 @@ export const Route = createFileRoute("/_authenticated/review")({
   head: () => ({
     meta: [
       { title: "Review Queue — InternTrack" },
-      { name: "description", content: "Review, approve and give feedback on intern activity reports." },
+      {
+        name: "description",
+        content: "Review, approve and give feedback on intern activity reports.",
+      },
       { property: "og:title", content: "Review Queue — InternTrack" },
-      { property: "og:description", content: "Approve or request corrections on submitted activities." },
+      {
+        property: "og:description",
+        content: "Approve or request corrections on submitted activities.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -67,13 +73,7 @@ function ReviewPage() {
   };
 
   const decide = useMutation({
-    mutationFn: async ({
-      id,
-      status,
-    }: {
-      id: string;
-      status: "approved" | "needs_correction";
-    }) => {
+    mutationFn: async ({ id, status }: { id: string; status: "approved" | "needs_correction" }) => {
       const { error } = await supabase
         .from("activities")
         .update({

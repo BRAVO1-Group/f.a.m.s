@@ -1,22 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Activity,
-  CalendarCheck,
-  CheckCircle2,
-  ClipboardList,
-  Clock,
-  Users,
-} from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Activity, CalendarCheck, CheckCircle2, ClipboardList, Clock, Users } from "lucide-react";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -88,7 +73,10 @@ function DashboardPage() {
           .select("id,title,status,activity_date,skills_gained")
           .eq("student_id", userId)
           .order("activity_date", { ascending: false }),
-        supabase.from("attendance").select("attendance_date,check_in,check_out").eq("student_id", userId),
+        supabase
+          .from("attendance")
+          .select("attendance_date,check_in,check_out")
+          .eq("student_id", userId),
       ]);
       if (internship.error) throw internship.error;
       if (activities.error) throw activities.error;
@@ -187,15 +175,30 @@ function DashboardPage() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard icon={Activity} label="Activities" value={acts.length} hint={`${approved} approved`} />
-          <StatCard icon={Clock} label="Awaiting review" value={submitted} hint="Submitted entries" />
+          <StatCard
+            icon={Activity}
+            label="Activities"
+            value={acts.length}
+            hint={`${approved} approved`}
+          />
+          <StatCard
+            icon={Clock}
+            label="Awaiting review"
+            value={submitted}
+            hint="Submitted entries"
+          />
           <StatCard
             icon={CalendarCheck}
             label="Attendance"
             value={`${attendanceRate}%`}
             hint={`${presentDays} of ${required} days`}
           />
-          <StatCard icon={CheckCircle2} label="Skills gained" value={skills.size} hint="Unique skills" />
+          <StatCard
+            icon={CheckCircle2}
+            label="Skills gained"
+            value={skills.size}
+            hint="Unique skills"
+          />
         </div>
 
         <div className="grid gap-4 lg:grid-cols-3">
@@ -268,7 +271,12 @@ function DashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard icon={Users} label="Interns" value={internships.length} hint={`${active} active`} />
+        <StatCard
+          icon={Users}
+          label="Interns"
+          value={internships.length}
+          hint={`${active} active`}
+        />
         <StatCard icon={ClipboardList} label="Pending review" value={staff.data?.pending ?? 0} />
         <StatCard icon={Activity} label="Recent entries" value={staff.data?.recent.length ?? 0} />
         <StatCard

@@ -64,21 +64,30 @@ function AuthPage() {
     });
   }, [navigate]);
 
-  async function handleSignIn(e: React.FormEvent) {
+  async function handleSignIn(e: React.FormEvent): Promise<void> {
     e.preventDefault();
     const parsed = signInSchema.safeParse({ email, password });
-    if (!parsed.success) return toast.error(parsed.error.issues[0]!.message);
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0]!.message);
+      return;
+    }
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword(parsed.data);
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     navigate({ to: "/dashboard", replace: true });
   }
 
-  async function handleSignUp(e: React.FormEvent) {
+  async function handleSignUp(e: React.FormEvent): Promise<void> {
     e.preventDefault();
     const parsed = signUpSchema.safeParse({ fullName, email, password });
-    if (!parsed.success) return toast.error(parsed.error.issues[0]!.message);
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0]!.message);
+      return;
+    }
     setLoading(true);
     const { data, error } = await supabase.auth.signUp({
       email: parsed.data.email,
@@ -89,7 +98,10 @@ function AuthPage() {
       },
     });
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     if (data.session) {
       navigate({ to: "/dashboard", replace: true });
     } else {
@@ -97,14 +109,15 @@ function AuthPage() {
     }
   }
 
-  async function handleGoogle() {
+  async function handleGoogle(): Promise<void> {
     setLoading(true);
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
     });
     if (result.error) {
       setLoading(false);
-      return toast.error("Google sign-in failed. Please try again.");
+      toast.error("Google sign-in failed. Please try again.");
+      return;
     }
     if (result.redirected) return;
     navigate({ to: "/dashboard", replace: true });

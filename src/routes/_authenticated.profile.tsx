@@ -99,7 +99,13 @@ function ProfilePage() {
   });
 
   const org = internship.data?.organizations as
-    | { name: string; industry: string | null; address: string | null; contact_person: string | null; contact_email: string | null }
+    | {
+        name: string;
+        industry: string | null;
+        address: string | null;
+        contact_person: string | null;
+        contact_email: string | null;
+      }
     | null
     | undefined;
 
@@ -107,7 +113,9 @@ function ProfilePage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-2xl font-semibold">My profile</h1>
-        <p className="text-sm text-muted-foreground">Your details and current internship placement.</p>
+        <p className="text-sm text-muted-foreground">
+          Your details and current internship placement.
+        </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -201,7 +209,9 @@ function ProfilePage() {
               ) : internship.data ? (
                 <>
                   <p className="font-medium">{org?.name ?? "Organization pending"}</p>
-                  <p className="text-muted-foreground">{internship.data.position || "Position TBC"}</p>
+                  <p className="text-muted-foreground">
+                    {internship.data.position || "Position TBC"}
+                  </p>
                   <p className="text-muted-foreground">
                     {internship.data.start_date} → {internship.data.end_date}
                   </p>

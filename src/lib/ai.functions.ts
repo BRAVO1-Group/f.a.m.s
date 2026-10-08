@@ -19,7 +19,7 @@ const PROMPTS: Record<string, string> = {
 
 export const improveText = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => schema.parse(input))
+  .validator((input: unknown) => schema.parse(input))
   .handler(async ({ data }) => {
     const apiKey = process.env["LOVABLE_API_KEY"];
     if (!apiKey) return { text: "", error: "AI assistant is not configured." };
@@ -50,7 +50,10 @@ export const improveText = createServerFn({ method: "POST" })
       const json = (await res.json()) as {
         choices?: Array<{ message?: { content?: string } }>;
       };
-      return { text: json.choices?.[0]?.message?.content?.trim() ?? "", error: null as string | null };
+      return {
+        text: json.choices?.[0]?.message?.content?.trim() ?? "",
+        error: null as string | null,
+      };
     } catch {
       return { text: "", error: "The AI assistant is unavailable right now." };
     }

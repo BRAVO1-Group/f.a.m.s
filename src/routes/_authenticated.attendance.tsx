@@ -158,7 +158,11 @@ function AttendancePage() {
           </CardHeader>
           <CardContent>
             {!todayRow ? (
-              <Button className="w-full" disabled={checkIn.isPending} onClick={() => checkIn.mutate()}>
+              <Button
+                className="w-full"
+                disabled={checkIn.isPending}
+                onClick={() => checkIn.mutate()}
+              >
                 <LogIn className="size-4" /> Check in
               </Button>
             ) : !todayRow.check_out ? (

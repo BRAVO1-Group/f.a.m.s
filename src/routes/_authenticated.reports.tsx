@@ -158,7 +158,11 @@ ${items || "<p>No activities recorded.</p>"}
 
       <div className="flex flex-wrap gap-2">
         <Button onClick={generateSummary} disabled={aiLoading}>
-          {aiLoading ? <Loader2 className="size-4 animate-spin" /> : <FileOutput className="size-4" />}
+          {aiLoading ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <FileOutput className="size-4" />
+          )}
           Generate summary with AI
         </Button>
         <Button variant="outline" onClick={printPdf}>

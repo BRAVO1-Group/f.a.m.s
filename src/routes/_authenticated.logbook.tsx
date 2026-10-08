@@ -27,7 +27,10 @@ export const Route = createFileRoute("/_authenticated/logbook")({
   head: () => ({
     meta: [
       { title: "Digital Logbook — InternTrack" },
-      { name: "description", content: "Record daily internship activities and submit for approval." },
+      {
+        name: "description",
+        content: "Record daily internship activities and submit for approval.",
+      },
       { property: "og:title", content: "Digital Logbook — InternTrack" },
       { property: "og:description", content: "Your searchable digital internship logbook." },
       { property: "og:type", content: "website" },
@@ -441,10 +444,16 @@ function LogbookPage() {
               Save draft
             </Button>
             <Button
-              disabled={save.isPending || !draft.title.trim() || draft.description.trim().length < 3}
+              disabled={
+                save.isPending || !draft.title.trim() || draft.description.trim().length < 3
+              }
               onClick={() => save.mutate({ d: draft, submit: true })}
             >
-              {save.isPending ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
+              {save.isPending ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Send className="size-4" />
+              )}
               Submit for approval
             </Button>
           </DialogFooter>
