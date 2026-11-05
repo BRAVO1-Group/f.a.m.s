@@ -1,6 +1,7 @@
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
+  Award,
   BookOpen,
   CalendarCheck,
   Check,
@@ -9,11 +10,15 @@ import {
   FileBarChart,
   GraduationCap,
   LayoutDashboard,
+  Lock,
   LogOut,
   Menu,
   Milestone,
   Shield,
   User as UserIcon,
+  UserCheck,
+  UserPlus,
+  Users,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,51 +33,138 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { ROLE_LABELS, setDemoUser, useSignOut, type AppRole } from "@/lib/auth";
+import {
+  ROLE_LABELS,
+  ROLE_TIERS,
+  getDemoUser,
+  setDemoUser,
+  useSignOut,
+  type AppRole,
+} from "@/lib/auth";
 import { DEMO_USERS } from "@/lib/mock-data";
 
-type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; roles: AppRole[] };
+type NavCategory = "core" | "tracking" | "supervision" | "governance" | "account";
+
+type NavItem = {
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  roles: AppRole[];
+  category: NavCategory;
+};
 
 const NAV: NavItem[] = [
+  // ── Core Workspace ──
   {
     to: "/dashboard",
     label: "Dashboard",
     icon: LayoutDashboard,
     roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+    category: "core",
   },
-  { to: "/logbook", label: "Digital Logbook", icon: BookOpen, roles: ["student"] },
+
+  // ── Student Workspace ──
+  {
+    to: "/logbook",
+    label: "Digital Logbook",
+    icon: BookOpen,
+    roles: ["student"],
+    category: "tracking",
+  },
+  {
+    to: "/attendance",
+    label: "Attendance & Clock",
+    icon: CalendarCheck,
+    roles: ["student"],
+    category: "tracking",
+  },
   {
     to: "/milestones",
     label: "Milestones Roadmap",
     icon: Milestone,
     roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+    category: "tracking",
   },
-  { to: "/attendance", label: "Attendance", icon: CalendarCheck, roles: ["student"] },
-  {
-    to: "/reports",
-    label: "Reports",
-    icon: FileBarChart,
-    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
-  },
+
+  // ── Supervisory Controls ──
   {
     to: "/review",
     label: "Review Queue",
     icon: ClipboardList,
     roles: ["supervisor", "org_admin", "uni_admin", "system_admin"],
+    category: "supervision",
+  },
+  {
+    to: "/students",
+    label: "Assigned Interns",
+    icon: Users,
+    roles: ["supervisor", "org_admin", "uni_admin", "system_admin"],
+    category: "supervision",
+  },
+  {
+    to: "/evaluations",
+    label: "Performance Evaluations",
+    icon: Award,
+    roles: ["supervisor", "uni_admin", "system_admin"],
+    category: "supervision",
+  },
+
+  // ── Institutional & RBAC Governance ──
+  {
+    to: "/supervisors",
+    label: "Supervisor Accounts",
+    icon: UserPlus,
+    roles: ["uni_admin", "org_admin", "system_admin"],
+    category: "governance",
+  },
+  {
+    to: "/assignments",
+    label: "Supervisor Pairing",
+    icon: UserCheck,
+    roles: ["uni_admin", "system_admin"],
+    category: "governance",
+  },
+  {
+    to: "/rbac",
+    label: "RBAC Control Matrix",
+    icon: Lock,
+    roles: ["uni_admin", "system_admin"],
+    category: "governance",
   },
   {
     to: "/admin",
-    label: "Administration",
+    label: "Placement Accreditation",
     icon: Shield,
     roles: ["org_admin", "uni_admin", "system_admin"],
+    category: "governance",
   },
+
+  // ── Reports ──
+  {
+    to: "/reports",
+    label: "Reports & Dossier",
+    icon: FileBarChart,
+    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+    category: "core",
+  },
+
+  // ── Account ──
   {
     to: "/profile",
     label: "My Profile",
     icon: UserIcon,
     roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+    category: "account",
   },
 ];
+
+const CATEGORY_LABELS: Record<NavCategory, string> = {
+  core: "Overview",
+  tracking: "Logbook & Tracking",
+  supervision: "Supervisory Controls",
+  governance: "Institutional & RBAC",
+  account: "Account",
+};
 
 export function AppShell({
   children,
@@ -88,12 +180,45 @@ export function AppShell({
   email: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(() => getDemoUser());
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const signOut = useSignOut();
-  const effectiveRoles = roles && roles.length > 0 ? roles : [role];
-  const items = NAV.filter((i) => i.roles.some((r) => effectiveRoles.includes(r)));
+
+  // Listen for real-time persona / role changes
+  useEffect(() => {
+    const handler = () => {
+      setCurrentUser(getDemoUser());
+    };
+    window.addEventListener("demo-auth-change", handler);
+    return () => window.removeEventListener("demo-auth-change", handler);
+  }, []);
+
+  const activeRole: AppRole = currentUser?.role ?? role;
+  const activeRoles: AppRole[] =
+    currentUser?.roles && currentUser.roles.length > 0
+      ? currentUser.roles
+      : roles && roles.length > 0
+        ? roles
+        : [activeRole];
+  const activeName = currentUser?.full_name || name;
+  const activeEmail = currentUser?.email || email;
+  const tier = ROLE_TIERS[activeRole];
+
+  // Filter items matching the active persona's roles
+  const allowedItems = NAV.filter((i) => i.roles.some((r) => activeRoles.includes(r)));
+
+  // Group by category in ordered sequence
+  const categories: NavCategory[] = ["core", "tracking", "supervision", "governance", "account"];
+  const groupedItems = categories
+    .map((cat) => ({
+      category: cat,
+      label: CATEGORY_LABELS[cat],
+      items: allowedItems.filter((i) => i.category === cat),
+    }))
+    .filter((group) => group.items.length > 0);
+
   const initials =
-    (name || email)
+    (activeName || activeEmail)
       .split(" ")
       .map((p) => p[0])
       .filter(Boolean)
@@ -103,24 +228,36 @@ export function AppShell({
 
   return (
     <div className="min-h-screen bg-background">
+      {/* ── Fixed Sidebar ── */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-sidebar text-sidebar-foreground transition-transform lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-sidebar text-sidebar-foreground transition-transform lg:translate-x-0 shadow-lg lg:shadow-none border-r border-sidebar-border",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex items-center gap-2 border-b border-sidebar-border px-5 py-4">
-          <div className="flex size-9 items-center justify-center rounded-lg bg-gradient-accent">
+        {/* Brand Header */}
+        <div className="flex items-center gap-2.5 border-b border-sidebar-border px-5 py-4">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-accent shadow-xs">
             <GraduationCap className="size-5 text-accent-foreground" />
           </div>
-          <div>
-            <p className="font-display text-base font-semibold leading-none">InternTrack</p>
-            <p className="mt-1 text-[11px] uppercase tracking-widest text-sidebar-foreground/60">
-              INTERNSHIP WORKSPACE
+          <div className="min-w-0">
+            <p className="font-display text-base font-bold leading-none tracking-tight">
+              InternTrack
             </p>
+            <div className="mt-1 flex items-center gap-1.5">
+              <Badge
+                variant="outline"
+                className="text-[10px] font-semibold border-sidebar-border text-sidebar-foreground/75 px-1.5 py-0"
+              >
+                Tier {tier.tier}
+              </Badge>
+              <span className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60 font-mono">
+                {ROLE_LABELS[activeRole].split(" ")[0]}
+              </span>
+            </div>
           </div>
           <button
-            className="ml-auto lg:hidden"
+            className="ml-auto lg:hidden text-sidebar-foreground/60 hover:text-sidebar-foreground"
             onClick={() => setOpen(false)}
             aria-label="Close navigation"
           >
@@ -128,71 +265,124 @@ export function AppShell({
           </button>
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-          {items.map((item) => {
-            const active = pathname.startsWith(item.to);
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setOpen(false)}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                  active
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                    : "text-sidebar-foreground/75 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
-                )}
-              >
-                <item.icon className="size-4.5" />
-                {item.label}
-              </Link>
-            );
-          })}
+        {/* Categorized Navigation */}
+        <nav className="flex-1 space-y-4 overflow-y-auto px-3 py-4">
+          {groupedItems.map((group) => (
+            <div key={group.category} className="space-y-1">
+              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-sidebar-foreground/50">
+                {group.label}
+              </p>
+              {group.items.map((item) => {
+                const active = pathname.startsWith(item.to);
+                return (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setOpen(false)}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
+                      active
+                        ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold shadow-xs"
+                        : "text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground",
+                    )}
+                  >
+                    <item.icon className="size-4 shrink-0" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
-        <div className="border-t border-sidebar-border p-3">
-          <div className="flex items-center gap-3 rounded-lg px-2 py-2">
-            <Avatar className="size-9">
-              <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-xs">
+        {/* Role Quick Switcher in Sidebar Footer */}
+        <div className="border-t border-sidebar-border p-3 space-y-2 bg-sidebar-accent/20">
+          <p className="px-2 text-[10px] font-bold uppercase tracking-wider text-sidebar-foreground/50">
+            Switch Persona (RBAC Demo)
+          </p>
+          <div className="grid grid-cols-2 gap-1.5">
+            {DEMO_USERS.map((u) => {
+              const isSelected = u.id === currentUser?.id;
+              return (
+                <button
+                  key={u.id}
+                  onClick={() => {
+                    setDemoUser(u.id);
+                    window.dispatchEvent(new Event("demo-auth-change"));
+                  }}
+                  className={cn(
+                    "text-[10px] font-medium py-1.5 px-2 rounded-md transition text-left truncate flex items-center gap-1",
+                    isSelected
+                      ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                      : "bg-sidebar/80 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                  )}
+                >
+                  <span>
+                    {u.role === "student" && "🎓"}
+                    {u.role === "supervisor" && "👔"}
+                    {u.role === "org_admin" && "🏢"}
+                    {u.role === "uni_admin" && "🏛️"}
+                  </span>
+                  <span className="truncate">{u.full_name.split(" ")[0]}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 pt-2 border-t border-sidebar-border/60">
+            <Avatar className="size-8">
+              <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-xs font-semibold">
                 {initials}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">{name || email}</p>
-              <p className="truncate text-xs text-sidebar-foreground/60">{ROLE_LABELS[role]}</p>
+              <p className="truncate text-xs font-semibold">{activeName}</p>
+              <p className="truncate text-[10px] text-sidebar-foreground/60">
+                {ROLE_LABELS[activeRole]}
+              </p>
             </div>
           </div>
+
           <Button
             variant="ghost"
-            className="mt-1 w-full justify-start gap-3 text-sidebar-foreground/75 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
+            size="sm"
+            className="w-full justify-start gap-2 text-xs text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground h-8"
             onClick={signOut}
           >
-            <LogOut className="size-4.5" /> Sign out
+            <LogOut className="size-3.5" /> Sign out
           </Button>
         </div>
       </aside>
 
+      {/* Mobile Backdrop */}
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-foreground/40 lg:hidden"
+          className="fixed inset-0 z-40 bg-foreground/40 backdrop-blur-xs lg:hidden"
           onClick={() => setOpen(false)}
         />
       )}
 
+      {/* Main Content Area */}
       <div className="lg:pl-64">
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card/80 px-4 py-3 backdrop-blur lg:px-8">
           <div className="flex items-center gap-3">
             <button
-              className="lg:hidden"
+              className="lg:hidden text-muted-foreground hover:text-foreground"
               onClick={() => setOpen(true)}
               aria-label="Open navigation"
             >
               <Menu className="size-5" />
             </button>
-            <div className="hidden items-center gap-2 sm:flex">
-              <Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary">
-                {ROLE_LABELS[role]}
+            <div className="flex items-center gap-2">
+              <Badge
+                variant="outline"
+                className={`text-xs font-semibold px-2 py-0.5 ${tier.color}`}
+              >
+                {tier.level}
               </Badge>
+              <span className="text-xs text-muted-foreground hidden sm:inline">
+                • {tier.description.split(",")[0]}
+              </span>
             </div>
           </div>
 
@@ -203,42 +393,34 @@ export function AppShell({
                   type="button"
                   className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium shadow-xs transition-colors hover:bg-accent focus:outline-hidden"
                 >
-                  <span className="hidden sm:inline text-muted-foreground">Change profile</span>
-                  <span className="font-semibold text-foreground">{name || email}</span>
+                  <span className="hidden sm:inline text-muted-foreground">Active:</span>
+                  <span className="font-semibold text-foreground">{activeName}</span>
                   <ChevronDown className="size-3 text-muted-foreground" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64">
                 <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground">
-                  Demo profiles
+                  Select Demo Stakeholder Role
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {DEMO_USERS.map((user) => {
-                  const isCurrent = user.email === email;
+                  const isCurrent = user.id === currentUser?.id;
                   return (
                     <DropdownMenuItem
                       key={user.id}
                       onClick={() => {
-                        const targetRoles =
-                          user.roles && user.roles.length > 0 ? user.roles : [user.role];
-                        const targetAllowedRoutes = NAV.filter((i) =>
-                          i.roles.some((r) => targetRoles.includes(r)),
-                        ).map((i) => i.to);
                         setDemoUser(user.id);
                         window.dispatchEvent(new Event("demo-auth-change"));
-                        if (!targetAllowedRoutes.includes(pathname)) {
-                          window.location.href = "/dashboard";
-                        }
                       }}
                       className={cn(
                         "flex items-center justify-between py-2 text-xs cursor-pointer",
-                        isCurrent && "bg-accent/70 font-medium",
+                        isCurrent && "bg-accent/70 font-semibold",
                       )}
                     >
                       <div className="min-w-0 pr-2">
                         <p className="truncate font-medium text-foreground">{user.full_name}</p>
                         <p className="truncate text-[10px] text-muted-foreground">
-                          {ROLE_LABELS[user.role]}
+                          {ROLE_LABELS[user.role]} (Tier {ROLE_TIERS[user.role].tier})
                         </p>
                       </div>
                       {isCurrent && <Check className="size-4 text-primary shrink-0" />}
@@ -249,6 +431,7 @@ export function AppShell({
             </DropdownMenu>
           </div>
         </header>
+
         <main className="px-4 py-6 lg:px-8 lg:py-8">{children}</main>
       </div>
     </div>
