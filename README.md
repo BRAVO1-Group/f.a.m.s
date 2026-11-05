@@ -70,6 +70,7 @@ Supervisors oversee intern activities and are categorized into two complementary
 - **University Academic Supervisor (Faculty Assessor)**: University academic staff ensuring curriculum standards, syllabus competencies, and institutional clearance.
 
 Supervisors oversee intern activities and are categorized into two complementary roles:
+
 - **Host Organization Field Supervisor (Industry Mentor)**: Based at the host company, receives pre-provisioned logins from the university, and monitors day-to-day workplace execution.
 - **University Academic Supervisor (Faculty Assessor)**: University academic staff ensuring curriculum standards, syllabus competencies, and institutional clearance.
 
