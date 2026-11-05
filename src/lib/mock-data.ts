@@ -60,13 +60,178 @@ export type MockInternship = {
   id: string;
   student_id: string;
   organization_id: string;
-  supervisor_id: string;
+  supervisor_id: string; // Host Organization Supervisor (Industry Mentor)
+  academic_supervisor_id?: string; // University Academic Supervisor (Faculty Assessor)
   position: string;
   department: string;
   start_date: string;
   end_date: string;
   required_days: number;
   status: "active" | "completed" | "pending";
+};
+
+export type SupervisorType = "organization" | "university";
+
+export type MockSupervisor = {
+  id: string;
+  user_id?: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  type: SupervisorType; // "organization" (industry mentor) | "university" (academic supervisor)
+  organization_name?: string;
+  faculty_department?: string;
+  title: string;
+  assigned_student_ids: string[];
+};
+
+export type PermissionCategory =
+  | "Logbooks & Activity Logging"
+  | "Attendance & Verification"
+  | "Milestones & Deliverables"
+  | "Evaluations & Grading"
+  | "Supervisors & Placements"
+  | "RBAC Governance & Access Control";
+
+export type MockPermission = {
+  id: string;
+  label: string;
+  description: string;
+  category: PermissionCategory;
+};
+
+export const SYSTEM_PERMISSIONS: MockPermission[] = [
+  // Logbooks & Activity Logging
+  {
+    id: "logs:create",
+    label: "Create Logbook Entries",
+    description: "Submit daily internship logs, challenges, solutions, and tool logs",
+    category: "Logbooks & Activity Logging",
+  },
+  {
+    id: "logs:approve",
+    label: "Approve / Reject Student Logs",
+    description: "Provide feedback and sign off on submitted daily logs",
+    category: "Logbooks & Activity Logging",
+  },
+  {
+    id: "logs:override",
+    label: "Administrative Log Override",
+    description: "Arbitrate disputes and edit locked activity entries",
+    category: "Logbooks & Activity Logging",
+  },
+  // Attendance & Verification
+  {
+    id: "attendance:record",
+    label: "Punch Daily Attendance",
+    description: "Clock in and out with geolocation timestamps",
+    category: "Attendance & Verification",
+  },
+  {
+    id: "attendance:audit",
+    label: "Audit Attendance & Hours",
+    description: "Review attendance trends, absence justifications, and shift logs",
+    category: "Attendance & Verification",
+  },
+  // Milestones & Deliverables
+  {
+    id: "milestones:track",
+    label: "Update Milestone Deliverables",
+    description: "Mark weekly deliverables and technical tasks as completed",
+    category: "Milestones & Deliverables",
+  },
+  {
+    id: "milestones:certify",
+    label: "Certify Milestone Phases",
+    description: "Sign off on completed learning phases and core competencies",
+    category: "Milestones & Deliverables",
+  },
+  // Evaluations & Grading
+  {
+    id: "assessments:grade",
+    label: "Submit Midterm & Final Evaluations",
+    description: "Evaluate technical skills, soft skills, punctuality, and assign letter grade",
+    category: "Evaluations & Grading",
+  },
+  {
+    id: "assessments:view_all",
+    label: "Institutional Grade Roster",
+    description: "Access department-wide grades, GPA weighting, and performance distribution",
+    category: "Evaluations & Grading",
+  },
+  // Supervisors & Placements
+  {
+    id: "supervisors:create",
+    label: "Create Supervisor Accounts",
+    description: "Register organization mentors and university academic supervisors",
+    category: "Supervisors & Placements",
+  },
+  {
+    id: "supervisors:assign",
+    label: "Assign Supervisors to Students",
+    description: "Pair students with dual mentors (industry host + university faculty)",
+    category: "Supervisors & Placements",
+  },
+  // RBAC Governance & Access Control
+  {
+    id: "rbac:manage",
+    label: "Define Roles & Permissions",
+    description: "Configure system security clearance, role hierarchies, and permission matrix",
+    category: "RBAC Governance & Access Control",
+  },
+  {
+    id: "accreditation:export",
+    label: "Accreditation Dossier Export",
+    description: "Generate dean-certified PDF audit reports for university graduation board",
+    category: "RBAC Governance & Access Control",
+  },
+];
+
+export type RolePermissionsMap = Record<AppRole, string[]>;
+
+export const DEFAULT_ROLE_PERMISSIONS: RolePermissionsMap = {
+  student: ["logs:create", "attendance:record", "milestones:track"],
+  supervisor: [
+    "logs:approve",
+    "attendance:audit",
+    "milestones:track",
+    "milestones:certify",
+    "assessments:grade",
+  ],
+  org_admin: [
+    "logs:approve",
+    "attendance:audit",
+    "milestones:certify",
+    "assessments:grade",
+    "supervisors:create",
+  ],
+  uni_admin: [
+    "logs:approve",
+    "logs:override",
+    "attendance:audit",
+    "milestones:certify",
+    "assessments:grade",
+    "assessments:view_all",
+    "supervisors:create",
+    "supervisors:assign",
+    "rbac:manage",
+    "accreditation:export",
+  ],
+  system_admin: [
+    "logs:create",
+    "logs:approve",
+    "logs:override",
+    "attendance:record",
+    "attendance:audit",
+    "milestones:track",
+    "milestones:certify",
+    "assessments:grade",
+    "assessments:view_all",
+    "supervisors:create",
+    "supervisors:assign",
+    "rbac:manage",
+    "accreditation:export",
+  ],
 };
 
 export type MockMilestoneTask = {
@@ -192,7 +357,8 @@ export const internships: MockInternship[] = [
     id: "intern-1",
     student_id: "student-1",
     organization_id: "org-1",
-    supervisor_id: "supervisor-1",
+    supervisor_id: "sup-org-1",
+    academic_supervisor_id: "sup-uni-1",
     position: "Software Engineering Intern",
     department: "Product Engineering",
     start_date: "2026-07-01",
@@ -204,7 +370,8 @@ export const internships: MockInternship[] = [
     id: "intern-2",
     student_id: "student-2",
     organization_id: "org-2",
-    supervisor_id: "supervisor-1",
+    supervisor_id: "sup-org-2",
+    academic_supervisor_id: "sup-uni-2",
     position: "Network Engineering Intern",
     department: "Infrastructure",
     start_date: "2026-07-01",
@@ -216,13 +383,27 @@ export const internships: MockInternship[] = [
     id: "intern-3",
     student_id: "student-3",
     organization_id: "org-3",
-    supervisor_id: "supervisor-1",
+    supervisor_id: "sup-org-3",
+    academic_supervisor_id: "sup-uni-1",
     position: "Data Analyst Intern",
     department: "Business Intelligence",
     start_date: "2026-06-01",
     end_date: "2026-08-31",
     required_days: 60,
     status: "completed",
+  },
+  {
+    id: "intern-4",
+    student_id: "student-4",
+    organization_id: "org-1",
+    supervisor_id: "sup-org-1",
+    academic_supervisor_id: undefined, // Unassigned academic supervisor to demonstrate assignment flow
+    position: "Cybersecurity Analyst Intern",
+    department: "InfoSec Operations",
+    start_date: "2026-07-15",
+    end_date: "2026-10-15",
+    required_days: 60,
+    status: "active",
   },
 ];
 
@@ -519,28 +700,42 @@ export const profiles = [
     id: "student-2",
     full_name: "Brian Mwangi",
     email: "brian@university.ac.ke",
-    institution: "KU",
-    course: "BSc. Networking",
+    institution: "Kenyatta University",
+    course: "BSc. Telecommunications & Networking",
   },
   {
     id: "student-3",
     full_name: "Carol Achieng",
     email: "carol@strathmore.edu",
     institution: "Strathmore University",
-    course: "BSc. Data Science",
+    course: "BSc. Data Science & Analytics",
+  },
+  {
+    id: "student-4",
+    full_name: "Kevin Kiprono",
+    email: "kevin.kiprono@university.ac.ke",
+    institution: "University of Nairobi",
+    course: "BSc. Computer Science (Cybersecurity)",
   },
   {
     id: "supervisor-1",
     full_name: "James Otieno",
     email: "james.otieno@techcorp.co.ke",
-    institution: "",
+    institution: "TechCorp Kenya Ltd",
     course: "",
+  },
+  {
+    id: "supervisor-2",
+    full_name: "Dr. Joyce Chelangat",
+    email: "jchelangat@university.ac.ke",
+    institution: "University of Nairobi",
+    course: "Faculty Assessor",
   },
   {
     id: "org-admin-1",
     full_name: "Fatuma Said",
     email: "admin@techcorp.co.ke",
-    institution: "",
+    institution: "TechCorp Kenya Ltd",
     course: "",
   },
   {
@@ -548,7 +743,7 @@ export const profiles = [
     full_name: "Dr. Peter Kamau",
     email: "dean@university.ac.ke",
     institution: "University of Nairobi",
-    course: "",
+    course: "Dean of Computing",
   },
 ];
 
@@ -556,7 +751,9 @@ export const userRoles: { user_id: string; role: AppRole }[] = [
   { user_id: "student-1", role: "student" },
   { user_id: "student-2", role: "student" },
   { user_id: "student-3", role: "student" },
+  { user_id: "student-4", role: "student" },
   { user_id: "supervisor-1", role: "supervisor" },
+  { user_id: "supervisor-2", role: "supervisor" },
   { user_id: "org-admin-1", role: "org_admin" },
   { user_id: "uni-admin-1", role: "uni_admin" },
   { user_id: "uni-admin-1", role: "system_admin" },
@@ -682,6 +879,198 @@ export const evaluations: MockEvaluation[] = [
     supervisor_name: "James Otieno",
   },
 ];
+
+// ── Supervisors (Organization Mentors & University Supervisors) ──────────────
+export const initialSupervisors: MockSupervisor[] = [
+  {
+    id: "sup-org-1",
+    user_id: "supervisor-1",
+    full_name: "James Otieno",
+    email: "james.otieno@techcorp.co.ke",
+    phone: "+254 722 001 122",
+    type: "organization",
+    organization_name: "TechCorp Kenya Ltd",
+    faculty_department: "Product Engineering",
+    title: "Senior Lead Architect & Industry Mentor",
+    assigned_student_ids: ["student-1", "student-4"],
+  },
+  {
+    id: "sup-org-2",
+    user_id: undefined,
+    full_name: "Grace Muthoni",
+    email: "grace.muthoni@safaricom.co.ke",
+    phone: "+254 722 334 455",
+    type: "organization",
+    organization_name: "Safaricom PLC",
+    faculty_department: "Infrastructure & Cloud",
+    title: "Head of Cloud Infrastructure",
+    assigned_student_ids: ["student-2"],
+  },
+  {
+    id: "sup-org-3",
+    user_id: undefined,
+    full_name: "Brian Njoroge",
+    email: "brian.njoroge@kcb.co.ke",
+    phone: "+254 733 445 566",
+    type: "organization",
+    organization_name: "Kenya Commercial Bank",
+    faculty_department: "Business Intelligence",
+    title: "Data Platform Lead",
+    assigned_student_ids: ["student-3"],
+  },
+  {
+    id: "sup-uni-1",
+    user_id: "uni-admin-1",
+    full_name: "Dr. Peter Kamau",
+    email: "dean@university.ac.ke",
+    phone: "+254 701 234 567",
+    type: "university",
+    organization_name: "University of Nairobi",
+    faculty_department: "School of Computing & Informatics",
+    title: "Dean of Computing & Faculty Assessor",
+    assigned_student_ids: ["student-1", "student-3"],
+  },
+  {
+    id: "sup-uni-2",
+    user_id: "supervisor-2",
+    full_name: "Dr. Joyce Chelangat",
+    email: "jchelangat@university.ac.ke",
+    phone: "+254 711 889 900",
+    type: "university",
+    organization_name: "University of Nairobi",
+    faculty_department: "Department of Software Engineering",
+    title: "Senior Lecturer & Academic Advisor",
+    assigned_student_ids: ["student-2"],
+  },
+  {
+    id: "sup-uni-3",
+    user_id: undefined,
+    full_name: "Prof. Evans Omondi",
+    email: "eomondi@university.ac.ke",
+    phone: "+254 799 112 233",
+    type: "university",
+    organization_name: "University of Nairobi",
+    faculty_department: "Department of Information Systems",
+    title: "Associate Professor & Industrial Liaison",
+    assigned_student_ids: [],
+  },
+];
+
+const SUPERVISORS_STORAGE_KEY = "internflow_supervisors_v1";
+const RBAC_STORAGE_KEY = "internflow_rbac_matrix_v1";
+const INTERNSHIPS_STORAGE_KEY = "internflow_internships_v1";
+
+export function getStoredSupervisors(): MockSupervisor[] {
+  if (typeof window === "undefined") return initialSupervisors;
+  try {
+    const raw = sessionStorage.getItem(SUPERVISORS_STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    // fallback
+  }
+  return initialSupervisors;
+}
+
+export function saveStoredSupervisors(data: MockSupervisor[]) {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(SUPERVISORS_STORAGE_KEY, JSON.stringify(data));
+    window.dispatchEvent(new Event("internflow-data-change"));
+  } catch (e) {
+    // fallback
+  }
+}
+
+export function addSupervisor(
+  sup: Omit<MockSupervisor, "id" | "assigned_student_ids">,
+): MockSupervisor {
+  const all = getStoredSupervisors();
+  const newSupervisor: MockSupervisor = {
+    ...sup,
+    id: `sup-${sup.type === "organization" ? "org" : "uni"}-${Date.now().toString(36)}`,
+    assigned_student_ids: [],
+  };
+  const updated = [newSupervisor, ...all];
+  saveStoredSupervisors(updated);
+  return newSupervisor;
+}
+
+export function getStoredRBAC(): RolePermissionsMap {
+  if (typeof window === "undefined") return DEFAULT_ROLE_PERMISSIONS;
+  try {
+    const raw = sessionStorage.getItem(RBAC_STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    // fallback
+  }
+  return DEFAULT_ROLE_PERMISSIONS;
+}
+
+export function saveStoredRBAC(data: RolePermissionsMap) {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(RBAC_STORAGE_KEY, JSON.stringify(data));
+    window.dispatchEvent(new Event("internflow-rbac-change"));
+  } catch (e) {
+    // fallback
+  }
+}
+
+export function getStoredInternships(): MockInternship[] {
+  if (typeof window === "undefined") return internships;
+  try {
+    const raw = sessionStorage.getItem(INTERNSHIPS_STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    // fallback
+  }
+  return internships;
+}
+
+export function saveStoredInternships(data: MockInternship[]) {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(INTERNSHIPS_STORAGE_KEY, JSON.stringify(data));
+    window.dispatchEvent(new Event("internflow-data-change"));
+  } catch (e) {
+    // fallback
+  }
+}
+
+export function assignSupervisors(
+  studentId: string,
+  orgSupervisorId: string,
+  academicSupervisorId: string,
+) {
+  const currentInternships = getStoredInternships();
+  const currentSupervisors = getStoredSupervisors();
+
+  // Update internship
+  const updatedInternships = currentInternships.map((intern) => {
+    if (intern.student_id === studentId) {
+      return {
+        ...intern,
+        supervisor_id: orgSupervisorId,
+        academic_supervisor_id: academicSupervisorId,
+      };
+    }
+    return intern;
+  });
+  saveStoredInternships(updatedInternships);
+
+  // Update assigned_student_ids in supervisors
+  const updatedSupervisors = currentSupervisors.map((s) => {
+    let assigned = s.assigned_student_ids.filter((id) => id !== studentId);
+    if (s.id === orgSupervisorId || s.id === academicSupervisorId) {
+      assigned = [...assigned, studentId];
+    }
+    return {
+      ...s,
+      assigned_student_ids: Array.from(new Set(assigned)),
+    };
+  });
+  saveStoredSupervisors(updatedSupervisors);
+}
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 export function uid() {
