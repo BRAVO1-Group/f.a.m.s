@@ -62,69 +62,94 @@ Attachments/evidence
 
 Submit for supervisor approval
 
-2. Supervisor Dashboard
+2. Supervisor Dashboard (Dual Supervision Model)
+
+Supervisors oversee intern activities and are categorized into two complementary roles:
+
+- **Host Organization Field Supervisor (Industry Mentor)**: Based at the host company, receives pre-provisioned logins from the university, and monitors day-to-day workplace execution.
+- **University Academic Supervisor (Faculty Assessor)**: University academic staff ensuring curriculum standards, syllabus competencies, and institutional clearance.
 
 Supervisors should be able to:
 
-View assigned students.
+View assigned students (scoped strictly to candidates allocated to their direct mentorship).
 
-Monitor daily activities.
+Monitor daily activities in real time.
 
-Review submitted reports.
+Review submitted logbook entries.
 
-Approve or reject activities.
+Approve or request corrections on daily reports.
 
-Add comments and recommendations.
+Add actionable mentor feedback notes and technical recommendations.
 
-Track attendance.
+Track workplace attendance and hours logged.
 
-Evaluate student performance.
+Evaluate student competency performance.
 
 Supervisor actions:
 
-✅ Approve
-❌ Request correction
-💬 Add feedback
+✅ Approve submission
+
+❌ Request correction with revision instructions
+
+💬 Add technical feedback note
 
 3. University Administrator Dashboard
 
+The university administrator serves as the central governing authority responsible for internship operations, supervisor account provisioning, candidate pairing, and RBAC policy enforcement.
+
 The university admin should manage:
 
-Students
+Students (onboarding, placement tracking, and progress metrics)
 
-Internship organizations
+Internship organizations & partner employer directories
 
-Supervisors
+Supervisor account creation (both Host Organization Field Supervisors and University Academic Supervisors)
 
-Internship periods
+Candidate pairing & supervisor assignment (allocating students to host organization mentors and faculty assessors)
 
-Assessment reports
+Credential generation and dispatch (issuing pre-provisioned login credentials directly to company field supervisors, bound strictly to their assigned students)
+
+Internship periods & attachment cohorts
+
+Assessment reports, evaluations, and institutional defense clearance
+
+User roles & permission definitions (interactive RBAC matrix)
 
 Features:
 
-View internship progress statistics.
+Create supervisor accounts for both industry and academic mentors.
 
-Monitor student participation.
+Assign host organization field supervisors and academic assessors to students.
 
-Download reports.
+Generate and dispatch pre-provisioned login credentials to company field mentors.
 
-Identify inactive students.
+View real-time internship progress and dual-supervision pairing statistics.
 
-Generate internship completion summaries.
+Monitor student participation and flag inactive candidates.
 
-4. Organization/Company Dashboard
+Define user roles and customize fine-grained RBAC permissions across all tiers.
 
-Companies should be able to:
+Download cohort compliance summaries and accredited logbook records.
 
-Register interns.
+4. Host Organization / Company Role (Field Supervisor Model)
 
-Assign supervisors.
+In this system, the host company/organization role is streamlined: companies do not self-register or independently manage an internship registration portal. Instead:
 
-Monitor intern progress.
+- **University-Issued Pre-Provisioned Logins**: The company role simply receives login credentials directly from the university administrator.
+- **Student-Tied Account Access**: Each company/field supervisor login is strictly tied to their assigned student(s).
+- **Organization Assignment as Field Supervision**: Assigning a host organization to a student intern is fundamentally **assigning a Host Organization Field Supervisor** (industry workplace mentor) to that student.
 
-Review completed tasks.
+Capabilities and responsibilities of the Host Organization Field Supervisor:
 
-Submit final evaluations.
+- **Receive Logins from University**: Log in using pre-provisioned credentials dispatched by the university attachment office (self-registration is restricted).
+- **Access Assigned Student Intern Details**: Inspect comprehensive profiles, degree programs, company placement details, and attendance meters strictly for their assigned intern(s).
+- **Review Student Submissions**: Access daily logbook submissions, technical activity reports, tools used, and problem-solving solutions created by their assigned intern(s).
+- **Approve Student Submissions**:
+  - ✅ Quick Approve daily deliverables.
+  - ❌ Request corrections with explicit revision guidance.
+  - 💬 Provide constructive technical mentorship notes recorded in the candidate's verified logbook.
+- **Monitor Workplace Attendance**: Verify on-site arrival and departure timestamps, total days completed (e.g. 42 of 60 days), and shift status.
+- **Submit Industry Evaluations**: Complete workplace assessments, score professional competencies, and submit final employer evaluations for their assigned student(s).
 
 Core System Features
 
@@ -254,17 +279,13 @@ Password encryption.
 
 Backup system.
 
-User roles:
+User roles (5-Tier Role-Based Access Control Architecture):
 
-Student
-
-Supervisor
-
-Organization Admin
-
-University Admin
-
-System Administrator
+1. **Student (Tier 1)**: Records daily digital activities, clocks in/out with arrival/departure timestamps, uploads proof of work, views mentor feedback, and generates certified reports.
+2. **Host Organization Field Supervisor (Tier 2 - Company)**: Receives pre-provisioned university login credentials strictly tied to assigned student(s); reviews daily activities, approves deliverables, provides technical guidance notes, and submits employer evaluations.
+3. **University Academic Supervisor (Tier 2 - Faculty)**: Academic assessor monitoring syllabus competencies, milestone progression, institutional defense clearance, and academic grading.
+4. **University Administrator (Tier 3 / Tier 4)**: Central authority that provisions supervisor accounts, assigns host organizations/field supervisors and faculty assessors to students, dispatches login credentials, and configures the RBAC matrix.
+5. **System Administrator (Tier 5)**: Manages platform infrastructure, global configurations, security audits, and system health.
 
 UI/UX Requirements
 
