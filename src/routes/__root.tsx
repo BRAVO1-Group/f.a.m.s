@@ -16,16 +16,48 @@ import appCss from "../styles.css?url";
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
+      <div className="max-w-lg text-center">
+        <h1 className="text-6xl font-display font-bold text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          The page you're looking for doesn't exist or was moved. You can jump directly to any of
+          the workspace dashboards below:
         </p>
-        <div className="mt-6">
+
+        <div className="mt-6 flex flex-wrap justify-center gap-2">
+          <Link
+            to="/dashboard"
+            className="inline-flex items-center justify-center rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
+          >
+            Open Dashboard
+          </Link>
+          <a
+            href="/dashboard?role=student"
+            className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent"
+          >
+            🎓 Student
+          </a>
+          <a
+            href="/dashboard?role=supervisor"
+            className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent"
+          >
+            👔 Supervisor
+          </a>
+          <a
+            href="/dashboard?role=org_admin"
+            className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent"
+          >
+            🏢 Org Admin
+          </a>
+          <a
+            href="/dashboard?role=uni_admin"
+            className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent"
+          >
+            🏛️ Uni Dean
+          </a>
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-4 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground hover:bg-accent"
           >
             Go home
           </Link>

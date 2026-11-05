@@ -711,7 +711,9 @@ function LandingPage() {
                     </ul>
                     <div className="mt-8">
                       <Button asChild className="rounded-xl">
-                        <Link to="/auth">Experience Student Demo →</Link>
+                        <Link to="/dashboard" search={{ role: "student" }}>
+                          Experience Student Demo →
+                        </Link>
                       </Button>
                     </div>
                   </div>
@@ -773,7 +775,9 @@ function LandingPage() {
                     </ul>
                     <div className="mt-8">
                       <Button asChild className="rounded-xl">
-                        <Link to="/auth">Experience Supervisor Demo →</Link>
+                        <Link to="/dashboard" search={{ role: "supervisor" }}>
+                          Experience Supervisor Demo →
+                        </Link>
                       </Button>
                     </div>
                   </div>
@@ -834,7 +838,9 @@ function LandingPage() {
                     </ul>
                     <div className="mt-8">
                       <Button asChild className="rounded-xl">
-                        <Link to="/auth">Experience University Admin Demo →</Link>
+                        <Link to="/dashboard" search={{ role: "uni_admin" }}>
+                          Experience University Admin Demo →
+                        </Link>
                       </Button>
                     </div>
                   </div>

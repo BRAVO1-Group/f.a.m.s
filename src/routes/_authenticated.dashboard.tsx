@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Activity,
@@ -69,7 +69,7 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { useAppUser } from "@/lib/app-user";
-import { ROLE_LABELS } from "@/lib/auth";
+import { ROLE_LABELS, setDemoUser, type AppRole } from "@/lib/auth";
 import {
   activities as initialActivities,
   attendance as initialAttendance,
@@ -82,6 +82,11 @@ import {
 } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
+  ssr: false,
+  validateSearch: (search: Record<string, unknown>): { role?: string; user?: string } => ({
+    role: typeof search.role === "string" ? search.role : undefined,
+    user: typeof search.user === "string" ? search.user : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Dashboard — InternTrack" },
@@ -105,21 +110,79 @@ function getGreeting(): string {
 
 export function DashboardPage() {
   const { userId, role, name } = useAppUser();
+  const search = Route.useSearch();
 
-  if (role === "student") {
-    return <StudentDashboard userId={userId} name={name} />;
-  }
+  useEffect(() => {
+    if (search.role) {
+      const normalized = search.role.toLowerCase().replace("-", "_");
+      const match =
+        DEMO_USERS.find((u) => u.role === normalized) ||
+        DEMO_USERS.find((u) => u.roles?.includes(normalized as AppRole));
+      if (match && match.id !== userId) {
+        setDemoUser(match.id);
+        window.dispatchEvent(new Event("demo-auth-change"));
+      }
+    } else if (search.user && search.user !== userId) {
+      const match = DEMO_USERS.find((u) => u.id === search.user);
+      if (match) {
+        setDemoUser(match.id);
+        window.dispatchEvent(new Event("demo-auth-change"));
+      }
+    }
+  }, [search.role, search.user, userId]);
 
-  if (role === "supervisor") {
-    return <SupervisorDashboard userId={userId} name={name} />;
-  }
+  const switcherBar = (
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-card/90 p-3 shadow-xs">
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Demo Persona:
+        </span>
+        <Badge
+          variant="outline"
+          className="text-xs font-semibold border-primary/30 text-primary bg-primary/5"
+        >
+          {ROLE_LABELS[role]} ({name.split(" ")[0]})
+        </Badge>
+      </div>
 
-  if (role === "org_admin") {
-    return <OrgAdminDashboard userId={userId} name={name} />;
-  }
+      <div className="flex flex-wrap items-center gap-1.5">
+        {DEMO_USERS.map((u) => {
+          const active = u.id === userId;
+          return (
+            <Button
+              key={u.id}
+              size="sm"
+              variant={active ? "default" : "outline"}
+              onClick={() => {
+                setDemoUser(u.id);
+                window.dispatchEvent(new Event("demo-auth-change"));
+              }}
+              className={`h-7.5 rounded-lg text-xs font-semibold transition ${
+                active ? "shadow-xs" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {u.role === "student" && "🎓 Student (Alice)"}
+              {u.role === "supervisor" && "👔 Supervisor (James)"}
+              {u.role === "org_admin" && "🏢 Org Admin (Fatuma)"}
+              {u.role === "uni_admin" && "🏛️ Uni Dean (Dr. Kamau)"}
+            </Button>
+          );
+        })}
+      </div>
+    </div>
+  );
 
-  // uni_admin & system_admin
-  return <UniversityAdminDashboard userId={userId} name={name} role={role} />;
+  return (
+    <div className="space-y-6">
+      {switcherBar}
+      {role === "student" && <StudentDashboard userId={userId} name={name} />}
+      {role === "supervisor" && <SupervisorDashboard userId={userId} name={name} />}
+      {role === "org_admin" && <OrgAdminDashboard userId={userId} name={name} />}
+      {role !== "student" && role !== "supervisor" && role !== "org_admin" && (
+        <UniversityAdminDashboard userId={userId} name={name} role={role} />
+      )}
+    </div>
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

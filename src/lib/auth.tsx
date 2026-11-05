@@ -18,10 +18,44 @@ export const ROLE_LABELS: Record<AppRole, string> = {
 
 const SESSION_KEY = "demo_user_id";
 
-export function getDemoUser(): MockUser | null {
-  const id = sessionStorage.getItem(SESSION_KEY);
-  if (!id) return null;
-  return DEMO_USERS.find((u) => u.id === id) ?? null;
+export function getDemoUser(): MockUser {
+  try {
+    if (typeof window !== "undefined") {
+      const search = window.location.search;
+      if (search) {
+        const params = new URLSearchParams(search);
+        const user = params.get("user");
+        const role = params.get("role");
+        if (user) {
+          const match = DEMO_USERS.find((u) => u.id === user);
+          if (match) {
+            sessionStorage.setItem(SESSION_KEY, match.id);
+            return match;
+          }
+        }
+        if (role) {
+          const normalized = role.toLowerCase().replace("-", "_");
+          const match =
+            DEMO_USERS.find((u) => u.role === normalized) ||
+            DEMO_USERS.find((u) => u.roles?.includes(normalized as AppRole));
+          if (match) {
+            sessionStorage.setItem(SESSION_KEY, match.id);
+            return match;
+          }
+        }
+      }
+
+      const id = sessionStorage.getItem(SESSION_KEY);
+      if (id) {
+        const found = DEMO_USERS.find((u) => u.id === id);
+        if (found) return found;
+      }
+    }
+  } catch (e) {
+    // sessionStorage might be restricted
+  }
+  // Default to Alice Wanjiku (Student) so a demo session is always active
+  return DEMO_USERS[0];
 }
 
 export function setDemoUser(id: string) {
