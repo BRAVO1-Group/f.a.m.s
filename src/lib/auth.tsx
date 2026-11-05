@@ -128,7 +128,7 @@ export function getDemoUser(): MockUser {
     // sessionStorage might be restricted
   }
   // Default to Alice Wanjiku (Student) so a demo session is always active
-  return DEMO_USERS[0];
+  return DEMO_USERS[0]!;
 }
 
 export function setDemoUser(id: string) {

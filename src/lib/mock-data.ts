@@ -61,7 +61,7 @@ export type MockInternship = {
   student_id: string;
   organization_id: string;
   supervisor_id: string; // Host Organization Supervisor (Industry Mentor)
-  academic_supervisor_id?: string; // University Academic Supervisor (Faculty Assessor)
+  academic_supervisor_id?: string | undefined; // University Academic Supervisor (Faculty Assessor)
   position: string;
   department: string;
   start_date: string;
@@ -74,13 +74,13 @@ export type SupervisorType = "organization" | "university";
 
 export type MockSupervisor = {
   id: string;
-  user_id?: string;
+  user_id?: string | undefined;
   full_name: string;
   email: string;
   phone: string;
   type: SupervisorType; // "organization" (industry mentor) | "university" (academic supervisor)
-  organization_name?: string;
-  faculty_department?: string;
+  organization_name?: string | undefined;
+  faculty_department?: string | undefined;
   title: string;
   assigned_student_ids: string[];
 };
@@ -570,6 +570,47 @@ export const activities: MockActivity[] = [
     reviewed_by: "supervisor-1",
     reviewed_at: "2026-08-31T09:00:00Z",
   },
+  {
+    id: "act-9",
+    student_id: "student-4",
+    internship_id: "intern-4",
+    activity_date: "2026-09-24",
+    arrival_time: "08:30",
+    departure_time: "17:00",
+    title: "Vulnerability assessment on customer portal API",
+    description:
+      "Conducted automated and manual vulnerability assessment using OWASP ZAP and Postman. Identified 2 CORS misconfigurations and drafted remediation notes.",
+    tools_used: ["OWASP ZAP", "Postman", "Burp Suite"],
+    skills_gained: ["API security", "CORS policy auditing", "Penetration testing"],
+    challenges: "False positives in automated scan reports.",
+    solutions: "Manually replayed suspected requests to verify vulnerability impact.",
+    status: "submitted",
+    submitted_at: "2026-09-24T17:00:00Z",
+    supervisor_feedback: null,
+    reviewed_by: null,
+    reviewed_at: null,
+  },
+  {
+    id: "act-10",
+    student_id: "student-4",
+    internship_id: "intern-4",
+    activity_date: "2026-09-21",
+    arrival_time: "08:30",
+    departure_time: "17:00",
+    title: "SIEM log analysis and alert rule tuning",
+    description:
+      "Reviewed Splunk alerts for anomalous SSH logins on production staging servers. Created a tuned correlation search to filter out authorized CI/CD runners.",
+    tools_used: ["Splunk", "Linux Bash", "Regex"],
+    skills_gained: ["SIEM engineering", "Log analysis", "Incident response"],
+    challenges: "High volume of noise from ephemeral runner IP addresses.",
+    solutions: "Whitelisted runner subnets in the correlation query.",
+    status: "approved",
+    submitted_at: "2026-09-21T17:30:00Z",
+    supervisor_feedback:
+      "Great analytical work, Kevin. Good job filtering out the false positives without compromising perimeter coverage.",
+    reviewed_by: "supervisor-1",
+    reviewed_at: "2026-09-22T08:30:00Z",
+  },
 ];
 
 // ── Attendance ───────────────────────────────────────────────────────────────
@@ -959,6 +1000,54 @@ export const initialSupervisors: MockSupervisor[] = [
 const SUPERVISORS_STORAGE_KEY = "internflow_supervisors_v1";
 const RBAC_STORAGE_KEY = "internflow_rbac_matrix_v1";
 const INTERNSHIPS_STORAGE_KEY = "internflow_internships_v1";
+const ACTIVITIES_STORAGE_KEY = "internflow_activities_v1";
+
+export function getStoredActivities(): MockActivity[] {
+  if (typeof window === "undefined") return activities;
+  try {
+    const raw = sessionStorage.getItem(ACTIVITIES_STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    // fallback
+  }
+  return activities;
+}
+
+export function saveStoredActivities(data: MockActivity[]) {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(ACTIVITIES_STORAGE_KEY, JSON.stringify(data));
+    window.dispatchEvent(new Event("internflow-activities-change"));
+  } catch (e) {
+    // fallback
+  }
+}
+
+export function approveOrCorrectActivity(
+  actId: string,
+  status: "approved" | "needs_correction",
+  reviewerId: string,
+  feedback?: string,
+) {
+  const all = getStoredActivities();
+  const updated = all.map((a) =>
+    a.id === actId
+      ? {
+          ...a,
+          status,
+          reviewed_by: reviewerId,
+          reviewed_at: new Date().toISOString(),
+          supervisor_feedback:
+            feedback ||
+            (status === "approved"
+              ? "Verified and signed off by Host Organization Mentor."
+              : "Please revise this activity log with additional technical details."),
+        }
+      : a,
+  );
+  saveStoredActivities(updated);
+  return updated;
+}
 
 export function getStoredSupervisors(): MockSupervisor[] {
   if (typeof window === "undefined") return initialSupervisors;

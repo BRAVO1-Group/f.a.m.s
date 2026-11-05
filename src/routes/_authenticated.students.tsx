@@ -3,11 +3,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Award,
   BookOpen,
+  Building2,
   CalendarCheck,
   CheckCircle2,
   Clock,
   ExternalLink,
   GraduationCap,
+  Lock,
   Mail,
   Phone,
   Search,
@@ -130,7 +132,22 @@ export function StudentsPage() {
     },
   ];
 
-  const filtered = universityCohort.filter((s) => {
+  const isSupervisor = role === "supervisor";
+  const currentSupervisor =
+    supervisorsList.find((s) => s.user_id === userId || s.id === userId) ||
+    supervisorsList.find((s) => s.type === "organization") ||
+    supervisorsList[0];
+
+  const assignedStudentIds =
+    currentSupervisor?.assigned_student_ids && currentSupervisor.assigned_student_ids.length > 0
+      ? currentSupervisor.assigned_student_ids
+      : ["student-1", "student-4"];
+
+  const scopedCohort = isSupervisor
+    ? universityCohort.filter((s) => assignedStudentIds.includes(s.studentId))
+    : universityCohort;
+
+  const filtered = scopedCohort.filter((s) => {
     if (search) {
       const q = search.toLowerCase();
       return (
@@ -143,8 +160,58 @@ export function StudentsPage() {
     return true;
   });
 
+  const avgDaysLogged =
+    scopedCohort.length > 0
+      ? (
+          scopedCohort.reduce((acc, curr) => acc + curr.daysLogged, 0) / scopedCohort.length
+        ).toFixed(1)
+      : "0";
+  const avgPct =
+    scopedCohort.length > 0
+      ? Math.round(
+          scopedCohort.reduce((acc, curr) => acc + (curr.daysLogged / curr.targetDays) * 100, 0) /
+            scopedCohort.length,
+        )
+      : 0;
+
   return (
     <div className="space-y-6 antialiased">
+      {/* ── Corporate Host Org Banner ── */}
+      {isSupervisor && (
+        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-start gap-3">
+            <div className="rounded-lg bg-primary/10 p-2 text-primary shrink-0">
+              <Building2 className="size-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-semibold text-sm text-foreground">
+                  My Assigned Mentee Cohort
+                </span>
+                <Badge
+                  variant="outline"
+                  className="text-[11px] font-medium border-primary/30 text-primary"
+                >
+                  🏢 {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"}
+                </Badge>
+                <Badge variant="secondary" className="text-[11px] font-medium">
+                  Received Enterprise Logins
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                Showing candidates directly assigned to your workplace supervision. Supervisors
+                access via corporate provisioned logins and cannot self-register.
+              </p>
+            </div>
+          </div>
+          <div className="text-right shrink-0">
+            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+              <ShieldCheck className="size-3.5" /> {scopedCohort.length} Active Mentees
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* ── Page Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
         <div>
@@ -194,7 +261,7 @@ export function StudentsPage() {
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {universityCohort.length}
+              {scopedCohort.length}
             </p>
             <p className="mt-2 text-xs text-muted-foreground">Under active supervision</p>
           </CardContent>
@@ -210,8 +277,10 @@ export function StudentsPage() {
                 <CheckCircle2 className="size-4.5" />
               </span>
             </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">66.2%</p>
-            <p className="mt-2 text-xs text-success font-medium">39.7 of 60 days logged avg</p>
+            <p className="mt-3 font-display text-3xl font-bold tracking-tight">{avgPct}%</p>
+            <p className="mt-2 text-xs text-success font-medium">
+              {avgDaysLogged} of 60 days logged avg
+            </p>
           </CardContent>
         </Card>
 
@@ -225,7 +294,7 @@ export function StudentsPage() {
                 <Clock className="size-4.5" />
               </span>
             </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">1</p>
+            <p className="mt-3 font-display text-3xl font-bold tracking-tight">2</p>
             <p className="mt-2 text-xs text-muted-foreground">Submitted logs awaiting feedback</p>
           </CardContent>
         </Card>
@@ -240,7 +309,9 @@ export function StudentsPage() {
                 <ShieldCheck className="size-4.5" />
               </span>
             </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">1</p>
+            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
+              {scopedCohort.filter((s) => s.daysLogged >= 60).length}
+            </p>
             <p className="mt-2 text-xs text-muted-foreground">Completed 60/60 days</p>
           </CardContent>
         </Card>
@@ -368,7 +439,9 @@ export function StudentsPage() {
                           variant="ghost"
                           className="h-7 text-xs text-primary"
                         >
-                          <Link to="/review">Logs →</Link>
+                          <Link to="/review" search={{ student: student.studentId }}>
+                            Logs →
+                          </Link>
                         </Button>
                         <Button asChild size="sm" variant="outline" className="h-7 text-xs">
                           <Link to="/evaluations">Grade</Link>
