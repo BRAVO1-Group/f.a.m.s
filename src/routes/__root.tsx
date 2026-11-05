@@ -41,13 +41,13 @@ function NotFoundComponent() {
             href="/dashboard?role=supervisor"
             className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent"
           >
-            👔 Supervisor
+            👔 Field Supervisor
           </a>
           <a
             href="/dashboard?role=org_admin"
             className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent"
           >
-            🏢 Org Admin
+            🏢 Company Mentor
           </a>
           <a
             href="/dashboard?role=uni_admin"

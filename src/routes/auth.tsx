@@ -112,7 +112,8 @@ export function AuthPage() {
 
                   {DEMO_USERS.map((user) => {
                     const isSupervisor = user.role === "supervisor";
-                    const isHostOrg = isSupervisor && user.id === "supervisor-1";
+                    const isOrgRole = user.role === "org_admin";
+                    const isReceivedLogin = isSupervisor || isOrgRole;
                     const tier = ROLE_TIERS[user.role];
 
                     return (
@@ -121,14 +122,14 @@ export function AuthPage() {
                         id={`demo-login-${user.id}`}
                         onClick={() => signInAs(user.id)}
                         className={`group flex w-full items-center gap-3.5 rounded-xl border p-3.5 text-left transition-all hover:shadow-card focus:outline-none focus:ring-2 focus:ring-primary/40 ${
-                          isHostOrg
+                          isReceivedLogin
                             ? "border-amber-300/80 bg-amber-500/5 hover:border-amber-400 hover:bg-amber-500/10"
                             : "border-border bg-card hover:border-primary/40 hover:bg-primary/5"
                         }`}
                       >
                         <span
                           className={`flex size-10 shrink-0 items-center justify-center rounded-xl font-display text-sm font-bold ${
-                            isHostOrg
+                            isReceivedLogin
                               ? "bg-amber-500/15 text-amber-700 dark:text-amber-300"
                               : "bg-primary/10 text-primary"
                           }`}
@@ -146,7 +147,7 @@ export function AuthPage() {
                             <p className="font-semibold text-sm text-foreground leading-tight">
                               {user.full_name}
                             </p>
-                            {isHostOrg && (
+                            {isReceivedLogin && (
                               <Badge
                                 variant="outline"
                                 className="border-amber-300 text-amber-700 bg-amber-50 text-[10px] font-semibold py-0 px-1.5"
@@ -159,12 +160,12 @@ export function AuthPage() {
                             {user.email}
                           </p>
                           <p className="mt-0.5 truncate text-[11px] text-muted-foreground/80">
-                            {isHostOrg
-                              ? "TechCorp Kenya Ltd • Lead Engineer & Field Mentor"
-                              : user.role === "uni_admin"
-                                ? "University of Nairobi • Dean & Assessor"
-                                : user.role === "org_admin"
-                                  ? "TechCorp Kenya Ltd • Workplace Admin"
+                            {user.id === "supervisor-1"
+                              ? "TechCorp Kenya Ltd • Field Supervisor (Tied to Alice & Kevin)"
+                              : user.role === "org_admin"
+                                ? "TechCorp Kenya Ltd • Field Mentor (Received University Login)"
+                                : user.role === "uni_admin"
+                                  ? "University of Nairobi • Dean & Assessor"
                                   : "BSc. Computer Science Candidate"}
                           </p>
                         </div>

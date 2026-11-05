@@ -3,10 +3,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   AlertTriangle,
   Building2,
+  Check,
   CheckCircle2,
+  Copy,
   GraduationCap,
+  KeyRound,
+  Lock,
   Plus,
   ShieldAlert,
+  ShieldCheck,
   UserCheck,
   Users,
 } from "lucide-react";
@@ -68,6 +73,18 @@ export function AssignmentsPage() {
   const [supervisorsList, setSupervisorsList] = useState<MockSupervisor[]>(getStoredSupervisors);
   const [internshipsList, setInternshipsList] = useState<MockInternship[]>(getStoredInternships);
   const [assignOpen, setAssignOpen] = useState(false);
+  const [credentialModalStudent, setCredentialModalStudent] = useState<{
+    student: {
+      studentId: string;
+      regNo: string;
+      name: string;
+      course: string;
+      company: string;
+      department: string;
+    };
+    orgSup?: MockSupervisor;
+    academicSup?: MockSupervisor;
+  } | null>(null);
 
   // Form state
   const [studentId, setStudentId] = useState("student-4");
@@ -140,8 +157,8 @@ export function AssignmentsPage() {
     setAssignOpen(false);
 
     const student = universityCohort.find((s) => s.studentId === studentId);
-    toast.success("Supervisor pairing updated!", {
-      description: `Dual-supervision allocated for ${student?.name ?? "student"}.`,
+    toast.success("Organization & Field Supervisor Assigned!", {
+      description: `Dual-supervision and pre-provisioned university login bound to ${student?.name ?? "student"}.`,
     });
   };
 
@@ -158,6 +175,42 @@ export function AssignmentsPage() {
 
   return (
     <div className="space-y-6 antialiased">
+      {/* ── Organization Assignment as Field Supervision Explainer Banner ── */}
+      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
+        <div className="flex items-start gap-3">
+          <div className="rounded-lg bg-primary/10 p-2 text-primary shrink-0">
+            <Building2 className="size-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-semibold text-sm text-foreground">
+                Organization Assignment as Field Supervision
+              </span>
+              <Badge
+                variant="outline"
+                className="text-[11px] font-medium border-primary/30 text-primary"
+              >
+                Pre-Provisioned University Credentials
+              </Badge>
+              <Badge variant="secondary" className="text-[11px] font-medium">
+                Student-Bound Logins
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+              In this system, assigning a student to a host organization is fundamentally{" "}
+              <strong>assigning the company's designated Field Supervisor</strong>. The University
+              Administrator provisions corporate credentials dispatched directly to the employer
+              mentor, strictly tying their login access to that student's logbook.
+            </p>
+          </div>
+        </div>
+        <div className="text-right shrink-0">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+            <ShieldCheck className="size-3.5" /> Direct University Dispatch
+          </span>
+        </div>
+      </div>
+
       {/* ── Page Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
         <div>
@@ -173,11 +226,12 @@ export function AssignmentsPage() {
             </span>
           </div>
           <h1 className="mt-2 font-display text-2xl font-bold sm:text-3xl tracking-tight">
-            Dual-Supervisor Pairing Console
+            Dual-Supervisor & Organization Allocation Console
           </h1>
           <p className="mt-1 text-sm text-primary-foreground/80 max-w-2xl">
-            Pair each candidate with an on-site Host Organization Mentor and a University Academic
-            Assessor for accreditation compliance.
+            Assign students to host organizations and university faculty. Assigning an organization
+            pairs the student with the company's designated Field Supervisor and issues a
+            pre-provisioned university login tied to that student.
           </p>
         </div>
 
@@ -185,8 +239,8 @@ export function AssignmentsPage() {
           onClick={() => openAssignModal("student-4")}
           className="rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-xs shadow-sm h-9 shrink-0"
         >
-          <UserCheck className="mr-1.5 size-4" />
-          Assign Supervisor Pair
+          <Plus className="mr-1.5 size-4" />
+          Assign Student Pair
         </Button>
       </div>
 
@@ -300,7 +354,8 @@ export function AssignmentsPage() {
               Candidate Supervisor Allocation Matrix
             </CardTitle>
             <CardDescription>
-              Assign and update both host organization mentor and university faculty assessor
+              Assigning a host organization pairs the company's designated Field Supervisor and
+              issues a pre-provisioned university login tied to that candidate
             </CardDescription>
           </div>
         </CardHeader>
@@ -310,10 +365,10 @@ export function AssignmentsPage() {
               <TableRow>
                 <TableHead>Candidate</TableHead>
                 <TableHead>Host Organization</TableHead>
-                <TableHead>🏢 Host Org Mentor</TableHead>
+                <TableHead>🏢 Field Supervisor & University-Issued Login</TableHead>
                 <TableHead>🏛️ University Assessor</TableHead>
                 <TableHead>Supervision Status</TableHead>
-                <TableHead className="text-right">Action</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -341,9 +396,14 @@ export function AssignmentsPage() {
                     </TableCell>
                     <TableCell className="text-xs">
                       {orgSup ? (
-                        <div>
+                        <div className="space-y-1">
                           <p className="font-medium text-foreground">{orgSup.full_name}</p>
-                          <p className="text-[11px] text-muted-foreground">{orgSup.title}</p>
+                          <p className="text-[11px] font-mono text-muted-foreground truncate max-w-[200px]">
+                            {orgSup.email}
+                          </p>
+                          <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                            <Lock className="size-2.5" /> Bound to {student.name.split(" ")[0]}
+                          </span>
                         </div>
                       ) : (
                         <Badge
@@ -379,14 +439,26 @@ export function AssignmentsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => openAssignModal(student.studentId)}
-                        className="text-xs h-7.5"
-                      >
-                        Pair Mentors →
-                      </Button>
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() =>
+                            setCredentialModalStudent({ student, orgSup, academicSup })
+                          }
+                          className="text-xs h-7.5 text-primary hover:bg-primary/10"
+                        >
+                          <KeyRound className="mr-1 size-3" /> Credentials
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openAssignModal(student.studentId)}
+                          className="text-xs h-7.5"
+                        >
+                          Pair Mentors →
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 );
@@ -402,11 +474,11 @@ export function AssignmentsPage() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <UserCheck className="size-5 text-primary" />
-              Assign Dual Supervisors
+              Assign Organization & Dual Supervisors
             </DialogTitle>
-            <DialogDescription>
-              Pair the candidate with a Host Organization Mentor and a University Academic
-              Supervisor.
+            <DialogDescription className="text-xs leading-relaxed">
+              Assigning a host organization pairs the company's designated Field Supervisor and
+              issues a pre-provisioned university login tied strictly to this student.
             </DialogDescription>
           </DialogHeader>
 
@@ -429,26 +501,32 @@ export function AssignmentsPage() {
 
             <div className="space-y-1">
               <div className="flex items-center justify-between">
-                <Label className="text-xs font-semibold">Host Organization Mentor (Field)</Label>
+                <Label className="text-xs font-semibold">
+                  Host Organization & Field Supervisor *
+                </Label>
                 <Badge
                   variant="outline"
                   className="text-[9px] border-amber-300 text-amber-700 bg-amber-50"
                 >
-                  Host Company
+                  🏢 University Login Issued
                 </Badge>
               </div>
               <Select value={orgSupervisorId} onValueChange={setOrgSupervisorId}>
                 <SelectTrigger className="h-9 text-xs">
-                  <SelectValue placeholder="Select Host Org Mentor" />
+                  <SelectValue placeholder="Select Host Organization & Field Supervisor" />
                 </SelectTrigger>
                 <SelectContent>
                   {orgSupervisors.map((sup) => (
                     <SelectItem key={sup.id} value={sup.id}>
-                      {sup.full_name} • {sup.organization_name}
+                      {sup.organization_name} • {sup.full_name} ({sup.title})
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              <p className="text-[11px] text-muted-foreground pt-0.5">
+                Assigning this organization pairs the company's designated Field Supervisor and
+                issues a login tied to this intern.
+              </p>
             </div>
 
             <div className="space-y-1">
@@ -460,7 +538,7 @@ export function AssignmentsPage() {
                   variant="outline"
                   className="text-[9px] border-indigo-300 text-indigo-700 bg-indigo-50"
                 >
-                  University
+                  🏛️ University
                 </Badge>
               </div>
               <Select value={academicSupervisorId} onValueChange={setAcademicSupervisorId}>
@@ -499,6 +577,109 @@ export function AssignmentsPage() {
               </Button>
             </DialogFooter>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── View Dispatched University Credentials Modal ── */}
+      <Dialog
+        open={!!credentialModalStudent}
+        onOpenChange={(open) => !open && setCredentialModalStudent(null)}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <KeyRound className="size-5 text-primary" />
+              University-Dispatched Field Supervisor Login
+            </DialogTitle>
+            <DialogDescription className="text-xs leading-relaxed">
+              Pre-provisioned corporate credentials generated by the University Administrator and
+              tied strictly to this student's placement.
+            </DialogDescription>
+          </DialogHeader>
+
+          {credentialModalStudent && (
+            <div className="space-y-3.5 py-2 text-xs">
+              <div className="rounded-lg bg-muted/50 p-3 space-y-1 border border-border/60">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-muted-foreground">Assigned Student:</span>
+                  <span className="font-bold text-foreground">
+                    {credentialModalStudent.student.name} ({credentialModalStudent.student.regNo})
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-muted-foreground">Host Organization:</span>
+                  <span className="font-semibold text-foreground">
+                    {credentialModalStudent.student.company}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-muted-foreground">Department:</span>
+                  <span>{credentialModalStudent.student.department}</span>
+                </div>
+              </div>
+
+              <div className="space-y-2 border rounded-lg p-3 bg-card border-border">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-xs text-foreground">
+                    Field Supervisor Identity
+                  </span>
+                  <Badge
+                    variant="outline"
+                    className="border-emerald-300 text-emerald-700 bg-emerald-50 text-[10px]"
+                  >
+                    Active • Pre-Provisioned
+                  </Badge>
+                </div>
+                <div>
+                  <span className="text-[11px] text-muted-foreground block">
+                    Supervisor Full Name:
+                  </span>
+                  <span className="font-semibold text-foreground">
+                    {credentialModalStudent.orgSup?.full_name ?? "James Otieno"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[11px] text-muted-foreground block">
+                    Corporate Login Email:
+                  </span>
+                  <span className="font-mono font-medium text-primary">
+                    {credentialModalStudent.orgSup?.email ?? "james.otieno@techcorp.co.ke"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[11px] text-muted-foreground block">
+                    Initial University Token / Passphrase:
+                  </span>
+                  <span className="font-mono text-muted-foreground">Attach2026!TechCorp#Kenya</span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-lg border border-primary/20 bg-primary/5 text-[11px] text-muted-foreground leading-relaxed flex items-start gap-2">
+                <Lock className="size-4 text-primary shrink-0 mt-0.5" />
+                <span>
+                  <strong>Strict Scoping Guarantee:</strong> When this field supervisor logs in,
+                  they will only have visibility and approval authority over{" "}
+                  <strong>{credentialModalStudent.student.name}</strong>. They cannot self-register
+                  or modify general university databases.
+                </span>
+              </div>
+
+              <DialogFooter className="pt-2">
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    const text = `InternTrack Field Supervisor Credentials\nOrganization: ${credentialModalStudent.student.company}\nSupervisor: ${credentialModalStudent.orgSup?.full_name ?? "James Otieno"}\nLogin: ${credentialModalStudent.orgSup?.email ?? "james.otieno@techcorp.co.ke"}\nAssigned Student: ${credentialModalStudent.student.name} (${credentialModalStudent.student.regNo})`;
+                    navigator.clipboard?.writeText(text);
+                    toast.success("Dispatched credentials copied to clipboard!");
+                  }}
+                  className="w-full text-xs font-semibold"
+                >
+                  <Copy className="mr-1.5 size-3.5" />
+                  Copy Dispatched Credentials
+                </Button>
+              </DialogFooter>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

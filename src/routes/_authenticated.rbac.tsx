@@ -226,13 +226,13 @@ export function RbacPage() {
                   </TableHead>
                   <TableHead className="text-center">
                     <div>
-                      <p className="font-semibold text-xs">Supervisor</p>
+                      <p className="font-semibold text-xs">Field Supervisor</p>
                       <span className="text-[10px] text-muted-foreground font-normal">Tier 2</span>
                     </div>
                   </TableHead>
                   <TableHead className="text-center">
                     <div>
-                      <p className="font-semibold text-xs">Org Admin</p>
+                      <p className="font-semibold text-xs">Host Org Mentor</p>
                       <span className="text-[10px] text-muted-foreground font-normal">Tier 3</span>
                     </div>
                   </TableHead>

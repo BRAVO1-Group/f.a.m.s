@@ -15,8 +15,8 @@ export type AppRole = "student" | "supervisor" | "org_admin" | "uni_admin" | "sy
 
 export const ROLE_LABELS: Record<AppRole, string> = {
   student: "Student",
-  supervisor: "Supervisor",
-  org_admin: "Organization Admin",
+  supervisor: "Host Org Field Supervisor",
+  org_admin: "Host Org Field Mentor",
   uni_admin: "University Admin",
   system_admin: "System Administrator",
 };
@@ -38,15 +38,17 @@ export const ROLE_TIERS: Record<
   },
   supervisor: {
     tier: 2,
-    level: "Tier 2: Field / Faculty Supervisor",
-    description: "Daily log sign-offs, attendance verification, mid-term/final grading",
+    level: "Tier 2: Host Org Field Supervisor",
+    description:
+      "Received university logins tied to assigned students, daily log sign-offs, and mentor feedback",
     color:
       "border-emerald-300 text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300",
   },
   org_admin: {
     tier: 3,
-    level: "Tier 3: Host Organization Admin",
-    description: "Company branch placements, corporate mentor roster, workplace audit",
+    level: "Tier 3: Host Org Field Mentor",
+    description:
+      "Company field mentor receiving university credentials, monitoring assigned intern cohort",
     color: "border-amber-300 text-amber-700 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-300",
   },
   uni_admin: {

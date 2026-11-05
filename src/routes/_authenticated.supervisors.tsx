@@ -2,11 +2,15 @@ import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Building2,
+  Copy,
   GraduationCap,
+  KeyRound,
+  Lock,
   Mail,
   Phone,
   Plus,
   Search,
+  ShieldCheck,
   UserCheck,
   UserPlus,
   Users,
@@ -61,6 +65,9 @@ export function SupervisorsPage() {
   const [filter, setFilter] = useState<"all" | "organization" | "university">("all");
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
+  const [selectedSupervisorCreds, setSelectedSupervisorCreds] = useState<MockSupervisor | null>(
+    null,
+  );
 
   // Form state
   const [supType, setSupType] = useState<SupervisorType>("organization");
@@ -134,6 +141,42 @@ export function SupervisorsPage() {
 
   return (
     <div className="space-y-6 antialiased">
+      {/* ── Host Organization Supervision Model Banner ── */}
+      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
+        <div className="flex items-start gap-3">
+          <div className="rounded-lg bg-primary/10 p-2 text-primary shrink-0">
+            <Building2 className="size-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-semibold text-sm text-foreground">
+                Host Organization Field Supervision & University Credentials
+              </span>
+              <Badge
+                variant="outline"
+                className="text-[11px] font-medium border-primary/30 text-primary"
+              >
+                Pre-Provisioned Logins
+              </Badge>
+              <Badge variant="secondary" className="text-[11px] font-medium">
+                Student-Bound Access
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+              Host Organization Field Supervisors receive login credentials directly from the
+              university. When an organization is assigned to an intern, the field supervisor's
+              login is automatically linked strictly to that student. Supervisors cannot
+              self-register.
+            </p>
+          </div>
+        </div>
+        <div className="text-right shrink-0">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+            <ShieldCheck className="size-3.5" /> University Provisioned
+          </span>
+        </div>
+      </div>
+
       {/* ── Page Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
         <div>
@@ -331,12 +374,27 @@ export function SupervisorsPage() {
                     </div>
 
                     <div className="pt-2 border-t border-border/50 flex items-center justify-between text-xs">
-                      <span className="text-[11px] text-muted-foreground">
-                        Assigned Candidates:
-                      </span>
-                      <Badge variant="secondary" className="font-mono text-[10px]">
-                        {sup.assigned_student_ids.length} interns
-                      </Badge>
+                      <div>
+                        <span className="text-[11px] text-muted-foreground block">
+                          {isOrg ? "Bound Interns:" : "Assigned Candidates:"}
+                        </span>
+                        <Badge variant="secondary" className="font-mono text-[10px]">
+                          {sup.assigned_student_ids.length > 0
+                            ? `${sup.assigned_student_ids.length} student${sup.assigned_student_ids.length > 1 ? "s" : ""}`
+                            : "Unassigned"}
+                        </Badge>
+                      </div>
+
+                      {isOrg && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setSelectedSupervisorCreds(sup)}
+                          className="h-7 text-[11px] px-2 text-primary hover:bg-primary/10"
+                        >
+                          <KeyRound className="mr-1 size-3" /> Credentials
+                        </Button>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -345,6 +403,105 @@ export function SupervisorsPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* ── View Supervisor Credentials Modal ── */}
+      <Dialog
+        open={!!selectedSupervisorCreds}
+        onOpenChange={(open) => !open && setSelectedSupervisorCreds(null)}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <KeyRound className="size-5 text-primary" />
+              University-Dispatched Supervisor Credentials
+            </DialogTitle>
+            <DialogDescription className="text-xs leading-relaxed">
+              Pre-provisioned corporate logins issued by University of Nairobi to the employer field
+              mentor.
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedSupervisorCreds && (
+            <div className="space-y-3.5 py-2 text-xs">
+              <div className="rounded-lg bg-muted/50 p-3 space-y-1.5 border border-border/60">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-muted-foreground">Field Supervisor:</span>
+                  <span className="font-bold text-foreground">
+                    {selectedSupervisorCreds.full_name}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-muted-foreground">Host Organization:</span>
+                  <span className="font-semibold text-foreground">
+                    {selectedSupervisorCreds.organization_name}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-muted-foreground">Department:</span>
+                  <span>{selectedSupervisorCreds.faculty_department}</span>
+                </div>
+              </div>
+
+              <div className="space-y-2 border rounded-lg p-3 bg-card border-border">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-xs text-foreground">
+                    Authentication Record
+                  </span>
+                  <Badge
+                    variant="outline"
+                    className="border-emerald-300 text-emerald-700 bg-emerald-50 text-[10px]"
+                  >
+                    Pre-Provisioned • Active
+                  </Badge>
+                </div>
+                <div>
+                  <span className="text-[11px] text-muted-foreground block">
+                    Corporate Login Email:
+                  </span>
+                  <span className="font-mono font-medium text-primary">
+                    {selectedSupervisorCreds.email}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[11px] text-muted-foreground block">
+                    Dispatched Initial Token:
+                  </span>
+                  <span className="font-mono text-muted-foreground">Attach2026!TechCorp#Kenya</span>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-lg border border-primary/20 bg-primary/5 text-[11px] text-muted-foreground leading-relaxed flex items-start gap-2">
+                <Lock className="size-4 text-primary shrink-0 mt-0.5" />
+                <span>
+                  <strong>Student-Bound Access:</strong> When this mentor logs in, their dashboard
+                  and review queue are strictly scoped to their assigned student interns (
+                  <strong>
+                    {selectedSupervisorCreds.assigned_student_ids.length > 0
+                      ? "Alice Wanjiku & Kevin Kiprono"
+                      : "Pending placement pairing"}
+                  </strong>
+                  ). Self-registration is restricted.
+                </span>
+              </div>
+
+              <DialogFooter className="pt-2">
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    const text = `InternTrack Field Supervisor Login\nSupervisor: ${selectedSupervisorCreds.full_name}\nOrganization: ${selectedSupervisorCreds.organization_name}\nEmail: ${selectedSupervisorCreds.email}\nScope: Bound strictly to assigned candidates.`;
+                    navigator.clipboard?.writeText(text);
+                    toast.success("Dispatched credentials copied to clipboard!");
+                  }}
+                  className="w-full text-xs font-semibold"
+                >
+                  <Copy className="mr-1.5 size-3.5" />
+                  Copy Login Details
+                </Button>
+              </DialogFooter>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* ── Create Supervisor Dialog ── */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
