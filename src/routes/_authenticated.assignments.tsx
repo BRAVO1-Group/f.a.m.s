@@ -212,32 +212,29 @@ export function AssignmentsPage() {
       </div>
 
       {/* ── Page Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
+            <h1 className="font-display text-2xl font-bold sm:text-3xl tracking-tight text-foreground">
+              Supervisor &amp; Organization Pairing
+            </h1>
             <Badge
               variant="outline"
-              className="border-white/30 bg-white/10 text-white text-xs font-semibold"
+              className="text-xs border-primary/30 text-primary bg-primary/5 font-semibold"
             >
-              Mentorship Governance
+              Dual Mentorship
             </Badge>
-            <span className="text-xs text-primary-foreground/75">
-              Dual-Track Attachment Oversight
-            </span>
           </div>
-          <h1 className="mt-2 font-display text-2xl font-bold sm:text-3xl tracking-tight">
-            Dual-Supervisor & Organization Allocation Console
-          </h1>
-          <p className="mt-1 text-sm text-primary-foreground/80 max-w-2xl">
-            Assign students to host organizations and university faculty. Assigning an organization
-            pairs the student with the company's designated Field Supervisor and issues a
-            pre-provisioned university login tied to that student.
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+            Pair students with host organization field supervisors and faculty mentors. Field
+            supervisors receive pre-provisioned university logins.
           </p>
         </div>
 
         <Button
           onClick={() => openAssignModal("student-4")}
-          className="rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-xs shadow-sm h-9 shrink-0"
+          size="sm"
+          className="rounded-xl font-semibold text-xs h-9 shrink-0 shadow-xs"
         >
           <Plus className="mr-1.5 size-4" />
           Assign Student Pair

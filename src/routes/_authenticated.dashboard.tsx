@@ -2344,57 +2344,55 @@ function UniversityAdminDashboard({
 
   return (
     <div className="space-y-6 antialiased">
-      {/* ── Dean Executive Header ── */}
-      <div className="rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge
-                variant="outline"
-                className="border-white/30 bg-white/10 text-white text-xs font-semibold"
-              >
-                Institutional Dean & Accreditation Console
-              </Badge>
-              <span className="text-xs text-primary-foreground/75">
-                University of Nairobi • School of Computing & Informatics
-              </span>
-            </div>
-            <h1 className="mt-2.5 font-display text-2xl font-bold sm:text-3xl tracking-tight">
+      {/* ── Clean Dean Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <h1 className="font-display text-2xl font-bold sm:text-3xl tracking-tight text-foreground">
               {greeting}, {name}
             </h1>
-            <p className="mt-1 text-sm text-primary-foreground/80 max-w-2xl">
-              Institutional governance: manage industry and university supervisors, assign dual
-              mentors, enforce role-based access control (RBAC), and review accreditation dossiers.
-            </p>
+            <Badge
+              variant="outline"
+              className="text-xs border-primary/30 text-primary bg-primary/5 font-semibold"
+            >
+              University Dean
+            </Badge>
           </div>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+            University of Nairobi • School of Computing &amp; Informatics • Placement &amp;
+            Mentorship Console
+          </p>
+        </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            <Button
-              onClick={() => setCreateSupervisorOpen(true)}
-              className="rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-xs shadow-sm h-9"
-            >
-              <UserPlus className="mr-1.5 size-4" />
-              Create Supervisor Account
-            </Button>
-            <Button
-              onClick={() => handleOpenAssignModal("student-4")}
-              variant="outline"
-              className="rounded-xl border-white/30 bg-white/10 text-white hover:bg-white/20 font-semibold text-xs h-9"
-            >
-              <UserCheck className="mr-1.5 size-4" />
-              Assign Supervisors
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="rounded-xl border-white/30 bg-white/10 text-white hover:bg-white/20 font-semibold text-xs h-9"
-            >
-              <Link to="/reports">
-                <FileBarChart className="mr-1.5 size-4" />
-                Dossier (PDF)
-              </Link>
-            </Button>
-          </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            onClick={() => setCreateSupervisorOpen(true)}
+            size="sm"
+            className="rounded-xl font-semibold text-xs h-9 shadow-xs"
+          >
+            <UserPlus className="mr-1.5 size-4" />
+            Create Supervisor
+          </Button>
+          <Button
+            onClick={() => handleOpenAssignModal("student-4")}
+            size="sm"
+            variant="outline"
+            className="rounded-xl font-semibold text-xs h-9"
+          >
+            <UserCheck className="mr-1.5 size-4" />
+            Assign Mentors
+          </Button>
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="rounded-xl font-semibold text-xs h-9"
+          >
+            <Link to="/reports">
+              <FileBarChart className="mr-1.5 size-4" />
+              Dossier (PDF)
+            </Link>
+          </Button>
         </div>
       </div>
 

@@ -178,31 +178,29 @@ export function SupervisorsPage() {
       </div>
 
       {/* ── Page Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
+            <h1 className="font-display text-2xl font-bold sm:text-3xl tracking-tight text-foreground">
+              Supervisor Accounts
+            </h1>
             <Badge
               variant="outline"
-              className="border-white/30 bg-white/10 text-white text-xs font-semibold"
+              className="text-xs border-primary/30 text-primary bg-primary/5 font-semibold"
             >
-              Institutional Roster
+              Roster Management
             </Badge>
-            <span className="text-xs text-primary-foreground/75">
-              Dual-Track Supervision Directory
-            </span>
           </div>
-          <h1 className="mt-2 font-display text-2xl font-bold sm:text-3xl tracking-tight">
-            Supervisor Account Management
-          </h1>
-          <p className="mt-1 text-sm text-primary-foreground/80 max-w-2xl">
-            Create and maintain accounts for both Host Organization Mentors (field supervisors) and
-            University Academic Supervisors (faculty assessors).
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+            Create and maintain accounts for Host Organization Mentors (field supervisors) and
+            University Academic Supervisors.
           </p>
         </div>
 
         <Button
           onClick={() => setCreateOpen(true)}
-          className="rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-xs shadow-sm h-9 shrink-0"
+          size="sm"
+          className="rounded-xl font-semibold text-xs h-9 shrink-0 shadow-xs"
         >
           <UserPlus className="mr-1.5 size-4" />
           Create Supervisor Account
