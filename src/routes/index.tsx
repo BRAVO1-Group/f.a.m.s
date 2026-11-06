@@ -1,15 +1,20 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { toast } from "sonner";
 import {
+  AlertCircle,
   ArrowRight,
   Award,
   BookOpen,
+  Building2,
   CalendarCheck,
   Check,
   CheckCircle2,
+  CheckSquare,
   ChevronRight,
   Clock,
   Compass,
+  ExternalLink,
   FileCheck,
   FileText,
   GraduationCap,
@@ -17,6 +22,7 @@ import {
   LayoutDashboard,
   MessageSquareCheck,
   Milestone,
+  RotateCcw,
   ShieldCheck,
   Sparkles,
   TrendingUp,
@@ -60,6 +66,40 @@ function LandingPage() {
   const [activeRoleTab, setActiveRoleTab] = useState<"students" | "supervisors" | "universities">(
     "students",
   );
+
+  // ── Interactive Simulation State (Landing Page Sandbox) ──
+  const [simActiveEntry, setSimActiveEntry] = useState<1 | 2>(1);
+  const [simStatusEntry1, setSimStatusEntry1] = useState<
+    "approved" | "pending" | "needs_correction"
+  >("approved");
+  const [simStatusEntry2, setSimStatusEntry2] = useState<
+    "approved" | "pending" | "needs_correction"
+  >("pending");
+  const [simFeedbackEntry1, setSimFeedbackEntry1] = useState(
+    "Excellent work! The automated test coverage is impressive. Tomorrow let's wire these endpoints up to the frontend client.",
+  );
+  const [simFeedbackEntry2, setSimFeedbackEntry2] = useState(
+    "Solid indexing strategy. Make sure to double check foreign key constraints on the logs table.",
+  );
+  const [simClockedIn, setSimClockedIn] = useState(false);
+  const [simVerifiedDays, setSimVerifiedDays] = useState(42);
+  const [simMarkApproved, setSimMarkApproved] = useState(false);
+
+  const handleResetSimulation = () => {
+    setSimActiveEntry(1);
+    setSimStatusEntry1("approved");
+    setSimStatusEntry2("pending");
+    setSimFeedbackEntry1(
+      "Excellent work! The automated test coverage is impressive. Tomorrow let's wire these endpoints up to the frontend client.",
+    );
+    setSimFeedbackEntry2(
+      "Solid indexing strategy. Make sure to double check foreign key constraints on the logs table.",
+    );
+    setSimClockedIn(false);
+    setSimVerifiedDays(42);
+    setSimMarkApproved(false);
+    toast.info("Simulation reset to initial state");
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
@@ -198,27 +238,27 @@ function LandingPage() {
             <div id="preview-sandbox" className="relative mt-14 sm:mt-18">
               <div className="absolute -inset-2 rounded-3xl bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 blur-xl opacity-70" />
 
-              <div className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-elevated">
+              <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-card shadow-elevated">
                 {/* Window Chrome Header */}
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-muted/40 px-4 py-3 sm:px-6">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/80 bg-muted/40 px-4 py-3 sm:px-6">
                   <div className="flex items-center gap-2">
-                    <span className="size-3 rounded-full bg-destructive/60" />
-                    <span className="size-3 rounded-full bg-warning/60" />
-                    <span className="size-3 rounded-full bg-success/60" />
-                    <span className="ml-3 hidden text-xs font-mono text-muted-foreground sm:inline">
+                    <span className="size-2.5 rounded-full bg-[#ef4444]" />
+                    <span className="size-2.5 rounded-full bg-[#f59e0b]" />
+                    <span className="size-2.5 rounded-full bg-[#10b981]" />
+                    <span className="ml-3 hidden text-xs font-mono text-muted-foreground/80 sm:inline">
                       app.interntrack.internal/workspace
                     </span>
                   </div>
 
                   {/* Sandbox Role Switcher Tabs */}
-                  <div className="flex rounded-xl bg-background p-1 border border-border text-xs font-medium">
+                  <div className="flex items-center gap-1 text-xs">
                     <button
                       type="button"
                       onClick={() => setActivePreview("student")}
-                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
+                      className={`flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 transition font-medium ${
                         activePreview === "student"
                           ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                          : "text-muted-foreground hover:text-foreground"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                       }`}
                     >
                       <BookOpen className="size-3.5" />
@@ -227,10 +267,10 @@ function LandingPage() {
                     <button
                       type="button"
                       onClick={() => setActivePreview("supervisor")}
-                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
+                      className={`flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 transition font-medium ${
                         activePreview === "supervisor"
                           ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                          : "text-muted-foreground hover:text-foreground"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                       }`}
                     >
                       <ShieldCheck className="size-3.5" />
@@ -239,10 +279,10 @@ function LandingPage() {
                     <button
                       type="button"
                       onClick={() => setActivePreview("university")}
-                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
+                      className={`flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 transition font-medium ${
                         activePreview === "university"
                           ? "bg-primary text-primary-foreground shadow-xs font-semibold"
-                          : "text-muted-foreground hover:text-foreground"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                       }`}
                     >
                       <GraduationCap className="size-3.5" />
@@ -253,226 +293,576 @@ function LandingPage() {
 
                 {/* Preview Tab Contents */}
                 <div className="p-4 sm:p-7 bg-background/50">
+                  {/* ────────────────── 1. STUDENT VIEW ────────────────── */}
                   {activePreview === "student" && (
-                    <div className="space-y-6">
-                      {/* Student Top Bar */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-border bg-card p-4">
+                    <div className="space-y-4 sm:space-y-5">
+                      {/* Interactive Simulation Controls Strip */}
+                      <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-dashed border-primary/30 bg-primary/5 px-3.5 py-2 text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-primary flex items-center gap-1">
+                            <Sparkles className="size-3.5" />
+                            Interactive Simulator:
+                          </span>
+                          <span className="text-muted-foreground hidden sm:inline">
+                            Switch entries or test clock-in
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex rounded-lg border border-border bg-card p-0.5 text-[11px]">
+                            <button
+                              type="button"
+                              onClick={() => setSimActiveEntry(1)}
+                              className={`rounded-md px-2.5 py-1 font-medium transition ${
+                                simActiveEntry === 1
+                                  ? "bg-primary text-primary-foreground shadow-xs"
+                                  : "text-muted-foreground hover:text-foreground"
+                              }`}
+                            >
+                              Sept 23 (API)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setSimActiveEntry(2)}
+                              className={`rounded-md px-2.5 py-1 font-medium transition ${
+                                simActiveEntry === 2
+                                  ? "bg-primary text-primary-foreground shadow-xs"
+                                  : "text-muted-foreground hover:text-foreground"
+                              }`}
+                            >
+                              Sept 24 (Database)
+                            </button>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSimClockedIn(!simClockedIn);
+                              if (!simClockedIn) {
+                                toast.success(
+                                  "Simulated Clock-In recorded! Verified via TechCorp WiFi beacon.",
+                                );
+                              } else {
+                                toast.info(
+                                  "Simulated Clock-Out: 8.5 work hours logged for accreditation.",
+                                );
+                              }
+                            }}
+                            className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] font-semibold transition ${
+                              simClockedIn
+                                ? "border-success/40 bg-success/15 text-success"
+                                : "border-border bg-card text-foreground hover:bg-muted"
+                            }`}
+                          >
+                            <Clock className="size-3" />
+                            {simClockedIn ? "🟢 Clocked In (08:30)" : "Clock In"}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Student Summary Top Card */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-border/80 bg-card p-4 sm:p-5 shadow-2xs">
                         <div className="flex items-center gap-3">
-                          <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary font-bold">
+                          <div className="flex size-10 items-center justify-center rounded-full bg-primary/15 text-primary font-bold text-xs shrink-0">
                             AW
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <h3 className="font-semibold text-sm sm:text-base">Alice Wanjiku</h3>
+                              <h3 className="font-bold text-sm sm:text-base text-foreground">
+                                Alice Wanjiku
+                              </h3>
                               <Badge
                                 variant="outline"
-                                className="text-xs border-success/30 bg-success/10 text-success"
+                                className="border-[#cbe4d1] bg-[#ecf7ed] text-[#1e5837] dark:border-success/30 dark:bg-success/20 dark:text-success text-xs font-medium rounded-full px-2.5 py-0.5"
                               >
                                 Active Placement
                               </Badge>
                             </div>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-muted-foreground mt-0.5">
                               Software Engineering Intern @ TechCorp Kenya Ltd • Week 9 of 12
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2.5">
                           <span className="text-xs text-muted-foreground">Required Days:</span>
-                          <span className="font-display font-semibold text-sm">42 / 60 (70%)</span>
-                          <div className="w-24 h-2 rounded-full bg-muted overflow-hidden">
-                            <div className="h-full bg-primary rounded-full w-[70%]" />
+                          <span className="font-bold text-xs sm:text-sm text-foreground">
+                            {simVerifiedDays} / 60 ({Math.round((simVerifiedDays / 60) * 100)}%)
+                          </span>
+                          <div className="h-2 w-24 sm:w-36 overflow-hidden rounded-full bg-[#eae7dd] dark:bg-muted shrink-0">
+                            <div
+                              className="h-full rounded-full bg-primary transition-all duration-500"
+                              style={{
+                                width: `${Math.min(100, Math.round((simVerifiedDays / 60) * 100))}%`,
+                              }}
+                            />
                           </div>
                         </div>
                       </div>
 
                       {/* Mock Logbook Entry Card */}
-                      <div className="rounded-xl border border-border bg-card p-5 shadow-xs space-y-4">
-                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
+                      <div className="rounded-2xl border border-border/80 bg-card p-5 sm:p-6 shadow-2xs space-y-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/70 pb-3">
                           <div className="flex items-center gap-2">
                             <span className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                              <FileCheck className="size-4" />
+                              <FileText className="size-4" />
                             </span>
-                            <span className="font-semibold text-sm">Today's Activity Entry</span>
+                            <span className="font-bold text-sm text-foreground">
+                              {simActiveEntry === 1
+                                ? "Today's Activity Entry"
+                                : "Daily Activity Entry"}
+                            </span>
                             <span className="text-xs text-muted-foreground">
-                              • Sept 23, 2026 (08:30 - 17:00)
+                              {simActiveEntry === 1
+                                ? "• Sept 23, 2026 (08:30 - 17:00)"
+                                : "• Sept 24, 2026 (08:30 - 17:00)"}
                             </span>
                           </div>
-                          <Badge className="bg-success text-success-foreground hover:bg-success/90 text-xs">
-                            <CheckCircle2 className="mr-1 size-3" />
-                            Approved by James Otieno
-                          </Badge>
+
+                          {/* Dynamic Status Badge */}
+                          {(simActiveEntry === 1 ? simStatusEntry1 : simStatusEntry2) ===
+                          "approved" ? (
+                            <Badge className="bg-[#205e42] hover:bg-[#184933] text-white text-xs font-semibold px-3 py-1 rounded-full shadow-2xs flex items-center gap-1.5">
+                              <CheckCircle2 className="size-3.5" />
+                              Approved by James Otieno
+                            </Badge>
+                          ) : (simActiveEntry === 1 ? simStatusEntry1 : simStatusEntry2) ===
+                            "pending" ? (
+                            <Badge
+                              variant="outline"
+                              className="border-warning/40 bg-warning/15 text-warning-foreground text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"
+                            >
+                              <Clock className="size-3.5" />
+                              In Review • Awaiting James Otieno
+                            </Badge>
+                          ) : (
+                            <Badge
+                              variant="outline"
+                              className="border-destructive/40 bg-destructive/15 text-destructive text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"
+                            >
+                              <AlertCircle className="size-3.5" />
+                              Revision Requested by Supervisor
+                            </Badge>
+                          )}
                         </div>
 
-                        <div>
-                          <h4 className="font-display text-base font-semibold">
-                            Implemented REST API Endpoints with Zod Validation
-                          </h4>
-                          <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                            Built robust authentication & user onboarding endpoints using Node.js
-                            and Express. Integrated schema validation with Zod and achieved 90% unit
-                            test coverage using Jest.
-                          </p>
-                        </div>
+                        {simActiveEntry === 1 ? (
+                          <div>
+                            <h4 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
+                              Implemented REST API Endpoints with Zod Validation
+                            </h4>
+                            <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                              Built robust authentication & user onboarding endpoints using Node.js
+                              and Express. Integrated schema validation with Zod and achieved 90%
+                              unit test coverage using Jest.
+                            </p>
+                          </div>
+                        ) : (
+                          <div>
+                            <h4 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
+                              Designed PostgreSQL Schema & Indexing for Analytics Pipeline
+                            </h4>
+                            <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                              Drafted entity relationship diagrams and wrote migration scripts in
+                              Prisma for time-series attendance records. Benchmarked query execution
+                              performance using EXPLAIN ANALYZE on 50,000 synthetic rows.
+                            </p>
+                          </div>
+                        )}
 
                         <div className="flex flex-wrap items-center gap-2 pt-1">
                           <span className="text-xs font-medium text-muted-foreground">
                             Tools & Skills:
                           </span>
-                          {["Node.js", "Express", "Zod", "Jest", "REST API", "Unit Testing"].map(
-                            (skill) => (
-                              <span
-                                key={skill}
-                                className="rounded-md border border-border bg-secondary/60 px-2 py-0.5 text-xs font-medium text-secondary-foreground"
-                              >
-                                {skill}
-                              </span>
-                            ),
-                          )}
+                          {(simActiveEntry === 1
+                            ? ["Node.js", "Express", "Zod", "Jest", "REST API", "Unit Testing"]
+                            : [
+                                "PostgreSQL",
+                                "Prisma",
+                                "Docker",
+                                "SQL Optimization",
+                                "Data Modeling",
+                              ]
+                          ).map((skill) => (
+                            <span
+                              key={skill}
+                              className="rounded-md border border-border/80 bg-muted/60 px-2.5 py-0.5 text-xs font-medium text-foreground"
+                            >
+                              {skill}
+                            </span>
+                          ))}
                         </div>
 
                         {/* Supervisor Feedback Bubble */}
-                        <div className="rounded-lg border border-primary/20 bg-primary/5 p-3.5 text-xs text-foreground">
-                          <div className="flex items-center gap-2 font-semibold text-primary">
+                        <div className="rounded-xl border border-[#d6e7dc] dark:border-primary/20 bg-[#f4f8f4] dark:bg-primary/10 p-3.5 sm:p-4 text-xs text-foreground mt-3">
+                          <div className="flex items-center gap-2 font-semibold text-[#154d35] dark:text-primary">
                             <MessageSquareCheck className="size-4" />
                             <span>Mentor Feedback — James Otieno (Senior Staff Engineer)</span>
                           </div>
-                          <p className="mt-1.5 text-muted-foreground italic">
-                            "Excellent work! The automated test coverage is impressive. Tomorrow
-                            let's wire these endpoints up to the frontend client."
+                          <p className="mt-1.5 text-xs text-muted-foreground italic leading-relaxed">
+                            "{simActiveEntry === 1 ? simFeedbackEntry1 : simFeedbackEntry2}"
                           </p>
+                        </div>
+
+                        {/* Simulation hint */}
+                        <div className="flex items-center justify-between border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
+                          <span>
+                            💡 Tip: Switch to <strong>Supervisor View</strong> above to approve or
+                            update feedback for Alice!
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setActivePreview("supervisor")}
+                            className="font-semibold text-primary underline underline-offset-2 hover:opacity-80"
+                          >
+                            Open Supervisor View →
+                          </button>
                         </div>
                       </div>
                     </div>
                   )}
 
+                  {/* ────────────────── 2. SUPERVISOR VIEW ────────────────── */}
                   {activePreview === "supervisor" && (
-                    <div className="space-y-5">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-border bg-card p-4">
-                        <div>
-                          <h3 className="font-semibold text-sm sm:text-base">
-                            Pending Supervisor Review Queue
-                          </h3>
-                          <p className="text-xs text-muted-foreground">
-                            James Otieno • 2 submissions awaiting your sign-off today
-                          </p>
-                        </div>
-                        <Button asChild size="sm" variant="outline" className="text-xs">
-                          <Link to="/auth">Review Full Batch (2 items)</Link>
-                        </Button>
-                      </div>
-
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-xl border border-border bg-card p-4 shadow-xs">
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <p className="text-xs font-semibold text-primary">Alice Wanjiku</p>
-                              <h4 className="text-sm font-medium mt-0.5">
-                                Database schema design for analytics
-                              </h4>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Submitted yesterday at 18:00
-                              </p>
-                            </div>
-                            <Badge variant="secondary" className="text-[11px]">
-                              In Review
-                            </Badge>
+                    <div className="space-y-4 sm:space-y-5">
+                      {/* Supervisor Top Bar (Field Supervisor dispatched by University) */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card p-4 sm:p-5 shadow-2xs">
+                        <div className="flex items-center gap-3">
+                          <div className="flex size-10 items-center justify-center rounded-full bg-primary/15 text-primary font-bold text-xs shrink-0">
+                            JO
                           </div>
-                          <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
-                            <span className="text-xs text-muted-foreground">
-                              Tools: PostgreSQL, DBeaver
-                            </span>
-                            <div className="flex gap-2">
-                              <Button
-                                size="sm"
-                                className="h-7 text-xs bg-primary text-primary-foreground"
-                              >
-                                Quick Approve
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="rounded-xl border border-border bg-card p-4 shadow-xs">
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <p className="text-xs font-semibold text-primary">Mark Mwangi</p>
-                              <h4 className="text-sm font-medium mt-0.5">
-                                Firewall configuration & VLAN isolation
-                              </h4>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Submitted today at 16:45
-                              </p>
-                            </div>
-                            <Badge variant="secondary" className="text-[11px]">
-                              In Review
-                            </Badge>
-                          </div>
-                          <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
-                            <span className="text-xs text-muted-foreground">
-                              Tools: Cisco CLI, Wireshark
-                            </span>
-                            <div className="flex gap-2">
-                              <Button
-                                size="sm"
-                                className="h-7 text-xs bg-primary text-primary-foreground"
-                              >
-                                Quick Approve
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {activePreview === "university" && (
-                    <div className="space-y-5">
-                      <div className="rounded-xl border border-border bg-card p-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                           <div>
-                            <h3 className="font-semibold text-sm sm:text-base">
-                              Cohort Compliance & Accreditation Dashboard
-                            </h3>
-                            <p className="text-xs text-muted-foreground">
-                              University of Nairobi • Department of Computer Science • 48 Enrolled
-                              Interns
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-bold text-sm sm:text-base text-foreground">
+                                James Otieno
+                              </h3>
+                              <Badge
+                                variant="outline"
+                                className="text-xs border-primary/30 bg-primary/10 text-primary"
+                              >
+                                Field Supervisor (TechCorp Kenya Ltd)
+                              </Badge>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              University Dispatched Logins • Reviewing assigned intern:{" "}
+                              <strong>Alice Wanjiku</strong>
                             </p>
                           </div>
-                          <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">
-                            96% On Track
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Badge variant="secondary" className="text-xs">
+                            1 Pending Review
                           </Badge>
                         </div>
                       </div>
 
+                      {/* Review Cards Grid */}
+                      <div className="grid gap-4 md:grid-cols-2">
+                        {/* Alice Wanjiku's Submission Card */}
+                        <div className="rounded-2xl border border-border/80 bg-card p-4 sm:p-5 shadow-2xs space-y-3">
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <p className="text-xs font-bold text-primary">
+                                Alice Wanjiku • Sept 24 Log
+                              </p>
+                              <h4 className="text-sm font-semibold text-foreground mt-0.5">
+                                Designed PostgreSQL Schema & Indexing
+                              </h4>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Submitted today at 17:00 • Prisma & EXPLAIN ANALYZE
+                              </p>
+                            </div>
+                            <Badge
+                              variant={simStatusEntry2 === "approved" ? "default" : "outline"}
+                              className={`text-[11px] ${
+                                simStatusEntry2 === "approved"
+                                  ? "bg-[#205e42] text-white"
+                                  : simStatusEntry2 === "needs_correction"
+                                    ? "border-destructive/40 text-destructive bg-destructive/10"
+                                    : "border-warning/40 text-warning-foreground bg-warning/10"
+                              }`}
+                            >
+                              {simStatusEntry2 === "approved"
+                                ? "✓ Approved"
+                                : simStatusEntry2 === "needs_correction"
+                                  ? "Revision Requested"
+                                  : "In Review"}
+                            </Badge>
+                          </div>
+
+                          <div className="rounded-lg border border-border/60 bg-muted/30 p-2.5 text-xs text-muted-foreground">
+                            <span className="font-semibold text-foreground">
+                              Student Log Summary:{" "}
+                            </span>
+                            Drafted ER diagrams and wrote migration scripts in Prisma.
+                          </div>
+
+                          {/* Quick Interactive Actions */}
+                          <div className="space-y-2 pt-1 border-t border-border/60">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-[11px] text-muted-foreground font-medium">
+                                Supervisor Action:
+                              </span>
+                              <div className="flex items-center gap-1.5">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => {
+                                    setSimStatusEntry2("needs_correction");
+                                    setSimFeedbackEntry2(
+                                      "Please attach query benchmark execution times and foreign key diagrams.",
+                                    );
+                                    toast.error(
+                                      "Revision requested: Alice has been notified via email & dashboard.",
+                                    );
+                                  }}
+                                  className="h-7 text-xs border-destructive/30 text-destructive hover:bg-destructive/10"
+                                >
+                                  Request Revision
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  onClick={() => {
+                                    setSimStatusEntry2("approved");
+                                    if (simStatusEntry2 !== "approved") {
+                                      setSimVerifiedDays((prev) => Math.min(60, prev + 1));
+                                    }
+                                    toast.success(
+                                      "✓ Approved by James Otieno! Digitally stamped for University clearance.",
+                                    );
+                                  }}
+                                  className="h-7 text-xs bg-primary text-primary-foreground font-semibold"
+                                >
+                                  Quick Approve
+                                </Button>
+                              </div>
+                            </div>
+
+                            {/* Quick Feedback Presets */}
+                            <div>
+                              <p className="text-[11px] text-muted-foreground mb-1 font-medium">
+                                Quick Feedback Presets (updates student view live):
+                              </p>
+                              <div className="flex flex-wrap gap-1.5">
+                                {[
+                                  "Great database normalization! 👍",
+                                  "Solid indexing strategy on logs table. 🚀",
+                                  "Ready for staging migration. ✨",
+                                ].map((preset) => (
+                                  <button
+                                    key={preset}
+                                    type="button"
+                                    onClick={() => {
+                                      setSimFeedbackEntry2(preset);
+                                      toast.success("Mentor feedback updated on Alice's logbook!");
+                                    }}
+                                    className="rounded-md border border-border bg-background px-2 py-0.5 text-[11px] text-foreground hover:bg-muted transition"
+                                  >
+                                    {preset}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Secondary Assigned Student (Mark Mwangi) */}
+                        <div className="rounded-2xl border border-border/80 bg-card p-4 sm:p-5 shadow-2xs space-y-3">
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <p className="text-xs font-bold text-primary">
+                                Mark Mwangi • Sept 24 Log
+                              </p>
+                              <h4 className="text-sm font-semibold text-foreground mt-0.5">
+                                Firewall Configuration & VLAN Isolation
+                              </h4>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Submitted today at 16:45 • Cisco CLI, Wireshark
+                              </p>
+                            </div>
+                            <Badge
+                              variant={simMarkApproved ? "default" : "outline"}
+                              className={`text-[11px] ${
+                                simMarkApproved
+                                  ? "bg-[#205e42] text-white"
+                                  : "border-warning/40 text-warning-foreground bg-warning/10"
+                              }`}
+                            >
+                              {simMarkApproved ? "✓ Approved" : "In Review"}
+                            </Badge>
+                          </div>
+
+                          <div className="rounded-lg border border-border/60 bg-muted/30 p-2.5 text-xs text-muted-foreground">
+                            <span className="font-semibold text-foreground">
+                              Student Log Summary:{" "}
+                            </span>
+                            Configured subnets for engineering department & verified packet drop
+                            logs.
+                          </div>
+
+                          <div className="flex items-center justify-between border-t border-border/60 pt-3">
+                            <span className="text-[11px] text-muted-foreground">
+                              Tools: Cisco IOS, Wireshark
+                            </span>
+                            <Button
+                              size="sm"
+                              onClick={() => {
+                                setSimMarkApproved(true);
+                                toast.success(
+                                  "✓ Signed off for Mark Mwangi (Firewall configuration & VLAN isolation)",
+                                );
+                              }}
+                              className="h-7 text-xs bg-primary text-primary-foreground font-semibold"
+                            >
+                              {simMarkApproved ? "Approved ✓" : "Quick Approve"}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ────────────────── 3. UNIVERSITY VIEW ────────────────── */}
+                  {activePreview === "university" && (
+                    <div className="space-y-4 sm:space-y-5">
+                      {/* University Header */}
+                      <div className="rounded-2xl border border-border/80 bg-card p-4 sm:p-5 shadow-2xs">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-bold text-sm sm:text-base text-foreground">
+                                Cohort Compliance & Accreditation Dashboard
+                              </h3>
+                              <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">
+                                96% On Track
+                              </Badge>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              University of Nairobi • Department of Computer Science • Dean's Office
+                              & Faculty Oversight
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                toast.success(
+                                  "Accredited Logbook PDF generated with university stamp (Simulated preview).",
+                                );
+                              }}
+                              className="h-8 text-xs font-semibold"
+                            >
+                              <FileCheck className="mr-1.5 size-3.5 text-primary" />
+                              Export PDF Summary
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Stat Metrics Grid */}
                       <div className="grid gap-3 sm:grid-cols-3">
-                        <div className="rounded-xl border border-border bg-card p-4">
+                        <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-2xs">
                           <p className="text-xs text-muted-foreground">Average Attendance</p>
                           <p className="font-display text-2xl font-bold mt-1 text-foreground">
                             94.8%
                           </p>
-                          <p className="text-[11px] text-success mt-1 flex items-center gap-1">
+                          <p className="text-[11px] text-success mt-1 flex items-center gap-1 font-medium">
                             <TrendingUp className="size-3" /> +3.2% vs last term
                           </p>
                         </div>
-                        <div className="rounded-xl border border-border bg-card p-4">
+                        <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-2xs">
                           <p className="text-xs text-muted-foreground">Verified Logbook Entries</p>
                           <p className="font-display text-2xl font-bold mt-1 text-foreground">
                             1,420
                           </p>
                           <p className="text-[11px] text-muted-foreground mt-1">
-                            Across 18 host companies
+                            Across 18 host organizations
                           </p>
                         </div>
-                        <div className="rounded-xl border border-border bg-card p-4">
+                        <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-2xs">
                           <p className="text-xs text-muted-foreground">
-                            Pending Mid-Term Evaluations
+                            Pending Mid-Term Clearances
                           </p>
                           <p className="font-display text-2xl font-bold mt-1 text-foreground">3</p>
-                          <p className="text-[11px] text-warning mt-1">Automated reminders sent</p>
+                          <p className="text-[11px] text-warning mt-1 font-medium">
+                            Automated reminders dispatched
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Institutional Student Placement Spotlight Card */}
+                      <div className="rounded-2xl border border-border/80 bg-card p-4 sm:p-5 shadow-2xs space-y-3">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/60 pb-3">
+                          <div>
+                            <span className="text-xs font-bold text-primary">
+                              Student Placement Spotlight:
+                            </span>
+                            <h4 className="text-sm font-semibold text-foreground">
+                              Alice Wanjiku (BSc CS • UoN-CS-2023-0491)
+                            </h4>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() => {
+                                toast.success(
+                                  "✅ Mid-Term Audit Passed: 100% of Alice's submitted entries verified by TechCorp Kenya Ltd.",
+                                );
+                              }}
+                              className="h-7 text-xs bg-primary text-primary-foreground font-semibold"
+                            >
+                              Run Mid-Term Audit
+                            </Button>
+                          </div>
+                        </div>
+
+                        <div className="grid gap-3 sm:grid-cols-3 text-xs">
+                          <div className="rounded-xl border border-border/60 bg-muted/30 p-2.5">
+                            <span className="text-muted-foreground block text-[11px]">
+                              Field Supervisor (Dispatched):
+                            </span>
+                            <span className="font-semibold text-foreground">
+                              James Otieno @ TechCorp
+                            </span>
+                          </div>
+                          <div className="rounded-xl border border-border/60 bg-muted/30 p-2.5">
+                            <span className="text-muted-foreground block text-[11px]">
+                              Faculty Advisor:
+                            </span>
+                            <span className="font-semibold text-foreground">
+                              Dr. Agnes Kimani (UoN)
+                            </span>
+                          </div>
+                          <div className="rounded-xl border border-border/60 bg-muted/30 p-2.5">
+                            <span className="text-muted-foreground block text-[11px]">
+                              Accreditation Progress:
+                            </span>
+                            <span className="font-semibold text-primary">
+                              {simVerifiedDays} of 60 Days Verified
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   )}
+                </div>
+
+                {/* Simulation Sandbox Footer Strip */}
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/80 bg-muted/20 px-4 py-2.5 sm:px-6 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="size-3.5 text-primary" />
+                    <span>
+                      Interactive sandbox: Live bidirectional state simulation between student,
+                      supervisor, and university.
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleResetSimulation}
+                    className="flex items-center gap-1.5 font-medium text-foreground hover:text-primary transition"
+                  >
+                    <RotateCcw className="size-3" />
+                    Reset Simulation
+                  </button>
                 </div>
               </div>
             </div>
