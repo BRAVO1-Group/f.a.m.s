@@ -179,12 +179,7 @@ function LandingPage() {
 
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/5 px-3.5 py-1.5 text-xs font-semibold text-primary">
-                <Sparkles className="size-3.5" />
-                <span>Next-Gen Internship Management & Verification</span>
-              </div>
-
-              <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-[4.25rem] lg:leading-[1.08]">
+              <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-[4.25rem] lg:leading-[1.08]">
                 Where internship experience becomes{" "}
                 <span className="text-primary underline decoration-primary/30 decoration-wavy underline-offset-8">
                   verified proof
