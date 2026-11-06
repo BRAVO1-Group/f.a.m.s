@@ -373,17 +373,6 @@ export function AppShell({
             >
               <Menu className="size-5" />
             </button>
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="outline"
-                className={`text-xs font-semibold px-2 py-0.5 ${tier.color}`}
-              >
-                {tier.level}
-              </Badge>
-              <span className="text-xs text-muted-foreground hidden sm:inline">
-                • {tier.description.split(",")[0]}
-              </span>
-            </div>
           </div>
 
           <div className="flex items-center gap-3">
@@ -391,16 +380,26 @@ export function AppShell({
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium shadow-xs transition-colors hover:bg-accent focus:outline-hidden"
+                  className="flex items-center gap-2 rounded-xl border border-border bg-background px-3 py-1.5 text-xs font-medium shadow-2xs transition-colors hover:bg-muted focus:outline-hidden"
                 >
-                  <span className="hidden sm:inline text-muted-foreground">Active:</span>
+                  <Avatar className="size-6">
+                    <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-bold">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
                   <span className="font-semibold text-foreground">{activeName}</span>
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] py-0 px-1.5 text-muted-foreground font-normal hidden sm:inline-flex"
+                  >
+                    {ROLE_LABELS[activeRole]}
+                  </Badge>
                   <ChevronDown className="size-3 text-muted-foreground" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64">
                 <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground">
-                  Select Demo Stakeholder Role
+                  Switch Account Persona
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {DEMO_USERS.map((user) => {
@@ -420,13 +419,21 @@ export function AppShell({
                       <div className="min-w-0 pr-2">
                         <p className="truncate font-medium text-foreground">{user.full_name}</p>
                         <p className="truncate text-[10px] text-muted-foreground">
-                          {ROLE_LABELS[user.role]} (Tier {ROLE_TIERS[user.role].tier})
+                          {ROLE_LABELS[user.role]}
                         </p>
                       </div>
                       {isCurrent && <Check className="size-4 text-primary shrink-0" />}
                     </DropdownMenuItem>
                   );
                 })}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={signOut}
+                  className="text-xs text-destructive focus:text-destructive cursor-pointer"
+                >
+                  <LogOut className="mr-2 size-3.5" />
+                  Sign out
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
