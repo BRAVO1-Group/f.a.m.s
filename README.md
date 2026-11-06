@@ -1,386 +1,319 @@
-# InternFlow Pro
+# InternTrack Pro — Smart Internship Management System
 
-Professional Prompt: Smart Internship Management & Digital Logbook System
+InternTrack Pro is a modern, enterprise-grade Digital Internship Management & Logbook Operating System designed to replace traditional paper-based attachment logbooks with a secure, centralized, and accredited online platform.
 
-Project Name:
+The system connects **Students**, **Host Organization Field Supervisors**, **University Faculty Assessors**, and **Institutional Administrators** into a unified, real-time workflow. It streamlines daily logging, automated attendance verification, dual-track supervisor sign-offs, and institutional defense clearance.
 
-InternTrack – Smart Internship Activity Management and Monitoring System
+---
 
-Project Description:
+## Table of Contents
 
-Design and develop a modern, secure, and responsive Digital Internship Management System that replaces traditional paper-based internship logbooks with a centralized online platform. The system should help students record daily activities, enable supervisors to monitor and approve progress, and allow universities or organizations to track internship performance in real time.
+- [Overview & Value Proposition](#overview--value-proposition)
+- [System Architecture & Tech Stack](#system-architecture--tech-stack)
+- [Role-Based Access Control (RBAC Architecture)](#role-based-access-control-rbac-architecture)
+- [Core Stakeholder Modules](#core-stakeholder-modules)
+  - [1. Student Intern Portal](#1-student-intern-portal)
+  - [2. Host Organization Field Supervisor (Industry Mentor)](#2-host-organization-field-supervisor-industry-mentor)
+  - [3. University Academic Supervisor (Faculty Assessor)](#3-university-academic-supervisor-faculty-assessor)
+  - [4. University Administrator Console](#4-university-administrator-console)
+- [Functional Capabilities](#functional-capabilities)
+  - [Digital Logbook Lifecycle](#digital-logbook-lifecycle)
+  - [Attendance & Time Tracking](#attendance--time-tracking)
+  - [Dual-Supervisor Pairing & Credential Dispatch](#dual-supervisor-pairing--credential-dispatch)
+  - [RBAC Control Matrix](#rbac-control-matrix)
+  - [Accredited Report Generation & AI Assistant](#accredited-report-generation--ai-assistant)
+- [Repository Structure](#repository-structure)
+- [Getting Started & Local Development](#getting-started--local-development)
+- [Demo Personas & Test Credentials](#demo-personas--test-credentials)
+- [Build & Deployment](#build--deployment)
+- [Lovable Integration](#lovable-integration)
 
-The system should solve challenges associated with traditional internship reporting, including lost logbooks, delayed updates, inaccurate records, difficulties in supervision, and time-consuming report preparation.
+---
 
-The platform should provide an easy-to-use experience for students while giving supervisors and institutions powerful monitoring and reporting tools.
+## Overview & Value Proposition
 
-System Users
+Traditional university attachment and internship programs suffer from critical operational bottlenecks:
 
-1. Students
+- **Lost or forged physical logbooks** lacking verifiable audit trails.
+- **Delayed supervisor feedback** that reaches students weeks after tasks are completed.
+- **Uncoordinated dual supervision** between on-site industry mentors and visiting university faculty.
+- **Labor-intensive manual grading** and last-minute report preparation panics prior to academic defense.
 
-Students should have a personal dashboard where they can:
+**InternTrack Pro** resolves these challenges by providing:
 
-Create and manage their internship profile.
+- **Real-Time Verification**: Instant daily activity submission, approval, revision requests, and digital timestamping.
+- **Dual Supervision Model**: Simultaneous oversight from host organization field mentors and university academic advisors.
+- **University Credential Dispatch**: Company supervisors receive pre-provisioned university credentials tied directly to their assigned interns, preventing unauthorized access.
+- **Accredited Exports**: Instant generation of standardized, defense-ready PDF/Word logbook dossiers.
 
-View internship company details.
+---
 
-Record daily activities digitally.
+## System Architecture & Tech Stack
 
-Submit daily reports.
+InternTrack Pro is engineered as a high-performance, full-stack TypeScript application utilizing modern web standards:
 
-Upload evidence of completed work (images, documents, screenshots).
+| Layer                       | Technologies                                                                                                                |
+| :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| **Frontend Framework**      | [React 19](https://react.dev/), [TypeScript](https://www.typescriptlang.org/)                                               |
+| **Routing & SSR**           | [TanStack Start](https://tanstack.com/start), [TanStack Router](https://tanstack.com/router) (type-safe file-based routing) |
+| **Data Fetching & State**   | [TanStack Query](https://tanstack.com/query) with reactive in-memory & session persistence                                  |
+| **UI Components & Icons**   | [shadcn/ui](https://ui.shadcn.com/) primitives, [Radix UI](https://www.radix-ui.com/), [Lucide React](https://lucide.dev/)  |
+| **Styling & Design Tokens** | [Tailwind CSS v4](https://tailwindcss.com/) with custom OKLCH color palettes and glassmorphism                              |
+| **Charts & Visualizations** | [Recharts](https://recharts.org/) (time-series attendance curves, competency radars, completion meters)                     |
+| **Notifications**           | [Sonner](https://sonner.emilkowal.ski/) rich-toast notification engine                                                      |
+| **Runtime & Build Tooling** | [Vite](https://vitejs.dev/), [Nitro Server](https://nitro.unjs.io/)                                                         |
 
-Track attendance.
+---
 
-View supervisor feedback.
+## Role-Based Access Control (RBAC Architecture)
 
-Generate weekly and final internship reports.
+The system implements a **5-Tier Role-Based Access Control** hierarchy enforcing strict principle-of-least-privilege boundaries:
 
-Daily Activity Entry Form:
-
-Students should record:
-
-Date
-
-Arrival time
-
-Departure time
-
-Activity title
-
-Detailed description of work done
-
-Tools/technologies used
-
-Skills acquired
-
-Challenges faced
-
-Solutions provided
-
-Attachments/evidence
-
-Submit for supervisor approval
-
-2. Supervisor Dashboard (Dual Supervision Model)
-
-Supervisors oversee intern activities and are categorized into two complementary roles:
-
-- **Host Organization Field Supervisor (Industry Mentor)**: Based at the host company, receives pre-provisioned logins from the university, and monitors day-to-day workplace execution.
-- **University Academic Supervisor (Faculty Assessor)**: University academic staff ensuring curriculum standards, syllabus competencies, and institutional clearance.
-
-Supervisors oversee intern activities and are categorized into two complementary roles:
-
-- **Host Organization Field Supervisor (Industry Mentor)**: Based at the host company, receives pre-provisioned logins from the university, and monitors day-to-day workplace execution.
-- **University Academic Supervisor (Faculty Assessor)**: University academic staff ensuring curriculum standards, syllabus competencies, and institutional clearance.
-
-Supervisors should be able to:
-
-View assigned students (scoped strictly to candidates allocated to their direct mentorship).
-
-Monitor daily activities in real time.
-
-Review submitted logbook entries.
-
-Approve or request corrections on daily reports.
-
-Add actionable mentor feedback notes and technical recommendations.
-
-Track workplace attendance and hours logged.
-
-Evaluate student competency performance.
-
-Supervisor actions:
-
-✅ Approve submission
-
-❌ Request correction with revision instructions
-
-💬 Add technical feedback note
-
-3. University Administrator Dashboard
-
-The university administrator serves as the central governing authority responsible for internship operations, supervisor account provisioning, candidate pairing, and RBAC policy enforcement.
-
-The university admin should manage:
-
-Students (onboarding, placement tracking, and progress metrics)
-
-Internship organizations & partner employer directories
-
-Supervisor account creation (both Host Organization Field Supervisors and University Academic Supervisors)
-
-Candidate pairing & supervisor assignment (allocating students to host organization mentors and faculty assessors)
-
-Credential generation and dispatch (issuing pre-provisioned login credentials directly to company field supervisors, bound strictly to their assigned students)
-
-Internship periods & attachment cohorts
-
-Assessment reports, evaluations, and institutional defense clearance
-
-User roles & permission definitions (interactive RBAC matrix)
-
-Features:
-
-Create supervisor accounts for both industry and academic mentors.
-
-Assign host organization field supervisors and academic assessors to students.
-
-Generate and dispatch pre-provisioned login credentials to company field mentors.
-
-View real-time internship progress and dual-supervision pairing statistics.
-
-Monitor student participation and flag inactive candidates.
-
-Define user roles and customize fine-grained RBAC permissions across all tiers.
-
-Download cohort compliance summaries and accredited logbook records.
-
-4. Host Organization / Company Role (Field Supervisor Model)
-
-In this system, the host company/organization role is streamlined: companies do not self-register or independently manage an internship registration portal. Instead:
-
-- **University-Issued Pre-Provisioned Logins**: The company role simply receives login credentials directly from the university administrator.
-- **Student-Tied Account Access**: Each company/field supervisor login is strictly tied to their assigned student(s).
-- **Organization Assignment as Field Supervision**: Assigning a host organization to a student intern is fundamentally **assigning a Host Organization Field Supervisor** (industry workplace mentor) to that student.
-
-Capabilities and responsibilities of the Host Organization Field Supervisor:
-
-- **Receive Logins from University**: Log in using pre-provisioned credentials dispatched by the university attachment office (self-registration is restricted).
-- **Access Assigned Student Intern Details**: Inspect comprehensive profiles, degree programs, company placement details, and attendance meters strictly for their assigned intern(s).
-- **Review Student Submissions**: Access daily logbook submissions, technical activity reports, tools used, and problem-solving solutions created by their assigned intern(s).
-- **Approve Student Submissions**:
-  - ✅ Quick Approve daily deliverables.
-  - ❌ Request corrections with explicit revision guidance.
-  - 💬 Provide constructive technical mentorship notes recorded in the candidate's verified logbook.
-- **Monitor Workplace Attendance**: Verify on-site arrival and departure timestamps, total days completed (e.g. 42 of 60 days), and shift status.
-- **Submit Industry Evaluations**: Complete workplace assessments, score professional competencies, and submit final employer evaluations for their assigned student(s).
-
-Core System Features
-
-Digital Logbook
-
-Replace physical logbooks with a smart digital version.
-
-Features:
-
-Automatic date recording.
-
-Search previous activities.
-
-Edit before approval.
-
-Approval history.
-
-Activity timeline.
-
-Attendance Management
-
-Implement:
-
-Digital check-in/check-out.
-
-Automatic timestamps.
-
-Attendance history.
-
-Attendance percentage calculation.
-
-Optional advanced features:
-
-QR code attendance.
-
-GPS verification.
-
-Face verification.
-
-Report Generation
-
-The system should automatically generate:
-
-Daily reports
-
-Weekly reports
-
-Monthly reports
-
-Final internship report
-
-Export formats:
-
-PDF
-
-Word document
-
-Performance Monitoring
-
-Dashboard analytics:
-
-Internship completion percentage.
-
-Number of activities completed.
-
-Skills developed.
-
-Attendance rate.
-
-Supervisor ratings.
-
-Use charts and visual statistics.
-
-AI Assistant Feature (Advanced)
-
-Add an AI internship assistant that helps students write professional reports.
-
-Example:
-
-Student writes:
-
-"Worked on website design"
-
-AI improves:
-
-"Designed responsive user interface components for the CBM Films website using modern frontend development principles, improving user experience and accessibility."
-
-AI should help with:
-
-Activity descriptions.
-
-Weekly summaries.
-
-Skill identification.
-
-Report formatting.
-
-Notification System
-
-The system should notify users about:
-
-Students:
-
-Pending approvals.
-
-Supervisor comments.
-
-Missing reports.
-
-Supervisors:
-
-New submissions.
-
-Pending evaluations.
-
-Security Requirements
-
-Implement:
-
-Secure authentication.
-
-Role-based access control.
-
-Data privacy.
-
-Password encryption.
-
-Backup system.
-
-User roles (5-Tier Role-Based Access Control Architecture):
-
-1. **Student (Tier 1)**: Records daily digital activities, clocks in/out with arrival/departure timestamps, uploads proof of work, views mentor feedback, and generates certified reports.
-2. **Host Organization Field Supervisor (Tier 2 - Company)**: Receives pre-provisioned university login credentials strictly tied to assigned student(s); reviews daily activities, approves deliverables, provides technical guidance notes, and submits employer evaluations.
-3. **University Academic Supervisor (Tier 2 - Faculty)**: Academic assessor monitoring syllabus competencies, milestone progression, institutional defense clearance, and academic grading.
-4. **University Administrator (Tier 3 / Tier 4)**: Central authority that provisions supervisor accounts, assigns host organizations/field supervisors and faculty assessors to students, dispatches login credentials, and configures the RBAC matrix.
-5. **System Administrator (Tier 5)**: Manages platform infrastructure, global configurations, security audits, and system health.
-
-UI/UX Requirements
-
-Design style:
-
-Modern professional dashboard.
-
-Clean academic/business appearance.
-
-Responsive design.
-
-Mobile-friendly interface.
-
-Include:
-
-Sidebar navigation.
-
-Dashboard cards.
-
-Progress charts.
-
-Activity timeline.
-
-Calendar view.
-
-Profile management.
-
-Recommended Technology Stack
-
-Frontend:
-
-React.js / Next.js
-
-Tailwind CSS
-
-Backend:
-
-Laravel API / Django / NestJS
-
-Database:
-
-PostgreSQL / MySQL
-
-Authentication:
-
-JWT / Laravel Sanctum
-
-Storage:
-
-Cloudinary / Firebase Storage
-
-Deployment:
-
-Vercel + Cloud hosting
-
-Expected Outcome
-
-The final system should provide a complete digital solution that improves internship management by:
-
-Reducing dependence on paper logbooks.
-
-Improving communication between students and supervisors.
-
-Providing real-time internship monitoring.
-
-Increasing accuracy and transparency of internship records.
-
-Making final report preparation faster and easier.
-
-Project Category: Education Technology / Internship Management System
-
-Target Users: Universities, Internship Organizations, Supervisors, and Students. create it and we see
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/cbd528e9-26cc-47f9-bbeb-7b498ad1b9e8).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
 ```
+┌─────────────────────────────────────────────────────────────┐
+│                 Tier 5: System Administrator                │
+│     Global Infrastructure, Audit Logs, System Operations     │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────┐
+│           Tier 4 / Tier 3: University Administrator         │
+│  Supervisor Provisioning, Intern Pairing, RBAC Governance   │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+            ┌──────────────────┴──────────────────┐
+            │                                     │
+┌───────────▼─────────────┐             ┌─────────▼───────────┐
+│ Tier 2A: Field Mentor   │             │ Tier 2B: Faculty    │
+│ Host Org Supervisor     │             │ Academic Assessor   │
+│ (Dispatched Logins)     │             │ (Curriculum Defense)│
+└───────────┬─────────────┘             └─────────┬───────────┘
+            │                                     │
+            └──────────────────┬──────────────────┘
+                               │
+┌──────────────────────────────▼──────────────────────────────┐
+│                   Tier 1: Student Intern                    │
+│   Daily Logbook, Check-In/Out, Milestone Tracking, Exports  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+| Role                          |    Tier    | Primary Responsibilities & Scope                                                                                                                                                    |
+| :---------------------------- | :--------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Student Intern**            |  `Tier 1`  | Records daily technical logs, punches attendance timestamps, tracks milestones, generates accredited logbook reports.                                                               |
+| **Host Org Field Supervisor** |  `Tier 2`  | Receives university-issued logins; scoped strictly to assigned student(s); reviews logs, approves daily submissions, adds technical guidance notes, completes industry evaluations. |
+| **Academic Supervisor**       |  `Tier 2`  | Faculty assessor monitoring academic syllabus competencies, visiting assessments, and institutional defense readiness.                                                              |
+| **University Administrator**  | `Tier 3/4` | Provisions supervisor accounts, assigns host organizations/field mentors and academic staff to students, customizes RBAC permissions matrix, audits cohort compliance.              |
+| **System Administrator**      |  `Tier 5`  | Platform-level operations, security policies, backup scheduling, and infrastructure health.                                                                                         |
+
+---
+
+## Core Stakeholder Modules
+
+### 1. Student Intern Portal
+
+- **Daily Activity Logging**: Record date, check-in/out hours, technical summary, detailed task description, tools/frameworks utilized, skills acquired, challenges encountered, and evidence attachments.
+- **Real-Time Status Tracking**: Dynamic status indicators (`Draft`, `Submitted / In Review`, `Approved`, `Revision Requested`).
+- **Workplace Attendance Meter**: Real-time attendance percentage, total verified days accumulator (e.g. 42 / 60 required days), and shift duration logs.
+- **Supervisor Feedback Timeline**: Immediate visibility into mentor feedback notes with explicit guidance on requested corrections.
+- **Milestone Goals**: Interactive roadmap decomposing 12-week placements into structured milestones (Onboarding, Architecture Design, Core Development, Performance Optimization, Defense Preparation).
+
+### 2. Host Organization Field Supervisor (Industry Mentor)
+
+- **University-Dispatched Credentials**: Field supervisors log in using pre-provisioned credentials dispatched by the university administration (self-registration is disabled).
+- **Student-Bound Scope**: Access is strictly sandboxed to allocated intern(s). Field supervisors only see candidates assigned to their direct workplace supervision.
+- **One-Click Review & Approval Queue**:
+  - `Quick Approve`: Digitally stamps logbook entries as verified by host organization.
+  - `Request Revision`: Rejects inadequate entries with explicit guidance for student resubmission.
+  - `Mentor Notes`: Adds technical recommendations recorded directly in the official accreditation logbook.
+- **Attendance Verification**: Reviews daily start/finish timestamps and total completed workplace shifts.
+- **Industry Evaluations**: Evaluates professional competencies (technical proficiency, punctuality, teamwork, problem-solving).
+
+### 3. University Academic Supervisor (Faculty Assessor)
+
+- **Academic Milestone Auditing**: Evaluates whether student activities satisfy university departmental curriculum and engineering syllabus requirements.
+- **Visiting Assessment Logs**: Records notes and scoring from physical/virtual on-site evaluation visits.
+- **Mid-Term & Final Defense Clearance**: Grants institutional sign-off verifying candidates have fulfilled prerequisite days and competencies.
+
+### 4. University Administrator Console
+
+- **Supervisor Account Provisioning**: Creates accounts for both Host Organization Mentors (field supervisors) and University Academic Staff.
+- **Dual-Supervisor Allocation**: Pairs students with an employer field supervisor and a faculty advisor in a single unified workflow.
+- **Credential Dispatch Management**: Generates and dispatches pre-provisioned login credentials directly to corporate supervisors.
+- **Cohort Compliance Dashboard**: Real-time tracking across partner companies (average attendance, total verified entries, at-risk candidates).
+- **Interactive RBAC Permission Matrix**: Grants or restricts fine-grained permissions across all system roles with instant enforcement.
+
+---
+
+## Functional Capabilities
+
+### Digital Logbook Lifecycle
+
+```
+[Draft Saved] ──► [Submitted for Review] ──► [Supervisor Review Queue]
+                                                     │
+                             ┌───────────────────────┴───────────────────────┐
+                             │                                               │
+                             ▼                                               ▼
+               [Approved & Digitally Stamped]                  [Revision Requested with Notes]
+                             │                                               │
+                             ▼                                               ▼
+              (Increments Verified Days)                          (Student Edits & Resubmits)
+```
+
+### Attendance & Time Tracking
+
+- Shift tracking with automatic work-hour calculation (e.g. 08:30 – 17:00 = 8.5 hours).
+- Required days progress gauge against university targets (e.g. 42 / 60 days = 70% completed).
+- Historical log of on-time arrival and daily shift records.
+
+### Dual-Supervisor Pairing & Credential Dispatch
+
+- Assigning an organization to an intern fundamentally represents **assigning the company's designated Field Supervisor**.
+- The university administrator inputs the employer mentor's details (name, corporate email, job title, department).
+- A pre-provisioned corporate credential set is generated and linked strictly to that student's record.
+
+### RBAC Control Matrix
+
+- Full-matrix permission manager allowing university administrators to toggle granular permissions across 13 functional privileges:
+  - `logbook.create`, `logbook.edit`, `logbook.view_own`, `logbook.view_assigned`, `logbook.approve`
+  - `attendance.punch`, `attendance.view_own`, `attendance.view_assigned`
+  - `reports.generate`, `reports.export_pdf`
+  - `admin.supervisors`, `admin.assignments`, `admin.rbac`
+- Changes take effect dynamically across all active sessions.
+
+### Accredited Report Generation & AI Assistant
+
+- **Automated Dossier Generation**: Generates official accreditation reports with institution headings, attendance logs, verified supervisor stamps, and grade breakdowns.
+- **Export Formats**: Standardized PDF and Word document (.docx) formats.
+- **AI Report Assistant**: Transforms brief student log notes into polished, articulate engineering summaries adhering to institutional documentation standards.
+
+---
+
+## Repository Structure
+
+```
+intern-flow/
+├── public/                      # Static assets, logos, and favicon
+├── src/
+│   ├── components/
+│   │   ├── ui/                  # Reusable shadcn/ui components (cards, tables, badges, dialogs, etc.)
+│   │   └── AppShell.tsx         # Unified dashboard shell with responsive navigation and persona switcher
+│   ├── lib/
+│   │   ├── auth.tsx             # Authentication context, session management, and RBAC utilities
+│   │   ├── mock-data.ts         # In-memory mock database and state initializers
+│   │   └── utils.ts             # Styling and class merging helpers
+│   ├── routes/
+│   │   ├── __root.tsx           # Application root layout with Sonner Toaster
+│   │   ├── index.tsx            # Public landing page with interactive 3-role sandbox simulation
+│   │   ├── auth.tsx             # Secure login and role-dispatch demo portal
+│   │   ├── _authenticated.tsx   # Authenticated route guard layout
+│   │   ├── _authenticated.dashboard.tsx   # Role-adaptive dashboard (Student, Supervisor, University)
+│   │   ├── _authenticated.logbook.tsx     # Student digital logbook drafting & entry history
+│   │   ├── _authenticated.attendance.tsx  # Shift clock-in/out and attendance meters
+│   │   ├── _authenticated.milestones.tsx  # 12-week competency roadmap and goal tracker
+│   │   ├── _authenticated.review.tsx      # Supervisor submission review & approval queue
+│   │   ├── _authenticated.supervisors.tsx # University supervisor provisioning console
+│   │   ├── _authenticated.assignments.tsx # Dual-supervisor pairing & organization assignment
+│   │   ├── _authenticated.rbac.tsx        # Interactive RBAC permissions control matrix
+│   │   ├── _authenticated.students.tsx    # Cohort student directory & progress tracking
+│   │   ├── _authenticated.evaluations.tsx # Industrial and academic evaluation scoring
+│   │   ├── _authenticated.reports.tsx     # Defense report & accredited logbook exporter
+│   │   └── _authenticated.profile.tsx     # User profile and account preferences
+│   ├── styles.css               # Design system tokens, OKLCH color definitions, and Tailwind config
+│   ├── routeTree.gen.ts         # Automatically generated TanStack Router route tree
+│   └── start.ts / server.ts     # TanStack Start / Nitro SSR server entrypoints
+├── package.json                 # Project dependencies and script definitions
+├── vite.config.ts               # Vite configuration and build pipelines
+└── tsconfig.json                # TypeScript compiler configuration
+```
+
+---
+
+## Getting Started & Local Development
+
+### Prerequisites
+
+- **Node.js**: Version 18.18.0 or newer
+- **npm** (or **bun** / **pnpm**)
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/shaficmukama0-hash/intern-flow.git
+   cd intern-flow
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Launch the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open your browser at:
+   ```
+   http://localhost:8080/
+   ```
+
+### Available Scripts
+
+| Script            | Purpose                                                           |
+| :---------------- | :---------------------------------------------------------------- |
+| `npm run dev`     | Starts Vite dev server with hot-module replacement on port `8080` |
+| `npm run build`   | Compiles client and SSR bundles with full TypeScript validation   |
+| `npm run preview` | Previews the compiled production build locally                    |
+| `npm run format`  | Runs Prettier across all project files                            |
+| `npm run lint`    | Performs ESLint static code analysis                              |
+
+---
+
+## Demo Personas & Test Credentials
+
+The platform includes pre-configured demo personas to immediately explore each role's permissions and workflow:
+
+| Stakeholder Role                | Demo User         | Organization / Department                   | Clearance Level |
+| :------------------------------ | :---------------- | :------------------------------------------ | :-------------: |
+| **Student Intern**              | Alice Wanjiku     | TechCorp Kenya Ltd (Intern)                 |    `Tier 1`     |
+| **Host Org Field Supervisor**   | James Otieno      | TechCorp Kenya Ltd (Senior Staff Engineer)  |    `Tier 2`     |
+| **Academic Faculty Supervisor** | Dr. Agnes Kimani  | University of Nairobi (School of Computing) |    `Tier 2`     |
+| **University Administrator**    | Dr. Patrick Kamau | University of Nairobi (Dean's Office)       |    `Tier 4`     |
+| **System Administrator**        | Alex Mercer       | InternTrack Infrastructure Operations       |    `Tier 5`     |
+
+> [!TIP]
+> Use the **Account Menu** in the top navigation bar or the **Persona Quick Switcher** at the bottom of the sidebar to seamlessly toggle between personas and observe real-time RBAC UI adaptation.
+
+---
+
+## Build & Deployment
+
+InternTrack Pro compiles into a unified client-server bundle powered by TanStack Start and Nitro:
+
+```bash
+# Build production bundle
+npm run build
+```
+
+The output directory `.output/` is ready for zero-config serverless or edge deployment on **Cloudflare Pages / Workers**, **Vercel**, **Netlify**, or **Node.js Docker containers**.
+
+---
+
+## Lovable Integration
+
+This project is connected with [Lovable](https://lovable.dev).
+
+### Development with Lovable
+
+- Changes committed and pushed to the repository automatically sync with the Lovable editor.
+- Git history should preserve clean, progressive commits without history rewriting (`git push --force` or destructive rebasing).
+
+---
+
+## License
+
+This software is released under the **MIT License**. Copyright &copy; 2026 InternTrack Pro.
