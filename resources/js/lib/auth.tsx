@@ -96,6 +96,12 @@ const SESSION_KEY = "demo_user_id";
 export function getDemoUser(): MockUser {
   try {
     if (typeof window !== "undefined") {
+      const id = sessionStorage.getItem(SESSION_KEY);
+      if (id) {
+        const found = DEMO_USERS.find((u) => u.id === id);
+        if (found) return found;
+      }
+
       const search = window.location.search;
       if (search) {
         const params = new URLSearchParams(search);
@@ -118,12 +124,6 @@ export function getDemoUser(): MockUser {
             return match;
           }
         }
-      }
-
-      const id = sessionStorage.getItem(SESSION_KEY);
-      if (id) {
-        const found = DEMO_USERS.find((u) => u.id === id);
-        if (found) return found;
       }
     }
   } catch (e) {

@@ -1,5 +1,5 @@
 import { useState, useEffect, type ReactNode } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   Award,
   BookOpen,
@@ -182,7 +182,26 @@ export function AppShell({
   const [open, setOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(() => getDemoUser());
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
   const signOut = useSignOut();
+
+  // Switch demo persona and safely redirect if current route is not permitted for the new role
+  const switchPersona = (newUserId: string) => {
+    setDemoUser(newUserId);
+    setCurrentUser(getDemoUser());
+    window.dispatchEvent(new Event("demo-auth-change"));
+
+    const targetUser = DEMO_USERS.find((u) => u.id === newUserId);
+    if (targetUser) {
+      const targetRoles = targetUser.roles ?? [targetUser.role];
+      const currentNav = NAV.find(
+        (item) => pathname === item.to || pathname.startsWith(item.to + "/"),
+      );
+      if (currentNav && !currentNav.roles.some((r) => targetRoles.includes(r))) {
+        navigate({ to: "/dashboard" });
+      }
+    }
+  };
 
   // Listen for real-time persona / role changes
   useEffect(() => {
@@ -306,10 +325,7 @@ export function AppShell({
               return (
                 <button
                   key={u.id}
-                  onClick={() => {
-                    setDemoUser(u.id);
-                    window.dispatchEvent(new Event("demo-auth-change"));
-                  }}
+                  onClick={() => switchPersona(u.id)}
                   className={cn(
                     "text-[10px] font-medium py-1.5 px-2 rounded-md transition text-left truncate flex items-center gap-1",
                     isSelected
@@ -407,10 +423,7 @@ export function AppShell({
                   return (
                     <DropdownMenuItem
                       key={user.id}
-                      onClick={() => {
-                        setDemoUser(user.id);
-                        window.dispatchEvent(new Event("demo-auth-change"));
-                      }}
+                      onClick={() => switchPersona(user.id)}
                       className={cn(
                         "flex items-center justify-between py-2 text-xs cursor-pointer",
                         isCurrent && "bg-accent/70 font-semibold",

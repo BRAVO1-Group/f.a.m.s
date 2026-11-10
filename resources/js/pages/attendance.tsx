@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CalendarCheck, LogIn, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useAppUser } from "@/lib/app-user";
-import { attendance, internships, uid } from "@/lib/mock-data";
+import {
+  internships,
+  uid,
+  getStoredAttendance,
+  saveStoredAttendance,
+  type MockAttendance,
+} from "@/lib/mock-data";
 
 const todayStr = () => new Date().toISOString().slice(0, 10);
 
@@ -30,11 +36,16 @@ function hours(a: string | null, b: string | null) {
 
 export default function AttendancePage() {
   const { userId } = useAppUser();
-  const [, forceUpdate] = useState(0);
-  const refresh = () => forceUpdate((n) => n + 1);
+  const [attendanceList, setAttendanceList] = useState<MockAttendance[]>(getStoredAttendance);
+
+  useEffect(() => {
+    const handler = () => setAttendanceList(getStoredAttendance());
+    window.addEventListener("internflow-attendance-change", handler);
+    return () => window.removeEventListener("internflow-attendance-change", handler);
+  }, []);
 
   const myInternship = internships.find((i) => i.student_id === userId);
-  const rows = attendance
+  const rows = attendanceList
     .filter((a) => a.student_id === userId)
     .sort((a, b) => (a.attendance_date < b.attendance_date ? 1 : -1));
 
@@ -45,33 +56,35 @@ export default function AttendancePage() {
 
   function checkIn() {
     if (todayRow) return;
-    attendance.unshift({
+    const current = getStoredAttendance();
+    const newEntry: MockAttendance = {
       id: uid(),
       student_id: userId,
       internship_id: myInternship?.id ?? "intern-1",
       attendance_date: todayStr(),
       check_in: new Date().toISOString(),
       check_out: null,
-    });
-    refresh();
+    };
+    const updated = [newEntry, ...current];
+    saveStoredAttendance(updated);
+    setAttendanceList(updated);
     toast.success("Checked in");
   }
 
   function checkOut(id: string) {
-    const idx = attendance.findIndex((a) => a.id === id);
+    const current = getStoredAttendance();
+    const idx = current.findIndex((a) => a.id === id);
     if (idx >= 0) {
-      const rec = attendance[idx]!;
-      attendance[idx] = {
-        id: rec.id,
-        student_id: rec.student_id,
-        internship_id: rec.internship_id,
-        attendance_date: rec.attendance_date,
-        check_in: rec.check_in,
+      const rec = current[idx]!;
+      const updated = [...current];
+      updated[idx] = {
+        ...rec,
         check_out: new Date().toISOString(),
       };
+      saveStoredAttendance(updated);
+      setAttendanceList(updated);
+      toast.success("Checked out");
     }
-    refresh();
-    toast.success("Checked out");
   }
 
   return (

@@ -1001,6 +1001,28 @@ const SUPERVISORS_STORAGE_KEY = "internflow_supervisors_v1";
 const RBAC_STORAGE_KEY = "internflow_rbac_matrix_v1";
 const INTERNSHIPS_STORAGE_KEY = "internflow_internships_v1";
 const ACTIVITIES_STORAGE_KEY = "internflow_activities_v1";
+const ATTENDANCE_STORAGE_KEY = "internflow_attendance_v1";
+
+export function getStoredAttendance(): MockAttendance[] {
+  if (typeof window === "undefined") return attendance;
+  try {
+    const raw = sessionStorage.getItem(ATTENDANCE_STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    // fallback
+  }
+  return attendance;
+}
+
+export function saveStoredAttendance(data: MockAttendance[]) {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(ATTENDANCE_STORAGE_KEY, JSON.stringify(data));
+    window.dispatchEvent(new Event("internflow-attendance-change"));
+  } catch (e) {
+    // fallback
+  }
+}
 
 export function getStoredActivities(): MockActivity[] {
   if (typeof window === "undefined") return activities;

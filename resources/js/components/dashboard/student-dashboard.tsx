@@ -121,6 +121,8 @@ import {
   getStoredActivities,
   saveStoredActivities,
   approveOrCorrectActivity,
+  getStoredAttendance,
+  type MockAttendance,
   type MockActivity,
   type MockSupervisor,
   type MockInternship,
@@ -137,11 +139,17 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
   const [isCheckedIn, setIsCheckedIn] = useState(true);
   const [activityFilter, setActivityFilter] = useState<"all" | "approved" | "submitted">("all");
   const [activitiesList, setActivitiesList] = useState<MockActivity[]>(getStoredActivities);
+  const [attendanceList, setAttendanceList] = useState<MockAttendance[]>(getStoredAttendance);
 
   useEffect(() => {
-    const handler = () => setActivitiesList(getStoredActivities());
-    window.addEventListener("internflow-activities-change", handler);
-    return () => window.removeEventListener("internflow-activities-change", handler);
+    const actHandler = () => setActivitiesList(getStoredActivities());
+    const attHandler = () => setAttendanceList(getStoredAttendance());
+    window.addEventListener("internflow-activities-change", actHandler);
+    window.addEventListener("internflow-attendance-change", attHandler);
+    return () => {
+      window.removeEventListener("internflow-activities-change", actHandler);
+      window.removeEventListener("internflow-attendance-change", attHandler);
+    };
   }, []);
 
   const greeting = getGreeting();
@@ -161,7 +169,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
     allStoredSupervisors.find((s) => s.type === "university");
 
   const acts = activitiesList.filter((a) => a.student_id === userId);
-  const myAttendance = initialAttendance.filter((a) => a.student_id === userId);
+  const myAttendance = attendanceList.filter((a) => a.student_id === userId);
 
   const approvedCount = acts.filter((a) => a.status === "approved").length;
   const submittedCount = acts.filter((a) => a.status === "submitted").length;

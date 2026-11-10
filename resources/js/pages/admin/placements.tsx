@@ -37,6 +37,8 @@ import {
   profiles,
   userRoles,
   uid,
+  getStoredInternships,
+  saveStoredInternships,
   type MockOrganization,
   type MockInternship,
 } from "@/lib/mock-data";
@@ -99,7 +101,10 @@ export default function AdminPage() {
     if (!place.student_id) return;
     setSavingPlace(true);
     await new Promise((r) => setTimeout(r, 600));
-    internships.push({ id: uid(), status: "active", ...place });
+    const newPlacement: MockInternship = { id: uid(), status: "active", ...place };
+    internships.push(newPlacement);
+    const stored = getStoredInternships();
+    saveStoredInternships([newPlacement, ...stored]);
     setSavingPlace(false);
     setPlaceOpen(false);
     refresh();
