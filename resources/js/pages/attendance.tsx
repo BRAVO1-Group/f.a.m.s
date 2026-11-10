@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
 import { CalendarCheck, LogIn, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";

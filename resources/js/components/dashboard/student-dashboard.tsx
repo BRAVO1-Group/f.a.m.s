@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { getRouteApi } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   Activity,
   AlertTriangle,
@@ -137,7 +136,13 @@ import { getGreeting } from "./get-greeting";
 export function StudentDashboard({ userId, name }: { userId: string; name: string }) {
   const [isCheckedIn, setIsCheckedIn] = useState(true);
   const [activityFilter, setActivityFilter] = useState<"all" | "approved" | "submitted">("all");
-  const [activitiesList, setActivitiesList] = useState<MockActivity[]>(initialActivities);
+  const [activitiesList, setActivitiesList] = useState<MockActivity[]>(getStoredActivities);
+
+  useEffect(() => {
+    const handler = () => setActivitiesList(getStoredActivities());
+    window.addEventListener("internflow-activities-change", handler);
+    return () => window.removeEventListener("internflow-activities-change", handler);
+  }, []);
 
   const greeting = getGreeting();
   const allStoredInternships = getStoredInternships();

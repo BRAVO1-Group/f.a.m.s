@@ -1,5 +1,4 @@
-import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState, useEffect } from "react";
 import { Download, FileOutput, FileText, Loader2, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppUser } from "@/lib/app-user";
-import { activities } from "@/lib/mock-data";
+import { getStoredActivities, type MockActivity } from "@/lib/mock-data";
 
 type Period = "week" | "month" | "final";
 
@@ -30,15 +29,22 @@ export default function ReportsPage() {
   const [period, setPeriod] = useState<Period>("week");
   const [summary, setSummary] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
+  const [activitiesList, setActivitiesList] = useState<MockActivity[]>(getStoredActivities);
+
+  useEffect(() => {
+    const handler = () => setActivitiesList(getStoredActivities());
+    window.addEventListener("internflow-activities-change", handler);
+    return () => window.removeEventListener("internflow-activities-change", handler);
+  }, []);
 
   const from = since(period);
 
   const rows = useMemo(
     () =>
-      activities
+      activitiesList
         .filter((a) => a.student_id === userId && a.activity_date >= from)
         .sort((a, b) => (a.activity_date > b.activity_date ? 1 : -1)),
-    [userId, from],
+    [activitiesList, userId, from],
   );
 
   const approved = rows.filter((r) => r.status === "approved").length;

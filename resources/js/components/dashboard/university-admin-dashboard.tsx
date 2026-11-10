@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { getRouteApi } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   Activity,
   AlertTriangle,

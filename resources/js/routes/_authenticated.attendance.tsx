@@ -4,6 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import AttendancePage from "@/pages/attendance";
 
 export const Route = createFileRoute("/_authenticated/attendance")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Attendance — InternTrack" },

@@ -4,6 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import LogbookPage from "@/pages/logbook";
 
 export const Route = createFileRoute("/_authenticated/logbook")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Digital Logbook — InternTrack" },

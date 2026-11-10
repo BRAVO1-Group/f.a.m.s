@@ -1,5 +1,4 @@
-import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState, useEffect } from "react";
 import { FilePenLine, Loader2, Plus, Search, Send, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAppUser } from "@/lib/app-user";
-import { activities, internships, uid, type MockActivity } from "@/lib/mock-data";
+import {
+  activities as initialActivities,
+  internships,
+  uid,
+  getStoredActivities,
+  saveStoredActivities,
+  type MockActivity,
+} from "@/lib/mock-data";
 
 type Draft = {
   id?: string;
@@ -57,11 +63,16 @@ export default function LogbookPage() {
   const [draft, setDraft] = useState<Draft>(emptyDraft());
   const [search, setSearch] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
-  const [, forceUpdate] = useState(0);
-  const refresh = () => forceUpdate((n) => n + 1);
+  const [activitiesList, setActivitiesList] = useState<MockActivity[]>(getStoredActivities);
+
+  useEffect(() => {
+    const handler = () => setActivitiesList(getStoredActivities());
+    window.addEventListener("internflow-activities-change", handler);
+    return () => window.removeEventListener("internflow-activities-change", handler);
+  }, []);
 
   const myInternship = internships.find((i) => i.student_id === userId);
-  const data = activities.filter((a) => a.student_id === userId);
+  const data = activitiesList.filter((a) => a.student_id === userId);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -74,14 +85,15 @@ export default function LogbookPage() {
           a.tools_used.join(" ").toLowerCase().includes(q),
       )
       .sort((a, b) => (a.activity_date < b.activity_date ? 1 : -1));
-  }, [data, search /* forceUpdate dep via , */]);
+  }, [data, search]);
 
   function saveDraft(submit: boolean) {
     if (!draft.title.trim()) {
       toast.error("Title is required.");
       return;
     }
-    const idx = activities.findIndex((a) => a.id === draft.id);
+    const current = getStoredActivities();
+    const idx = current.findIndex((a) => a.id === draft.id);
     const entry: MockActivity = {
       id: draft.id ?? uid(),
       student_id: userId,
@@ -107,49 +119,42 @@ export default function LogbookPage() {
       reviewed_by: null,
       reviewed_at: null,
     };
+    let updated: MockActivity[];
     if (idx >= 0) {
-      activities[idx] = entry;
+      updated = [...current];
+      updated[idx] = entry;
     } else {
-      activities.unshift(entry);
+      updated = [entry, ...current];
     }
+    saveStoredActivities(updated);
+    setActivitiesList(updated);
     setOpen(false);
     setDraft(emptyDraft());
-    refresh();
     toast.success(submit ? "Submitted for supervisor approval" : "Saved as draft");
   }
 
   function deleteEntry(id: string) {
-    const idx = activities.findIndex((a) => a.id === id);
-    if (idx >= 0) activities.splice(idx, 1);
-    refresh();
+    const current = getStoredActivities();
+    const updated = current.filter((a) => a.id !== id);
+    saveStoredActivities(updated);
+    setActivitiesList(updated);
     toast.success("Entry deleted");
   }
 
   function submitExisting(id: string) {
-    const idx = activities.findIndex((a) => a.id === id);
+    const current = getStoredActivities();
+    const idx = current.findIndex((a) => a.id === id);
     if (idx >= 0) {
-      const a = activities[idx]!;
-      activities[idx] = {
-        id: a.id,
-        student_id: a.student_id,
-        internship_id: a.internship_id,
-        activity_date: a.activity_date,
-        arrival_time: a.arrival_time,
-        departure_time: a.departure_time,
-        title: a.title,
-        description: a.description,
-        tools_used: a.tools_used,
-        skills_gained: a.skills_gained,
-        challenges: a.challenges,
-        solutions: a.solutions,
+      const a = current[idx]!;
+      const updated = [...current];
+      updated[idx] = {
+        ...a,
         status: "submitted",
         submitted_at: new Date().toISOString(),
-        supervisor_feedback: a.supervisor_feedback,
-        reviewed_by: a.reviewed_by,
-        reviewed_at: a.reviewed_at,
       };
+      saveStoredActivities(updated);
+      setActivitiesList(updated);
     }
-    refresh();
     toast.success("Sent to your supervisor");
   }
 

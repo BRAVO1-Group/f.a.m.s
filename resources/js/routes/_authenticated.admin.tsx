@@ -4,6 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import AdminPage from "@/pages/admin/placements";
 
 export const Route = createFileRoute("/_authenticated/admin")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Administration — InternTrack" },

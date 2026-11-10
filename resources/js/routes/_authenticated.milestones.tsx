@@ -4,6 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import MilestonesPage from "@/pages/milestones";
 
 export const Route = createFileRoute("/_authenticated/milestones")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Milestones Roadmap — InternTrack" },

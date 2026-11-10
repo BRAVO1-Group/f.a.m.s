@@ -15,12 +15,7 @@ import type {
 } from "@/lib/mock-data";
 import type { AppRole } from "@/lib/auth";
 
-export type {
-  AppRole,
-  PermissionCategory,
-  RolePermissionsMap,
-  SupervisorType,
-};
+export type { AppRole, PermissionCategory, RolePermissionsMap, SupervisorType };
 
 export type User = MockUser;
 export type Activity = MockActivity;
@@ -46,4 +41,3 @@ export interface SharedData {
   };
   [key: string]: unknown;
 }
-
