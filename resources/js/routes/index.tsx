@@ -6,17 +6,17 @@ import LandingPage from "@/pages/welcome";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "InternTrack — The Modern Internship Operating System" },
+      { title: "FAMS — Field Attachment Management System" },
       {
         name: "description",
         content:
-          "Transform paper logbooks into verified real-world achievements. Unified daily logging, automated attendance, milestone tracking, and supervisor sign-offs.",
+          "Field Attachment Management System for universities, students, host organisations and supervisors.",
       },
-      { property: "og:title", content: "InternTrack — The Modern Internship Operating System" },
+      { property: "og:title", content: "FAMS — Field Attachment Management System" },
       {
         property: "og:description",
         content:
-          "One clear platform for students, supervisors, and universities to track, verify, and celebrate internship growth.",
+          "Field Attachment Management System for universities, students, host organisations and supervisors.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>FAMS — Field Attachment Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Inter+Tight:wght@100..900&display=swap" rel="stylesheet">
+  <style>
+    /* ── Colour Tokens & Variables ── */
+    :root {
+      --green-900: #0b2f20;
+      --green-800: #11402c;
+      --green-700: #1a5a40;
+      --mint: #cfeee0;
+      --ink: #0d0f0e;
+      --n: 1px;
+      --mbs: 1;
+      --th: 120px;
+      --glide: 0s;
+    }
+
+    @property --m0 {
+      syntax: '<length>';
+      inherits: true;
+      initial-value: 0px;
+    }
+    @property --mt {
+      syntax: '<length>';
+      inherits: true;
+      initial-value: 0px;
+    }
+    @property --mb {
+      syntax: '<length>';
+      inherits: true;
+      initial-value: 0px;
+    }
+    @property --ms {
+      syntax: '<length>';
+      inherits: true;
+      initial-value: 0px;
+    }
+
+    /* ── Global Reset ── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--green-900);
+      color: #fff;
+      font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* ── Stage ── */
+    .stage {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(180deg, #0c3523 0%, #14503a 45%, #9fd8bf 100%);
+    }
+
+    /* ── The 1440x810 Frame ── */
+    .frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1440px;
+      height: 810px;
+      transform-origin: 0 0;
+      will-change: transform;
+    }
+
+    .frame.glide {
+      transition: transform var(--glide) cubic-bezier(.65, 0, .35, 1);
+    }
+
+    /* ── Layer Overhangs & Masking ── */
+    .plate {
+      position: absolute;
+      left: 0;
+      top: -73.125px;
+      width: 1440px;
+      height: 956.25px;
+      pointer-events: none;
+      --o: 73.125px;
+      --ob: 73.125px;
+      will-change: transform, filter;
+    }
+
+    .caseplate {
+      position: absolute;
+      left: 0;
+      top: -105.47px;
+      width: 1440px;
+      height: 956.25px;
+      opacity: 0;
+      pointer-events: none;
+      --o: 105.47px;
+      --ob: 40.78px;
+      z-index: 7;
+      will-change: opacity, filter;
+    }
+
+    .trans {
+      position: absolute;
+      inset: 0;
+      width: 1440px;
+      height: 810px;
+      object-fit: cover;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 6;
+      --o: 0px;
+      --ob: 0px;
+    }
+
+    .plate, .trans, .caseplate {
+      mask-image:
+        linear-gradient(180deg,
+          transparent calc(var(--o, 0px) + var(--m0)),
+          rgba(0, 0, 0, .35) calc(var(--o, 0px) + var(--m0) + var(--mt) * .37),
+          #000 calc(var(--o, 0px) + var(--m0) + var(--mt)),
+          #000 calc(100% - var(--ob, 0px) - var(--mb)),
+          transparent calc(100% - var(--ob, 0px))),
+        linear-gradient(90deg, transparent 0, #000 var(--ms), #000 calc(100% - var(--ms)), transparent 100%);
+      -webkit-mask-image:
+        linear-gradient(180deg,
+          transparent calc(var(--o, 0px) + var(--m0)),
+          rgba(0, 0, 0, .35) calc(var(--o, 0px) + var(--m0) + var(--mt) * .37),
+          #000 calc(var(--o, 0px) + var(--m0) + var(--mt)),
+          #000 calc(100% - var(--ob, 0px) - var(--mb)),
+          transparent calc(100% - var(--ob, 0px))),
+        linear-gradient(90deg, transparent 0, #000 var(--ms), #000 calc(100% - var(--ms)), transparent 100%);
+      mask-composite: intersect;
+      -webkit-mask-composite: source-in;
+      transition:
+        --m0 var(--glide) cubic-bezier(.65, 0, .35, 1),
+        --mt var(--glide) cubic-bezier(.65, 0, .35, 1),
+        --mb var(--glide) cubic-bezier(.65, 0, .35, 1),
+        --ms var(--glide) cubic-bezier(.65, 0, .35, 1);
+    }
+
+    /* Edge Fade State Classes */
+    .d-fade { --m0: 0px; --mt: 0px; --mb: 0px; --ms: 0px; }
+    .d-fade.m-case { --m0: 0px; --mt: 110px; --mb: 60px; --ms: 170px; }
+    .m-fade { --m0: 0px; --mt: 190px; --mb: 0px; --ms: 140px; }
+    .m-fade.m-case { --m0: 48px; --mt: 40px; --mb: 70px; --ms: 140px; }
+
+    /* ── Wordmark "FAMS" (Desktop) ── */
+    svg.wm {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1440px;
+      height: 380px;
+      overflow: visible;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* ── Man Cutout ── */
+    img.cut {
+      position: absolute;
+      left: 0;
+      top: -73.125px;
+      width: 1440px;
+      height: 956.25px;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    /* ── Handwriting Script ── */
+    .script {
+      position: absolute;
+      top: 148px;
+      left: 88px;
+      z-index: 6;
+      font-family: 'Caveat Brush', cursive;
+      font-size: 82px;
+      line-height: 1;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      transform: rotate(-8deg);
+      transform-origin: 0 50%;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, .18);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    /* ── Lanyard Badge (Desktop Frame) ── */
+    .badge {
+      position: absolute;
+      left: 986px;
+      top: -165px;
+      width: 582px;
+      height: 1030px;
+      transform-origin: 288px 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .badge-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .card {
+      position: absolute;
+      left: 172px;
+      top: 536px;
+      width: 238px;
+      height: 392px;
+      padding: 20px 16px 0 16px;
+      color: #141615;
+      font-family: 'Inter Tight', sans-serif;
+      pointer-events: none;
+    }
+
+    .card h4 {
+      font-size: 30px;
+      line-height: 0.95;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+      color: #141615;
+    }
+
+    .card .yr {
+      position: absolute;
+      right: 16px;
+      top: 62px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #141615;
+    }
+
+    .card .role {
+      margin-top: 12px;
+      padding-top: 5px;
+      border-top: 1px solid #222;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      color: #141615;
+    }
+
+    .card .ph {
+      width: 92px;
+      height: 112px;
+      margin: 12px auto;
+      border-radius: 6px;
+      background-color: #dfe4e1;
+      background-image: url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261111_001143_ec356b1a-50a2-4b50-82fc-e346c914a406.png&w=2048&q=85');
+      background-size: 471px 313px;
+      background-position: -212px -16px;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06);
+    }
+
+    .card .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 6px 0 3px;
+      border-bottom: 1.5px dotted #333;
+      color: #141615;
+    }
+
+    .card .row span {
+      font-weight: 700;
+    }
+
+    .card .row b {
+      font-weight: 600;
+    }
+
+    .badge .hit {
+      position: absolute;
+      left: 160px;
+      top: 470px;
+      width: 262px;
+      height: 440px;
+      pointer-events: auto;
+      cursor: grab;
+    }
+
+    /* ── Laptop Screen ── */
+    .screen {
+      position: absolute;
+      left: 272.8px;
+      top: 102.7px;
+      width: 894.4px;
+      height: 604.7px;
+      border-radius: 3px;
+      background: #000;
+      overflow: hidden;
+      opacity: 0;
+      z-index: 8;
+      pointer-events: none;
+    }
+
+    .screen video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+      opacity: 0;
+    }
+
+    .screen::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(115deg, rgba(255, 255, 255, .07) 0%, rgba(255, 255, 255, 0) 38%);
+      z-index: 1;
+    }
+
+    .screen .flash {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .screen-hit {
+      position: absolute;
+      left: 272.8px;
+      top: 102.7px;
+      width: 894.4px;
+      height: 604.7px;
+      cursor: pointer;
+      display: none;
+      z-index: 9;
+    }
+
+    /* ── Viewport-Pinned Fixed UI ── */
+    .ui {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    /* Nav Tags */
+    .tag {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: calc(37 * var(--n));
+      padding: 0 calc(18 * var(--n));
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 650;
+      font-size: calc(16.5 * var(--n));
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      background: #ffffff;
+      border: none;
+      text-decoration: none;
+      white-space: nowrap;
+      pointer-events: auto;
+      cursor: pointer;
+      box-shadow: 0 calc(3 * var(--n)) 0 rgba(0, 0, 0, .18), 0 calc(6 * var(--n)) calc(14 * var(--n)) rgba(0, 0, 0, .18);
+      transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .tag:hover {
+      transform: translateY(calc(-2 * var(--n))) rotate(-1.5deg);
+      box-shadow: 0 calc(5 * var(--n)) 0 rgba(0, 0, 0, .22), 0 calc(10 * var(--n)) calc(18 * var(--n)) rgba(0, 0, 0, .2);
+    }
+
+    .tag:active {
+      transform: translateY(calc(1 * var(--n)));
+      box-shadow: 0 calc(1 * var(--n)) 0 rgba(0, 0, 0, .18);
+    }
+
+    .t1 { left: calc(30 * var(--n)); top: calc(7 * var(--n)); }
+    .t2 { left: calc(233 * var(--n)); top: calc(7 * var(--n)); }
+    .t3 { right: calc(244 * var(--n)); top: calc(7 * var(--n)); }
+    .t4 { right: calc(32 * var(--n)); top: calc(7 * var(--n)); }
+
+    /* Centre Logo */
+    .nav-logo {
+      position: absolute;
+      left: 50%;
+      top: calc(14 * var(--n));
+      transform: translateX(-50%);
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 600;
+      font-size: calc(19 * var(--n));
+      letter-spacing: .14em;
+      color: #fff;
+      background: none;
+      border: none;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: auto;
+      transition: opacity .4s ease;
+    }
+
+    /* Scroll Hint */
+    .hint {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(22 * var(--n));
+      font-family: 'Inter Tight', sans-serif;
+      font-size: calc(12 * var(--n));
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: #fff;
+      opacity: 0.85;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: calc(10 * var(--n));
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+
+    .hint-line {
+      width: calc(1.5 * var(--n));
+      height: calc(22 * var(--n));
+      background: rgba(255, 255, 255, .35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hint-bead {
+      width: 100%;
+      height: 40%;
+      background: #fff;
+      position: absolute;
+      top: -40%;
+      animation: drip 1.6s cubic-bezier(.6, 0, .4, 1) infinite;
+    }
+
+    @keyframes drip {
+      0% { top: -40%; }
+      100% { top: 100%; }
+    }
+
+    /* ── Case UI (Desktop) ── */
+    /* Punched Paper Ticket */
+    .ticket {
+      position: absolute;
+      right: calc(32 * var(--n));
+      top: calc(98 * var(--n));
+      width: calc(348 * var(--n));
+      height: calc(182 * var(--n));
+      background: #ffffff;
+      border-radius: calc(3 * var(--n));
+      box-shadow: 0 calc(18 * var(--n)) calc(40 * var(--n)) rgba(0, 0, 0, .28);
+      padding: calc(26 * var(--n)) calc(34 * var(--n)) 0 calc(44 * var(--n));
+      transform-origin: 50% 0;
+      opacity: 0;
+      pointer-events: auto;
+      color: var(--ink);
+    }
+
+    .hole {
+      position: absolute;
+      width: calc(21 * var(--n));
+      height: calc(21 * var(--n));
+      background-color: var(--green-800);
+      border-radius: 50%;
+      box-shadow: inset 0 calc(2 * var(--n)) calc(3 * var(--n)) rgba(0, 0, 0, .35);
+    }
+
+    .hl-tl { top: calc(12 * var(--n)); left: calc(12 * var(--n)); }
+    .hl-tr { top: calc(12 * var(--n)); right: calc(12 * var(--n)); }
+    .hl-bl { bottom: calc(12 * var(--n)); left: calc(12 * var(--n)); }
+    .hl-br { bottom: calc(12 * var(--n)); right: calc(12 * var(--n)); }
+
+    .ticket-title {
+      font-family: 'Anton', sans-serif;
+      font-size: calc(50 * var(--n));
+      line-height: 1;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .ticket-rows {
+      margin-top: calc(8 * var(--n));
+      text-align: right;
+    }
+
+    .t-row {
+      font-weight: 700;
+      font-size: calc(12 * var(--n));
+      letter-spacing: 0.02em;
+      padding: calc(4 * var(--n)) 0 calc(3 * var(--n));
+      border-bottom: 1.5px dotted #2a2a2a;
+      color: var(--ink);
+    }
+
+    /* Case Description */
+    .desc {
+      position: absolute;
+      left: calc(28 * var(--n));
+      top: calc(326 * var(--n));
+      width: calc(172 * var(--n));
+      color: #fff;
+      pointer-events: none;
+    }
+
+    .desc-k {
+      font-weight: 700;
+      font-size: calc(17 * var(--n));
+      letter-spacing: -0.02em;
+      color: #fff;
+      opacity: 0;
+    }
+
+    .desc-p {
+      margin-top: calc(14 * var(--n));
+      font-size: calc(15 * var(--n));
+      line-height: 1.36;
+      font-weight: 500;
+      color: rgba(255, 255, 255, .92);
+      opacity: 0;
+    }
+
+    .desc-num {
+      margin-top: calc(22 * var(--n));
+      font-size: calc(12 * var(--n));
+      letter-spacing: 0.16em;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .7);
+      opacity: 0;
+    }
+
+    /* Prev / Next Case Buttons */
+    .nav-case {
+      position: absolute;
+      bottom: calc(150 * var(--n));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: calc(9 * var(--n));
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      opacity: 0;
+      pointer-events: auto;
+      transition: opacity .3s;
+    }
+
+    .nav-case.prev { left: calc(95 * var(--n)); }
+    .nav-case.next { right: calc(95 * var(--n)); }
+
+    .nav-case .c {
+      width: calc(50 * var(--n));
+      height: calc(50 * var(--n));
+      border-radius: 50%;
+      border: 1.6px solid rgba(255, 255, 255, .9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .2s ease, background-color .2s ease;
+    }
+
+    .nav-case .c svg {
+      width: calc(24 * var(--n));
+      height: calc(24 * var(--n));
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-case.next .c {
+      background: #ffffff;
+      border-color: #ffffff;
+      color: var(--green-800);
+    }
+
+    .nav-case.next:hover .c {
+      background-color: var(--mint);
+      border-color: var(--mint);
+    }
+
+    .nav-case:hover .c {
+      transform: scale(1.08);
+    }
+
+    .nav-case.dim {
+      opacity: 0.45 !important;
+      cursor: default;
+    }
+
+    .nav-case .lbl {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 600;
+      font-size: calc(15 * var(--n));
+      line-height: 1.05;
+      text-align: center;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    /* ── State Visibility Toggles ── */
+    body.is-case .nav-logo {
+      opacity: 1;
+    }
+
+    body.is-case .hint,
+    body.busy .hint {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    body.is-case .nav-case {
+      opacity: 1;
+    }
+
+    body.is-case .screen-hit {
+      display: block;
+    }
+
+    /* Initial pre-entrance hiding */
+    .js .pre {
+      opacity: 0 !important;
+    }
+
+    .m-only {
+      display: none;
+    }
+
+    /* ── Mobile Responsive Rules (<= 820px) ── */
+    @media (max-width: 820px) {
+      .frame .wm,
+      .frame .script,
+      .frame .badge {
+        display: none !important;
+      }
+
+      .m-only {
+        display: block;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      /* Mobile Stage */
+      .stage {
+        background: #0b3b2a;
+      }
+
+      .stage::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, #1b4a34 0%, #1b4a34 55%, #2f6a50 80%, #7fb79d 100%);
+        opacity: 0;
+        transition: opacity 1.6s ease;
+        pointer-events: none;
+      }
+
+      .stage.m-case::before {
+        opacity: 1;
+      }
+
+      /* Mobile Nav Tags */
+      .tag {
+        font-size: 13px;
+        height: 30px;
+        padding: 0 12px;
+      }
+
+      .t1 { left: 12px; top: 12px; }
+      .t2 { right: 12px; top: 12px; left: auto; }
+      .t3 { left: 12px; top: calc(12px + 44 * var(--n)); right: auto; }
+      .t4 { right: 12px; top: calc(12px + 44 * var(--n)); }
+
+      body.is-case .t3,
+      body.is-case .t4 {
+        visibility: hidden;
+      }
+
+      /* Mobile Wordmark */
+      svg.m-wm {
+        position: absolute;
+        left: 3vw;
+        top: calc(12px + 96 * var(--n));
+        width: 94vw;
+        height: auto;
+        overflow: visible;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Mobile Script */
+      .m-script {
+        position: absolute;
+        right: 6vw;
+        top: calc(12px + 96 * var(--n) + 14vw);
+        font-size: 15vw;
+        font-family: 'Caveat Brush', cursive;
+        color: #ffffff;
+        transform: rotate(-7deg);
+        text-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+        pointer-events: none;
+        z-index: 2;
+        white-space: nowrap;
+      }
+
+      /* Mobile Badge */
+      .m-badge {
+        position: absolute;
+        right: 2vw;
+        top: calc(12px + 96 * var(--n) + 9vw);
+        width: 27vw;
+        height: calc(27vw * 1030 / 582);
+        z-index: 1;
+        pointer-events: none;
+        overflow: visible;
+      }
+
+      .m-badge .badge {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 582px;
+        height: 1030px;
+        transform-origin: 0 0;
+        transform: scale(var(--mbs)) translate(calc(-288px + 13.5vw), 0);
+      }
+
+      /* Mobile Hint */
+      .hint {
+        bottom: 18px;
+        font-size: 11px;
+      }
+
+      /* Mobile Case Mode */
+      body.is-case .nav-logo {
+        display: none !important;
+      }
+
+      .ticket {
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%) !important;
+        top: 62px !important;
+        width: min(86vw, 360px) !important;
+        height: auto !important;
+        padding: 22px 26px 16px 36px !important;
+      }
+
+      .ticket-title {
+        font-size: 38px !important;
+      }
+
+      .t-row {
+        font-size: 11px !important;
+      }
+
+      .hole {
+        width: 15px !important;
+        height: 15px !important;
+      }
+
+      .desc {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        top: calc(62px + var(--th) + 18px) !important;
+        width: min(86vw, 360px) !important;
+        text-align: center;
+      }
+
+      .desc-k { font-size: 15px !important; }
+      .desc-p { font-size: 13.5px !important; }
+      .desc-num { display: none !important; }
+
+      .nav-case {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 2.2vh) !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+      }
+
+      .nav-case.prev { left: 6vw !important; }
+      .nav-case.next { right: 6vw !important; }
+
+      .nav-case .c {
+        width: 42px !important;
+        height: 42px !important;
+      }
+
+      .nav-case .c svg {
+        width: 20px !important;
+        height: 20px !important;
+      }
+
+      .nav-case .lbl {
+        font-size: 12.5px !important;
+      }
+
+      .nav-case br {
+        display: none !important;
+      }
+    }
+
+    /* ── Reduced Motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+  <!-- ── Stage Container ── -->
+  <div class="stage" id="stage">
+    <div class="frame" id="frame">
+      <!-- 1. Plate Photo -->
+      <img class="plate" id="plate" alt="" crossorigin="anonymous">
+
+      <!-- 2. Wordmark "FAMS" -->
+      <svg class="wm pre" id="wm" viewBox="0 0 1440 380" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="wm-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9"/>
+            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.28"/>
+          </linearGradient>
+        </defs>
+        <text x="14" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400" letter-spacing="-6px" fill="url(#wm-grad)">FAMS</text>
+      </svg>
+
+      <!-- 3. Man Cutout -->
+      <img class="cut" id="cut" alt="" crossorigin="anonymous">
+
+      <!-- 4. Lanyard ID Badge -->
+      <div class="badge pre" id="badge">
+        <img class="badge-img" id="badge-img" alt="" crossorigin="anonymous">
+        <div class="card">
+          <h4>INTERN<br>CARD</h4>
+          <span class="yr">2026</span>
+          <div class="role">FIELD ATTACHMENT // STUDENT</div>
+          <div class="ph"></div>
+          <div class="row"><span>NAME</span><b>A. NAKATO</b></div>
+          <div class="row"><span>PROGRAM</span><b>BIS, YEAR 3</b></div>
+          <div class="row"><span>HOST</span><b>NILE ANALYTICS</b></div>
+          <div class="row"><span>EMAIL</span><b>HELLO@FAMS.APP</b></div>
+        </div>
+        <div class="hit" id="badge-hit" title="Field Attachment ID"></div>
+      </div>
+
+      <!-- 5. Handwriting Script -->
+      <div class="script pre" id="script">field-attachment</div>
+
+      <!-- 6. Camera Push Video -->
+      <video class="trans" id="trans" playsinline muted preload="auto"></video>
+
+      <!-- 7. Caseplate Photo -->
+      <img class="caseplate" id="caseplate" alt="" crossorigin="anonymous">
+
+      <!-- 8. Laptop Display -->
+      <div class="screen" id="screen">
+        <video class="case-vid" id="cv0" playsinline muted loop crossorigin="anonymous"></video>
+        <video class="case-vid" id="cv1" playsinline muted loop crossorigin="anonymous"></video>
+        <video class="case-vid" id="cv2" playsinline muted loop crossorigin="anonymous"></video>
+        <div class="flash" id="flash"></div>
+      </div>
+
+      <!-- 9. Laptop Display Hit Target -->
+      <div class="screen-hit" id="screen-hit" title="Next case"></div>
+    </div>
+  </div>
+
+  <!-- ── Viewport-Pinned Fixed UI ── -->
+  <div class="ui">
+    <!-- Nav Tags -->
+    <button class="tag t1 pre" id="btn-overview" type="button">overview</button>
+    <button class="tag t2 pre" id="btn-features" type="button">features</button>
+    <a class="tag t3 pre" id="btn-contacts" href="#contacts">contacts</a>
+    <a class="tag t4 pre" id="btn-demo" href="#demo">request a demo</a>
+
+    <!-- Centre Nav Logo -->
+    <button class="nav-logo" id="btn-logo" type="button" aria-label="Back to overview">FAMS</button>
+
+    <!-- Scroll Hint -->
+    <div class="hint pre" id="hint">
+      <div class="hint-line"><div class="hint-bead"></div></div>
+      <span>scroll into the system</span>
+    </div>
+
+    <!-- Mobile-Only Copies Layer -->
+    <div class="m-only" id="m-only">
+      <svg class="m-wm pre" id="m-wm" viewBox="0 0 1440 380" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="m-wm-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9"/>
+            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.3"/>
+          </linearGradient>
+        </defs>
+        <text x="10" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400" letter-spacing="-6px" fill="url(#m-wm-grad)">FAMS</text>
+      </svg>
+      <div class="m-script pre" id="m-script">field-attachment</div>
+      <div class="m-badge" id="m-badge"></div>
+    </div>
+
+    <!-- Case UI: Ticket -->
+    <div class="ticket" id="ticket">
+      <div class="hole hl-tl"></div>
+      <div class="hole hl-tr"></div>
+      <div class="hole hl-bl"></div>
+      <div class="hole hl-br"></div>
+      <h2 class="ticket-title" id="t-title">PLACEMENT HUB</h2>
+      <div class="ticket-rows" id="t-rows">
+        <div class="t-row">STUDENT PORTAL</div>
+        <div class="t-row">PLACEMENTS</div>
+        <div class="t-row">2026</div>
+      </div>
+    </div>
+
+    <!-- Case UI: Description -->
+    <div class="desc" id="desc">
+      <div class="desc-k" id="d-k">// placement hub</div>
+      <p class="desc-p" id="d-p">— students browse host organisations, apply for attachment and track every request through to approval.</p>
+      <div class="desc-num" id="d-num">01 / 03</div>
+    </div>
+
+    <!-- Case UI: Prev/Next Buttons -->
+    <button class="nav-case prev" id="btn-prev" type="button" aria-label="Previous case">
+      <div class="c">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      </div>
+      <span class="lbl">previous <br>case</span>
+    </button>
+    <button class="nav-case next" id="btn-next" type="button" aria-label="Next case">
+      <div class="c">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>
+      <span class="lbl">next <br>case</span>
+    </button>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ── 1. Asset URLs & Configuration ── */
+      const HX = (u) => 'https://images.higgs.ai/?default=1&output=webp&url=' + encodeURIComponent(u) + '&w=2048&q=85';
+      const CF = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/';
+
+      const ASSETS = {
+        plate: HX(CF + 'hf_20261111_001031_a09dc558-2c69-4e05-83a4-5f01ebdd1363.png'),
+        casePlate: HX(CF + 'hf_20261111_001031_4a7c3fd9-2168-4219-9736-096a17bbb0e2.png'),
+        cut: HX(CF + 'hf_20261111_001143_ec356b1a-50a2-4b50-82fc-e346c914a406.png'),
+        badge: 'https://images.higgs.ai/?default=1&output=webp&url=' + encodeURIComponent(CF + 'hf_20261111_001143_65c037e6-0768-4b12-9f17-17be132ce16b.png') + '&w=1200&q=85',
+        trans: CF + 'hf_20261111_001144_2b054228-95af-41d5-922d-b02979fe485b.mp4',
+      };
+
+      const R2 = 'https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/aaaf/';
+      const CASES = [
+        {
+          video: R2 + 'vell-lookbook.mp4',
+          title: 'PLACEMENT HUB',
+          rows: ['STUDENT PORTAL', 'PLACEMENTS', '2026'],
+          key: '// placement hub',
+          text: '— students browse host organisations, apply for attachment and track every request through to approval.',
+        },
+        {
+          video: R2 + 'vasari-vhs-hero.mp4',
+          title: 'DIGITAL LOGBOOK',
+          rows: ['INTERNS', 'WEEKLY LOGS', '2026'],
+          key: '// digital logbook',
+          text: '— interns record daily activities and supervisors sign off in one tap, no more paper logbooks.',
+        },
+        {
+          video: R2 + 'living-portrait-hero.mp4',
+          title: 'SUPERVISION',
+          rows: ['SUPERVISORS', 'ASSESSMENT', '2026'],
+          key: '// supervision',
+          text: '— academic and field supervisors schedule visits, score interns and generate final reports automatically.',
+        },
+      ];
+
+      /* ── 2. DOM Elements ── */
+      const frameEl = document.getElementById('frame');
+      const stageEl = document.getElementById('stage');
+      const plateImg = document.getElementById('plate');
+      const casePlateImg = document.getElementById('caseplate');
+      const cutImg = document.getElementById('cut');
+      const badgeImg = document.getElementById('badge-img');
+      const transVideo = document.getElementById('trans');
+      const screenEl = document.getElementById('screen');
+      const screenHitEl = document.getElementById('screen-hit');
+      const flashEl = document.getElementById('flash');
+      const caseVids = [document.getElementById('cv0'), document.getElementById('cv1'), document.getElementById('cv2')];
+
+      const wmSvg = document.getElementById('wm');
+      const scriptEl = document.getElementById('script');
+      const badgeEl = document.getElementById('badge');
+      const badgeHitEl = document.getElementById('badge-hit');
+      const hintEl = document.getElementById('hint');
+
+      const btnOverview = document.getElementById('btn-overview');
+      const btnFeatures = document.getElementById('btn-features');
+      const btnContacts = document.getElementById('btn-contacts');
+      const btnDemo = document.getElementById('btn-demo');
+      const btnLogo = document.getElementById('btn-logo');
+      const btnPrev = document.getElementById('btn-prev');
+      const btnNext = document.getElementById('btn-next');
+
+      const ticketEl = document.getElementById('ticket');
+      const tTitleEl = document.getElementById('t-title');
+      const tRowsEl = document.getElementById('t-rows');
+      const descEl = document.getElementById('desc');
+      const dKEl = document.getElementById('d-k');
+      const dPEl = document.getElementById('d-p');
+      const dNumEl = document.getElementById('d-num');
+
+      const mOnlyEl = document.getElementById('m-only');
+      const mWmSvg = document.getElementById('m-wm');
+      const mScriptEl = document.getElementById('m-script');
+      const mBadgeEl = document.getElementById('m-badge');
+
+      /* ── 3. State ── */
+      let mode = 'hero';
+      let currentCase = 0;
+      let busy = false;
+      let transReady = false;
+      let badgeSway = null;
+      let entered = false;
+      const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Assign image sources
+      plateImg.src = ASSETS.plate;
+      casePlateImg.src = ASSETS.casePlate;
+      cutImg.src = ASSETS.cut;
+      badgeImg.src = ASSETS.badge;
+      caseVids[0].src = CASES[0].video;
+
+      // Clone mobile badge
+      const mobileBadgeClone = badgeEl.cloneNode(true);
+      mobileBadgeClone.id = 'badge-mobile-clone';
+      mBadgeEl.appendChild(mobileBadgeClone);
+
+      // Preload transition video with Blob fetch for seamless seek
+      fetch(ASSETS.trans)
+        .then((r) => r.blob())
+        .then((b) => {
+          transVideo.src = URL.createObjectURL(b);
+        })
+        .catch(() => {
+          transVideo.src = ASSETS.trans;
+        });
+
+      transVideo.addEventListener('loadeddata', () => {
+        transReady = true;
+      });
+
+      /* ── 4. Frame Fitting & Layout (pose) ── */
+      function pose(m) {
+        const W = window.innerWidth;
+        const H = window.innerHeight;
+        const isMobile = W <= 820;
+
+        // Set unit variable
+        const n = isMobile ? W / 430 : Math.min(W / 1440, H / 900);
+        document.documentElement.style.setProperty('--n', `${n}px`);
+
+        // Fade classes
+        frameEl.classList.remove('d-fade', 'm-fade');
+        frameEl.classList.add(isMobile ? 'm-fade' : 'd-fade');
+
+        let s, x, y;
+        if (!isMobile) {
+          const cover = Math.max(W / 1440, H / 810);
+          const u = Math.min(W / 1440, H / 900);
+
+          if (m === 'hero') {
+            s = cover;
+            x = (W - 1440 * s) / 2;
+            y = 0;
+            fitHero(s, x, y, W, H);
+          } else {
+            const top = 66 * u;
+            const fit = (H - top - 28 * u) / (762 - 79);
+            if (fit >= cover) {
+              s = cover;
+              y = Math.min(0, Math.max(H - 810 * s, top - 79 * s));
+            } else {
+              s = fit;
+              y = top - 79 * fit;
+            }
+            x = (W - 1440 * s) / 2;
+          }
+        } else {
+          // Mobile fitting
+          if (m === 'hero') {
+            s = Math.min(W / 650, (0.62 * H) / 810);
+            x = W / 2 - 805 * s;
+            y = H - 790 * s;
+          } else {
+            const navH = 0.022 * H + 42 + 22;
+            const ticketH = ticketEl ? ticketEl.offsetHeight : 120;
+            const descH = descEl ? descEl.offsetHeight : 60;
+            const uiBottom = 62 + ticketH + 18 + Math.max(60, descH) + 14;
+            s = Math.min((W - 28) / 905, Math.max(0.2, (H - navH - uiBottom) / (762 - 95)));
+            x = W / 2 - 720 * s;
+            y = H - navH - 762 * s;
+          }
+
+          const mbadgeW = 0.27 * W;
+          document.documentElement.style.setProperty('--mbs', (mbadgeW / 582).toString());
+          if (ticketEl) {
+            document.documentElement.style.setProperty('--th', `${ticketEl.offsetHeight}px`);
+          }
+        }
+
+        return { s, x, y };
+      }
+
+      function fitHero(s, x, y, W, H) {
+        const vl = Math.max(0, -x / s);
+        const vr = Math.min(1440, (W - x) / s);
+        const pad = 18 / s;
+
+        // Wordmark positioning
+        wmSvg.style.left = `${vl + 0.6 * pad}px`;
+        wmSvg.style.width = `${vr - vl - 1.2 * pad}px`;
+
+        // Badge positioning
+        const bLeft = Math.min(986, vr - pad - 417);
+        const vb = Math.min(810, (H - y) / s);
+        const bTop = Math.min(-165, vb - 56 / s - 935);
+        badgeEl.style.left = `${bLeft}px`;
+        badgeEl.style.top = `${bTop}px`;
+
+        // Script positioning
+        scriptEl.style.left = `${vl + pad + 70}px`;
+      }
+
+      function place(m) {
+        const { s, x, y } = pose(m);
+        frameEl.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
+        if (m === 'case') {
+          frameEl.classList.add('m-case');
+          stageEl.classList.add('m-case');
+        } else {
+          frameEl.classList.remove('m-case');
+          stageEl.classList.remove('m-case');
+        }
+      }
+
+      // Initial placement
+      place('hero');
+
+      window.addEventListener('resize', () => {
+        frameEl.classList.remove('glide');
+        place(mode);
+      });
+
+      /* ── 5. Entrance Sequence ── */
+      function runEntrance() {
+        if (entered) return;
+        entered = true;
+
+        // Remove initial hiding class
+        document.querySelectorAll('.pre').forEach((el) => el.classList.remove('pre'));
+
+        if (RM) {
+          fillCase(0);
+          return;
+        }
+
+        const tags = [btnOverview, btnFeatures, btnContacts, btnDemo];
+        tags.forEach((tag, i) => {
+          tag.animate(
+            [
+              { opacity: 0, transform: 'translateY(-40px) rotate(-4deg)' },
+              { opacity: 1, transform: 'none' },
+            ],
+            {
+              duration: 700,
+              delay: 120 + i * 80,
+              easing: 'cubic-bezier(.3, 1.5, .5, 1)',
+              fill: 'both',
+            }
+          );
+        });
+
+        // Wordmark entrance
+        [wmSvg, mWmSvg].forEach((wm) => {
+          if (!wm) return;
+          wm.animate(
+            [
+              { opacity: 0, transform: 'translateY(60px)', clipPath: 'inset(100% 0 0 0)' },
+              { opacity: 1, transform: 'translateY(0)', clipPath: 'inset(0)' },
+            ],
+            {
+              duration: 1100,
+              delay: 260,
+              easing: 'cubic-bezier(.2, .8, .2, 1)',
+              fill: 'both',
+            }
+          );
+        });
+
+        // Script entrance
+        [scriptEl, mScriptEl].forEach((sc) => {
+          if (!sc) return;
+          sc.animate(
+            [
+              { opacity: 0, clipPath: 'inset(0 100% 0 0)' },
+              { opacity: 1, clipPath: 'inset(0)' },
+            ],
+            {
+              duration: 900,
+              delay: 1050,
+              easing: 'cubic-bezier(.5, 0, .3, 1)',
+              fill: 'both',
+            }
+          );
+        });
+
+        // Badge entrance
+        const bAnim = badgeEl.animate(
+          [
+            { opacity: 0, transform: 'translateY(-120%) rotate(8deg)', offset: 0 },
+            { opacity: 1, transform: 'translateY(0) rotate(-3deg)', offset: 0.6 },
+            { transform: 'translateY(0) rotate(1.6deg)', offset: 0.8 },
+            { opacity: 1, transform: 'translateY(0) rotate(0)', offset: 1 },
+          ],
+          {
+            duration: 1500,
+            delay: 700,
+            easing: 'cubic-bezier(.2, .8, .2, 1)',
+            fill: 'both',
+          }
+        );
+
+        // Hint entrance
+        hintEl.animate(
+          [{ opacity: 0 }, { opacity: 0.85 }],
+          {
+            duration: 600,
+            delay: 1800,
+            easing: 'cubic-bezier(.2, .8, .2, 1)',
+            fill: 'both',
+          }
+        );
+
+        bAnim.finished.then(() => {
+          startBadgeSway();
+        });
+
+        fillCase(0);
+      }
+
+      function startBadgeSway() {
+        if (mode === 'hero' && !RM) {
+          badgeSway = badgeEl.animate(
+            [{ transform: 'rotate(-1.1deg)' }, { transform: 'rotate(1.1deg)' }],
+            {
+              duration: 3200,
+              iterations: Infinity,
+              direction: 'alternate',
+              easing: 'ease-in-out',
+            }
+          );
+        }
+      }
+
+      // Badge Hover Swing
+      badgeHitEl.addEventListener('pointerenter', () => {
+        if (mode === 'hero' && !RM) {
+          badgeEl.animate(
+            [
+              { transform: 'rotate(0)' },
+              { transform: 'rotate(-6deg)' },
+              { transform: 'rotate(4deg)' },
+              { transform: 'rotate(-2deg)' },
+              { transform: 'rotate(0)' },
+            ],
+            {
+              duration: 1400,
+              easing: 'ease-out',
+              composite: 'add',
+            }
+          );
+        }
+      });
+
+      // Wait for font and hero plate
+      const fontReady = document.fonts ? document.fonts.ready : Promise.resolve();
+      const plateReady = new Promise((resolve) => {
+        if (plateImg.complete && plateImg.naturalHeight > 0) resolve();
+        else {
+          plateImg.addEventListener('load', resolve, { once: true });
+          plateImg.addEventListener('error', resolve, { once: true });
+        }
+      });
+
+      Promise.race([
+        Promise.all([fontReady, plateReady]),
+        new Promise((r) => setTimeout(r, 2500)),
+      ]).then(() => {
+        requestAnimationFrame(runEntrance);
+      });
+      setTimeout(runEntrance, 4000); // failsafe
+
+      /* ── 6. Case Population ── */
+      function fillCase(i) {
+        const c = CASES[i];
+        tTitleEl.textContent = c.title;
+        tRowsEl.innerHTML = c.rows.map((r) => `<div class="t-row">${r}</div>`).join('');
+        dKEl.textContent = c.key;
+        dPEl.textContent = c.text;
+        dNumEl.textContent = `0${i + 1} / 03`;
+
+        if (i === 0) btnPrev.classList.add('dim');
+        else btnPrev.classList.remove('dim');
+      }
+
+      function playOnly(n) {
+        caseVids.forEach((v, i) => {
+          if (i === n) {
+            if (!v.src && CASES[n].video) v.src = CASES[n].video;
+            v.style.opacity = '1';
+            v.currentTime = 0;
+            v.play().catch(() => {});
+          } else {
+            v.style.opacity = '0';
+            v.pause();
+          }
+        });
+      }
+
+      function caseIn(n, first) {
+        fillCase(n);
+
+        // Ticket animation
+        ticketEl.animate(
+          [
+            { opacity: 0, transform: 'translateY(-60px) rotate(-6deg)', offset: 0 },
+            { transform: 'translateY(6px) rotate(1.2deg)', offset: 0.7 },
+            { opacity: 1, transform: 'none', offset: 1 },
+          ],
+          {
+            duration: 800,
+            delay: first ? 150 : 0,
+            easing: 'cubic-bezier(.2, .8, .2, 1)',
+            fill: 'both',
+          }
+        );
+
+        // Description children
+        const descChildren = [dKEl, dPEl, dNumEl];
+        descChildren.forEach((child, k) => {
+          child.animate(
+            [
+              { opacity: 0, transform: 'translateY(14px)' },
+              { opacity: 1, transform: 'none' },
+            ],
+            {
+              duration: 600,
+              delay: (first ? 250 : 80) + k * 70,
+              easing: 'cubic-bezier(.2, .8, .2, 1)',
+              fill: 'both',
+            }
+          );
+        });
+      }
+
+      function caseOut() {
+        ticketEl.animate(
+          [
+            { opacity: 1, transform: 'none' },
+            { opacity: 0, transform: 'translateY(-40px) rotate(4deg)' },
+          ],
+          {
+            duration: 380,
+            easing: 'cubic-bezier(.5, 0, .75, 0)',
+            fill: 'forwards',
+          }
+        );
+
+        const descChildren = [dKEl, dPEl, dNumEl];
+        descChildren.forEach((child, k) => {
+          child.animate(
+            [
+              { opacity: 1, transform: 'none' },
+              { opacity: 0, transform: 'translateY(-10px)' },
+            ],
+            {
+              duration: 300,
+              delay: k * 40,
+              easing: 'cubic-bezier(.5, 0, .75, 0)',
+              fill: 'forwards',
+            }
+          );
+        });
+      }
+
+      /* ── 7. Hero -> Laptop Dive (toCase) ── */
+      function toCase() {
+        if (busy || mode === 'case') return;
+        busy = true;
+        document.body.classList.add('busy');
+
+        // heroOut
+        [wmSvg, mWmSvg].forEach((wm) => {
+          if (!wm) return;
+          wm.animate(
+            [
+              { opacity: 1, transform: 'translateY(0)' },
+              { opacity: 0, transform: 'translateY(-40px)' },
+            ],
+            { duration: 380, easing: 'cubic-bezier(.5, 0, .75, 0)', fill: 'forwards' }
+          );
+        });
+
+        [scriptEl, mScriptEl].forEach((sc) => {
+          if (!sc) return;
+          sc.animate([{ opacity: 1 }, { opacity: 0 }], {
+            duration: 380,
+            easing: 'cubic-bezier(.5, 0, .75, 0)',
+            fill: 'forwards',
+          });
+        });
+
+        if (badgeSway) badgeSway.cancel();
+        badgeEl.animate(
+          [
+            { opacity: 1, transform: 'translateY(0) rotate(0)' },
+            { opacity: 0, transform: 'translateY(-110%) rotate(-6deg)' },
+          ],
+          { duration: 380, easing: 'cubic-bezier(.5, 0, .75, 0)', fill: 'forwards' }
+        );
+
+        setTimeout(() => {
+          if (RM || !transReady) {
+            place('case');
+            casePlateImg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, fill: 'forwards' });
+            arriveCase();
+            return;
+          }
+
+          transVideo.currentTime = 0;
+          transVideo.style.opacity = '1';
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              plateImg.style.visibility = 'hidden';
+              cutImg.animate([{ opacity: 1 }, { opacity: 0 }], {
+                duration: 260,
+                easing: 'ease-out',
+                fill: 'forwards',
+              });
+
+              frameEl.style.setProperty('--glide', '1.6s');
+              frameEl.classList.add('glide');
+              place('case');
+            });
+          });
+
+          // Play video with eased speed curve
+          transVideo.play().catch(() => {});
+          const duration = transVideo.duration || 5.04;
+
+          function tickSpeed() {
+            const cur = transVideo.currentTime;
+            const p = cur / duration;
+            const rate = Math.max(1.2, 1.8 + 2.4 * Math.sin(Math.PI * Math.min(p * 1.08, 1)));
+            transVideo.playbackRate = rate;
+
+            if (transVideo.ended || p >= 0.995) {
+              transVideo.pause();
+              casePlateImg.style.opacity = '1';
+              transVideo.style.opacity = '0';
+              arriveCase();
+            } else {
+              requestAnimationFrame(tickSpeed);
+            }
+          }
+          requestAnimationFrame(tickSpeed);
+        }, 330);
+      }
+
+      /* ── 8. Arrive in Case Mode ── */
+      function arriveCase() {
+        mode = 'case';
+        document.body.classList.add('is-case');
+
+        plateImg.style.visibility = 'hidden';
+        cutImg.style.opacity = '0';
+        screenEl.style.opacity = '1';
+
+        // Flash on screen
+        flashEl.animate(
+          [
+            { opacity: 0 },
+            { opacity: 0.55 },
+            { opacity: 0 },
+          ],
+          { duration: 600, easing: 'ease-out' }
+        );
+
+        // First video reveal
+        caseVids[0].animate(
+          [
+            { opacity: 0, transform: 'scale(1.06)' },
+            { opacity: 1, transform: 'scale(1)' },
+          ],
+          { duration: 700, fill: 'both' }
+        );
+
+        playOnly(0);
+        caseIn(0, true);
+
+        // Preload video 2
+        if (!caseVids[1].src) caseVids[1].src = CASES[1].video;
+
+        setTimeout(() => {
+          busy = false;
+          document.body.classList.remove('busy');
+          frameEl.classList.remove('glide');
+        }, 700);
+      }
+
+      /* ── 9. Switching Cases (swapTo) ── */
+      function swapTo(n) {
+        if (busy) return;
+        busy = true;
+
+        const oldIdx = currentCase;
+        currentCase = n;
+
+        // 1. In parallel: caseOut and old video fade
+        caseOut();
+        caseVids[oldIdx].animate(
+          [{ opacity: 1 }, { opacity: 0 }],
+          { duration: 350, fill: 'forwards' }
+        );
+
+        setTimeout(() => {
+          caseVids[oldIdx].pause();
+
+          // 2. Flash
+          flashEl.animate(
+            [{ opacity: 0 }, { opacity: 0.35 }, { opacity: 0 }],
+            { duration: 420 }
+          );
+
+          // 3. New video entrance
+          caseVids[n].animate(
+            [
+              { opacity: 0, transform: 'scale(1.04)' },
+              { opacity: 1, transform: 'scale(1)' },
+            ],
+            { duration: 500, fill: 'both' }
+          );
+
+          playOnly(n);
+          caseIn(n, false);
+
+          // Preload next video
+          const nextIdx = (n + 1) % CASES.length;
+          if (!caseVids[nextIdx].src) caseVids[nextIdx].src = CASES[nextIdx].video;
+
+          setTimeout(() => {
+            busy = false;
+          }, 520);
+        }, 350);
+      }
+
+      function nextCase() {
+        if (busy) return;
+        const next = (currentCase + 1) % CASES.length;
+        swapTo(next);
+      }
+
+      function prevCase() {
+        if (busy) return;
+        if (currentCase === 0) {
+          toHero();
+        } else {
+          swapTo(currentCase - 1);
+        }
+      }
+
+      /* ── 10. Back to Hero (toHero) ── */
+      function toHero() {
+        if (busy || mode === 'hero') return;
+        busy = true;
+        document.body.classList.add('busy');
+
+        caseOut();
+        caseVids.forEach((v) => v.pause());
+        screenEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' });
+
+        document.body.classList.remove('is-case');
+        frameEl.style.setProperty('--glide', '.9s');
+        frameEl.classList.add('glide');
+        place('hero');
+
+        plateImg.style.visibility = 'visible';
+        cutImg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, delay: 150, fill: 'forwards' });
+
+        casePlateImg.animate(
+          [
+            { opacity: 1, filter: 'blur(0)' },
+            { opacity: 0, filter: 'blur(12px)' },
+          ],
+          { duration: 800, easing: 'cubic-bezier(.65, 0, .35, 1)', fill: 'forwards' }
+        );
+
+        plateImg.animate(
+          [
+            { transform: 'scale(1.12)', filter: 'blur(8px)' },
+            { transform: 'scale(1)', filter: 'blur(0)' },
+          ],
+          { duration: 900, easing: 'cubic-bezier(.2, .8, .2, 1)', fill: 'forwards' }
+        );
+
+        setTimeout(() => {
+          // heroIn
+          [wmSvg, mWmSvg].forEach((wm) => {
+            if (!wm) return;
+            wm.animate(
+              [
+                { opacity: 0, transform: 'translateY(40px)' },
+                { opacity: 1, transform: 'translateY(0)' },
+              ],
+              { duration: 700, fill: 'forwards' }
+            );
+          });
+
+          [scriptEl, mScriptEl].forEach((sc) => {
+            if (!sc) return;
+            sc.animate(
+              [
+                { opacity: 0, clipPath: 'inset(0 100% 0 0)' },
+                { opacity: 1, clipPath: 'inset(0)' },
+              ],
+              { duration: 700, delay: 250, fill: 'forwards' }
+            );
+          });
+
+          const bIn = badgeEl.animate(
+            [
+              { opacity: 0, transform: 'translateY(-110%) rotate(6deg)', offset: 0 },
+              { opacity: 1, transform: 'translateY(0) rotate(-2deg)', offset: 0.7 },
+              { opacity: 1, transform: 'rotate(0)', offset: 1 },
+            ],
+            { duration: 1100, fill: 'forwards' }
+          );
+
+          bIn.finished.then(() => {
+            startBadgeSway();
+          });
+
+          mode = 'hero';
+          currentCase = 0;
+          screenEl.style.opacity = '0';
+
+          setTimeout(() => {
+            busy = false;
+            document.body.classList.remove('busy');
+            frameEl.classList.remove('glide');
+          }, 1000);
+        }, 250);
+      }
+
+      /* ── 11. Event Listeners ── */
+      // Wheel navigation
+      let lastWheelTime = 0;
+      window.addEventListener(
+        'wheel',
+        (e) => {
+          e.preventDefault();
+          const now = Date.now();
+          if (now - lastWheelTime < 900) return;
+          if (Math.abs(e.deltaY) < 18) return;
+
+          lastWheelTime = now;
+          if (mode === 'hero') {
+            if (e.deltaY > 0) toCase();
+          } else {
+            if (e.deltaY > 0) {
+              nextCase();
+            } else {
+              prevCase();
+            }
+          }
+        },
+        { passive: false }
+      );
+
+      // Touch navigation
+      let touchStartY = 0;
+      let touchStartX = 0;
+      window.addEventListener(
+        'touchstart',
+        (e) => {
+          if (e.touches && e.touches.length) {
+            touchStartY = e.touches[0].clientY;
+            touchStartX = e.touches[0].clientX;
+          }
+        },
+        { passive: true }
+      );
+
+      window.addEventListener(
+        'touchend',
+        (e) => {
+          if (e.changedTouches && e.changedTouches.length) {
+            const dy = e.changedTouches[0].clientY - touchStartY;
+            const dx = e.changedTouches[0].clientX - touchStartX;
+
+            if (mode === 'hero') {
+              if (dy <= -40) toCase();
+            } else {
+              if (dy <= -40 || dx <= -40) {
+                nextCase();
+              } else if (dy >= 40 || dx >= 40) {
+                prevCase();
+              }
+            }
+          }
+        },
+        { passive: true }
+      );
+
+      // Keyboard navigation
+      window.addEventListener('keydown', (e) => {
+        if (mode === 'hero') {
+          if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+            e.preventDefault();
+            toCase();
+          }
+        } else {
+          if (['ArrowDown', 'PageDown', ' ', 'ArrowRight'].includes(e.key)) {
+            e.preventDefault();
+            nextCase();
+          } else if (['ArrowUp', 'PageUp', 'ArrowLeft'].includes(e.key)) {
+            e.preventDefault();
+            prevCase();
+          }
+        }
+      });
+
+      // UI Clicks
+      btnOverview.addEventListener('click', toHero);
+      btnFeatures.addEventListener('click', toCase);
+      btnLogo.addEventListener('click', toHero);
+      btnPrev.addEventListener('click', prevCase);
+      btnNext.addEventListener('click', nextCase);
+      screenHitEl.addEventListener('click', nextCase);
+
+      // Prevent dummy link jumps
+      btnContacts.addEventListener('click', (e) => e.preventDefault());
+      btnDemo.addEventListener('click', (e) => {
+        e.preventDefault();
+        try {
+          if (window.top && window.top !== window) {
+            window.top.location.href = '/auth';
+            return;
+          }
+        } catch (_) {}
+        window.location.href = '/auth';
+      });
+    })();
+  </script>
+</body>
+</html>
