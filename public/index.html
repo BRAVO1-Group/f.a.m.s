@@ -6,7 +6,7 @@
   <title>FAMS — Field Attachment Management System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Inter+Tight:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Inter+Tight:wght@100..900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     /* ── Colour Tokens & Variables ── */
     :root {
@@ -302,30 +302,20 @@
       cursor: grab;
     }
 
-    /* ── Laptop Screen ── */
+    /* ── Laptop Screen Frame ── */
     .screen {
       position: absolute;
       left: 272.8px;
       top: 102.7px;
       width: 894.4px;
       height: 604.7px;
-      border-radius: 3px;
-      background: #000;
+      border-radius: 4px;
+      background: #090d13;
       overflow: hidden;
       opacity: 0;
       z-index: 8;
       pointer-events: auto;
-    }
-
-    .screen video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background: #000;
-      opacity: 0;
-      transition: opacity .4s ease;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
     .screen::after {
@@ -333,8 +323,8 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: linear-gradient(115deg, rgba(255, 255, 255, .07) 0%, rgba(255, 255, 255, 0) 38%);
-      z-index: 1;
+      background: linear-gradient(115deg, rgba(255, 255, 255, .05) 0%, rgba(255, 255, 255, 0) 32%);
+      z-index: 10;
     }
 
     .screen .flash {
@@ -343,7 +333,7 @@
       background: #fff;
       opacity: 0;
       pointer-events: none;
-      z-index: 10;
+      z-index: 20;
     }
 
     .screen-hit {
@@ -357,112 +347,483 @@
       z-index: 9;
     }
 
-    /* ── Optional In-Screen Live Mode Switcher ── */
-    .screen-mode-bar {
+    /* ═══════════════════════════════════════════════════
+       INTERNSHIP MANAGEMENT DASHBOARDS (IN-SCREEN LIVE)
+       ═══════════════════════════════════════════════════ */
+    .case-dash {
       position: absolute;
-      top: 12px;
-      left: 16px;
-      right: 16px;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      padding: 16px 20px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #0a0f18;
+      background-image:
+        radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.12) 0%, transparent 65%),
+        linear-gradient(180deg, #0a0f18 0%, #06090f 100%);
+      color: #fff;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.985);
+      transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+      z-index: 1;
+    }
+
+    .case-dash.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+      z-index: 2;
+    }
+
+    /* OS Menubar */
+    .d-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      z-index: 5;
-      pointer-events: auto;
+      height: 28px;
+      padding: 0 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      font-size: 11px;
     }
 
-    .screen-status-pill {
+    .d-bar-left {
       display: flex;
       align-items: center;
-      gap: 7px;
-      padding: 4px 10px;
-      background: rgba(11, 47, 32, 0.75);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(207, 238, 224, 0.25);
-      border-radius: 20px;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
+      gap: 8px;
+    }
+
+    .d-bar-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .d-bar-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .d-bar-dot.r { background: #ef4444; }
+    .d-bar-dot.y { background: #f59e0b; }
+    .d-bar-dot.g { background: #10b981; }
+
+    .d-bar-title {
+      font-weight: 700;
+      font-size: 11.5px;
+      letter-spacing: 0.02em;
       color: #cfeee0;
     }
 
-    .screen-status-dot {
+    .d-bar-crumb {
+      font-size: 10.5px;
+      color: #6ee7b7;
+      opacity: 0.85;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .d-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10.5px;
+      color: #94a3b8;
+    }
+
+    .d-pulse-dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
       background: #10b981;
       box-shadow: 0 0 8px #10b981;
-      animation: pulseDot 2s infinite;
+      animation: pulseGlow 1.8s infinite;
     }
 
-    @keyframes pulseDot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.4; }
     }
 
-    .screen-view-toggle {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 20px;
-      padding: 2px;
+    .d-clock {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: #f1f5f9;
     }
 
-    .screen-view-toggle button {
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.65);
-      padding: 3px 10px;
-      border-radius: 16px;
+    .d-tag {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      padding: 1px 7px;
+      border-radius: 10px;
       font-size: 9.5px;
       font-weight: 700;
-      cursor: pointer;
-      letter-spacing: 0.03em;
-      transition: all 0.2s ease;
+      letter-spacing: 0.04em;
     }
 
-    .screen-view-toggle button.active {
-      background: #10b981;
-      color: #0d0f0e;
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+    /* KPI Cards Row */
+    .d-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
 
-    /* In-Screen Interactive Card */
-    .screen-live-console {
-      position: absolute;
-      inset: 46px 16px 16px 16px;
-      background: rgba(13, 17, 23, 0.94);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      display: none;
+    .d-kpi {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
       flex-direction: column;
-      z-index: 4;
-      color: #fff;
+      gap: 2px;
+      position: relative;
       overflow: hidden;
     }
 
-    .screen-live-console.visible {
-      display: flex;
+    .d-kpi::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #10b981, transparent);
     }
 
-    .live-console-header {
-      padding: 10px 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.02);
+    .d-kpi-lbl {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .d-kpi-val {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .d-kpi-val .up {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #10b981;
+      animation: pulseGlow 2.5s infinite;
+    }
+
+    .d-kpi-val .chip {
+      font-size: 9px;
+      padding: 1px 6px;
+      border-radius: 8px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .d-kpi-sub {
+      font-size: 10px;
+      color: #64748b;
+      margin-top: 1px;
+    }
+
+    /* Main Dashboard Split Layout */
+    .d-split {
+      display: flex;
+      gap: 12px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .d-panel {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.065);
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .d-p-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 11px;
+      font-weight: 700;
+      color: #e2e8f0;
+      letter-spacing: 0.03em;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .live-console-body {
+    /* Dashboard 0: Placement Hub Stream */
+    .stream-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      overflow: hidden;
       flex: 1;
-      padding: 14px;
+    }
+
+    .stream-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 5px;
+      font-size: 11px;
+      animation: slideInDown 0.4s ease-out;
+      transition: all 0.3s ease;
+    }
+
+    @keyframes slideInDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stream-st {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stream-name {
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+
+    .stream-host {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+
+    .stream-pill {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 12px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      white-space: nowrap;
+    }
+
+    .host-box {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .h-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .h-sub {
+      font-size: 10.5px;
+      color: #94a3b8;
+    }
+
+    .h-stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10.5px;
+      padding: 4px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+    }
+
+    .h-stat-row b {
+      color: #38bdf8;
+    }
+
+    .progress-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      border-radius: 3px;
+      animation: pulseBar 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseBar {
+      0% { opacity: 0.85; filter: brightness(1); }
+      100% { opacity: 1; filter: brightness(1.25); }
+    }
+
+    /* Dashboard 1: Digital Logbook */
+    .log-code-view {
+      background: #06090e;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 5px;
+      padding: 10px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      line-height: 1.6;
+      color: #a7f3d0;
+      flex: 1;
       overflow-y: auto;
+    }
+
+    .log-code-line {
+      display: block;
+      white-space: nowrap;
+    }
+
+    .c-cm { color: #64748b; font-style: italic; }
+    .c-kw { color: #f472b6; font-weight: 600; }
+    .c-fn { color: #60a5fa; }
+    .c-str { color: #fbbf24; }
+    .c-num { color: #34d399; }
+
+    .stamp-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      border: 2px dashed rgba(16, 185, 129, 0.35);
+      border-radius: 8px;
+      background: rgba(16, 185, 129, 0.04);
+      gap: 6px;
+      text-align: center;
+      animation: stampBreathe 4s infinite alternate;
+    }
+
+    @keyframes stampBreathe {
+      0% { transform: scale(0.99); box-shadow: 0 0 0 rgba(16, 185, 129, 0); }
+      100% { transform: scale(1.01); box-shadow: 0 0 16px rgba(16, 185, 129, 0.15); }
+    }
+
+    .stamp-badge {
+      font-size: 9px;
+      font-weight: 800;
+      color: #10b981;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .stamp-name {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.03em;
+    }
+
+    .stamp-role {
+      font-size: 9.5px;
+      color: #94a3b8;
+    }
+
+    .stamp-nonce {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Dashboard 2: Supervision Scoring Rubric */
+    .rubric-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .rubric-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .rubric-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10.5px;
+      color: #cbd5e1;
+    }
+
+    .rubric-label b {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .rubric-track {
+      width: 100%;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .rubric-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1s ease-out;
+    }
+
+    .board-attest {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 6px;
+      padding: 10px;
+      background: rgba(16, 185, 129, 0.06);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 6px;
+      flex: 1;
+    }
+
+    .board-emblem {
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .board-title {
       font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.02em;
+    }
+
+    .board-sub {
+      font-size: 9.5px;
+      color: #94a3b8;
+    }
+
+    .board-stamp {
+      background: #10b981;
+      color: #062b1b;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-top: 2px;
     }
 
     /* ── Viewport-Pinned Fixed UI ── */
@@ -810,7 +1171,6 @@
         z-index: 5;
       }
 
-      /* Mobile Stage */
       .stage {
         background: #0b3b2a;
       }
@@ -829,7 +1189,6 @@
         opacity: 1;
       }
 
-      /* Mobile Nav Tags */
       .tag {
         font-size: 13px;
         height: 30px;
@@ -846,7 +1205,6 @@
         visibility: hidden;
       }
 
-      /* Mobile Wordmark */
       svg.m-wm {
         position: absolute;
         left: 3vw;
@@ -858,7 +1216,6 @@
         z-index: 1;
       }
 
-      /* Mobile Script */
       .m-script {
         position: absolute;
         right: 6vw;
@@ -873,7 +1230,6 @@
         white-space: nowrap;
       }
 
-      /* Mobile Badge */
       .m-badge {
         position: absolute;
         right: 2vw;
@@ -896,13 +1252,11 @@
         transform: scale(var(--mbs)) translate(calc(-288px + 13.5vw), 0);
       }
 
-      /* Mobile Hint */
       .hint {
         bottom: 18px;
         font-size: 11px;
       }
 
-      /* Mobile Case Mode */
       body.is-case .nav-logo {
         display: none !important;
       }
@@ -1027,36 +1381,224 @@
       <!-- 7. Caseplate Photo -->
       <img class="caseplate" id="caseplate" alt="" crossorigin="anonymous">
 
-      <!-- 8. Laptop Display -->
+      <!-- 8. Laptop Display with Live Internship Dashboards -->
       <div class="screen" id="screen">
-        <video class="case-vid" id="cv0" playsinline muted loop crossorigin="anonymous"></video>
-        <video class="case-vid" id="cv1" playsinline muted loop crossorigin="anonymous"></video>
-        <video class="case-vid" id="cv2" playsinline muted loop crossorigin="anonymous"></video>
+        <!-- ── DASHBOARD 0: PLACEMENT & HOST MATCHING HUB ── -->
+        <div class="case-dash active" id="dash0">
+          <div class="d-bar">
+            <div class="d-bar-left">
+              <div class="d-bar-dots"><span class="d-bar-dot r"></span><span class="d-bar-dot y"></span><span class="d-bar-dot g"></span></div>
+              <span class="d-bar-title">🛡️ FAMS PLACEMENT ENGINE v4.2</span>
+              <span class="d-bar-crumb">// MAK-COCIS.AC.UG</span>
+            </div>
+            <div class="d-bar-right">
+              <span class="d-pulse-dot"></span>
+              <span class="d-clock" id="clock0">15:30:00 EAT</span>
+              <span class="d-tag">NREN 5G</span>
+            </div>
+          </div>
+
+          <div class="d-kpis">
+            <div class="d-kpi">
+              <span class="d-kpi-lbl">Total Attached Interns</span>
+              <div class="d-kpi-val" id="kpi0-placed">1,420 <span class="up">+14 today</span></div>
+              <span class="d-kpi-sub">98.6% Placement Rate</span>
+            </div>
+            <div class="d-kpi">
+              <span class="d-kpi-lbl">Accredited Enterprises</span>
+              <div class="d-kpi-val">380 <span class="chip" style="background:rgba(56,189,248,0.2); color:#38bdf8;">ACTIVE</span></div>
+              <span class="d-kpi-sub">Tech, Banking, Public Sector</span>
+            </div>
+            <div class="d-kpi">
+              <span class="d-kpi-lbl">Tripartite MOUs</span>
+              <div class="d-kpi-val" style="color:#10b981;">100% <span class="chip" style="background:rgba(16,185,129,0.2); color:#10b981;">VERIFIED</span></div>
+              <span class="d-kpi-sub">Cryptographic Nonces Validated</span>
+            </div>
+          </div>
+
+          <div class="d-split">
+            <!-- Left: Live Placement Stream -->
+            <div class="d-panel" style="flex:1.45;">
+              <div class="d-p-head">
+                <span>⚡ LIVE PLACEMENT & MATCHING STREAM</span>
+                <span class="d-tag" style="background:rgba(16,185,129,0.15); color:#10b981;">AUTO-SYNC</span>
+              </div>
+              <div class="stream-feed" id="stream-feed">
+                <!-- Stream items inserted and animated by JS -->
+              </div>
+            </div>
+
+            <!-- Right: Host Organization Spotlight -->
+            <div class="d-panel" style="flex:1;">
+              <div class="d-p-head">
+                <span>🏢 HOST ENTERPRISE SPOTLIGHT</span>
+                <span style="font-size:10px; color:#10b981; font-weight:700;">ACCREDITED</span>
+              </div>
+              <div class="host-box">
+                <div class="h-name">Nile Analytics Institute</div>
+                <div class="h-sub">Data Infrastructure & Applied AI Division</div>
+                <div class="h-stat-row"><span>Intern Quota:</span> <b>5 / 5 Placements Filled</b></div>
+                <div class="h-stat-row"><span>Campus Location:</span> <b>Kampala Innovation Hub</b></div>
+                <div class="h-stat-row"><span>Field Mentor:</span> <b>Dr. K. Sempala</b></div>
+                <div class="h-stat-row"><span>Geofence Radius:</span> <b>150m (HQ Perimeter)</b></div>
+                <div class="progress-bar-wrap">
+                  <div style="display:flex; justify-content:space-between; font-size:10px; color:#94a3b8;">
+                    <span>Host Onboarding Compliance</span>
+                    <b style="color:#10b981;">100%</b>
+                  </div>
+                  <div class="progress-track"><div class="progress-fill" style="width:100%;"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── DASHBOARD 1: DIGITAL LOGBOOK & ACTIVITY LEDGER ── -->
+        <div class="case-dash" id="dash1">
+          <div class="d-bar">
+            <div class="d-bar-left">
+              <div class="d-bar-dots"><span class="d-bar-dot r"></span><span class="d-bar-dot y"></span><span class="d-bar-dot g"></span></div>
+              <span class="d-bar-title">📖 FAMS DIGITAL LOGBOOK ENGINE</span>
+              <span class="d-bar-crumb">// ALICE NAKATO (23/U/0482/EVE)</span>
+            </div>
+            <div class="d-bar-right">
+              <span class="d-pulse-dot"></span>
+              <span class="d-clock" id="clock1">15:30:00 EAT</span>
+              <span class="d-tag">GPS GEOFENCE LOCKED</span>
+            </div>
+          </div>
+
+          <div class="d-kpis">
+            <div class="d-kpi">
+              <span class="d-kpi-lbl">Current Shift Duration</span>
+              <div class="d-kpi-val" id="dash-shift-timer" style="color:#10b981; font-family:'JetBrains Mono', monospace;">08:34:12</div>
+              <span class="d-kpi-sub">● Biometric Verification Active</span>
+            </div>
+            <div class="d-kpi">
+              <span class="d-kpi-lbl">Contact Hours Gauge</span>
+              <div class="d-kpi-val">153 / 320 <span class="up">47.8%</span></div>
+              <span class="d-kpi-sub">Total Curriculum: 10 Weeks Required</span>
+            </div>
+            <div class="d-kpi">
+              <span class="d-kpi-lbl">Supervisor Weekly Sign-Offs</span>
+              <div class="d-kpi-val" style="color:#38bdf8;">06 / 06 <span class="chip" style="background:rgba(56,189,248,0.2); color:#38bdf8;">COMMITTED</span></div>
+              <span class="d-kpi-sub">Zero Unsigned Timecard Deficits</span>
+            </div>
+          </div>
+
+          <div class="d-split">
+            <!-- Left: Technical Activity Code View -->
+            <div class="d-panel" style="flex:1.45;">
+              <div class="d-p-head">
+                <span>💻 TECHNICAL WORK JOURNAL</span>
+                <span style="font-size:10px; color:#10b981;">WEEK 6 • DAY 28</span>
+              </div>
+              <div class="log-code-view">
+                <span class="log-code-line"><span class="c-cm">-- 08:30:00 Clock-in validated via Geofence (HQ Campus, Lat 0.3476, Lon 32.5825)</span></span>
+                <span class="log-code-line"><span class="c-cm">-- 10:15:22 Database: Partition tuning on high-throughput analytics stream</span></span>
+                <span class="log-code-line"><span class="c-fn">SELECT</span> <span class="c-kw">register_task</span>(<span class="c-str">'23/U/0482/EVE'</span>, <span class="c-num">8.5</span>, <span class="c-str">'PostgreSQL cluster optimization'</span>);</span>
+                <span class="log-code-line"><span class="c-cm">-- 13:40:00 Caching layer: Redis pool latency dropped from 180ms to 9ms</span></span>
+                <span class="log-code-line"><span class="c-fn">UPDATE</span> telemetry_logs <span class="c-kw">SET</span> verified = <span class="c-num">true</span> <span class="c-kw">WHERE</span> node_id = <span class="c-str">'kampala-cluster-01'</span>;</span>
+                <span class="log-code-line"><span class="c-cm">-- 16:30:15 Weekly summary package compiled & signed with ECDSA key</span></span>
+              </div>
+            </div>
+
+            <!-- Right: Supervisor Sign-Off Stamp -->
+            <div class="d-panel" style="flex:1;">
+              <div class="d-p-head">
+                <span>✍️ SUPERVISOR SIGN-OFF</span>
+                <span class="d-pulse-dot"></span>
+              </div>
+              <div class="stamp-container">
+                <span class="stamp-badge">● CRYPTOGRAPHICALLY CERTIFIED</span>
+                <div class="stamp-name">DR. K. SEMPALA</div>
+                <div class="stamp-role">Lead Workplace Mentor • Nile Analytics</div>
+                <div class="stamp-nonce">NONCE: 0x9f4a28...e12b77c0</div>
+                <div style="font-size:9.5px; color:#cbd5e1; margin-top:2px;">Sign-off verified & timestamped for University Board review.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── DASHBOARD 2: SUPERVISION SCORING RUBRIC ── -->
+        <div class="case-dash" id="dash2">
+          <div class="d-bar">
+            <div class="d-bar-left">
+              <div class="d-bar-dots"><span class="d-bar-dot r"></span><span class="d-bar-dot y"></span><span class="d-bar-dot g"></span></div>
+              <span class="d-bar-title">⚖️ FAMS DUAL SUPERVISION SCORING RUBRIC</span>
+              <span class="d-bar-crumb">// FACULTY OF COMPUTING & INFORMATICS</span>
+            </div>
+            <div class="d-bar-right">
+              <span class="d-pulse-dot"></span>
+              <span class="d-clock" id="clock2">15:30:00 EAT</span>
+              <span class="d-tag">RATIFIED</span>
+            </div>
+          </div>
+
+          <div class="d-kpis">
+            <div class="d-kpi">
+              <span class="d-kpi-lbl">Host Workplace Mentor (40%)</span>
+              <div class="d-kpi-val" style="color:#34d399;">39.0 / 40.0 <span class="up">97.5%</span></div>
+              <span class="d-kpi-sub">Punctuality, Technical Delivery, Ethics</span>
+            </div>
+            <div class="d-kpi">
+              <span class="d-kpi-lbl">University Academic Assessor (60%)</span>
+              <div class="d-kpi-val" style="color:#60a5fa;">56.5 / 60.0 <span class="up">94.2%</span></div>
+              <span class="d-kpi-sub">On-Site Inspection, Logbook, Defense Dossier</span>
+            </div>
+            <div class="d-kpi" style="border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.06);">
+              <span class="d-kpi-lbl">Composite Institutional Grade</span>
+              <div class="d-kpi-val" style="color:#10b981;">95.5% <span class="chip" style="background:#10b981; color:#062b1b;">GRADE A</span></div>
+              <span class="d-kpi-sub">First Class Honours Distinction</span>
+            </div>
+          </div>
+
+          <div class="d-split">
+            <!-- Left: Criteria Breakdown -->
+            <div class="d-panel" style="flex:1.45;">
+              <div class="d-p-head">
+                <span>📊 OFFICIAL SCORING CRITERIA BREAKDOWN</span>
+                <span style="font-size:10px; color:#10b981; font-weight:700;">FINAL DEFENSE</span>
+              </div>
+              <div class="rubric-list">
+                <div class="rubric-item">
+                  <div class="rubric-label"><span>Workplace Discipline, Attitude & Reliability</span> <b>10.0 / 10.0</b></div>
+                  <div class="rubric-track"><div class="rubric-fill" style="width:100%; background:#10b981;"></div></div>
+                </div>
+                <div class="rubric-item">
+                  <div class="rubric-label"><span>Technical Execution & Project Deliverables</span> <b>19.0 / 20.0</b></div>
+                  <div class="rubric-track"><div class="rubric-fill" style="width:95%; background:#10b981;"></div></div>
+                </div>
+                <div class="rubric-item">
+                  <div class="rubric-label"><span>University Academic On-Site Field Visit</span> <b>18.5 / 20.0</b></div>
+                  <div class="rubric-track"><div class="rubric-fill" style="width:92.5%; background:#3b82f6;"></div></div>
+                </div>
+                <div class="rubric-item">
+                  <div class="rubric-label"><span>Field Attachment Defense & Comprehensive Dossier</span> <b>28.0 / 30.0</b></div>
+                  <div class="rubric-track"><div class="rubric-fill" style="width:93.3%; background:#3b82f6;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Faculty Board Emblem Attestation -->
+            <div class="d-panel" style="flex:1;">
+              <div class="d-p-head">
+                <span>🏛️ FACULTY BOARD ATTESTATION</span>
+                <span style="font-size:10px; color:#10b981; font-weight:700;">APPROVED</span>
+              </div>
+              <div class="board-attest">
+                <div class="board-emblem">🏛️</div>
+                <div class="board-title">MAKERERE UNIVERSITY</div>
+                <div class="board-sub">Board of Examiners & Academic Registrar</div>
+                <div class="board-stamp">OFFICIAL RESULTS RATIFIED</div>
+                <div style="font-family:'JetBrains Mono', monospace; font-size:9px; color:#94a3b8; margin-top:2px;">ATTESTATION: FAMS-2026-MAK-BIS-0482</div>
+                <div style="font-size:9.5px; color:#10b981; font-weight:600;">✓ Official Academic Transcript Generated</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="flash" id="flash"></div>
-
-        <!-- In-Screen Mode Bar -->
-        <div class="screen-mode-bar">
-          <div class="screen-status-pill">
-            <span class="screen-status-dot"></span>
-            <span id="screen-clock">EAT 15:30:00</span>
-            <span>• NREN 5G</span>
-          </div>
-          <div class="screen-view-toggle">
-            <button class="active" id="btn-show-vid" type="button">🎬 Showcase</button>
-            <button id="btn-show-live" type="button">⚡ Live Console</button>
-          </div>
-        </div>
-
-        <!-- In-Screen Live Interactive Console -->
-        <div class="screen-live-console" id="live-console">
-          <div class="live-console-header">
-            <span id="live-console-title" style="font-weight:700; color:#10b981;">PLACEMENT ENGINE v4.2</span>
-            <span style="color:#9ca3af; font-size:10px;">MAKERERE UNIVERSITY • COCIS</span>
-          </div>
-          <div class="live-console-body" id="live-console-content">
-            <!-- Dynamic interactive content rendered by JS -->
-          </div>
-        </div>
       </div>
 
       <!-- 9. Laptop Display Hit Target -->
@@ -1191,98 +1733,24 @@
         trans: CF + 'hf_20261111_001144_2b054228-95af-41d5-922d-b02979fe485b.mp4',
       };
 
-      const R2 = 'https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/aaaf/';
       const CASES = [
         {
-          video: R2 + 'vell-lookbook.mp4',
           title: 'PLACEMENT HUB',
           rows: ['STUDENT PORTAL', 'PLACEMENTS', '2026'],
           key: '// placement hub',
           text: '— students browse host organisations, apply for attachment and track every request through to approval.',
-          liveTitle: '01 PLACEMENT & HOST MATCHING',
-          renderLive: () => `
-            <div style="display:flex; flex-direction:column; gap:10px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.04); padding:10px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
-                <div>
-                  <div style="font-weight:700; color:#fff;">Nile Analytics Institute</div>
-                  <div style="font-size:11px; color:#9ca3af;">Data Engineering & AI Research Division</div>
-                </div>
-                <span style="background:rgba(16,185,129,0.15); color:#10b981; padding:3px 8px; border-radius:12px; font-size:10px; font-weight:700;">APPROVED HOST</span>
-              </div>
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:6px;">
-                  <div style="font-size:10px; color:#9ca3af;">PLACEMENT STATUS</div>
-                  <div style="font-size:14px; font-weight:700; color:#10b981; margin-top:4px;">Direct Tripartite Signed</div>
-                  <div style="font-size:10px; color:#6b7280; margin-top:2px;">MOU Nonce: 0x88f2b7...d01e</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:6px;">
-                  <div style="font-size:10px; color:#9ca3af;">WORKPLACE MENTOR</div>
-                  <div style="font-size:14px; font-weight:700; color:#fff; margin-top:4px;">Dr. K. Sempala</div>
-                  <div style="font-size:10px; color:#6b7280; margin-top:2px;">Lead Data Architect (Accredited)</div>
-                </div>
-              </div>
-              <button onclick="window.triggerLiveAction('mou')" style="background:#10b981; color:#0b2f20; font-weight:700; border:none; padding:8px; border-radius:6px; cursor:pointer; font-size:11px; margin-top:4px;">✓ Verify Tripartite Nonce & Accreditation</button>
-            </div>
-          `
         },
         {
-          video: R2 + 'vasari-vhs-hero.mp4',
           title: 'DIGITAL LOGBOOK',
           rows: ['INTERNS', 'WEEKLY LOGS', '2026'],
           key: '// digital logbook',
           text: '— interns record daily activities and supervisors sign off in one tap, no more paper logbooks.',
-          liveTitle: '02 DIGITAL LOGBOOK & ACTIVITY LEDGER',
-          renderLive: () => `
-            <div style="display:flex; flex-direction:column; gap:10px;">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:11px; color:#9ca3af;">WEEK 06 OF 10 • LOGBOOK JOURNAL</span>
-                <span style="background:rgba(16,185,129,0.2); color:#10b981; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:700;">153 / 320 HOURS LOGGED</span>
-              </div>
-              <div style="background:#090d13; border:1px solid rgba(255,255,255,0.08); padding:10px; border-radius:6px; font-family:monospace; font-size:11px; line-height:1.5; color:#a7f3d0;">
-                <div style="color:#6ee7b7; font-weight:bold;">// Daily Technical Entry — Alice Nakato</div>
-                <div>SELECT record_session('23/U/0482/EVE', date 'today');</div>
-                <div>-- Scaled pipeline cluster to 4 worker nodes</div>
-                <div>-- Fixed Redis transaction pool latency from 180ms to 12ms</div>
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:8px 12px; border-radius:6px;">
-                <span style="font-size:11px; color:#e5e7eb;">Field Supervisor Sign-off:</span>
-                <span id="log-status" style="font-size:11px; font-weight:700; color:#10b981;">● Cryptographically Stamped</span>
-              </div>
-              <button onclick="window.triggerLiveAction('log')" style="background:#10b981; color:#0b2f20; font-weight:700; border:none; padding:8px; border-radius:6px; cursor:pointer; font-size:11px;">✍️ Simulate 1-Tap Supervisor Weekly Sign-Off</button>
-            </div>
-          `
         },
         {
-          video: R2 + 'living-portrait-hero.mp4',
           title: 'SUPERVISION',
           rows: ['SUPERVISORS', 'ASSESSMENT', '2026'],
           key: '// supervision',
           text: '— academic and field supervisors schedule visits, score interns and generate final reports automatically.',
-          liveTitle: '03 DUAL SUPERVISION SCORING RUBRIC',
-          renderLive: () => `
-            <div style="display:flex; flex-direction:column; gap:10px;">
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:6px; border-left:3px solid #10b981;">
-                  <div style="font-size:10px; color:#9ca3af;">HOST MENTOR SCORE (40%)</div>
-                  <div style="font-size:16px; font-weight:800; color:#fff; margin-top:2px;">39.0 / 40</div>
-                  <div style="font-size:10px; color:#10b981;">Professionalism & Delivery: 97.5%</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:6px; border-left:3px solid #3b82f6;">
-                  <div style="font-size:10px; color:#9ca3af;">ACADEMIC ASSESSOR (60%)</div>
-                  <div style="font-size:16px; font-weight:800; color:#fff; margin-top:2px;">56.5 / 60</div>
-                  <div style="font-size:10px; color:#3b82f6;">Field Defense & Portfolio: 94.2%</div>
-                </div>
-              </div>
-              <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); padding:10px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                  <div style="font-size:11px; color:#9ca3af;">COMPOSITE INSTITUTIONAL GRADE</div>
-                  <div style="font-size:16px; font-weight:800; color:#10b981;">95.5% — GRADE A (DISTINCTION)</div>
-                </div>
-                <span id="seal-badge" style="background:#10b981; color:#0b2f20; font-size:10px; font-weight:800; padding:4px 8px; border-radius:4px;">SEAL APPLIED</span>
-              </div>
-              <button onclick="window.triggerLiveAction('seal')" style="background:#10b981; color:#0b2f20; font-weight:700; border:none; padding:8px; border-radius:6px; cursor:pointer; font-size:11px;">🏛️ Recalculate & Apply Faculty Board Seal</button>
-            </div>
-          `
         },
       ];
 
@@ -1297,7 +1765,7 @@
       const screenEl = document.getElementById('screen');
       const screenHitEl = document.getElementById('screen-hit');
       const flashEl = document.getElementById('flash');
-      const caseVids = [document.getElementById('cv0'), document.getElementById('cv1'), document.getElementById('cv2')];
+      const dashEls = [document.getElementById('dash0'), document.getElementById('dash1'), document.getElementById('dash2')];
 
       const wmSvg = document.getElementById('wm');
       const scriptEl = document.getElementById('script');
@@ -1328,13 +1796,6 @@
       const mScriptEl = document.getElementById('m-script');
       const mBadgeEl = document.getElementById('m-badge');
 
-      const btnShowVid = document.getElementById('btn-show-vid');
-      const btnShowLive = document.getElementById('btn-show-live');
-      const liveConsole = document.getElementById('live-console');
-      const liveConsoleTitle = document.getElementById('live-console-title');
-      const liveConsoleContent = document.getElementById('live-console-content');
-      const screenClock = document.getElementById('screen-clock');
-
       /* ── 4. State ── */
       let mode = 'hero';
       let currentCase = 0;
@@ -1342,7 +1803,6 @@
       let transReady = false;
       let badgeSway = null;
       let entered = false;
-      let liveMode = false;
       const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       // Assign image sources
@@ -1350,26 +1810,82 @@
       casePlateImg.src = ASSETS.casePlate;
       cutImg.src = ASSETS.cut;
       badgeImg.src = ASSETS.badge;
-      caseVids[0].src = CASES[0].video;
 
-      // Transition video
+      // Preload transition video
       transVideo.src = ASSETS.trans;
       transVideo.addEventListener('loadeddata', () => { transReady = true; });
       transVideo.addEventListener('canplaythrough', () => { transReady = true; });
-
-      // Live clock in screen
-      setInterval(() => {
-        const d = new Date();
-        const hrs = String(d.getHours()).padStart(2, '0');
-        const mins = String(d.getMinutes()).padStart(2, '0');
-        const secs = String(d.getSeconds()).padStart(2, '0');
-        if (screenClock) screenClock.textContent = `EAT ${hrs}:${mins}:${secs}`;
-      }, 1000);
 
       // Clone mobile badge
       const mobileBadgeClone = badgeEl.cloneNode(true);
       mobileBadgeClone.id = 'badge-mobile-clone';
       mBadgeEl.appendChild(mobileBadgeClone);
+
+      /* ═══════════════════════════════════════════════════
+         CONTINUOUS SELF-ANIMATING DASHBOARDS (WITHOUT USER INTERACTION)
+         ═══════════════════════════════════════════════════ */
+      // 1. Live Clocks in Dashboards
+      const clock0 = document.getElementById('clock0');
+      const clock1 = document.getElementById('clock1');
+      const clock2 = document.getElementById('clock2');
+
+      setInterval(() => {
+        const d = new Date();
+        const hrs = String(d.getHours()).padStart(2, '0');
+        const mins = String(d.getMinutes()).padStart(2, '0');
+        const secs = String(d.getSeconds()).padStart(2, '0');
+        const str = `${hrs}:${mins}:${secs} EAT`;
+        if (clock0) clock0.textContent = str;
+        if (clock1) clock1.textContent = str;
+        if (clock2) clock2.textContent = str;
+      }, 1000);
+
+      // 2. Dashboard 1: Live Shift Seconds Counter
+      let shiftSeconds = 8 * 3600 + 34 * 60 + 12;
+      const shiftTimerEl = document.getElementById('dash-shift-timer');
+      setInterval(() => {
+        shiftSeconds++;
+        const h = String(Math.floor(shiftSeconds / 3600)).padStart(2, '0');
+        const m = String(Math.floor((shiftSeconds % 3600) / 60)).padStart(2, '0');
+        const s = String(shiftSeconds % 60).padStart(2, '0');
+        if (shiftTimerEl) shiftTimerEl.textContent = `${h}:${m}:${s}`;
+      }, 1000);
+
+      // 3. Dashboard 0: Live Stream Feed of Placement Matches
+      const streamFeed = document.getElementById('stream-feed');
+      const MATCH_POOL = [
+        { name: 'Alice Nakato', host: 'Nile Analytics Institute', role: 'Data Engineering & AI', status: '✓ Tripartite Signed' },
+        { name: 'David Ochieng', host: 'Ministry of ICT & Guidance', role: 'Cloud Systems Arch', status: '✓ Verified Nonce' },
+        { name: 'Sarah Namubiru', host: 'Stanbic Bank Innovation Lab', role: 'FinTech Cybersecurity', status: '✓ Placement Active' },
+        { name: 'Brian Kigozi', host: 'UN Pulse Lab Kampala', role: 'Applied ML Research', status: '✓ MOU Cleared' },
+        { name: 'Grace Atuhaire', host: 'Uganda Revenue Authority', role: 'Enterprise Database Eng', status: '✓ Host Approved' },
+        { name: 'Emmanuel Okello', host: 'Makerere Innovation Pod', role: 'Fullstack Systems', status: '✓ Nonce Valid' },
+        { name: 'Joan Nansubuga', host: 'Rocket Health Uganda', role: 'HealthTech Platform Eng', status: '✓ Placed' }
+      ];
+
+      let streamIndex = 0;
+      function renderStream() {
+        if (!streamFeed) return;
+        const visibleItems = [];
+        for (let i = 0; i < 4; i++) {
+          visibleItems.push(MATCH_POOL[(streamIndex + i) % MATCH_POOL.length]);
+        }
+        streamFeed.innerHTML = visibleItems.map((item) => `
+          <div class="stream-item">
+            <div class="stream-st">
+              <span class="stream-name">${item.name}</span>
+              <span class="stream-host">${item.host} • ${item.role}</span>
+            </div>
+            <span class="stream-pill">${item.status}</span>
+          </div>
+        `).join('');
+      }
+
+      renderStream();
+      setInterval(() => {
+        streamIndex = (streamIndex + 1) % MATCH_POOL.length;
+        renderStream();
+      }, 3200);
 
       /* ── 5. Frame Fitting & Layout (pose) ── */
       function pose(m) {
@@ -1613,7 +2129,7 @@
       });
       setTimeout(runEntrance, 3500);
 
-      /* ── 7. Case Population ── */
+      /* ── 7. Case Population & Active Dashboard Switching ── */
       function fillCase(i) {
         const c = CASES[i];
         tTitleEl.textContent = c.title;
@@ -1622,25 +2138,17 @@
         dPEl.textContent = c.text;
         dNumEl.textContent = `0${i + 1} / 03`;
 
-        if (liveConsoleTitle) liveConsoleTitle.textContent = c.liveTitle;
-        if (liveConsoleContent) liveConsoleContent.innerHTML = c.renderLive();
+        // Switch active dashboard in screen
+        dashEls.forEach((dash, idx) => {
+          if (idx === i) {
+            dash.classList.add('active');
+          } else {
+            dash.classList.remove('active');
+          }
+        });
 
         if (i === 0) btnPrev.classList.add('dim');
         else btnPrev.classList.remove('dim');
-      }
-
-      function playOnly(n) {
-        caseVids.forEach((v, i) => {
-          if (i === n) {
-            if (!v.src && CASES[n].video) v.src = CASES[n].video;
-            v.style.opacity = liveMode ? '0.25' : '1';
-            v.currentTime = 0;
-            v.play().catch(() => {});
-          } else {
-            v.style.opacity = '0';
-            v.pause();
-          }
-        });
       }
 
       function caseIn(n, first) {
@@ -1810,18 +2318,15 @@
           { duration: 600, easing: 'ease-out' }
         );
 
-        caseVids[0].animate(
+        dashEls[0].animate(
           [
-            { opacity: 0, transform: 'scale(1.06)' },
+            { opacity: 0, transform: 'scale(0.96)' },
             { opacity: 1, transform: 'scale(1)' },
           ],
           { duration: 700, fill: 'both' }
         );
 
-        playOnly(0);
         caseIn(0, true);
-
-        if (!caseVids[1].src) caseVids[1].src = CASES[1].video;
 
         setTimeout(() => {
           busy = false;
@@ -1840,37 +2345,33 @@
         currentCase = n;
 
         caseOut();
-        caseVids[oldIdx].animate(
-          [{ opacity: 1 }, { opacity: 0 }],
-          { duration: 350, fill: 'forwards' }
+        dashEls[oldIdx].animate(
+          [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(0.97)' }],
+          { duration: 320, fill: 'forwards' }
         );
 
         setTimeout(() => {
-          caseVids[oldIdx].pause();
-
           flashEl.animate(
             [{ opacity: 0 }, { opacity: 0.35 }, { opacity: 0 }],
-            { duration: 420 }
+            { duration: 380 }
           );
 
-          caseVids[n].animate(
+          fillCase(n);
+
+          dashEls[n].animate(
             [
-              { opacity: 0, transform: 'scale(1.04)' },
+              { opacity: 0, transform: 'scale(1.02)' },
               { opacity: 1, transform: 'scale(1)' },
             ],
-            { duration: 500, fill: 'both' }
+            { duration: 480, fill: 'both' }
           );
 
-          playOnly(n);
           caseIn(n, false);
-
-          const nextIdx = (n + 1) % CASES.length;
-          if (!caseVids[nextIdx].src) caseVids[nextIdx].src = CASES[nextIdx].video;
 
           setTimeout(() => {
             busy = false;
-          }, 520);
-        }, 350);
+          }, 480);
+        }, 320);
       }
 
       function nextCase() {
@@ -1896,7 +2397,6 @@
         document.body.classList.add('busy');
 
         caseOut();
-        caseVids.forEach((v) => v.pause());
         screenEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' });
 
         document.body.classList.remove('is-case');
@@ -1971,43 +2471,7 @@
         }, 250);
       }
 
-      /* ── 12. Interactive In-Screen Live Mode Switcher ── */
-      btnShowVid.addEventListener('click', (e) => {
-        e.stopPropagation();
-        playClick();
-        liveMode = false;
-        btnShowVid.classList.add('active');
-        btnShowLive.classList.remove('active');
-        liveConsole.classList.remove('visible');
-        caseVids[currentCase].style.opacity = '1';
-      });
-
-      btnShowLive.addEventListener('click', (e) => {
-        e.stopPropagation();
-        playClick();
-        liveMode = true;
-        btnShowLive.classList.add('active');
-        btnShowVid.classList.remove('active');
-        liveConsole.classList.add('visible');
-        caseVids[currentCase].style.opacity = '0.2';
-      });
-
-      window.triggerLiveAction = function(type) {
-        playChime();
-        if (type === 'mou') {
-          alert('MOU Nonce 0x88f2b7...d01e successfully verified against National ICT Database!');
-        } else if (type === 'log') {
-          const st = document.getElementById('log-status');
-          if (st) st.innerHTML = '● Weekly Logbook Verified & Timestamped!';
-          alert('Weekly sign-off verified with ECDSA signature.');
-        } else if (type === 'seal') {
-          const seal = document.getElementById('seal-badge');
-          if (seal) seal.innerHTML = 'INSTITUTIONAL SEAL CERTIFIED';
-          alert('Faculty Board composite grade ratified: Grade A Distinction.');
-        }
-      };
-
-      /* ── 13. Event Listeners ── */
+      /* ── 12. Event Listeners ── */
       let lastWheelTime = 0;
       window.addEventListener(
         'wheel',
