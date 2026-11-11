@@ -1329,21 +1329,30 @@
     }
 
     /* ═══════════════════════════════════════════════════
-       NEW SCENE 2 SURROUNDING UI (SLEEK & LUXURIOUS)
+       NEW SCENE 2 SURROUNDING UI (EXECUTIVE HUD & INTEL)
        ═══════════════════════════════════════════════════ */
-    /* Top Scene 2 Header */
+    /* Top Navigation & Workflow HUD */
     .s2-header {
       position: absolute;
-      top: calc(10 * var(--n));
-      left: calc(28 * var(--n));
-      right: calc(28 * var(--n));
+      top: calc(14 * var(--n));
+      left: calc(24 * var(--n));
+      right: calc(24 * var(--n));
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: calc(12 * var(--n));
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s ease;
-      z-index: 30;
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transform: translateY(-12px);
+      z-index: 35;
+    }
+
+    .s2-header-left {
+      display: flex;
+      align-items: center;
+      gap: calc(10 * var(--n));
+      flex-shrink: 0;
     }
 
     .s2-back-btn {
@@ -1353,326 +1362,304 @@
       height: calc(36 * var(--n));
       padding: 0 calc(16 * var(--n));
       border-radius: 9999px;
-      background: rgba(10, 31, 21, 0.85);
+      background: rgba(9, 24, 17, 0.9);
       border: 1px solid rgba(52, 211, 153, 0.35);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(20px);
       color: #ffffff;
-      font-size: calc(13 * var(--n));
+      font-size: calc(12.5 * var(--n));
       font-weight: 700;
+      letter-spacing: 0.02em;
       cursor: pointer;
       pointer-events: auto;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      transition: all 0.25s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .s2-back-btn:hover {
       background: rgba(16, 50, 35, 0.95);
       border-color: #34d399;
+      transform: translateX(-3px);
+      box-shadow: 0 6px 24px rgba(16, 185, 129, 0.25);
+    }
+
+    .s2-back-arrow {
+      font-size: calc(14 * var(--n));
+      transition: transform 0.2s ease;
+    }
+
+    .s2-back-btn:hover .s2-back-arrow {
       transform: translateX(-2px);
     }
 
-    .s2-title-pill {
-      display: inline-flex;
+    /* Centered Segmented Workflow Stage Switcher */
+    .s2-hud-stages {
+      display: flex;
       align-items: center;
-      gap: 8px;
-      height: calc(36 * var(--n));
-      padding: 0 calc(18 * var(--n));
+      gap: calc(4 * var(--n));
+      background: rgba(7, 18, 13, 0.92);
+      border: 1px solid rgba(52, 211, 153, 0.28);
+      backdrop-filter: blur(24px);
       border-radius: 9999px;
-      background: rgba(7, 20, 14, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(16px);
-      color: #cfeee0;
-      font-size: calc(12 * var(--n));
-      font-weight: 700;
-      letter-spacing: 0.04em;
+      padding: calc(4 * var(--n));
+      box-shadow: 0 calc(10 * var(--n)) calc(30 * var(--n)) rgba(0, 0, 0, 0.5);
+      pointer-events: auto;
     }
 
-    .s2-controls {
+    .s2-stage-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(7 * var(--n));
+      height: calc(32 * var(--n));
+      padding: 0 calc(14 * var(--n));
+      border-radius: 9999px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: #94a3b8;
+      font-size: calc(11.5 * var(--n));
+      font-weight: 700;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      transition: all 0.25s ease;
+    }
+
+    .s2-stage-pill:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .s2-stage-pill.active {
+      color: #ffffff;
+      background: rgba(16, 185, 129, 0.16);
+      border-color: rgba(52, 211, 153, 0.45);
+      box-shadow: 0 0 calc(16 * var(--n)) rgba(16, 185, 129, 0.15);
+    }
+
+    .s2-stage-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: calc(9.5 * var(--n));
+      font-weight: 800;
+      padding: calc(1 * var(--n)) calc(5 * var(--n));
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+    }
+
+    .s2-stage-pill.active .s2-stage-num {
+      background: #10b981;
+      color: #062416;
+    }
+
+    .s2-stage-name {
+      letter-spacing: 0.01em;
+    }
+
+    .s2-stage-prog {
+      position: absolute;
+      bottom: 0;
+      left: calc(12 * var(--n));
+      right: calc(12 * var(--n));
+      height: calc(2.2 * var(--n));
+      background: #34d399;
+      border-radius: 2px;
+      transform-origin: left;
+      transform: scaleX(0);
+      opacity: 0;
+      transition: transform 0.1s linear, opacity 0.2s ease;
+    }
+
+    .s2-stage-pill.active .s2-stage-prog {
+      opacity: 1;
+    }
+
+    /* Right Header Action Cluster */
+    .s2-header-right {
       display: flex;
       align-items: center;
       gap: calc(8 * var(--n));
+      flex-shrink: 0;
     }
 
-    .s2-btn {
+    .s2-action-pill {
       height: calc(36 * var(--n));
       padding: 0 calc(14 * var(--n));
       border-radius: 9999px;
-      background: rgba(10, 31, 21, 0.85);
+      background: rgba(9, 24, 17, 0.9);
       border: 1px solid rgba(52, 211, 153, 0.3);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(20px);
       color: #ffffff;
-      font-size: calc(12 * var(--n));
+      font-size: calc(11.5 * var(--n));
       font-weight: 700;
       cursor: pointer;
       pointer-events: auto;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
       transition: all 0.2s ease;
     }
 
-    .s2-btn:hover {
+    .s2-action-pill:hover {
       background: rgba(16, 50, 35, 0.95);
       border-color: #34d399;
     }
 
-    /* Left Workflow Pipeline Timeline */
-    .s2-timeline {
-      position: absolute;
-      left: calc(28 * var(--n));
-      top: calc(80 * var(--n));
-      width: calc(230 * var(--n));
-      display: flex;
-      flex-direction: column;
-      gap: calc(8 * var(--n));
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      transform: translateX(-15px);
-      z-index: 25;
-    }
-
-    .s2-timeline-head {
-      font-size: calc(10.5 * var(--n));
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      color: #94a3b8;
-      text-transform: uppercase;
-      margin-bottom: calc(2 * var(--n));
-    }
-
-    .s2-step-card {
-      background: rgba(10, 25, 18, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(16px);
-      border-radius: calc(8 * var(--n));
-      padding: calc(10 * var(--n)) calc(12 * var(--n));
-      display: flex;
-      flex-direction: column;
-      gap: calc(3 * var(--n));
-      cursor: pointer;
-      pointer-events: auto;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.25s ease;
-    }
-
-    .s2-step-card:hover {
-      background: rgba(15, 38, 28, 0.95);
-      border-color: rgba(52, 211, 153, 0.35);
-    }
-
-    .s2-step-card.active {
-      background: rgba(16, 45, 32, 0.95);
-      border-color: #10b981;
-      box-shadow: 0 0 calc(18 * var(--n)) rgba(16, 185, 129, 0.2);
-    }
-
-    .s2-step-meta {
-      display: flex;
-      justify-content: space-between;
+    .s2-cta-link {
+      display: inline-flex;
       align-items: center;
-      font-size: calc(9 * var(--n));
-      font-family: 'JetBrains Mono', monospace;
-      color: #94a3b8;
-    }
-
-    .s2-step-card.active .s2-step-meta {
-      color: #34d399;
-    }
-
-    .s2-step-title {
-      font-size: calc(12 * var(--n));
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1.2;
-    }
-
-    .s2-step-role {
-      font-size: calc(9.5 * var(--n));
-      color: #94a3b8;
-    }
-
-    .s2-step-progress {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: calc(2.5 * var(--n));
-      background: #10b981;
-      width: 0%;
-      transition: width 0.1s linear;
-    }
-
-    /* Right Luxury Executive Dossier Card */
-    .s2-dossier {
-      position: absolute;
-      right: calc(28 * var(--n));
-      top: calc(80 * var(--n));
-      width: calc(300 * var(--n));
-      background: rgba(9, 24, 17, 0.88);
-      border: 1px solid rgba(52, 211, 153, 0.28);
-      backdrop-filter: blur(20px);
-      border-radius: calc(10 * var(--n));
-      box-shadow: 0 calc(20 * var(--n)) calc(50 * var(--n)) rgba(0, 0, 0, 0.5), 0 0 calc(30 * var(--n)) rgba(16, 185, 129, 0.1);
-      padding: calc(18 * var(--n)) calc(20 * var(--n));
-      display: flex;
-      flex-direction: column;
-      gap: calc(12 * var(--n));
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      transform: translateX(15px);
-      z-index: 25;
-    }
-
-    .s2-dossier-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: calc(8 * var(--n));
-    }
-
-    .s2-crest {
-      display: flex;
-      align-items: center;
-      gap: calc(6 * var(--n));
-      font-size: calc(10 * var(--n));
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      color: #cfeee0;
-    }
-
-    .s2-live-tag {
-      font-size: calc(8.5 * var(--n));
-      font-weight: 800;
-      padding: calc(2 * var(--n)) calc(6 * var(--n));
+      gap: 6px;
+      height: calc(36 * var(--n));
+      padding: 0 calc(16 * var(--n));
       border-radius: 9999px;
-      background: rgba(16, 185, 129, 0.2);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.4);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: calc(11.5 * var(--n));
+      font-weight: 800;
+      text-decoration: none;
+      pointer-events: auto;
+      box-shadow: 0 4px 18px rgba(16, 185, 129, 0.4);
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    .s2-dossier-title {
-      font-size: calc(18 * var(--n));
+    .s2-cta-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(16, 185, 129, 0.55);
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    }
+
+    /* Bottom-Left Executive Stage Intel Card */
+    .s2-intel-card {
+      position: absolute;
+      left: calc(24 * var(--n));
+      bottom: calc(20 * var(--n));
+      width: calc(380 * var(--n));
+      max-width: 440px;
+      background: rgba(8, 22, 16, 0.92);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      backdrop-filter: blur(24px);
+      border-radius: calc(12 * var(--n));
+      padding: calc(14 * var(--n)) calc(18 * var(--n));
+      box-shadow: 0 calc(16 * var(--n)) calc(40 * var(--n)) rgba(0, 0, 0, 0.6), 0 0 calc(25 * var(--n)) rgba(16, 185, 129, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: calc(6 * var(--n));
+      z-index: 35;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(16px);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .s2-intel-badge {
+      display: flex;
+      align-items: center;
+      gap: calc(7 * var(--n));
+      font-size: calc(9 * var(--n));
       font-weight: 800;
-      line-height: 1.15;
+      font-family: 'JetBrains Mono', monospace;
+      color: #34d399;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .s2-live-indicator {
+      width: calc(6 * var(--n));
+      height: calc(6 * var(--n));
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 calc(8 * var(--n)) #10b981;
+      animation: pulseLive 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulseLive {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .s2-intel-title {
+      font-size: calc(16 * var(--n));
+      font-weight: 800;
+      line-height: 1.2;
       color: #ffffff;
       letter-spacing: -0.01em;
     }
 
-    .s2-dossier-desc {
-      font-size: calc(12 * var(--n));
+    .s2-intel-desc {
+      font-size: calc(11.5 * var(--n));
       line-height: 1.45;
-      color: #cbd5e1;
+      color: #94a3b8;
       font-weight: 500;
     }
 
-    .s2-dossier-metrics {
+    .s2-intel-tags {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       gap: calc(5 * var(--n));
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: calc(6 * var(--n));
-      padding: calc(8 * var(--n)) calc(10 * var(--n));
+      margin-top: calc(4 * var(--n));
     }
 
-    .s2-metric-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: calc(10 * var(--n));
-      color: #94a3b8;
-    }
-
-    .s2-metric-row b {
-      color: #34d399;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .s2-dossier-status {
-      display: flex;
-      align-items: center;
-      gap: calc(6 * var(--n));
-      font-size: calc(10 * var(--n));
-      color: #a7f3d0;
-      font-weight: 600;
-      border-top: 1px dashed rgba(255, 255, 255, 0.08);
-      padding-top: calc(8 * var(--n));
-    }
-
-    /* Bottom Centered Controller Dock */
-    .s2-dock {
-      position: absolute;
-      left: 50%;
-      bottom: calc(22 * var(--n));
-      transform: translateX(-50%) translateY(20px);
-      display: flex;
-      align-items: center;
-      gap: calc(10 * var(--n));
-      background: rgba(9, 24, 17, 0.9);
-      border: 1px solid rgba(52, 211, 153, 0.35);
-      backdrop-filter: blur(20px);
-      border-radius: 9999px;
-      padding: calc(6 * var(--n)) calc(14 * var(--n));
-      box-shadow: 0 calc(10 * var(--n)) calc(30 * var(--n)) rgba(0, 0, 0, 0.5);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      z-index: 30;
-    }
-
-    .s2-dock-btn {
-      display: flex;
-      align-items: center;
-      gap: calc(5 * var(--n));
-      height: calc(32 * var(--n));
-      padding: 0 calc(12 * var(--n));
-      border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #ffffff;
-      font-size: calc(11.5 * var(--n));
-      font-weight: 700;
-      cursor: pointer;
-      pointer-events: auto;
-      transition: all 0.2s ease;
-    }
-
-    .s2-dock-btn:hover {
-      background: rgba(16, 185, 129, 0.2);
-      border-color: #10b981;
-      color: #34d399;
-    }
-
-    .s2-dock-dots {
-      display: flex;
-      align-items: center;
-      gap: calc(6 * var(--n));
-      padding: 0 calc(4 * var(--n));
-    }
-
-    .s2-dock-dot {
-      width: calc(8 * var(--n));
-      height: calc(8 * var(--n));
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      cursor: pointer;
-      pointer-events: auto;
-      transition: all 0.25s ease;
-    }
-
-    .s2-dock-dot.active {
-      background: #10b981;
-      box-shadow: 0 0 calc(8 * var(--n)) #10b981;
-      transform: scale(1.25);
-    }
-
-    .s2-dock-hint {
+    .s2-intel-tag {
       font-size: calc(9.5 * var(--n));
       font-family: 'JetBrains Mono', monospace;
-      color: #64748b;
-      margin-left: calc(4 * var(--n));
+      padding: calc(3 * var(--n)) calc(8 * var(--n));
+      border-radius: calc(4 * var(--n));
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+
+    .s2-intel-tag.highlight {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.35);
+      color: #34d399;
+    }
+
+    /* In-Screen Toast Popup inside Laptop */
+    .os-toast {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      background: rgba(9, 26, 18, 0.96);
+      border: 1px solid #10b981;
+      border-radius: 6px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(16, 185, 129, 0.2);
+      transform: translateY(40px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      z-index: 60;
+    }
+
+    .os-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .os-toast-icon {
+      font-size: 11px;
+      color: #10b981;
+      font-weight: 800;
+    }
+
+    .os-toast-text {
+      font-size: 10px;
+      font-weight: 700;
+      color: #ffffff;
+      font-family: 'Inter Tight', sans-serif;
+    }
+
+    /* Tactile Click Feedback on Simulated Elements */
+    .sim-active {
+      transform: scale(0.96) !important;
+      filter: brightness(1.25) !important;
+      transition: transform 0.1s ease !important;
     }
 
     /* ── State Visibility Toggles ── */
@@ -1686,9 +1673,7 @@
     }
 
     body.is-case .s2-header,
-    body.is-case .s2-timeline,
-    body.is-case .s2-dossier,
-    body.is-case .s2-dock {
+    body.is-case .s2-intel-card {
       opacity: 1;
       pointer-events: auto;
       transform: none;
@@ -1769,19 +1754,51 @@
       .hint { bottom: 18px; font-size: 11px; }
 
       /* Mobile Scene 2 Overrides */
-      .s2-timeline { display: none !important; }
-      .s2-dossier {
-        left: 12px !important;
-        right: 12px !important;
-        width: auto !important;
-        top: 56px !important;
-        padding: 12px 14px !important;
+      .s2-header {
+        top: 8px !important;
+        left: 10px !important;
+        right: 10px !important;
+        gap: 6px !important;
       }
-      .s2-dossier-desc, .s2-dossier-metrics { display: none !important; }
-      .s2-dossier-title { font-size: 15px !important; }
-      .s2-header { left: 12px !important; right: 12px !important; top: 12px !important; }
-      .s2-dock { bottom: 16px !important; width: 92% !important; justify-content: space-between !important; }
-      .s2-dock-hint { display: none !important; }
+      .s2-back-btn {
+        height: 32px !important;
+        padding: 0 10px !important;
+        font-size: 11px !important;
+      }
+      .s2-hud-stages {
+        padding: 2px !important;
+        gap: 2px !important;
+      }
+      .s2-stage-pill {
+        height: 28px !important;
+        padding: 0 8px !important;
+        font-size: 10px !important;
+      }
+      .s2-stage-pill:not(.active) .s2-stage-name {
+        display: none !important;
+      }
+      .s2-cta-link {
+        display: none !important;
+      }
+      .s2-action-pill {
+        height: 32px !important;
+        padding: 0 8px !important;
+        font-size: 10px !important;
+      }
+      .s2-intel-card {
+        left: 10px !important;
+        right: 10px !important;
+        bottom: 12px !important;
+        width: auto !important;
+        max-width: none !important;
+        padding: 10px 14px !important;
+      }
+      .s2-intel-desc, .s2-intel-tags {
+        display: none !important;
+      }
+      .s2-intel-title {
+        font-size: 13px !important;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -2222,6 +2239,12 @@
             <div class="sim-cursor-badge" id="sim-cursor-badge">Autopilot: Matching</div>
             <div class="sim-cursor-ripple" id="sim-cursor-ripple"></div>
           </div>
+
+          <!-- In-Screen Live Toast -->
+          <div class="os-toast" id="os-toast">
+            <span class="os-toast-icon" id="os-toast-icon">✓</span>
+            <span class="os-toast-text" id="os-toast-text">MOU Ratified Successfully</span>
+          </div>
         </div>
 
         <div class="flash" id="flash"></div>
@@ -2265,101 +2288,73 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════
-         SCENE 2 SURROUNDING UI (LUXURY CONTROLS & DOSSIER)
+         SCENE 2 SURROUNDING UI (EXECUTIVE HUD & INTEL)
          ═══════════════════════════════════════════════════ -->
-    <!-- 1. Top Header -->
+    <!-- Top Executive HUD -->
     <div class="s2-header" id="s2-header">
-      <button class="s2-back-btn" id="s2-back-btn" type="button">
-        <span>←</span>
-        <span>Return to Overview</span>
-      </button>
-
-      <div class="s2-title-pill">
-        <span class="os-live-dot"></span>
-        <span>FAMS WORKSTATION // AUTONOMOUS SIMULATION</span>
+      <div class="s2-header-left">
+        <button class="s2-back-btn" id="s2-back-btn" type="button">
+          <span class="s2-back-arrow">←</span>
+          <span>Overview</span>
+        </button>
       </div>
 
-      <div class="s2-controls">
-        <button class="s2-btn" id="s2-tour-toggle" type="button">
+      <!-- Centered Segmented Workflow Stage Switcher -->
+      <div class="s2-hud-stages" id="s2-hud-stages">
+        <button class="s2-stage-pill active" id="s2-stage-0" data-idx="0" type="button">
+          <span class="s2-stage-num">01</span>
+          <span class="s2-stage-name">Matching Hub</span>
+          <span class="s2-stage-prog" id="s2-prog-0"></span>
+        </button>
+        <button class="s2-stage-pill" id="s2-stage-1" data-idx="1" type="button">
+          <span class="s2-stage-num">02</span>
+          <span class="s2-stage-name">GPS Logbook</span>
+          <span class="s2-stage-prog" id="s2-prog-1"></span>
+        </button>
+        <button class="s2-stage-pill" id="s2-stage-2" data-idx="2" type="button">
+          <span class="s2-stage-num">03</span>
+          <span class="s2-stage-name">Mentor Sign-Off</span>
+          <span class="s2-stage-prog" id="s2-prog-2"></span>
+        </button>
+        <button class="s2-stage-pill" id="s2-stage-3" data-idx="3" type="button">
+          <span class="s2-stage-num">04</span>
+          <span class="s2-stage-name">Supervision Rubric</span>
+          <span class="s2-stage-prog" id="s2-prog-3"></span>
+        </button>
+      </div>
+
+      <!-- Header Controls -->
+      <div class="s2-header-right">
+        <button class="s2-action-pill" id="s2-tour-toggle" type="button" title="Toggle Autopilot Tour (Space)">
           <span id="s2-tour-icon">⏸</span>
-          <span id="s2-tour-text">Pause Tour</span>
+          <span id="s2-tour-text">Autopilot</span>
         </button>
-        <button class="s2-btn" id="s2-sound-btn" type="button">
-          <span id="s2-sound-icon">🔊</span> SFX
+        <button class="s2-action-pill" id="s2-sound-btn" type="button" title="Toggle Sound SFX">
+          <span id="s2-sound-icon">🔊</span>
         </button>
+        <a href="/auth" class="s2-cta-link" id="s2-cta-link" title="Launch FAMS Live Application">
+          <span>Launch Workspace</span>
+          <span class="s2-cta-arrow">↗</span>
+        </a>
       </div>
     </div>
 
-    <!-- 2. Left Workflow Timeline -->
-    <div class="s2-timeline" id="s2-timeline">
-      <div class="s2-timeline-head">SYSTEM WORKFLOW PIPELINE</div>
-      <div class="s2-step-card active" id="s2-step-0" data-idx="0">
-        <div class="s2-step-meta"><span>STAGE 01</span><span>STUDENT & HOST</span></div>
-        <div class="s2-step-title">Placement & Enterprise MOU</div>
-        <div class="s2-step-role">Nile Analytics AI Division</div>
-        <div class="s2-step-progress" id="s2-prog-0"></div>
+    <!-- Bottom-Left Executive Stage Intel Card -->
+    <div class="s2-intel-card" id="s2-intel-card">
+      <div class="s2-intel-badge">
+        <span class="s2-live-indicator"></span>
+        <span id="s2-intel-stage-tag">STAGE 01 // ENTERPRISE MATCHING</span>
       </div>
-      <div class="s2-step-card" id="s2-step-1" data-idx="1">
-        <div class="s2-step-meta"><span>STAGE 02</span><span>INTERN & GPS</span></div>
-        <div class="s2-step-title">GPS Geofence & Digital Logbook</div>
-        <div class="s2-step-role">Biometric Presence Validation</div>
-        <div class="s2-step-progress" id="s2-prog-1"></div>
+      <div class="s2-intel-title" id="s2-intel-title">Placements & Tripartite MOU Hub</div>
+      <div class="s2-intel-desc" id="s2-intel-desc">
+        Automates matching across accredited industry hosts with cryptographic student-host-university agreements.
       </div>
-      <div class="s2-step-card" id="s2-step-2" data-idx="2">
-        <div class="s2-step-meta"><span>STAGE 03</span><span>WORKPLACE MENTOR</span></div>
-        <div class="s2-step-title">1-Tap Cryptographic Sign-Off</div>
-        <div class="s2-step-role">Dr. K. Sempala • Nonce 0x9f4a</div>
-        <div class="s2-step-progress" id="s2-prog-2"></div>
+      <div class="s2-intel-tags" id="s2-intel-tags">
+        <span class="s2-intel-tag" id="s2-tag-1">1,420 Placements</span>
+        <span class="s2-intel-tag" id="s2-tag-2">380 Accredited Hosts</span>
+        <span class="s2-intel-tag highlight" id="s2-tag-3">100% Ratified Nonces</span>
       </div>
-      <div class="s2-step-card" id="s2-step-3" data-idx="3">
-        <div class="s2-step-meta"><span>STAGE 04</span><span>FACULTY BOARD</span></div>
-        <div class="s2-step-title">Dual Supervision & Transcripts</div>
-        <div class="s2-step-role">Grade A Distinction (96.5%)</div>
-        <div class="s2-step-progress" id="s2-prog-3"></div>
-      </div>
-    </div>
-
-    <!-- 3. Right Executive Dossier Card -->
-    <div class="s2-dossier" id="s2-dossier">
-      <div class="s2-dossier-top">
-        <div class="s2-crest">
-          <span>🏛️</span>
-          <span>MAK COCIS // FAMS</span>
-        </div>
-        <span class="s2-live-tag">LIVE TELEMETRY</span>
-      </div>
-
-      <div class="s2-dossier-title" id="s2-dossier-title">PLACEMENT & ENTERPRISE MOU</div>
-      <div class="s2-dossier-desc" id="s2-dossier-desc">
-        Undergraduates browse accredited industry hosts, submit placement requests and auto-generate legally binding tripartite agreements.
-      </div>
-
-      <div class="s2-dossier-metrics" id="s2-dossier-metrics">
-        <div class="s2-metric-row"><span>Attached Intern:</span> <b>Alice Nakato (BIS III)</b></div>
-        <div class="s2-metric-row"><span>Host Organization:</span> <b>Nile Analytics Institute</b></div>
-        <div class="s2-metric-row"><span>Geofence Boundary:</span> <b>150m Perimeter HQ</b></div>
-        <div class="s2-metric-row"><span>Security Nonce:</span> <b>0x9f4a...e12b77c0</b></div>
-      </div>
-
-      <div class="s2-dossier-status">
-        <span class="os-live-dot"></span>
-        <span id="s2-dossier-status-text">Simulating automated workflow 1 of 4</span>
-      </div>
-    </div>
-
-    <!-- 4. Bottom Centered Controller Dock -->
-    <div class="s2-dock" id="s2-dock">
-      <button class="s2-dock-btn" id="s2-btn-prev" type="button">◀ Prev</button>
-      <div class="s2-dock-dots">
-        <span class="s2-dock-dot active" id="dock-dot-0" data-idx="0"></span>
-        <span class="s2-dock-dot" id="dock-dot-1" data-idx="1"></span>
-        <span class="s2-dock-dot" id="dock-dot-2" data-idx="2"></span>
-        <span class="s2-dock-dot" id="dock-dot-3" data-idx="3"></span>
-      </div>
-      <button class="s2-dock-btn" id="s2-btn-next" type="button">Next ▶</button>
-      <span class="s2-dock-hint">[Space to Pause • Arrows to Step]</span>
-    </div>
-  </div>
+    </div>  </div>
 
   <script>
     (function () {
@@ -2422,48 +2417,32 @@
 
       const WORKFLOW_DATA = [
         {
-          title: 'PLACEMENT & ENTERPRISE MOU',
+          stageTag: 'STAGE 01 // ENTERPRISE MATCHING',
+          title: 'Placements & Tripartite MOU Hub',
           desc: 'Undergraduates browse accredited industry hosts, submit placement requests and auto-generate legally binding tripartite agreements.',
-          metrics: [
-            ['Attached Intern:', 'Alice Nakato (BIS III)'],
-            ['Host Organization:', 'Nile Analytics Institute'],
-            ['Geofence Boundary:', '150m Perimeter HQ'],
-            ['Security Nonce:', '0x9f4a...e12b77c0']
-          ],
-          user: 'Alice Nakato (BIS III Intern)'
+          tags: ['1,420 Placements', '380 Accredited Hosts', '100% Ratified Nonces'],
+          user: 'Alice Nakato (BIS III Student)'
         },
         {
-          title: 'GPS GEOFENCE & DIGITAL LOGBOOK',
-          desc: 'Biometric GPS geofencing validates physical campus presence. Interns record daily tasks and verify contact hours in real-time.',
-          metrics: [
-            ['Biometric Lock:', 'Lat 0.3476° N, 32.5825° E'],
-            ['Shift Duration:', '08:34:12 Active'],
-            ['Curriculum Progress:', '153 / 320 Hours (47.8%)'],
-            ['Weekly Status:', 'Week 6, Day 28 Logged']
-          ],
-          user: 'Alice Nakato (BIS III Intern)'
+          stageTag: 'STAGE 02 // GPS LOGBOOK VERIFICATION',
+          title: 'GPS Geofence & Digital Daily Logbook',
+          desc: 'Biometric GPS geofencing validates physical campus presence within 150m. Interns submit daily technical reports directly to mentors.',
+          tags: ['Lat 0.3476° N, 32.5825° E', '153 / 320 Contact Hrs', '100% Geofence Lock'],
+          user: 'Alice Nakato (BIS III Student)'
         },
         {
-          title: '1-TAP CRYPTOGRAPHIC SIGN-OFF',
-          desc: 'Workplace mentors inspect student deliverables and commit instant ECDSA nonces with 1-tap cryptographic certification.',
-          metrics: [
-            ['Lead Mentor:', 'Dr. K. Sempala (Nile Analytics)'],
-            ['Validated Days:', '28 of 28 Days Signed'],
-            ['ECDSA Signature:', '0x9f4a28c11e7b993a402d'],
-            ['Audit Status:', '100% Senate Compliant']
-          ],
-          user: 'Dr. K. Sempala (Workplace Mentor)'
+          stageTag: 'STAGE 03 // MENTOR VERIFICATION',
+          title: 'Workplace Mentor 1-Tap Cryptographic Sign-Off',
+          desc: 'Workplace mentors inspect daily technical milestones, verify Git attestation hashes, and ratify logs with permanent ECDSA nonces.',
+          tags: ['Dr. K. Sempala (Nile)', 'Git #9a4f21 Verified', 'ECDSA Secp256k1 Seal'],
+          user: 'Dr. K. Sempala (Lead Mentor)'
         },
         {
-          title: 'DUAL SUPERVISION & TRANSCRIPTS',
-          desc: 'Weighted evaluation combining workplace mentor scores (40%) and faculty assessor inspections (60%) into senate-ratified academic transcripts.',
-          metrics: [
-            ['Host Score (40%):', '39.5 / 40.0 (98.8%)'],
-            ['Academic Score (60%):', '57.0 / 60.0 (95.0%)'],
-            ['Composite Grade:', '96.5% (Grade A Distinction)'],
-            ['Senate Ratification:', 'MAK-COCIS-2026-0482']
-          ],
-          user: 'Dr. Florence Namaganda (Faculty Assessor)'
+          stageTag: 'STAGE 04 // SENATE EVALUATION',
+          title: 'Dual Supervision Rubric & Transcripts',
+          desc: 'Joint scoring matrix combines workplace mentor rating (40%) and university academic assessor visit (60%) into certified senate credentials.',
+          tags: ['Composite Grade: 96.5%', 'First Class Honours', 'MAK-COCIS-2026-0482'],
+          user: 'Prof. M. Bwambale (Academic Assessor)'
         }
       ];
 
@@ -2503,13 +2482,13 @@
       const s2TourText = document.getElementById('s2-tour-text');
       const s2SoundBtn = document.getElementById('s2-sound-btn');
       const s2SoundIcon = document.getElementById('s2-sound-icon');
+      const s2CtaLink = document.getElementById('s2-cta-link');
 
-      const s2Timeline = document.getElementById('s2-timeline');
-      const s2StepCards = [
-        document.getElementById('s2-step-0'),
-        document.getElementById('s2-step-1'),
-        document.getElementById('s2-step-2'),
-        document.getElementById('s2-step-3')
+      const s2StagePills = [
+        document.getElementById('s2-stage-0'),
+        document.getElementById('s2-stage-1'),
+        document.getElementById('s2-stage-2'),
+        document.getElementById('s2-stage-3')
       ];
       const s2ProgressBars = [
         document.getElementById('s2-prog-0'),
@@ -2518,21 +2497,13 @@
         document.getElementById('s2-prog-3')
       ];
 
-      const s2Dossier = document.getElementById('s2-dossier');
-      const s2DossierTitle = document.getElementById('s2-dossier-title');
-      const s2DossierDesc = document.getElementById('s2-dossier-desc');
-      const s2DossierMetrics = document.getElementById('s2-dossier-metrics');
-      const s2DossierStatusText = document.getElementById('s2-dossier-status-text');
-
-      const s2Dock = document.getElementById('s2-dock');
-      const s2BtnPrev = document.getElementById('s2-btn-prev');
-      const s2BtnNext = document.getElementById('s2-btn-next');
-      const dockDots = [
-        document.getElementById('dock-dot-0'),
-        document.getElementById('dock-dot-1'),
-        document.getElementById('dock-dot-2'),
-        document.getElementById('dock-dot-3')
-      ];
+      const s2IntelCard = document.getElementById('s2-intel-card');
+      const s2IntelStageTag = document.getElementById('s2-intel-stage-tag');
+      const s2IntelTitle = document.getElementById('s2-intel-title');
+      const s2IntelDesc = document.getElementById('s2-intel-desc');
+      const s2Tag1 = document.getElementById('s2-tag-1');
+      const s2Tag2 = document.getElementById('s2-tag-2');
+      const s2Tag3 = document.getElementById('s2-tag-3');
 
       // In-Screen Elements
       const osTabs = [
@@ -2549,6 +2520,9 @@
       ];
       const osClock = document.getElementById('os-clock');
       const osUserName = document.getElementById('os-user-name');
+      const osToast = document.getElementById('os-toast');
+      const osToastIcon = document.getElementById('os-toast-icon');
+      const osToastText = document.getElementById('os-toast-text');
 
       // Virtual Cursor Elements
       const simCursor = document.getElementById('sim-cursor');
@@ -2586,9 +2560,8 @@
       let tourPlaying = true;
       let userManualOverride = false;
       let manualOverrideTimer = null;
-      let simStepTimer = null;
       let simStepStartTime = 0;
-      const STEP_DURATION = 9500; // 9.5s per automated workflow demo
+      const STEP_DURATION = 9200; // 9.2s per automated workflow demo
       const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       // Assign image sources
@@ -2662,9 +2635,36 @@
       }, 3000);
 
       /* ═══════════════════════════════════════════════════
-         VIRTUAL CURSOR / AUTONOMOUS SIMULATION ENGINE
+         TOAST NOTIFICATIONS (IN-SCREEN)
          ═══════════════════════════════════════════════════ */
-      function setCursorPos(x, y, actionText, duration = 600) {
+      let toastTimer = null;
+      function showToast(icon, text, duration = 2800) {
+        if (!osToast) return;
+        if (osToastIcon) osToastIcon.textContent = icon;
+        if (osToastText) osToastText.textContent = text;
+        osToast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          osToast.classList.remove('show');
+        }, duration);
+      }
+
+      /* ═══════════════════════════════════════════════════
+         PRECISION VIRTUAL CURSOR / AUTONOMOUS ENGINE
+         ═══════════════════════════════════════════════════ */
+      function getElementScreenCoords(target, offsetX = 0.5, offsetY = 0.5) {
+        const el = typeof target === 'string' ? document.getElementById(target) : target;
+        if (!el || !screenEl) return null;
+        const sRect = screenEl.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        const s = sRect.width / 894.4;
+        if (!s || s <= 0) return null;
+        const x = (elRect.left - sRect.left) / s + (elRect.width / s) * offsetX;
+        const y = (elRect.top - sRect.top) / s + (elRect.height / s) * offsetY;
+        return { x: Math.round(x), y: Math.round(y), el };
+      }
+
+      function setCursorPos(x, y, actionText, duration = 650) {
         if (!simCursor) return;
         simCursor.style.transition = `left ${duration}ms cubic-bezier(0.22, 1, 0.36, 1), top ${duration}ms cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s`;
         simCursor.style.left = `${x}px`;
@@ -2674,11 +2674,22 @@
         }
       }
 
-      function triggerCursorClick(x, y, callback) {
-        if (x !== undefined && y !== undefined) {
-          setCursorPos(x, y, null, 400);
+      function moveCursorTo(target, actionText, duration = 650, offsetX = 0.5, offsetY = 0.5) {
+        const coords = getElementScreenCoords(target, offsetX, offsetY);
+        if (!coords) return;
+        setCursorPos(coords.x, coords.y, actionText, duration);
+      }
+
+      function clickTarget(target, actionText, callback, duration = 650, offsetX = 0.5, offsetY = 0.5) {
+        const coords = getElementScreenCoords(target, offsetX, offsetY);
+        if (!coords) {
+          if (callback) callback();
+          return;
         }
-        setTimeout(() => {
+        setCursorPos(coords.x, coords.y, actionText, duration);
+        const tId = setTimeout(() => {
+          coords.el.classList.add('sim-active');
+          setTimeout(() => coords.el.classList.remove('sim-active'), 180);
           if (simCursorRipple) {
             simCursorRipple.classList.remove('pulse');
             void simCursorRipple.offsetWidth;
@@ -2686,7 +2697,8 @@
           }
           playClick();
           if (callback) callback();
-        }, 420);
+        }, duration + 60);
+        currentScriptTimeout.push(tId);
       }
 
       // Simulate student typing into textarea
@@ -2705,7 +2717,7 @@
             clearInterval(typeTimer);
             if (callback) callback();
           }
-        }, 32);
+        }, 28);
       }
 
       /* ═══════════════════════════════════════════════════
@@ -2722,48 +2734,48 @@
         clearWorkflowScript();
         if (RM || userManualOverride || !tourPlaying) return;
 
-        // Reset elements to base state
+        // Reset modals & state
         if (modalMou) modalMou.classList.remove('open');
         if (modalTranscript) modalTranscript.classList.remove('open');
 
         if (idx === 0) {
-          // Workflow 0: Matching & MOU
-          setCursorPos(240, 20, 'Autopilot: Select Placements', 500);
+          // ── Workflow 0: Matching & MOU ──
+          moveCursorTo('tab0', 'Autopilot: Enterprise Matching', 500);
+
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(350, 110, 'Hover: Nile Analytics AI Lab', 700);
+            moveCursorTo('host-item-nile', 'Inspect: Nile Analytics AI Lab', 700);
+            if (hostItemNile) hostItemNile.classList.add('highlighted');
           }, 800));
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(420, 145, 'Click: Apply & Dispatch MOU', 600);
-            triggerCursorClick(420, 145, () => {
+            clickTarget('btn-apply-nile', 'Click: Apply & Dispatch MOU', () => {
               if (modalMou) modalMou.classList.add('open');
               playChime();
-            });
-          }, 2400));
+            }, 650);
+          }, 2200));
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(560, 360, 'Click: Confirm MOU Agreement', 600);
-            triggerCursorClick(560, 360, () => {
+            clickTarget('modal-mou-confirm', 'Click: Ratify Tripartite MOU', () => {
               if (modalMou) modalMou.classList.remove('open');
               if (btnApplyNile) {
                 btnApplyNile.textContent = '✓ Tripartite Ratified';
                 btnApplyNile.classList.add('applied');
               }
               playChime();
-            });
-          }, 5200));
+              showToast('📑', 'Tripartite MOU Ratified (Nonce: 0x7a3f...c91e)');
+            }, 700);
+          }, 4800));
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(650, 220, 'Telemetry: Nonce Validated', 600);
-          }, 7200));
+            moveCursorTo('stream-feed-wf0', 'Verified: Live Matching Stream', 700);
+          }, 7400));
 
         } else if (idx === 1) {
-          // Workflow 1: GPS Geofence & Digital Logbook
-          setCursorPos(150, 20, 'Autopilot: GPS Logbook', 500);
+          // ── Workflow 1: GPS Geofence & Digital Logbook ──
+          moveCursorTo('tab1', 'Autopilot: GPS Logbook', 500);
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(750, 365, 'Click: Verify Geofence GPS', 700);
-            triggerCursorClick(750, 365, () => {
+            clickTarget('btn-verify-gps', 'Click: Verify Geofence GPS', () => {
               playPing();
               if (btnVerifyGps) {
                 btnVerifyGps.classList.add('locked');
@@ -2772,72 +2784,75 @@
               if (geofenceStatusText) {
                 geofenceStatusText.textContent = '● Verified on Campus Perimeter';
               }
-            });
+              showToast('📡', 'Biometric GPS Locked to Nile Campus Perimeter');
+            }, 700);
           }, 1200));
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(240, 240, 'Type: Daily Work Report', 700);
-            const sampleReport = 'Optimized distributed PostgreSQL indexing and reduced Redis cache latency from 180ms to 9ms.';
+            moveCursorTo('log-text-entry', 'Type: Daily Technical Report', 650);
+            const sampleReport = 'Refactored distributed PostgreSQL indexing and deployed Redis cache. Latency dropped from 180ms to 9ms.';
             simulateTyping(sampleReport, logTextEntry);
-          }, 3200));
+          }, 2800));
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(260, 365, 'Click: Submit Day 28 Log', 600);
-            triggerCursorClick(260, 365, () => {
+            clickTarget('btn-submit-log', 'Click: Submit Day 28 Log', () => {
               if (btnSubmitLog) {
                 btnSubmitLog.textContent = '✓ Log Submitted to Mentor';
                 btnSubmitLog.classList.add('submitted');
               }
               playChime();
-            });
-          }, 7200));
+              showToast('📝', 'Day 28 Technical Log Submitted to Dr. Sempala');
+            }, 650);
+          }, 7000));
 
         } else if (idx === 2) {
-          // Workflow 2: Mentor 1-Tap Cryptographic Sign-Off
-          setCursorPos(260, 20, 'Autopilot: Mentor Sign-Off', 500);
+          // ── Workflow 2: Mentor 1-Tap Cryptographic Sign-Off ──
+          moveCursorTo('tab2', 'Autopilot: Mentor Sign-Off', 500);
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(280, 210, 'Inspect: Alice Day 28 Entry', 800);
-          }, 1200));
+            moveCursorTo('mentor-submission-card', 'Inspect: Alice Day 28 Entry', 800);
+          }, 1000));
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(750, 160, '1-Tap Sign-Off: Dr. Sempala', 700);
-            triggerCursorClick(750, 160, () => {
+            clickTarget('btn-mentor-sign', '1-Tap Sign-Off: Dr. Sempala', () => {
               playStamp();
               if (cryptoSeal) cryptoSeal.classList.add('stamped');
               if (mentorStatusBadge) {
                 mentorStatusBadge.textContent = '✓ CRYPTOGRAPHICALLY CERTIFIED';
                 mentorStatusBadge.classList.add('verified');
               }
-            });
-          }, 3600));
+              showToast('🛡️', 'Mentor Attestation Ratified (ECDSA Nonce 0x9f4a)');
+            }, 700);
+          }, 3400));
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(740, 280, 'Nonce: 0x9f4a... Verified', 600);
+            moveCursorTo('crypto-seal', 'Nonce: 0x9f4a...e12b Ratified', 600);
           }, 6800));
 
         } else if (idx === 3) {
-          // Workflow 3: Dual Supervision Rubric & Transcripts
-          setCursorPos(380, 20, 'Autopilot: Supervision Rubric', 500);
+          // ── Workflow 3: Dual Supervision Rubric & Transcripts ──
+          moveCursorTo('tab3', 'Autopilot: Scoring Rubric', 500);
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(350, 175, 'Review: Mentor Score (39.5/40)', 700);
-          }, 1400));
+            moveCursorTo('score-mentor', 'Mentor Rating: 39.5 / 40.0', 700);
+          }, 1200));
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(350, 280, 'Review: Faculty Score (57.0/60)', 700);
-          }, 3200));
+            moveCursorTo('score-uni', 'Faculty Rating: 57.0 / 60.0', 700);
+          }, 2600));
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(260, 360, 'Click: Issue Senate Transcript', 700);
-            triggerCursorClick(260, 360, () => {
+            clickTarget('btn-gen-transcript', 'Click: Issue Senate Transcript', () => {
               playChime();
               if (modalTranscript) modalTranscript.classList.add('open');
-            });
-          }, 5000));
+              showToast('🏛️', 'Makerere Senate Transcript Generated');
+            }, 700);
+          }, 4400));
 
           currentScriptTimeout.push(setTimeout(() => {
-            setCursorPos(420, 370, 'Inspect: Makerere Seal & QR', 600);
+            clickTarget('modal-transcript-close', 'Close Credential View', () => {
+              if (modalTranscript) modalTranscript.classList.remove('open');
+            }, 700);
           }, 7600));
         }
       }
@@ -2849,18 +2864,14 @@
         currentWorkflow = idx;
         simStepStartTime = Date.now();
 
-        // Update Dossier content
+        // Update Intel Card content
         const d = WORKFLOW_DATA[idx];
-        if (s2DossierTitle) s2DossierTitle.textContent = d.title;
-        if (s2DossierDesc) s2DossierDesc.textContent = d.desc;
-        if (s2DossierMetrics) {
-          s2DossierMetrics.innerHTML = d.metrics.map(([label, val]) => `
-            <div class="s2-metric-row"><span>${label}</span> <b>${val}</b></div>
-          `).join('');
-        }
-        if (s2DossierStatusText) {
-          s2DossierStatusText.textContent = `Automated Tour: Workflow ${idx + 1} of 4`;
-        }
+        if (s2IntelStageTag) s2IntelStageTag.textContent = d.stageTag;
+        if (s2IntelTitle) s2IntelTitle.textContent = d.title;
+        if (s2IntelDesc) s2IntelDesc.textContent = d.desc;
+        if (s2Tag1) s2Tag1.textContent = d.tags[0];
+        if (s2Tag2) s2Tag2.textContent = d.tags[1];
+        if (s2Tag3) s2Tag3.textContent = d.tags[2];
         if (osUserName) osUserName.textContent = d.user;
 
         // Update In-Screen Tabs & Views
@@ -2873,20 +2884,17 @@
           else view.classList.remove('active');
         });
 
-        // Update Timeline Steps & Dock Dots
-        s2StepCards.forEach((card, i) => {
-          if (i === idx) card.classList.add('active');
-          else card.classList.remove('active');
-        });
-        dockDots.forEach((dot, i) => {
-          if (i === idx) dot.classList.add('active');
-          else dot.classList.remove('active');
+        // Update Top HUD Stage Pills
+        s2StagePills.forEach((pill, i) => {
+          if (i === idx) pill.classList.add('active');
+          else pill.classList.remove('active');
         });
 
         // Reset progress bars
         s2ProgressBars.forEach((p, i) => {
-          if (i < idx) p.style.width = '100%';
-          else if (i > idx) p.style.width = '0%';
+          if (!p) return;
+          if (i < idx) p.style.transform = 'scaleX(1)';
+          else if (i > idx) p.style.transform = 'scaleX(0)';
         });
 
         if (userInitiated) {
@@ -2901,9 +2909,9 @@
       function tickSimulationProgress() {
         if (mode === 'case' && tourPlaying && !userManualOverride && !RM) {
           const elapsed = Date.now() - simStepStartTime;
-          const pct = Math.min(100, (elapsed / STEP_DURATION) * 100);
+          const p = Math.min(1, elapsed / STEP_DURATION);
           if (s2ProgressBars[currentWorkflow]) {
-            s2ProgressBars[currentWorkflow].style.width = `${pct}%`;
+            s2ProgressBars[currentWorkflow].style.transform = `scaleX(${p})`;
           }
 
           if (elapsed >= STEP_DURATION) {
@@ -2918,13 +2926,16 @@
       /* ── User Manual Interaction Override ── */
       function pauseAutopilotForManual() {
         userManualOverride = true;
+        clearWorkflowScript();
         if (simCursor) simCursor.style.opacity = '0';
+        if (s2TourText) s2TourText.textContent = 'Manual Mode';
         clearTimeout(manualOverrideTimer);
         manualOverrideTimer = setTimeout(() => {
           userManualOverride = false;
           if (simCursor) simCursor.style.opacity = '1';
+          if (s2TourText) s2TourText.textContent = tourPlaying ? 'Autopilot' : 'Resume';
           if (tourPlaying) {
-            runWorkflowScript(currentWorkflow);
+            selectWorkflow(currentWorkflow, false);
           }
         }, 4500);
       }
@@ -2939,7 +2950,7 @@
       function toggleTour() {
         tourPlaying = !tourPlaying;
         if (s2TourIcon) s2TourIcon.textContent = tourPlaying ? '⏸' : '▶';
-        if (s2TourText) s2TourText.textContent = tourPlaying ? 'Pause Tour' : 'Resume Tour';
+        if (s2TourText) s2TourText.textContent = tourPlaying ? 'Autopilot' : 'Resume';
         if (tourPlaying) {
           playClick();
           simStepStartTime = Date.now();
@@ -3078,9 +3089,9 @@
               { opacity: 1, transform: 'translateY(0)', clipPath: 'inset(0)' },
             ],
             {
-              duration: 1100,
-              delay: 260,
-              easing: 'cubic-bezier(.2, .8, .2, 1)',
+              duration: 900,
+              delay: 200,
+              easing: 'cubic-bezier(.16, 1, .3, 1)',
               fill: 'both',
             }
           );
@@ -3095,68 +3106,112 @@
             ],
             {
               duration: 900,
-              delay: 1050,
-              easing: 'cubic-bezier(.5, 0, .3, 1)',
+              delay: 450,
+              easing: 'cubic-bezier(.2, .8, .2, 1)',
               fill: 'both',
             }
           );
         });
 
-        const bAnim = badgeEl.animate(
+        const bIn = badgeEl.animate(
           [
-            { opacity: 0, transform: 'translateY(-120%) rotate(8deg)', offset: 0 },
-            { opacity: 1, transform: 'translateY(0) rotate(-3deg)', offset: 0.6 },
-            { transform: 'translateY(0) rotate(1.6deg)', offset: 0.8 },
-            { opacity: 1, transform: 'translateY(0) rotate(0)', offset: 1 },
+            { opacity: 0, transform: 'translateY(-110%) rotate(6deg)', offset: 0 },
+            { opacity: 1, transform: 'translateY(0) rotate(-2deg)', offset: 0.7 },
+            { opacity: 1, transform: 'rotate(0)', offset: 1 },
           ],
           {
-            duration: 1500,
-            delay: 700,
+            duration: 1200,
+            delay: 400,
             easing: 'cubic-bezier(.2, .8, .2, 1)',
             fill: 'both',
           }
         );
 
-        hintEl.animate(
-          [{ opacity: 0 }, { opacity: 0.85 }],
-          {
-            duration: 600,
-            delay: 1800,
-            easing: 'cubic-bezier(.2, .8, .2, 1)',
-            fill: 'both',
-          }
-        );
-
-        bAnim.finished.then(() => {
+        bIn.finished.then(() => {
           startBadgeSway();
         });
-
-        selectWorkflow(0);
       }
 
       function startBadgeSway() {
-        if (mode === 'hero' && !RM) {
-          badgeSway = badgeEl.animate(
-            [{ transform: 'rotate(-1.1deg)' }, { transform: 'rotate(1.1deg)' }],
-            {
-              duration: 3200,
-              iterations: Infinity,
-              direction: 'alternate',
-              easing: 'ease-in-out',
-            }
-          );
-        }
+        if (badgeSway) badgeSway.cancel();
+        badgeSway = badgeEl.animate(
+          [
+            { transform: 'rotate(-0.8deg)' },
+            { transform: 'rotate(0.8deg)' },
+            { transform: 'rotate(-0.8deg)' },
+          ],
+          {
+            duration: 5400,
+            iterations: Infinity,
+            easing: 'ease-in-out',
+          }
+        );
       }
 
-      badgeHitEl.addEventListener('pointerenter', () => {
-        playClick();
-        if (mode === 'hero' && !RM) {
-          badgeEl.animate(
+      /* ── Drag & Flick on Lanyard Badge ── */
+      let dragging = false;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let badgeRot = 0;
+      let badgeVelocity = 0;
+      let lastDragX = 0;
+      let lastDragTime = 0;
+
+      badgeHitEl.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        badgeHitEl.setPointerCapture(e.pointerId);
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        lastDragX = e.clientX;
+        lastDragTime = Date.now();
+        if (badgeSway) badgeSway.pause();
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - dragStartX;
+        const now = Date.now();
+        const dt = Math.max(1, now - lastDragTime);
+        badgeVelocity = (e.clientX - lastDragX) / dt;
+        lastDragX = e.clientX;
+        lastDragTime = now;
+
+        badgeRot = Math.max(-18, Math.min(18, dx * 0.08));
+        badgeEl.style.transform = `rotate(${badgeRot}deg)`;
+      });
+
+      window.addEventListener('pointerup', (e) => {
+        if (!dragging) return;
+        dragging = false;
+        try { badgeHitEl.releasePointerCapture(e.pointerId); } catch (_) {}
+
+        const fling = Math.max(-25, Math.min(25, badgeRot + badgeVelocity * 12));
+        const settle = badgeEl.animate(
+          [
+            { transform: `rotate(${badgeRot}deg)` },
+            { transform: `rotate(${fling}deg)`, offset: 0.25 },
+            { transform: 'rotate(0deg)' },
+          ],
+          {
+            duration: 900,
+            easing: 'cubic-bezier(.17, .89, .32, 1.25)',
+          }
+        );
+
+        settle.finished.then(() => {
+          badgeEl.style.transform = '';
+          startBadgeSway();
+        });
+      });
+
+      // Sound button spin on hover
+      btnSound.addEventListener('mouseenter', () => {
+        if (!RM) {
+          btnSound.animate(
             [
               { transform: 'rotate(0)' },
-              { transform: 'rotate(-6deg)' },
-              { transform: 'rotate(4deg)' },
-              { transform: 'rotate(-2deg)' },
+              { transform: 'rotate(-15deg)' },
+              { transform: 'rotate(10deg)' },
               { transform: 'rotate(0)' },
             ],
             { duration: 1400, easing: 'ease-out', composite: 'add' }
@@ -3395,35 +3450,111 @@
 
       // Scene 2 Navigation Controls
       if (s2BackBtn) s2BackBtn.addEventListener('click', toHero);
-      if (s2BtnPrev) s2BtnPrev.addEventListener('click', prevWorkflow);
-      if (s2BtnNext) s2BtnNext.addEventListener('click', nextWorkflow);
 
-      // Timeline Steps & Dock Dots Click Handlers
-      s2StepCards.forEach((card, idx) => {
-        card.addEventListener('click', () => selectWorkflow(idx, true));
-      });
-      dockDots.forEach((dot, idx) => {
-        dot.addEventListener('click', () => selectWorkflow(idx, true));
+      // HUD Stage Pills Click Handlers
+      s2StagePills.forEach((pill, idx) => {
+        if (pill) {
+          pill.addEventListener('click', () => {
+            selectWorkflow(idx, true);
+          });
+        }
       });
 
       // In-Screen Tabs Click Handlers
       osTabs.forEach((tab, idx) => {
-        tab.addEventListener('click', () => {
-          pauseAutopilotForManual();
-          selectWorkflow(idx, true);
-        });
+        if (tab) {
+          tab.addEventListener('click', () => {
+            pauseAutopilotForManual();
+            selectWorkflow(idx, true);
+          });
+        }
       });
 
-      // In-Screen Modal Close Handlers
-      if (modalMouCancel) modalMouCancel.addEventListener('click', () => modalMou.classList.remove('open'));
-      if (modalMouConfirm) {
-        modalMouConfirm.addEventListener('click', () => {
-          modalMou.classList.remove('open');
+      // CTA Link
+      if (s2CtaLink) {
+        s2CtaLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          try {
+            if (window.top && window.top !== window) {
+              window.top.location.href = '/auth';
+              return;
+            }
+          } catch (_) {}
+          window.location.href = '/auth';
+        });
+      }
+
+      // In-Screen Interactive Action Listeners (Manual Clicks)
+      if (btnApplyNile) {
+        btnApplyNile.addEventListener('click', () => {
+          pauseAutopilotForManual();
+          if (modalMou) modalMou.classList.add('open');
           playChime();
         });
       }
+      if (modalMouCancel) {
+        modalMouCancel.addEventListener('click', () => {
+          if (modalMou) modalMou.classList.remove('open');
+        });
+      }
+      if (modalMouConfirm) {
+        modalMouConfirm.addEventListener('click', () => {
+          if (modalMou) modalMou.classList.remove('open');
+          if (btnApplyNile) {
+            btnApplyNile.textContent = '✓ Tripartite Ratified';
+            btnApplyNile.classList.add('applied');
+          }
+          playChime();
+          showToast('📑', 'Tripartite MOU Ratified (Nonce: 0x7a3f...c91e)');
+        });
+      }
+
+      if (btnVerifyGps) {
+        btnVerifyGps.addEventListener('click', () => {
+          pauseAutopilotForManual();
+          playPing();
+          btnVerifyGps.classList.add('locked');
+          btnVerifyGps.innerHTML = '<span>✓ Geofence Locked (150m)</span>';
+          if (geofenceStatusText) geofenceStatusText.textContent = '● Verified on Campus Perimeter';
+          showToast('📡', 'Biometric GPS Locked to Nile Campus Perimeter');
+        });
+      }
+
+      if (btnSubmitLog) {
+        btnSubmitLog.addEventListener('click', () => {
+          pauseAutopilotForManual();
+          btnSubmitLog.textContent = '✓ Log Submitted to Mentor';
+          btnSubmitLog.classList.add('submitted');
+          playChime();
+          showToast('📝', 'Day 28 Technical Log Submitted to Dr. Sempala');
+        });
+      }
+
+      if (btnMentorSign) {
+        btnMentorSign.addEventListener('click', () => {
+          pauseAutopilotForManual();
+          playStamp();
+          if (cryptoSeal) cryptoSeal.classList.add('stamped');
+          if (mentorStatusBadge) {
+            mentorStatusBadge.textContent = '✓ CRYPTOGRAPHICALLY CERTIFIED';
+            mentorStatusBadge.classList.add('verified');
+          }
+          showToast('🛡️', 'Mentor Attestation Ratified (ECDSA Nonce 0x9f4a)');
+        });
+      }
+
+      if (btnGenTranscript) {
+        btnGenTranscript.addEventListener('click', () => {
+          pauseAutopilotForManual();
+          playChime();
+          if (modalTranscript) modalTranscript.classList.add('open');
+          showToast('🏛️', 'Makerere Senate Transcript Generated');
+        });
+      }
       if (modalTranscriptClose) {
-        modalTranscriptClose.addEventListener('click', () => modalTranscript.classList.remove('open'));
+        modalTranscriptClose.addEventListener('click', () => {
+          if (modalTranscript) modalTranscript.classList.remove('open');
+        });
       }
 
       // Wheel Navigation
