@@ -6,9 +6,9 @@
   <title>FAMS — Field Attachment Management System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Inter+Tight:wght@100..900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Inter+Tight:wght@100..900&family=JetBrains+Mono:wght@400;500;600;750&display=swap" rel="stylesheet">
   <style>
-    /* ── Colour Tokens & 3D Variables ── */
+    /* ── Colour Tokens & Variables ── */
     :root {
       --green-950: #061a11;
       --green-900: #0b2f20;
@@ -21,10 +21,6 @@
       --mbs: 1;
       --th: 120px;
       --glide: 0s;
-
-      /* Dynamic 3D Cursor Offsets */
-      --mouse-x: 0;
-      --mouse-y: 0;
     }
 
     @property --m0 { syntax: '<length>'; inherits: true; initial-value: 0px; }
@@ -50,7 +46,6 @@
       -moz-osx-font-smoothing: grayscale;
       user-select: none;
       -webkit-user-select: none;
-      perspective: 1400px;
     }
 
     /* ── Stage ── */
@@ -63,7 +58,7 @@
       background: radial-gradient(circle at 50% 40%, #154d36 0%, #0b2f20 45%, #051810 100%);
     }
 
-    /* ── The 1440x810 Frame with 3D Depth ── */
+    /* ── The 1440x810 Frame ── */
     .frame {
       position: absolute;
       top: 0;
@@ -72,7 +67,6 @@
       height: 810px;
       transform-origin: 0 0;
       will-change: transform;
-      transform-style: preserve-3d;
     }
 
     .frame.glide {
@@ -90,7 +84,6 @@
       --o: 73.125px;
       --ob: 73.125px;
       will-change: transform, filter;
-      transform-origin: 50% 50%;
     }
 
     .caseplate {
@@ -104,7 +97,7 @@
       --o: 105.47px;
       --ob: 40.78px;
       z-index: 7;
-      will-change: opacity, filter, transform;
+      will-change: opacity, filter;
     }
 
     .trans {
@@ -152,7 +145,7 @@
     .m-fade { --m0: 0px; --mt: 190px; --mb: 0px; --ms: 140px; }
     .m-fade.m-case { --m0: 48px; --mt: 40px; --mb: 70px; --ms: 140px; }
 
-    /* ── 3D Extruded Wordmark "FAMS" ── */
+    /* ── Wordmark "FAMS" ── */
     .wm-wrap {
       position: absolute;
       left: 0;
@@ -161,8 +154,6 @@
       height: 380px;
       z-index: 3;
       pointer-events: none;
-      transform-style: preserve-3d;
-      will-change: transform;
     }
 
     svg.wm {
@@ -171,7 +162,7 @@
       overflow: visible;
     }
 
-    /* ── 3D Parallax Man Cutout ── */
+    /* ── Man Cutout ── */
     .cut-wrap {
       position: absolute;
       left: 0;
@@ -180,7 +171,6 @@
       height: 956.25px;
       pointer-events: none;
       z-index: 4;
-      will-change: transform;
     }
 
     img.cut {
@@ -188,15 +178,13 @@
       height: 100%;
     }
 
-    /* ── 3D Floating Handwriting Script ── */
+    /* ── Handwriting Script ── */
     .script-wrap {
       position: absolute;
       top: 148px;
       left: 88px;
       z-index: 6;
       pointer-events: none;
-      transform-style: preserve-3d;
-      will-change: transform;
     }
 
     .script {
@@ -207,19 +195,17 @@
       letter-spacing: -0.5px;
       transform: rotate(-8deg);
       transform-origin: 0 50%;
-      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), 0 0 30px rgba(34, 197, 94, 0.25);
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
       white-space: nowrap;
     }
 
-    /* ── Subtitle Chip with 3D Depth ── */
+    /* ── Subtitle Chip ── */
     .hero-subtitle-wrap {
       position: absolute;
       top: 260px;
       left: 92px;
       z-index: 6;
       pointer-events: none;
-      transform-style: preserve-3d;
-      will-change: transform;
     }
 
     .hero-subtitle {
@@ -234,7 +220,6 @@
       padding: 7px 16px;
       border-radius: 9999px;
       border: 1px solid rgba(74, 222, 128, 0.3);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2);
       white-space: nowrap;
       display: inline-flex;
       align-items: center;
@@ -255,7 +240,7 @@
       50% { transform: scale(0.8); opacity: 0.5; }
     }
 
-    /* ── 3D Lanyard ID Badge ── */
+    /* ── Lanyard ID Badge ── */
     .badge {
       position: absolute;
       left: 986px;
@@ -265,8 +250,6 @@
       transform-origin: 288px 0;
       z-index: 5;
       pointer-events: none;
-      transform-style: preserve-3d;
-      will-change: transform;
     }
 
     .badge-img {
@@ -275,7 +258,6 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.45));
     }
 
     .card {
@@ -288,7 +270,6 @@
       color: #141615;
       font-family: 'Inter Tight', sans-serif;
       pointer-events: none;
-      transform-style: preserve-3d;
     }
 
     .card-roles {
@@ -363,7 +344,7 @@
       background-image: url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261111_001143_ec356b1a-50a2-4b50-82fc-e346c914a406.png&w=2048&q=85');
       background-size: 471px 313px;
       background-position: -212px -16px;
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .1), 0 4px 10px rgba(0, 0, 0, 0.08);
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .1);
       transition: background-position 0.3s;
     }
 
@@ -391,7 +372,7 @@
       cursor: grab;
     }
 
-    /* ── 3D Laptop Screen with Spatial Console ── */
+    /* ── The Overengineered FAMS Laptop Screen ── */
     .screen {
       position: absolute;
       left: 272.8px;
@@ -399,23 +380,21 @@
       width: 894.4px;
       height: 604.7px;
       border-radius: 4px;
-      background: #09120e;
+      background: #07150e;
       overflow: hidden;
       opacity: 0;
       z-index: 8;
       pointer-events: none;
       display: flex;
       flex-direction: column;
-      transform-style: preserve-3d;
-      box-shadow: 0 0 80px rgba(34, 197, 94, 0.2), inset 0 0 40px rgba(0, 0, 0, 0.9);
-      will-change: transform;
+      box-shadow: 0 0 80px rgba(34, 197, 94, 0.25), inset 0 0 30px rgba(0, 0, 0, 0.85);
     }
 
     body.is-case .screen {
       pointer-events: auto;
     }
 
-    /* Real-time 3D Canvas Background for Motions */
+    /* 3D Motion Canvas inside Laptop */
     .sc-3d-canvas {
       position: absolute;
       inset: 0;
@@ -431,21 +410,100 @@
       background: #fff;
       opacity: 0;
       pointer-events: none;
-      z-index: 25;
+      z-index: 40;
     }
 
-    /* ── Laptop Console Top Chrome Bar ── */
+    /* ── Layer 1: OS Top Menubar ── */
+    .os-menubar {
+      position: relative;
+      z-index: 20;
+      height: 26px;
+      background: rgba(9, 22, 15, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      font-size: 10.5px;
+      color: rgba(255, 255, 255, 0.8);
+      flex-shrink: 0;
+    }
+
+    .os-menu-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .os-logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 800;
+      color: #4ade80;
+      letter-spacing: 0.05em;
+    }
+
+    .os-menu-items {
+      display: flex;
+      gap: 10px;
+    }
+
+    .os-menu-item {
+      color: rgba(255, 255, 255, 0.65);
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+
+    .os-menu-item:hover { color: #fff; }
+
+    .os-menu-center {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(74, 222, 128, 0.25);
+      padding: 2px 10px;
+      border-radius: 9999px;
+      font-size: 10px;
+      color: #86efac;
+      font-weight: 600;
+    }
+
+    .os-menu-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+    }
+
+    .os-sfx-btn {
+      background: none;
+      border: none;
+      color: #86efac;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .os-sfx-btn:hover { color: #fff; }
+
+    /* ── Layer 2: Console App Switcher Tabs ── */
     .sc-chrome {
       position: relative;
-      z-index: 10;
-      height: 40px;
-      background: rgba(12, 24, 18, 0.85);
+      z-index: 20;
+      height: 38px;
+      background: rgba(12, 28, 20, 0.88);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding: 0 14px;
       flex-shrink: 0;
     }
 
@@ -469,7 +527,7 @@
     .sc-tab {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      color: rgba(255, 255, 255, 0.65);
+      color: rgba(255, 255, 255, 0.7);
       font-size: 10.5px;
       font-weight: 650;
       padding: 4px 10px;
@@ -481,7 +539,7 @@
 
     .sc-tab:hover {
       color: #fff;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.12);
       transform: translateY(-1px);
     }
 
@@ -492,79 +550,73 @@
       box-shadow: 0 0 14px rgba(34, 197, 94, 0.25);
     }
 
-    .sc-status {
-      display: flex;
-      align-items: center;
-      gap: 7px;
+    .sc-cli-toggle {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #86efac;
+      padding: 3px 9px;
+      border-radius: 6px;
       font-size: 10px;
       font-weight: 700;
-      color: #4ade80;
-      letter-spacing: 0.06em;
-      background: rgba(34, 197, 94, 0.12);
-      border: 1px solid rgba(34, 197, 94, 0.25);
-      padding: 3px 9px;
-      border-radius: 9999px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.2s;
     }
 
-    .sc-status-pulse {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #4ade80;
-      box-shadow: 0 0 10px #4ade80;
-      animation: scPulse 1.8s infinite;
+    .sc-cli-toggle:hover {
+      background: #11402c;
+      color: #fff;
     }
 
-    /* ── Laptop Screen Content Body (Floating Glass HUD) ── */
+    /* ── Layer 3: Workspace Content Area ── */
     .sc-body {
       position: relative;
       z-index: 10;
       flex: 1;
-      padding: 16px 22px;
+      padding: 14px 18px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transform-style: preserve-3d;
     }
 
     .sc-slide {
       position: absolute;
-      inset: 16px 22px;
+      inset: 14px 18px;
       opacity: 0;
       pointer-events: none;
-      transform: translateY(12px) translateZ(-20px);
-      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transform: translateY(10px);
+      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
       display: flex;
       flex-direction: column;
+      gap: 10px;
     }
 
     .sc-slide.active {
       opacity: 1;
       pointer-events: auto;
-      transform: translateY(0) translateZ(0);
+      transform: translateY(0);
     }
 
     .slide-badge-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      flex-shrink: 0;
     }
 
     .slide-pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 4px 10px;
+      padding: 3px 10px;
       border-radius: 9999px;
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 750;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       background: rgba(34, 197, 94, 0.18);
       color: #86efac;
       border: 1px solid rgba(74, 222, 128, 0.35);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     .slide-tag {
@@ -575,46 +627,41 @@
     }
 
     .slide-title-bar {
-      margin-bottom: 12px;
+      flex-shrink: 0;
     }
 
     .slide-title-bar h3 {
-      font-size: 19px;
+      font-size: 17px;
       font-weight: 800;
       letter-spacing: -0.02em;
       color: #fff;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     }
 
     .slide-title-bar p {
-      font-size: 11.5px;
+      font-size: 11px;
       color: rgba(255, 255, 255, 0.7);
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .sc-grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 12px;
       flex: 1;
+      min-height: 0;
     }
 
     .sc-card {
-      background: rgba(10, 26, 18, 0.72);
+      background: rgba(10, 26, 18, 0.78);
       backdrop-filter: blur(14px);
       border: 1px solid rgba(74, 222, 128, 0.2);
       border-radius: 8px;
-      padding: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
-      transition: border-color 0.25s, transform 0.25s;
-    }
-
-    .sc-card:hover {
-      border-color: rgba(74, 222, 128, 0.4);
-      transform: translateY(-2px);
+      gap: 6px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      overflow-y: auto;
     }
 
     .sc-card-header {
@@ -622,11 +669,12 @@
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 8px;
+      padding-bottom: 6px;
+      flex-shrink: 0;
     }
 
     .sc-card-title {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 750;
       text-transform: uppercase;
       letter-spacing: 0.06em;
@@ -637,8 +685,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 11px;
-      padding: 3px 0;
+      font-size: 10.5px;
+      padding: 2.5px 0;
       color: rgba(255, 255, 255, 0.9);
     }
 
@@ -647,27 +695,28 @@
 
     .sc-seal {
       margin-top: auto;
-      padding: 8px 12px;
+      padding: 6px 10px;
       background: rgba(34, 197, 94, 0.14);
       border: 1px dashed rgba(74, 222, 128, 0.45);
       border-radius: 6px;
-      font-size: 10px;
+      font-size: 9.5px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       color: #86efac;
       font-weight: 600;
+      flex-shrink: 0;
     }
 
-    /* Screen Action Buttons */
+    /* Action Buttons in Screen */
     .sc-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      padding: 8px 16px;
+      gap: 5px;
+      padding: 6px 12px;
       border-radius: 6px;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 750;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -678,13 +727,104 @@
     .sc-btn-primary {
       background: #22c55e;
       color: #061a11;
-      box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);
     }
 
     .sc-btn-primary:hover {
       background: #4ade80;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .sc-btn-outline {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .sc-btn-outline:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    /* ── Layer 4: Interactive Slide-out CLI Terminal ── */
+    .fams-terminal {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 175px;
+      background: rgba(6, 17, 12, 0.97);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(74, 222, 128, 0.35);
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .fams-terminal.open {
+      transform: translateY(0);
+    }
+
+    .terminal-header {
+      height: 24px;
+      background: rgba(17, 40, 28, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      font-size: 9.5px;
+      color: #86efac;
+      font-weight: 700;
+    }
+
+    .terminal-close {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .terminal-close:hover { color: #fff; }
+
+    .terminal-body {
+      flex: 1;
+      padding: 8px 12px;
+      overflow-y: auto;
+      font-size: 10.5px;
+      color: #86efac;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .terminal-input-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(11, 28, 19, 0.9);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .terminal-prompt {
+      color: #22c55e;
+      font-weight: 700;
+      font-size: 10.5px;
+    }
+
+    .terminal-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
     }
 
     /* ── Viewport-Pinned Fixed UI ── */
@@ -816,7 +956,6 @@
       opacity: 0;
       pointer-events: auto;
       color: var(--ink);
-      transform-style: preserve-3d;
     }
 
     .hole {
@@ -1093,7 +1232,7 @@
   </style>
 </head>
 <body class="js">
-  <!-- ── Stage Container with 3D Depth ── -->
+  <!-- ── Stage Container ── -->
   <div class="stage" id="stage">
     <!-- ── 1440x810 Relative Frame ── -->
     <div class="frame d-fade" id="frame">
@@ -1106,7 +1245,7 @@
         crossorigin="anonymous"
       >
 
-      <!-- 2. Wordmark "FAMS" (Desktop SVG with 3D Depth Wrap) -->
+      <!-- 2. Wordmark "FAMS" -->
       <div class="wm-wrap" id="wm-wrap">
         <svg class="wm pre" id="wordmark" viewBox="0 0 1440 380" preserveAspectRatio="none">
           <defs>
@@ -1120,7 +1259,7 @@
         </svg>
       </div>
 
-      <!-- 3. Man Cutout with 3D Parallax Wrap -->
+      <!-- 3. Man Cutout -->
       <div class="cut-wrap" id="cut-wrap">
         <img
           class="cut"
@@ -1131,7 +1270,7 @@
         >
       </div>
 
-      <!-- 4. Lanyard ID Badge (Desktop 3D Floating) -->
+      <!-- 4. Lanyard ID Badge -->
       <div class="badge pre" id="badge">
         <img
           class="badge-img"
@@ -1157,12 +1296,12 @@
         <div class="hit" id="badge-hit"></div>
       </div>
 
-      <!-- 5. Handwriting Script with 3D Depth -->
+      <!-- 5. Handwriting Script -->
       <div class="script-wrap" id="script-wrap">
         <div class="script pre" id="script">field-attachment</div>
       </div>
 
-      <!-- 6. Hero Subtitle Badge with 3D Depth -->
+      <!-- 6. Hero Subtitle Badge -->
       <div class="hero-subtitle-wrap" id="hero-subtitle-wrap">
         <div class="hero-subtitle pre" id="hero-subtitle">
           <span class="hero-subtitle-dot"></span>
@@ -1189,227 +1328,288 @@
         crossorigin="anonymous"
       >
 
-      <!-- 9. 3D Laptop Screen with Real-Time Motion Canvas -->
+      <!-- 9. Overengineered FAMS Laptop Operating Console -->
       <div class="screen" id="screen">
         <!-- 3D Interactive Topic Canvas Engine -->
         <canvas class="sc-3d-canvas" id="sc-3d-canvas"></canvas>
         <div class="flash" id="flash"></div>
 
-        <!-- Laptop Console Chrome Top Bar -->
+        <!-- Layer 1: OS Menubar -->
+        <div class="os-menubar">
+          <div class="os-menu-left">
+            <span class="os-logo-badge">🛡️ FAMS OS v4.2</span>
+            <div class="os-menu-items">
+              <span class="os-menu-item" onclick="triggerCliCommand('help')">Commands</span>
+              <span class="os-menu-item" onclick="triggerCliCommand('verify')">Audit Ledger</span>
+              <span class="os-menu-item" onclick="triggerCliCommand('radar')">GPS Radar</span>
+            </div>
+          </div>
+          <div class="os-menu-center">
+            <span>👤 ALICE NAKATO (23/U/0482/EVE) • BIS-III</span>
+          </div>
+          <div class="os-menu-right">
+            <button class="os-sfx-btn" id="sfx-toggle" type="button">🔊 SFX: ON</button>
+            <span style="color:#4ade80;">● NREN 5G</span>
+            <span id="os-live-clock">14:32:00 EAT</span>
+            <span>⚡100%</span>
+          </div>
+        </div>
+
+        <!-- Layer 2: Console App Switcher Tabs -->
         <div class="sc-chrome">
           <div class="sc-dots">
-            <span class="sc-dot r"></span>
-            <span class="sc-dot y"></span>
-            <span class="sc-dot g"></span>
+            <span class="sc-dot r" onclick="toHero()" title="Close to Hero"></span>
+            <span class="sc-dot y" onclick="triggerFlash(0.3, 300)" title="Recalculate"></span>
+            <span class="sc-dot g" onclick="toggleTerminal()" title="Toggle CLI Terminal"></span>
           </div>
           <div class="sc-tabs" id="sc-tabs">
             <button class="sc-tab active" data-idx="0" type="button">01 DISPATCH</button>
             <button class="sc-tab" data-idx="1" type="button">02 LOGBOOK</button>
             <button class="sc-tab" data-idx="2" type="button">03 GEOFENCE</button>
-            <button class="sc-tab" data-idx="3" type="button">04 DUAL SIGN-OFF</button>
+            <button class="sc-tab" data-idx="3" type="button">04 DUAL SCORING</button>
             <button class="sc-tab" data-idx="4" type="button">05 DEFENSE DOSSIER</button>
             <button class="sc-tab" data-idx="5" type="button">06 FACULTY BOARD</button>
           </div>
-          <div class="sc-status">
-            <span class="sc-status-pulse"></span>
-            <span>3D VERIFICATION ACTIVE</span>
-          </div>
+          <button class="sc-cli-toggle" id="cli-toggle-btn" type="button" onclick="toggleTerminal()">>_ CLI</button>
         </div>
 
-        <!-- Laptop Console Body Slides (Floating 3D HUD) -->
+        <!-- Layer 3: Workspace Content Area -->
         <div class="sc-body">
           <!-- Slide 0: Placement & Tripartite Dispatch -->
           <div class="sc-slide active" id="slide-0">
             <div class="slide-badge-row">
-              <span class="slide-pill">Stage 01 • Placement &amp; Clearance</span>
-              <span class="slide-tag">REF: FAMS-2026-BIS-0482</span>
+              <span class="slide-pill">Stage 01 • Placement Dispatch &amp; MOU</span>
+              <span class="slide-tag">REF: FAMS-2026-BIS-0482 • SHA-256 VALIDATED</span>
             </div>
             <div class="slide-title-bar">
-              <h3>Tripartite Placement Dispatch &amp; MOU</h3>
-              <p>Real-time 3D tripartite connection between University, Student Candidate, and Host Industry Enterprise.</p>
+              <h3>Tripartite Placement Dispatch &amp; Memorandum</h3>
+              <p>Cryptographically validated university recommendation, student undertaking, and host enterprise acceptance.</p>
             </div>
             <div class="sc-grid-2">
               <div class="sc-card">
                 <div class="sc-card-header">
-                  <span class="sc-card-title">Student Candidate</span>
+                  <span class="sc-card-title">Student Candidate Clearance</span>
                   <span class="slide-tag">REG: 23/U/0482/EVE</span>
                 </div>
-                <div class="sc-row"><span>Candidate:</span><b>Alice Nakato</b></div>
-                <div class="sc-row"><span>Program:</span><b>B. Information Systems (BIS, Y3)</b></div>
-                <div class="sc-row"><span>Faculty:</span><b>Computing &amp; Informatics</b></div>
-                <div class="sc-row"><span>Cumulative GPA:</span><b>4.32 / 5.00 (First Class)</b></div>
-                <div class="sc-seal">
-                  <span>Student Declaration:</span>
-                  <b>✓ Electronically Signed</b>
+                <div class="sc-row"><span>Student Name:</span><b>Alice Nakato</b></div>
+                <div class="sc-row"><span>Academic Program:</span><b>B. Information Systems (BIS, Y3)</b></div>
+                <div class="sc-row"><span>Faculty Board:</span><b>Computing &amp; Informatics</b></div>
+                <div class="sc-row"><span>Cumulative GPA:</span><b>4.32 / 5.00 (First Class Honors)</b></div>
+                <div class="sc-row"><span>Required Hours:</span><b>400 Contact Hours (10 Weeks)</b></div>
+                <div class="sc-seal" id="student-seal">
+                  <span>Candidate Undertaking:</span>
+                  <b style="color:#4ade80;">✓ Digitally Signed (2026-05-28)</b>
                 </div>
               </div>
               <div class="sc-card">
                 <div class="sc-card-header">
-                  <span class="sc-card-title">Host Attachment Site</span>
+                  <span class="sc-card-title">Host Attachment Site Accreditation</span>
                   <span class="slide-tag">STATUS: ACCREDITED</span>
                 </div>
-                <div class="sc-row"><span>Host Enterprise:</span><b>Nile Analytics Ltd</b></div>
-                <div class="sc-row"><span>Workplace Mentor:</span><b>Eng. Sarah Namubiru</b></div>
-                <div class="sc-row"><span>Attachment Term:</span><b>10 Weeks (400 Required Hrs)</b></div>
-                <div class="sc-row"><span>Dean Dispatch:</span><b>Approved &amp; Registered</b></div>
-                <div class="sc-seal">
-                  <span>University Clearance:</span>
-                  <b>✓ Tripartite MOU Active</b>
+                <div class="sc-row"><span>Host Enterprise:</span><b>Nile Analytics Ltd (Tech Park)</b></div>
+                <div class="sc-row"><span>Workplace Mentor:</span><b>Eng. Sarah Namubiru (Lead Architect)</b></div>
+                <div class="sc-row"><span>Academic Supervisor:</span><b>Dr. Patrick Kigozi (Senior Lecturer)</b></div>
+                <div class="sc-row"><span>Dean Dispatch Code:</span><b>FAMS-DISPATCH-UG-2026</b></div>
+                <div style="display:flex; gap:8px; margin-top:auto;">
+                  <button class="sc-btn sc-btn-primary" style="flex:1;" type="button" onclick="verifyMOUCertificate()">
+                    <span>🔍 Verify Certificate</span>
+                  </button>
+                  <a href="/auth" class="sc-btn sc-btn-outline" style="text-decoration:none;">Open Portal →</a>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Slide 1: Continuous Digital Logbook -->
+          <!-- Slide 1: Continuous Digital Logbook & Code Engine -->
           <div class="sc-slide" id="slide-1">
             <div class="slide-badge-row">
-              <span class="slide-pill">Stage 02 • Daily Industrial Journal</span>
+              <span class="slide-pill">Stage 02 • Digital Industrial Logbook</span>
               <span class="slide-tag">WEEK 4 • DAY 18 • WEDNESDAY</span>
             </div>
             <div class="slide-title-bar">
-              <h3>Continuous Daily Digital Logbook</h3>
-              <p>Volumetric ledger telemetry: tasks, code snippets, and skills stream directly into university audit logs.</p>
+              <h3>Continuous Daily Industrial Journal &amp; Tasks</h3>
+              <p>Students log practical tasks, code snippets, and deliverables with automated supervisor review workflows.</p>
             </div>
-            <div class="sc-card" style="flex:1;">
-              <div class="sc-card-header">
-                <span class="sc-card-title">Daily Activity &amp; Technical Execution</span>
-                <span class="slide-tag">08:30 AM — 17:00 PM (8.5 hrs logged)</span>
-              </div>
-              <div style="font-size:12px; line-height:1.5; color:#e2e8f0; margin-top:4px;">
-                "Configured PostgreSQL connection pool with PgBouncer, implemented Redis caching layer on billing microservice, and achieved 64% latency reduction under 1,200 req/sec load test."
-              </div>
-              <div style="display:flex; gap:6px; margin:8px 0;">
-                <span style="font-size:9.5px; background:rgba(34,197,94,0.15); border:1px solid rgba(74,222,128,0.3); padding:3px 8px; border-radius:4px; color:#86efac;">#PostgreSQL</span>
-                <span style="font-size:9.5px; background:rgba(34,197,94,0.15); border:1px solid rgba(74,222,128,0.3); padding:3px 8px; border-radius:4px; color:#86efac;">#RedisCache</span>
-                <span style="font-size:9.5px; background:rgba(34,197,94,0.15); border:1px solid rgba(74,222,128,0.3); padding:3px 8px; border-radius:4px; color:#86efac;">#PgBouncer</span>
-                <span style="font-size:9.5px; background:rgba(34,197,94,0.15); border:1px solid rgba(74,222,128,0.3); padding:3px 8px; border-radius:4px; color:#86efac;">#Docker</span>
-              </div>
-              <div class="sc-seal" style="margin-top:auto;">
-                <div>
-                  <span style="display:block; font-size:9px; color:rgba(255,255,255,0.6);">Workplace Mentor Weekly Sign-off:</span>
-                  <b>"Demonstrated independent problem-solving in database clustering." — Eng. S. Namubiru</b>
+            <div class="sc-grid-2">
+              <div class="sc-card">
+                <div class="sc-card-header">
+                  <span class="sc-card-title">Active Daily Journal</span>
+                  <span class="slide-tag" id="logbook-timer">08:30:00 - 17:02:15 EAT (8.5h)</span>
                 </div>
-                <span style="font-size:12px; color:#4ade80;">✅ SIGNED</span>
+                <div style="font-size:11.5px; line-height:1.45; color:#e2e8f0;">
+                  "Architected PostgreSQL read-replica connection pool via PgBouncer. Integrated Redis cache layer on the microservice transaction ledger, reducing p99 latency from 142ms to 18ms under 1,200 req/sec stress testing."
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:9.5px; background:rgba(0,0,0,0.4); padding:6px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.08); color:#86efac; margin:4px 0;">
+                  // PgBouncer pool sizing &amp; cache purge<br>
+                  CREATE INDEX idx_audit ON logs (student_id, date);<br>
+                  SET max_connections = '250';
+                </div>
+                <div style="display:flex; gap:5px;">
+                  <span style="font-size:9px; background:rgba(34,197,94,0.15); border:1px solid rgba(74,222,128,0.3); padding:2px 6px; border-radius:4px; color:#86efac;">#PostgreSQL</span>
+                  <span style="font-size:9px; background:rgba(34,197,94,0.15); border:1px solid rgba(74,222,128,0.3); padding:2px 6px; border-radius:4px; color:#86efac;">#RedisCache</span>
+                  <span style="font-size:9px; background:rgba(34,197,94,0.15); border:1px solid rgba(74,222,128,0.3); padding:2px 6px; border-radius:4px; color:#86efac;">#PgBouncer</span>
+                </div>
+              </div>
+              <div class="sc-card">
+                <div class="sc-card-header">
+                  <span class="sc-card-title">Supervisor Sign-Off &amp; Hours</span>
+                  <span class="slide-tag">153 / 320 TOTAL HRS</span>
+                </div>
+                <div class="sc-row"><span>Running Contact Hours:</span><b>153.0 / 320.0 Hrs (47.8%)</b></div>
+                <div class="sc-row"><span>Mentor Feedback:</span><b>"Exceptional database debugging."</b></div>
+                <div class="sc-row"><span>Sign-off Nonce:</span><b style="font-family:'JetBrains Mono',monospace;">0x82f1...c99a</b></div>
+                <div class="sc-seal" id="logbook-sign-status">
+                  <span>Sign-off Protocol:</span>
+                  <b id="logbook-status-text" style="color:#4ade80;">✓ Signed by Eng. S. Namubiru</b>
+                </div>
+                <button class="sc-btn sc-btn-primary" type="button" onclick="simulateLogbookSignOff()">
+                  <span>✍️ Simulate Live Weekly Sign-Off</span>
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- Slide 2: Geofence Radar & Biometric Attendance -->
+          <!-- Slide 2: 3D LiDAR Geofence Radar & Biometrics -->
           <div class="sc-slide" id="slide-2">
             <div class="slide-badge-row">
-              <span class="slide-pill">3D LiDAR • Anti-Ghost Verification</span>
+              <span class="slide-pill">Verification • 3D LiDAR Geofencing</span>
               <span class="slide-tag">GPS LOCK: 0.3324° N, 32.5702° E</span>
             </div>
             <div class="slide-title-bar">
-              <h3>3D Holographic Geofence Radar</h3>
-              <p>50-meter spherical GPS perimeter guarantees student physical presence at the approved workplace coordinates.</p>
+              <h3>3D Holographic Geofence Radar &amp; Presence</h3>
+              <p>Continuous GPS perimeter checks eliminate fake logs and guarantee verified physical presence on premise.</p>
             </div>
             <div class="sc-grid-2">
               <div class="sc-card" style="align-items:center; justify-content:center; text-align:center;">
-                <div style="font-size:11px; font-weight:750; color:#86efac; margin-bottom:4px;">HOST PREMISE PERIMETER</div>
-                <div style="font-size:28px; font-weight:800; color:#fff; font-family:'JetBrains Mono',monospace;">18.4m</div>
-                <div style="font-size:10px; color:rgba(255,255,255,0.7);">Inside 50m Approved Boundary</div>
-                <div style="margin-top:10px; font-size:9.5px; padding:3px 10px; background:rgba(34,197,94,0.2); border:1px solid rgba(74,222,128,0.4); border-radius:9999px; color:#86efac;">
-                  ● LIVE SATELLITE BEAM PINGING
+                <div style="font-size:10.5px; font-weight:750; color:#86efac; margin-bottom:2px;">HOST PREMISE RADAR BEACON</div>
+                <div style="font-size:32px; font-weight:800; color:#fff; font-family:'JetBrains Mono',monospace;" id="radar-distance-text">18.4m</div>
+                <div style="font-size:10px; color:rgba(255,255,255,0.7);">Inside 50m Approved Boundary (Nile Analytics HQ)</div>
+                <div style="display:flex; gap:6px; margin-top:8px;">
+                  <button class="sc-btn sc-btn-primary" type="button" onclick="triggerRadarPing()">
+                    <span>📡 Trigger Satellite GPS Ping</span>
+                  </button>
                 </div>
               </div>
               <div class="sc-card">
                 <div class="sc-card-header">
-                  <span class="sc-card-title">Attendance Audit Trail</span>
-                  <span class="slide-tag">40-DAY ROTATION</span>
+                  <span class="sc-card-title">Biometric Attendance Audit Matrix</span>
+                  <span class="slide-tag">38 / 40 DAYS VERIFIED</span>
                 </div>
-                <div class="sc-row"><span>Days Completed:</span><b>38 / 40 Days (95.0%)</b></div>
-                <div class="sc-row"><span>Approved Leave:</span><b>2 Days (Medical Clearance)</b></div>
-                <div class="sc-row"><span>Spoofing Detection:</span><b>0 Flags (Hardware Fingerprint)</b></div>
-                <div class="sc-row"><span>Compliance:</span><b>TVETA Section 14 Certified</b></div>
+                <div class="sc-row"><span>Attendance Consistency:</span><b>95.0% Verified On-Premises</b></div>
+                <div class="sc-row"><span>Authorized Medical Leave:</span><b>2 Days (Dean Form Filed)</b></div>
+                <div class="sc-row"><span>Device Integrity Attestation:</span><b>Hardware Keystore Sealed</b></div>
+                <div class="sc-row"><span>Mock Location Anomaly:</span><b style="color:#4ade80;">0.00% Spoof Risk</b></div>
                 <div class="sc-seal">
-                  <span>Geofence Status:</span>
-                  <b>🟢 100% Genuine Attendance</b>
+                  <span>CUE &amp; TVETA Standard:</span>
+                  <b>🟢 Section 14 Geolocation Certified</b>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Slide 3: Dual Supervision Assessment -->
+          <!-- Slide 3: Dual Supervision Interactive Scoring Rubric -->
           <div class="sc-slide" id="slide-3">
             <div class="slide-badge-row">
               <span class="slide-pill">Stage 03 • Dual Assessor Protocol</span>
-              <span class="slide-tag">SHA-256: 0x9f4a7c2be12b</span>
+              <span class="slide-tag">INTERACTIVE SCORING RUBRIC</span>
             </div>
             <div class="slide-title-bar">
-              <h3>Dual Industry &amp; Faculty Supervision</h3>
-              <p>Cryptographically linked assessments: host mentor weekly ratings paired with faculty lecturer on-site inspection.</p>
+              <h3>Dual Industry &amp; Faculty Assessment Rubric</h3>
+              <p>Workplace mentor scores field ethics while university lecturer grades technical depth on physical site inspection.</p>
             </div>
             <div class="sc-grid-2">
+              <!-- Industry Mentor Card (40%) -->
               <div class="sc-card">
                 <div class="sc-card-header">
-                  <span class="sc-card-title">Industry Workplace Mentor (40%)</span>
-                  <span class="slide-tag">HOST EVALUATION</span>
+                  <span class="sc-card-title">Workplace Mentor (40%)</span>
+                  <span class="slide-tag" id="host-subtotal-tag">39 / 40 (97.5%)</span>
                 </div>
-                <div class="sc-row"><span>Assessor:</span><b>Eng. Sarah Namubiru</b></div>
-                <div class="sc-row"><span>Technical Proficiency:</span><b>19 / 20</b></div>
-                <div class="sc-row"><span>Punctuality &amp; Discipline:</span><b>10 / 10</b></div>
-                <div class="sc-row"><span>Team Collaboration:</span><b>10 / 10</b></div>
-                <div class="sc-seal">
-                  <span>Host Subtotal:</span>
-                  <b>39 / 40 (97.5%) • Signed</b>
+                <div class="sc-row">
+                  <span>Punctuality &amp; Discipline:</span>
+                  <b id="score-punc">10 / 10</b>
+                </div>
+                <div class="sc-row">
+                  <span>Practical Execution:</span>
+                  <b id="score-tech">19 / 20</b>
+                </div>
+                <div class="sc-row">
+                  <span>Ethics &amp; Teamwork:</span>
+                  <b id="score-team">10 / 10</b>
+                </div>
+                <div class="sc-seal" id="mentor-seal-status">
+                  <span>Mentor Digital Stamp:</span>
+                  <b>✓ Signed by Eng. S. Namubiru</b>
                 </div>
               </div>
+              <!-- Academic Faculty Assessor (60%) -->
               <div class="sc-card">
                 <div class="sc-card-header">
-                  <span class="sc-card-title">University Academic Assessor (60%)</span>
-                  <span class="slide-tag">SITE INSPECTION</span>
+                  <span class="sc-card-title">Academic Assessor (60%)</span>
+                  <span class="slide-tag" id="faculty-subtotal-tag">47 / 50 (94.0%)</span>
                 </div>
-                <div class="sc-row"><span>Assessor:</span><b>Dr. Patrick Kigozi (Senior Lecturer)</b></div>
-                <div class="sc-row"><span>Physical Field Visit:</span><b>Week 6 On-Site Inspection</b></div>
-                <div class="sc-row"><span>Logbook Rigor:</span><b>28 / 30</b></div>
-                <div class="sc-row"><span>Oral Defense Readiness:</span><b>19 / 20</b></div>
-                <div class="sc-seal">
-                  <span>Faculty Subtotal:</span>
-                  <b>47 / 50 (94.0%) • Verified</b>
+                <div class="sc-row">
+                  <span>Logbook Documentation:</span>
+                  <b id="score-log">28 / 30</b>
                 </div>
+                <div class="sc-row">
+                  <span>Defense Preparation:</span>
+                  <b id="score-oral">19 / 20</b>
+                </div>
+                <div class="sc-row">
+                  <span>Composite Grade:</span>
+                  <b id="composite-grade-text" style="color:#4ade80;">95.5% (Grade A • Distinction)</b>
+                </div>
+                <button class="sc-btn sc-btn-primary" type="button" onclick="applyOfficialFacultySeal()">
+                  <span>🏛️ Apply University Faculty Board Seal</span>
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- Slide 4: Automated Defense Dossier -->
+          <!-- Slide 4: Automated Defense Dossier Compiler -->
           <div class="sc-slide" id="slide-4">
             <div class="slide-badge-row">
-              <span class="slide-pill">Stage 04 • Defense Dossier Export</span>
-              <span class="slide-tag">FACULTY OF COMPUTING</span>
+              <span class="slide-pill">Stage 04 • Graduation Defense Dossier</span>
+              <span class="slide-tag">NCHE &amp; CUE ACCREDITED</span>
             </div>
             <div class="slide-title-bar">
-              <h3>Accredited Graduation Defense Dossier</h3>
-              <p>Automated 3D compilation of verified logbooks, dual assessment rubrics, and GPS audit trails.</p>
+              <h3>Accredited Defense Dossier &amp; Degree Clearance</h3>
+              <p>Automated compilation of 10-week verified daily logs, dual evaluation rubrics, and satellite audit trails.</p>
             </div>
             <div class="sc-card" style="flex:1;">
               <div class="sc-card-header">
-                <span class="sc-card-title">Official Board of Examiners Summary</span>
-                <span class="slide-tag">FINAL COMPOSITE SCORE</span>
+                <span class="sc-card-title">Board of Examiners Defense Summary Dossier</span>
+                <span class="slide-tag">COMPOSITE: 95.5% (GRADE A)</span>
               </div>
-              <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin:8px 0; text-align:center;">
-                <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
-                  <span style="font-size:9.5px; color:rgba(255,255,255,0.5); display:block;">Host Mentor</span>
-                  <b style="font-size:14px; color:#86efac;">39/40</b>
+              <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin:6px 0; text-align:center;">
+                <div style="background:rgba(255,255,255,0.05); padding:6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                  <span style="font-size:9px; color:rgba(255,255,255,0.5); display:block;">Host Mentor</span>
+                  <b style="font-size:13px; color:#86efac;">39/40</b>
                 </div>
-                <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
-                  <span style="font-size:9.5px; color:rgba(255,255,255,0.5); display:block;">Academic Assessor</span>
-                  <b style="font-size:14px; color:#86efac;">47/50</b>
+                <div style="background:rgba(255,255,255,0.05); padding:6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                  <span style="font-size:9px; color:rgba(255,255,255,0.5); display:block;">Faculty Assessor</span>
+                  <b style="font-size:13px; color:#86efac;">47/50</b>
                 </div>
-                <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
-                  <span style="font-size:9.5px; color:rgba(255,255,255,0.5); display:block;">Oral Presentation</span>
-                  <b style="font-size:14px; color:#86efac;">9.5/10</b>
+                <div style="background:rgba(255,255,255,0.05); padding:6px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                  <span style="font-size:9px; color:rgba(255,255,255,0.5); display:block;">Oral Defense</span>
+                  <b style="font-size:13px; color:#86efac;">9.5/10</b>
                 </div>
-                <div style="background:rgba(34,197,94,0.18); padding:8px; border-radius:6px; border:1px solid rgba(74,222,128,0.5); box-shadow:0 0 14px rgba(34,197,94,0.2);">
-                  <span style="font-size:9.5px; color:#86efac; display:block;">Final Grade</span>
-                  <b style="font-size:14px; color:#fff;">95.5% (A)</b>
+                <div style="background:rgba(34,197,94,0.18); padding:6px; border-radius:6px; border:1px solid rgba(74,222,128,0.5); box-shadow:0 0 14px rgba(34,197,94,0.25);">
+                  <span style="font-size:9px; color:#86efac; display:block;">Final Grade</span>
+                  <b style="font-size:13px; color:#fff;">95.5% (A)</b>
                 </div>
+              </div>
+              <div style="font-size:10px; color:rgba(255,255,255,0.7); line-height:1.4;">
+                Bound Deliverables: Complete 40-Day Technical Journal • GPS Geofenced Telemetry Nonce Log • Host Mentor Signed Form 4B • University Inspection Form 5C • Tripartite MOU Agreement.
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; pt-2;">
-                <div style="font-size:10px; color:rgba(255,255,255,0.7);">
-                  Includes: 10 Weeks Logbook • 40-Day GPS Logs • Dual Rubrics • NCHE &amp; CUE Standard
+                <div style="font-size:9.5px; color:#86efac; font-weight:700;">
+                  ✅ Dossier Ready for Faculty Board of Examiners Defense
                 </div>
                 <div style="display:flex; gap:8px;">
+                  <button class="sc-btn sc-btn-outline" type="button" onclick="simulateDossierExport()">
+                    <span>⬇ Export Official PDF Binder</span>
+                  </button>
                   <a href="/auth" class="sc-btn sc-btn-primary">Launch Working Workspace →</a>
                 </div>
               </div>
@@ -1456,6 +1656,23 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Layer 4: Interactive Slide-out CLI Terminal -->
+        <div class="fams-terminal" id="fams-terminal">
+          <div class="terminal-header">
+            <span>>_ FAMS-CLI v4.2.0 (Institutional Terminal)</span>
+            <button class="terminal-close" type="button" onclick="toggleTerminal()">✕</button>
+          </div>
+          <div class="terminal-body" id="terminal-body">
+            <div>FAMS Core Kernel v4.2.0-albertine [Ready]</div>
+            <div>Connected to NREN/KENET Node #042 (Latency: 12ms, TLS 1.3)</div>
+            <div>Type <span style="color:#fff; font-weight:700;">help</span> to view available institutional commands.</div>
+          </div>
+          <div class="terminal-input-row">
+            <span class="terminal-prompt">fams-admin@os:~$</span>
+            <input class="terminal-input" id="terminal-input" type="text" autocomplete="off" spellcheck="false" placeholder="type 'help', 'verify', 'radar', 'grade', 'export'..." />
           </div>
         </div>
       </div>
@@ -1578,7 +1795,6 @@
         },
       ];
 
-      // Stakeholder Role Badges
       const ROLES = {
         student: {
           h4: 'INTERN<br>CARD',
@@ -1618,7 +1834,6 @@
       const plateImg = document.getElementById('plate');
       const casePlateImg = document.getElementById('caseplate');
       const cutImg = document.getElementById('cut');
-      const cutWrap = document.getElementById('cut-wrap');
       const wmWrap = document.getElementById('wm-wrap');
       const scriptWrap = document.getElementById('script-wrap');
       const heroSubtitleWrap = document.getElementById('hero-subtitle-wrap');
@@ -1666,15 +1881,19 @@
       const dPEl = document.getElementById('d-p');
       const dNumEl = document.getElementById('d-num');
 
+      const terminalEl = document.getElementById('fams-terminal');
+      const terminalBody = document.getElementById('terminal-body');
+      const terminalInput = document.getElementById('terminal-input');
+
       /* ── 3. State ── */
-      let mode = 'hero'; // 'hero' | 'case'
+      let mode = 'hero';
       let activeCase = 0;
       let busy = false;
       let transReady = false;
       let swayAnim = null;
       let entranceDone = false;
+      let sfxEnabled = true;
 
-      // 3D Parallax & Cursor Physics
       let targetMouseX = 0;
       let targetMouseY = 0;
       let currentMouseX = 0;
@@ -1682,14 +1901,62 @@
 
       const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      /* ── 4. Setup Mobile Badge Clone ── */
-      if (mBadgeWrap) {
-        const clone = badgeEl.cloneNode(true);
-        clone.id = 'badge-mobile';
-        mBadgeWrap.appendChild(clone);
+      /* ── 4. Web Audio API Acoustic Synthesizer ── */
+      let audioCtx = null;
+      function initAudio() {
+        if (!audioCtx) {
+          const AudioCtor = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtor) audioCtx = new AudioCtor();
+        }
       }
 
-      /* ── 5. Responsive Math (fitHero & pose) ── */
+      function playTone(freq, type = 'sine', dur = 0.08, vol = 0.12) {
+        if (!sfxEnabled) return;
+        try {
+          initAudio();
+          if (!audioCtx) return;
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+          gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start();
+          osc.stop(audioCtx.currentTime + dur);
+        } catch (_) {}
+      }
+
+      function playClick() { playTone(1200, 'sine', 0.03, 0.08); }
+      function playPing() { playTone(880, 'sine', 0.25, 0.15); }
+      function playStamp() {
+        playTone(320, 'triangle', 0.15, 0.2);
+        setTimeout(() => playTone(640, 'sine', 0.2, 0.15), 50);
+      }
+
+      document.getElementById('sfx-toggle').addEventListener('click', (e) => {
+        sfxEnabled = !sfxEnabled;
+        e.target.textContent = sfxEnabled ? '🔊 SFX: ON' : '🔇 SFX: OFF';
+        if (sfxEnabled) playClick();
+      });
+
+      /* ── 5. Live EAT Clock in Menubar ── */
+      const clockEl = document.getElementById('os-live-clock');
+      function updateLiveClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', hour12: false });
+        if (clockEl) clockEl.textContent = `${timeStr} EAT`;
+      }
+      setInterval(updateLiveClock, 1000);
+      updateLiveClock();
+
+      /* ── 6. Responsive Math (fitHero & pose) ── */
       function pose(m) {
         const W = window.innerWidth;
         const H = window.innerHeight;
@@ -1756,20 +2023,17 @@
         const vr = Math.min(1440, (W - x) / s);
         const pad = 18 / s;
 
-        // Wordmark Wrap
         const wmLeft = vl + 0.6 * pad;
         const wmWidth = vr - vl - 1.2 * pad;
         wmWrap.style.left = `${wmLeft}px`;
         wmWrap.style.width = `${wmWidth}px`;
 
-        // Badge
         const bLeft = Math.min(986, vr - pad - 417);
         const vb = Math.min(810, (H - y) / s);
         const bTop = Math.min(-165, vb - 56 / s - 935);
         badgeEl.style.left = `${bLeft}px`;
         badgeEl.style.top = `${bTop}px`;
 
-        // Script & Subtitle
         scriptWrap.style.left = `${vl + pad + 70}px`;
         heroSubtitleWrap.style.left = `${vl + pad + 74}px`;
       }
@@ -1793,27 +2057,26 @@
         resizeCanvases();
       });
 
-      /* ── 6. 3D Spatial Mouse Tracking Loop ── */
+      /* ── 7. Clean Mouse Tracking for 3D Canvas ── */
       window.addEventListener('mousemove', (e) => {
         const w = window.innerWidth;
         const h = window.innerHeight;
-        // Normalized coordinates: -1.0 to +1.0
         targetMouseX = (e.clientX / w) * 2 - 1;
         targetMouseY = (e.clientY / h) * 2 - 1;
       });
 
-      function render3DParallaxLoop() {
+      function render3DLoop() {
         if (!RM) {
-          // Smooth Lerp
           currentMouseX += (targetMouseX - currentMouseX) * 0.08;
           currentMouseY += (targetMouseY - currentMouseY) * 0.08;
         }
-        requestAnimationFrame(render3DParallaxLoop);
+        requestAnimationFrame(render3DLoop);
       }
-      requestAnimationFrame(render3DParallaxLoop);
+      requestAnimationFrame(render3DLoop);
 
-      /* ── 7. Lanyard Stakeholder Switching ── */
+      /* ── 8. Lanyard Stakeholder Switching ── */
       function setStakeholderRole(roleKey) {
+        playClick();
         const r = ROLES[roleKey];
         if (!r) return;
 
@@ -1853,7 +2116,7 @@
         }
       });
 
-      /* ── 8. Preload Kling Video Blob ── */
+      /* ── 9. Preload Kling Video Blob ── */
       (async function preloadTrans() {
         try {
           const res = await fetch(TRANS_URL);
@@ -1868,7 +2131,7 @@
         });
       })();
 
-      /* ── 9. True 3D Canvas Engine for Topic Modules ── */
+      /* ── 10. 3D Canvas Engine for Topic Modules ── */
       const ctx = screenCanvas.getContext('2d');
 
       function resizeCanvases() {
@@ -1878,17 +2141,13 @@
       }
       resizeCanvases();
 
-      // 3D Canvas Visualizer for Active Case Module
       let animAngle = 0;
-
-      // 3D Tripartite Nodes for Case 0
       const triNodes = [
-        { label: 'University', x: 0, y: -110, z: 0, color: '#38bdf8' },
-        { label: 'Candidate', x: -140, y: 80, z: 30, color: '#4ade80' },
-        { label: 'Host Org', x: 140, y: 80, z: -30, color: '#fbbf24' },
+        { label: 'University Registry', x: 0, y: -110, z: 0, color: '#38bdf8' },
+        { label: 'Alice Nakato (Candidate)', x: -140, y: 80, z: 30, color: '#4ade80' },
+        { label: 'Nile Analytics (Host)', x: 140, y: 80, z: -30, color: '#fbbf24' },
       ];
 
-      // Traveling 3D Energy Packets
       const packets = Array.from({ length: 18 }, (_, i) => ({
         from: i % 3,
         to: (i + 1) % 3,
@@ -1906,36 +2165,23 @@
         ctx.clearRect(0, 0, w, h);
 
         if (activeCase === 0) {
-          // ── Case 0: 3D Tripartite Network Clearance ──
-          // Rotate in 3D
+          // Case 0: 3D Tripartite Clearance Network
           const rotY = animAngle * 0.6 + currentMouseX * 0.5;
           const rotX = currentMouseY * 0.35;
 
           const projected = triNodes.map((n) => {
-            // Y rotation
             const x1 = n.x * Math.cos(rotY) - n.z * Math.sin(rotY);
             const z1 = n.x * Math.sin(rotY) + n.z * Math.cos(rotY);
-            // X rotation
             const y2 = n.y * Math.cos(rotX) - z1 * Math.sin(rotX);
             const z2 = n.y * Math.sin(rotX) + z1 * Math.cos(rotX) + 380;
-
             const scale = 360 / z2;
-            return {
-              px: cx + x1 * scale,
-              py: cy + y2 * scale,
-              scale,
-              color: n.color,
-              label: n.label,
-              z: z2
-            };
+            return { px: cx + x1 * scale, py: cy + y2 * scale, scale, color: n.color, label: n.label, z: z2 };
           });
 
-          // Draw 3D Energy Beams between nodes
           for (let i = 0; i < 3; i++) {
             const n1 = projected[i];
             const n2 = projected[(i + 1) % 3];
-
-            ctx.strokeStyle = 'rgba(74, 222, 128, 0.25)';
+            ctx.strokeStyle = 'rgba(74, 222, 128, 0.28)';
             ctx.lineWidth = 2 * ((n1.scale + n2.scale) / 2);
             ctx.beginPath();
             ctx.moveTo(n1.px, n1.py);
@@ -1943,7 +2189,6 @@
             ctx.stroke();
           }
 
-          // Draw Traveling Data Packets
           packets.forEach((pkt) => {
             pkt.p = (pkt.p + pkt.speed) % 1;
             const n1 = projected[pkt.from];
@@ -1960,7 +2205,6 @@
             ctx.shadowBlur = 0;
           });
 
-          // Draw 3D Nodes
           projected.sort((a, b) => b.z - a.z).forEach((p) => {
             const rad = 26 * p.scale;
             const grad = ctx.createRadialGradient(p.px - rad * 0.3, p.py - rad * 0.3, rad * 0.1, p.px, p.py, rad);
@@ -1976,21 +2220,19 @@
             ctx.fill();
             ctx.shadowBlur = 0;
 
-            // Halo Ring
             ctx.strokeStyle = p.color;
             ctx.lineWidth = 1.5;
             ctx.beginPath();
             ctx.arc(p.px, p.py, rad * 1.35, 0, Math.PI * 2);
             ctx.stroke();
 
-            // Label
             ctx.fillStyle = '#ffffff';
             ctx.font = `bold ${Math.round(10 * p.scale)}px 'Inter Tight'`;
             ctx.textAlign = 'center';
             ctx.fillText(p.label, p.px, p.py + rad + 14 * p.scale);
           });
         } else if (activeCase === 1) {
-          // ── Case 1: 3D Volumetric Matrix & Data Cube ──
+          // Case 1: 3D Volumetric Data Cube
           const rotY = animAngle * 0.8 + currentMouseX * 0.6;
           const rotX = animAngle * 0.5 + currentMouseY * 0.4;
           const cubeSize = 85;
@@ -2003,7 +2245,6 @@
           ];
 
           const pVerts = vertices.map(([x, y, z]) => {
-            // Rotations
             const x1 = x * Math.cos(rotY) - z * Math.sin(rotY);
             const z1 = x * Math.sin(rotY) + z * Math.cos(rotY);
             const y2 = y * Math.cos(rotX) - z1 * Math.sin(rotX);
@@ -2012,7 +2253,6 @@
             return { x: cx + x1 * scale, y: cy + y2 * scale };
           });
 
-          // Edges
           const edges = [
             [0,1],[1,2],[2,3],[3,0],
             [4,5],[5,6],[6,7],[7,4],
@@ -2032,7 +2272,6 @@
           });
           ctx.shadowBlur = 0;
 
-          // Vertices
           pVerts.forEach((v) => {
             ctx.fillStyle = '#ffffff';
             ctx.beginPath();
@@ -2040,12 +2279,11 @@
             ctx.fill();
           });
         } else if (activeCase === 2) {
-          // ── Case 2: 3D Holographic LiDAR Ground Grid & Radar Beam ──
+          // Case 2: 3D Holographic LiDAR Ground Grid & Sweep Radar
           const horizonY = cy + 40;
           ctx.strokeStyle = 'rgba(74, 222, 128, 0.18)';
           ctx.lineWidth = 1;
 
-          // 3D Perspective Grid
           for (let i = -7; i <= 7; i++) {
             ctx.beginPath();
             ctx.moveTo(cx + i * 22, horizonY);
@@ -2061,7 +2299,6 @@
             ctx.stroke();
           }
 
-          // Rotating LiDAR Beam
           const sweep = (animAngle * 1.5) % (Math.PI * 2);
           const radX = cx + Math.cos(sweep) * 180;
           const radY = cy + Math.sin(sweep) * 80 + 30;
@@ -2078,7 +2315,6 @@
           ctx.closePath();
           ctx.fill();
 
-          // Premise Pin Beacon
           ctx.fillStyle = '#4ade80';
           ctx.shadowColor = '#4ade80';
           ctx.shadowBlur = 20;
@@ -2087,7 +2323,6 @@
           ctx.fill();
           ctx.shadowBlur = 0;
 
-          // Pulse Rings
           const ringRad = ((animAngle * 40) % 140);
           ctx.strokeStyle = `rgba(74, 222, 128, ${1 - ringRad / 140})`;
           ctx.lineWidth = 2;
@@ -2095,11 +2330,10 @@
           ctx.ellipse(cx, cy + 30, ringRad, ringRad * 0.45, 0, 0, Math.PI * 2);
           ctx.stroke();
         } else if (activeCase === 3) {
-          // ── Case 3: Dual Rotating Gyroscope Shields (Dual Supervision) ──
+          // Case 3: Dual Rotating Gyroscope Shields
           const rot1 = animAngle;
           const rot2 = -animAngle * 1.2;
 
-          // Shield Ring 1 (Host Mentor)
           ctx.strokeStyle = 'rgba(74, 222, 128, 0.7)';
           ctx.lineWidth = 3;
           ctx.shadowColor = '#4ade80';
@@ -2108,7 +2342,6 @@
           ctx.ellipse(cx, cy, 110, Math.abs(Math.sin(rot1) * 110), rot1 * 0.5, 0, Math.PI * 2);
           ctx.stroke();
 
-          // Shield Ring 2 (Faculty Assessor)
           ctx.strokeStyle = 'rgba(56, 189, 248, 0.7)';
           ctx.shadowColor = '#38bdf8';
           ctx.beginPath();
@@ -2116,7 +2349,6 @@
           ctx.stroke();
           ctx.shadowBlur = 0;
 
-          // Central SHA-256 Core
           ctx.fillStyle = '#ffffff';
           ctx.shadowColor = '#4ade80';
           ctx.shadowBlur = 24;
@@ -2125,11 +2357,10 @@
           ctx.fill();
           ctx.shadowBlur = 0;
         } else if (activeCase === 4) {
-          // ── Case 4: 3D Holographic Gold Defense Polyhedron ──
+          // Case 4: 3D Gold Defense Polyhedron
           const rotY = animAngle * 0.7 + currentMouseX * 0.5;
           const rad = 75;
 
-          // 3D Octahedron
           const octa = [
             [0, -rad, 0], [rad, 0, 0], [0, 0, rad],
             [-rad, 0, 0], [0, 0, -rad], [0, rad, 0]
@@ -2161,13 +2392,12 @@
           });
           ctx.shadowBlur = 0;
 
-          // Gold Core
           ctx.fillStyle = '#fef3c7';
           ctx.beginPath();
           ctx.arc(cx, cy, 8, 0, Math.PI * 2);
           ctx.fill();
         } else if (activeCase === 5) {
-          // ── Case 5: 3D Isometric Regional Extruded Pillars ──
+          // Case 5: 3D Regional Extruded Pillars
           const pillars = [
             { x: -120, label: 'Kampala', h: 140, color: '#4ade80' },
             { x: -40, label: 'Entebbe', h: 90, color: '#38bdf8' },
@@ -2180,7 +2410,6 @@
             const curH = p.h + Math.sin(animAngle * 2 + p.x) * 8;
             const px = cx + p.x;
 
-            // Draw Pillar
             const grad = ctx.createLinearGradient(px, baseCY, px, baseCY - curH);
             grad.addColorStop(0, 'rgba(11, 47, 32, 0.2)');
             grad.addColorStop(1, p.color);
@@ -2188,14 +2417,12 @@
             ctx.fillStyle = grad;
             ctx.fillRect(px - 18, baseCY - curH, 36, curH);
 
-            // Pillar Cap
             ctx.fillStyle = '#ffffff';
             ctx.shadowColor = p.color;
             ctx.shadowBlur = 10;
             ctx.fillRect(px - 18, baseCY - curH, 36, 4);
             ctx.shadowBlur = 0;
 
-            // Label
             ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
             ctx.font = '10px "Inter Tight"';
             ctx.textAlign = 'center';
@@ -2212,7 +2439,127 @@
       }
       requestAnimationFrame(mainAnimLoop);
 
-      /* ── 10. Web Animations Entrance ── */
+      /* ── 11. Interactive Overengineered In-Screen Operations ── */
+      window.verifyMOUCertificate = function() {
+        playStamp();
+        triggerFlash(0.4, 350);
+        appendTerminalLog('Executing cryptographic clearance verification...');
+        appendTerminalLog('SHA-256 Nonce: 0x7a8fe1902bc459a93e810482');
+        appendTerminalLog('Signature Check: PASSED (Dean: Balikuddembe • Host: Namubiru)');
+        appendTerminalLog('Status: TRIPARTITE MOU FULLY ENFORCED');
+      };
+
+      window.simulateLogbookSignOff = function() {
+        playStamp();
+        triggerFlash(0.35, 300);
+        const stText = document.getElementById('logbook-status-text');
+        if (stText) {
+          stText.textContent = '✅ Signed off live (Week 4 Journal Verified)';
+          stText.style.color = '#22c55e';
+        }
+        appendTerminalLog('Logbook Week 4 entry signed by mentor Eng. S. Namubiru.');
+        appendTerminalLog('Hours audited: 8.5 hrs today • Running total: 153 hrs.');
+      };
+
+      window.triggerRadarPing = function() {
+        playPing();
+        const distEl = document.getElementById('radar-distance-text');
+        const newDist = (17 + Math.random() * 2.5).toFixed(1);
+        if (distEl) distEl.textContent = `${newDist}m`;
+        appendTerminalLog(`Satellite GPS ping sent to 0.3324° N, 32.5702° E`);
+        appendTerminalLog(`Result: Geofence Lock CONFIRMED (${newDist}m from premise center).`);
+        appendTerminalLog(`Zero mock location spoofing detected.`);
+      };
+
+      window.applyOfficialFacultySeal = function() {
+        playStamp();
+        triggerFlash(0.5, 450);
+        const grText = document.getElementById('composite-grade-text');
+        if (grText) {
+          grText.textContent = '🏛️ FACULTY BOARD APPROVED (95.5% Grade A)';
+        }
+        appendTerminalLog('University Academic Assessor Seal APPLIED by Dr. P. Kigozi.');
+        appendTerminalLog('Graduation defense eligibility granted.');
+      };
+
+      window.simulateDossierExport = function() {
+        playPing();
+        appendTerminalLog('Compiling 10-week logbook into Defense Dossier PDF...');
+        appendTerminalLog('Attaching 40-day geofenced telemetry audit trail...');
+        appendTerminalLog('Embedding Dual Rubric Grade Breakdown (95.5% Grade A)...');
+        appendTerminalLog('Output: FAMS_Dossier_23_U_0482_EVE_Nakato.pdf generated.');
+        alert('FAMS Defense Dossier PDF successfully compiled for Alice Nakato (23/U/0482/EVE)!');
+      };
+
+      /* ── 12. Interactive CLI Terminal Implementation ── */
+      window.toggleTerminal = function() {
+        playClick();
+        terminalEl.classList.toggle('open');
+        if (terminalEl.classList.contains('open')) {
+          terminalInput.focus();
+        }
+      };
+
+      function appendTerminalLog(msg, color = '#86efac') {
+        const line = document.createElement('div');
+        line.style.color = color;
+        line.textContent = msg;
+        terminalBody.appendChild(line);
+        terminalBody.scrollTop = terminalBody.scrollHeight;
+      }
+
+      window.triggerCliCommand = function(cmd) {
+        if (mode !== 'case') toCase(0);
+        if (!terminalEl.classList.contains('open')) {
+          terminalEl.classList.add('open');
+        }
+        executeCommand(cmd);
+      };
+
+      function executeCommand(raw) {
+        const cmd = raw.trim().toLowerCase();
+        appendTerminalLog(`fams-admin@os:~$ ${raw}`, '#ffffff');
+
+        if (cmd === 'help') {
+          appendTerminalLog('Available Institutional Commands:');
+          appendTerminalLog('  verify    - Verify student clearance certificate and MOU');
+          appendTerminalLog('  radar     - Ping satellite GPS geofence radar');
+          appendTerminalLog('  logs      - Inspect continuous logbook entries and sign-off');
+          appendTerminalLog('  grade     - Calculate composite dual supervision rubric');
+          appendTerminalLog('  export    - Generate accredited defense dossier PDF');
+          appendTerminalLog('  clear     - Clear terminal buffer');
+          appendTerminalLog('  demo      - Navigate to live app workspace');
+        } else if (cmd === 'verify') {
+          verifyMOUCertificate();
+        } else if (cmd === 'radar') {
+          triggerRadarPing();
+        } else if (cmd === 'logs') {
+          simulateLogbookSignOff();
+        } else if (cmd === 'grade') {
+          applyOfficialFacultySeal();
+        } else if (cmd === 'export') {
+          simulateDossierExport();
+        } else if (cmd === 'clear') {
+          terminalBody.innerHTML = '';
+        } else if (cmd === 'demo') {
+          window.location.href = '/auth';
+        } else {
+          appendTerminalLog(`Command not recognized: '${raw}'. Type 'help' for available commands.`, '#f87171');
+        }
+      }
+
+      terminalInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          playClick();
+          const val = terminalInput.value;
+          if (val) {
+            executeCommand(val);
+            terminalInput.value = '';
+          }
+        }
+      });
+
+      /* ── 13. Web Animations Entrance ── */
       function startEntrance() {
         if (entranceDone) return;
         entranceDone = true;
@@ -2330,6 +2677,7 @@
 
       badgeHitEl.addEventListener('pointerenter', () => {
         if (mode !== 'hero' || RM) return;
+        playClick();
         badgeEl.animate(
           [
             { transform: 'rotate(0deg)' },
@@ -2363,7 +2711,7 @@
       });
       setTimeout(startEntrance, 4000);
 
-      /* ── 11. Case Fill & Slide Switching ── */
+      /* ── 14. Case Fill & Slide Switching ── */
       function fillCase(i) {
         const c = CASES[i];
         tTitleEl.textContent = c.title;
@@ -2460,6 +2808,7 @@
       function swapTo(n) {
         if (busy || n === activeCase) return;
         busy = true;
+        playClick();
 
         caseOut();
 
@@ -2497,11 +2846,12 @@
         }
       });
 
-      /* ── 12. Dive & Return Transitions ── */
+      /* ── 15. Dive & Return Transitions ── */
       function toCase(targetIdx = 0) {
         if (mode === 'case' || busy) return;
         busy = true;
         document.body.classList.add('busy');
+        playPing();
 
         wmSvg.animate(
           [
@@ -2613,6 +2963,11 @@
         if (mode === 'hero' || busy) return;
         busy = true;
         document.body.classList.add('busy');
+        playClick();
+
+        if (terminalEl.classList.contains('open')) {
+          terminalEl.classList.remove('open');
+        }
 
         caseOut();
 
@@ -2708,7 +3063,7 @@
         }, 250);
       }
 
-      /* ── 13. Event Listeners ── */
+      /* ── 16. Event Listeners ── */
       let lastWheelTime = 0;
       window.addEventListener(
         'wheel',
@@ -2767,6 +3122,19 @@
       );
 
       window.addEventListener('keydown', (e) => {
+        // Toggle terminal on tilde key
+        if (e.key === '`' || e.key === '~') {
+          if (mode === 'case') {
+            e.preventDefault();
+            toggleTerminal();
+            return;
+          }
+        }
+
+        if (terminalEl && terminalEl.classList.contains('open')) {
+          return; // Let user type in terminal
+        }
+
         if (mode === 'hero') {
           if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
             e.preventDefault();
