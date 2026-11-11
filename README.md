@@ -286,7 +286,7 @@ The platform includes pre-configured demo personas to immediately explore each r
 | **System Administrator**        | Alex Mercer       | InternTrack Infrastructure Operations       |    `Tier 5`     |
 
 > [!TIP]
-> Use the **Account Menu** in the top navigation bar or the **Persona Quick Switcher** at the bottom of the sidebar to seamlessly toggle between personas and observe real-time RBAC UI adaptation.
+> Use the **Account Menu** in the top navigation bar to seamlessly toggle between personas and observe real-time RBAC UI adaptation.
 
 ---
 
