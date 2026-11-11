@@ -61,18 +61,6 @@
       height: 100%;
       overflow: hidden;
       background: radial-gradient(circle at 50% 40%, #154d36 0%, #0b2f20 45%, #051810 100%);
-      transform-style: preserve-3d;
-    }
-
-    /* 3D Ambient Dust Particles in the Studio */
-    .stage-dust {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      opacity: 0.35;
-      mix-blend-mode: screen;
     }
 
     /* ── The 1440x810 Frame with 3D Depth ── */
@@ -181,7 +169,6 @@
       width: 100%;
       height: 100%;
       overflow: visible;
-      filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.45)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
     }
 
     /* ── 3D Parallax Man Cutout ── */
@@ -193,14 +180,12 @@
       height: 956.25px;
       pointer-events: none;
       z-index: 4;
-      transform-style: preserve-3d;
       will-change: transform;
     }
 
     img.cut {
       width: 100%;
       height: 100%;
-      filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.55));
     }
 
     /* ── 3D Floating Handwriting Script ── */
@@ -1110,9 +1095,6 @@
 <body class="js">
   <!-- ── Stage Container with 3D Depth ── -->
   <div class="stage" id="stage">
-    <!-- Ambient 3D Depth Dust Canvas -->
-    <canvas class="stage-dust" id="dust-canvas"></canvas>
-
     <!-- ── 1440x810 Relative Frame ── -->
     <div class="frame d-fade" id="frame">
       <!-- 1. Hero Photo Plate -->
@@ -1667,7 +1649,6 @@
       const scTabs = document.getElementById('sc-tabs');
       const scTabButtons = scTabs.querySelectorAll('.sc-tab');
       const scSlides = document.querySelectorAll('.sc-slide');
-      const dustCanvas = document.getElementById('dust-canvas');
 
       const hintEl = document.getElementById('hint');
       const btnOverview = document.getElementById('btn-overview');
@@ -1826,19 +1807,6 @@
           // Smooth Lerp
           currentMouseX += (targetMouseX - currentMouseX) * 0.08;
           currentMouseY += (targetMouseY - currentMouseY) * 0.08;
-
-          if (mode === 'hero') {
-            // Hero Multiplane 3D Depth
-            plateImg.style.transform = `translate3d(${currentMouseX * -12}px, ${currentMouseY * -10}px, -40px)`;
-            wmWrap.style.transform = `translate3d(${currentMouseX * -28}px, ${currentMouseY * -18}px, -20px) rotateY(${currentMouseX * 4}deg) rotateX(${currentMouseY * -3}deg)`;
-            cutWrap.style.transform = `translate3d(${currentMouseX * 16}px, ${currentMouseY * 12}px, 35px) scale(1.02)`;
-            scriptWrap.style.transform = `translate3d(${currentMouseX * 24}px, ${currentMouseY * 18}px, 50px)`;
-            heroSubtitleWrap.style.transform = `translate3d(${currentMouseX * 20}px, ${currentMouseY * 14}px, 45px)`;
-            badgeEl.style.transform = `translate3d(${currentMouseX * 32}px, ${currentMouseY * 24}px, 70px) rotateY(${currentMouseX * 6}deg)`;
-          } else {
-            // Case Mode Laptop 3D Tilt
-            screenEl.style.transform = `perspective(1000px) rotateX(${currentMouseY * -5}deg) rotateY(${currentMouseX * 7}deg)`;
-          }
         }
         requestAnimationFrame(render3DParallaxLoop);
       }
@@ -1902,46 +1870,13 @@
 
       /* ── 9. True 3D Canvas Engine for Topic Modules ── */
       const ctx = screenCanvas.getContext('2d');
-      const dCtx = dustCanvas.getContext('2d');
 
       function resizeCanvases() {
         const sRect = screenEl.getBoundingClientRect();
         screenCanvas.width = sRect.width || 894;
         screenCanvas.height = sRect.height || 605;
-
-        dustCanvas.width = window.innerWidth;
-        dustCanvas.height = window.innerHeight;
       }
       resizeCanvases();
-
-      // Ambient 3D Dust in Studio
-      const dustParticles = Array.from({ length: 45 }, () => ({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        z: Math.random() * 800 + 100,
-        size: Math.random() * 2 + 1,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3
-      }));
-
-      function renderDust() {
-        dCtx.clearRect(0, 0, dustCanvas.width, dustCanvas.height);
-        dCtx.fillStyle = 'rgba(134, 239, 172, 0.4)';
-        dustParticles.forEach((p) => {
-          p.x += p.vx + currentMouseX * 0.2;
-          p.y += p.vy + currentMouseY * 0.2;
-
-          if (p.x < 0) p.x = dustCanvas.width;
-          if (p.x > dustCanvas.width) p.x = 0;
-          if (p.y < 0) p.y = dustCanvas.height;
-          if (p.y > dustCanvas.height) p.y = 0;
-
-          const scale = 400 / p.z;
-          dCtx.beginPath();
-          dCtx.arc(p.x, p.y, p.size * scale, 0, Math.PI * 2);
-          dCtx.fill();
-        });
-      }
 
       // 3D Canvas Visualizer for Active Case Module
       let animAngle = 0;
@@ -2270,7 +2205,6 @@
       }
 
       function mainAnimLoop() {
-        renderDust();
         if (mode === 'case') {
           render3DMotions();
         }
