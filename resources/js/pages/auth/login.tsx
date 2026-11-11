@@ -59,7 +59,7 @@ export default function AuthPage() {
           <CardContent className="space-y-4">
             <Tabs
               value={activeTab}
-              onValueChange={(v) => setActiveTab(v as "login" | "register")}
+              onValueChange={(v: string) => setActiveTab(v as "login" | "register")}
               className="w-full"
             >
               <TabsList className="grid w-full grid-cols-2 h-10 p-1 bg-muted/60 rounded-xl mb-4">

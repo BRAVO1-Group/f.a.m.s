@@ -335,7 +335,7 @@ export default function AdminPage() {
               <Label>Student</Label>
               <Select
                 value={place.student_id}
-                onValueChange={(v) => setPlace({ ...place, student_id: v })}
+                onValueChange={(v: string) => setPlace({ ...place, student_id: v })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select student" />
@@ -353,7 +353,7 @@ export default function AdminPage() {
               <Label>Organization</Label>
               <Select
                 value={place.organization_id}
-                onValueChange={(v) => setPlace({ ...place, organization_id: v })}
+                onValueChange={(v: string) => setPlace({ ...place, organization_id: v })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select" />
@@ -371,7 +371,7 @@ export default function AdminPage() {
               <Label>Supervisor</Label>
               <Select
                 value={place.supervisor_id}
-                onValueChange={(v) => setPlace({ ...place, supervisor_id: v })}
+                onValueChange={(v: string) => setPlace({ ...place, supervisor_id: v })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select" />

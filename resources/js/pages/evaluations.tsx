@@ -312,7 +312,7 @@ export default function EvaluationsPage() {
                 <Label className="text-xs font-semibold">Period *</Label>
                 <Select
                   value={period}
-                  onValueChange={(v) => setPeriod(v as "Mid-Term" | "Final Assessment")}
+                  onValueChange={(v: string) => setPeriod(v as "Mid-Term" | "Final Assessment")}
                 >
                   <SelectTrigger className="h-9 text-xs">
                     <SelectValue />
@@ -400,7 +400,7 @@ export default function EvaluationsPage() {
               <Label className="text-xs font-semibold">Official Recommendation *</Label>
               <Select
                 value={recommendation}
-                onValueChange={(v) =>
+                onValueChange={(v: string) =>
                   setRecommendation(
                     v as "full_time_offer" | "commendation" | "satisfactory" | "needs_improvement",
                   )

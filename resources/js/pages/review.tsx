@@ -182,7 +182,7 @@ export default function ReviewPage() {
       </div>
 
       {/* ── Status Tabs ── */}
-      <Tabs value={filter} onValueChange={(v) => setFilter(v as FilterType)}>
+      <Tabs value={filter} onValueChange={(v: string) => setFilter(v as FilterType)}>
         <TabsList className="h-9">
           <TabsTrigger value="submitted" className="text-xs flex items-center gap-1.5">
             Pending

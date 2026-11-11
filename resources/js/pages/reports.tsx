@@ -125,7 +125,7 @@ ${items || "<p>No activities recorded.</p>"}
         </p>
       </div>
 
-      <Tabs value={period} onValueChange={(v) => setPeriod(v as Period)}>
+      <Tabs value={period} onValueChange={(v: string) => setPeriod(v as Period)}>
         <TabsList>
           <TabsTrigger value="week">Weekly</TabsTrigger>
           <TabsTrigger value="month">Monthly</TabsTrigger>

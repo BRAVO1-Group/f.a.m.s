@@ -562,7 +562,7 @@ export default function AssignmentsPage() {
       {/* ── View Dispatched University Credentials Modal ── */}
       <Dialog
         open={!!credentialModalStudent}
-        onOpenChange={(open) => !open && setCredentialModalStudent(null)}
+        onOpenChange={(open: string) => !open && setCredentialModalStudent(null)}
       >
         <DialogContent className="max-w-md">
           <DialogHeader>

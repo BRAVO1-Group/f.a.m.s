@@ -388,7 +388,7 @@ export default function SupervisorsPage() {
       {/* ── View Supervisor Credentials Modal ── */}
       <Dialog
         open={!!selectedSupervisorCreds}
-        onOpenChange={(open) => !open && setSelectedSupervisorCreds(null)}
+        onOpenChange={(open: null) => !open && setSelectedSupervisorCreds(null)}
       >
         <DialogContent className="max-w-md">
           <DialogHeader>

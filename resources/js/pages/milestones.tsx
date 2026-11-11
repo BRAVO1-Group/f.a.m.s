@@ -263,7 +263,7 @@ export default function MilestonesPage() {
       </Card>
 
       {/* Tabs Filter */}
-      <Tabs value={filter} onValueChange={(v) => setFilter(v as Filter)}>
+      <Tabs value={filter} onValueChange={(v: string) => setFilter(v as Filter)}>
         <TabsList>
           <TabsTrigger value="all">All Phases ({data.length})</TabsTrigger>
           <TabsTrigger value="in_progress">
