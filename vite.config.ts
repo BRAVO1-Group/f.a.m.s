@@ -1,4 +1,3 @@
-
 import path from "node:path";
 import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
@@ -25,4 +24,3 @@ export default defineConfig({
     },
   },
 });
-
