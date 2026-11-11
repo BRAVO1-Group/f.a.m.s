@@ -25,8 +25,6 @@
       /* Dynamic 3D Cursor Offsets */
       --mouse-x: 0;
       --mouse-y: 0;
-      --glare-x: 50%;
-      --glare-y: 40%;
     }
 
     @property --m0 { syntax: '<length>'; inherits: true; initial-value: 0px; }
@@ -440,18 +438,6 @@
       height: 100%;
       z-index: 1;
       pointer-events: none;
-    }
-
-    /* Dynamic 3D Specular Glass Glare */
-    .screen-glare {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: radial-gradient(circle 500px at var(--glare-x) var(--glare-y), rgba(255, 255, 255, 0.12) 0%, transparent 65%);
-      z-index: 15;
-      mix-blend-mode: overlay;
-      transition: background 0.1s ease-out;
     }
 
     .screen .flash {
@@ -1225,7 +1211,6 @@
       <div class="screen" id="screen">
         <!-- 3D Interactive Topic Canvas Engine -->
         <canvas class="sc-3d-canvas" id="sc-3d-canvas"></canvas>
-        <div class="screen-glare" id="screen-glare"></div>
         <div class="flash" id="flash"></div>
 
         <!-- Laptop Console Chrome Top Bar -->
@@ -1678,7 +1663,6 @@
 
       const screenEl = document.getElementById('screen');
       const screenCanvas = document.getElementById('sc-3d-canvas');
-      const screenGlare = document.getElementById('screen-glare');
       const flashEl = document.getElementById('flash');
       const scTabs = document.getElementById('sc-tabs');
       const scTabButtons = scTabs.querySelectorAll('.sc-tab');
@@ -1835,12 +1819,6 @@
         // Normalized coordinates: -1.0 to +1.0
         targetMouseX = (e.clientX / w) * 2 - 1;
         targetMouseY = (e.clientY / h) * 2 - 1;
-
-        // Dynamic glare position
-        const gx = (e.clientX / w) * 100;
-        const gy = (e.clientY / h) * 100;
-        document.documentElement.style.setProperty('--glare-x', `${gx}%`);
-        document.documentElement.style.setProperty('--glare-y', `${gy}%`);
       });
 
       function render3DParallaxLoop() {
