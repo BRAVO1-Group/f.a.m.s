@@ -191,23 +191,42 @@ export default function LandingPage() {
                   </Link>
                 </Button>
                 <a
-                  href="#features"
+                  href="#preview-sandbox"
                   className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card/70 px-6 text-sm font-semibold text-foreground backdrop-blur transition hover:bg-card hover:border-primary/40 sm:w-auto shadow-2xs"
                 >
                   <Layers className="size-4 text-muted-foreground" />
-                  Explore Capabilities
+                  Explore Live Sandbox
                 </a>
               </div>
 
+              {/* Social Proof Pill */}
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs">
+                <div className="flex -space-x-2 overflow-hidden">
+                  {["AW", "JO", "AK", "PK"].map((item) => (
+                    <span
+                      key={item}
+                      className="inline-flex size-7 items-center justify-center rounded-full border-2 border-background bg-primary/15 text-[10px] font-bold text-primary"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex items-center gap-1 text-muted-foreground font-medium">
+                  <span className="text-amber-500 font-bold">★★★★★</span>
+                  <span className="font-semibold text-foreground">4.9 / 5</span>
+                  <span>• Trusted by 14+ academic faculties & 350+ host employers</span>
+                </div>
+              </div>
+
               {/* Trust Badges */}
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs font-medium text-muted-foreground">
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs font-medium text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <Check className="size-4 text-primary" strokeWidth={2.5} />
                   No credit card required
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Check className="size-4 text-primary" strokeWidth={2.5} />
-                  Pre-configured demo personas
+                  <Check className="size-4 text-primary" strokeWidth={2.5} />3 Pre-configured demo
+                  personas
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Check className="size-4 text-primary" strokeWidth={2.5} />
