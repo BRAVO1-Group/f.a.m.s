@@ -626,107 +626,242 @@
       flex-shrink: 0;
     }
 
-    /* ── Live Dashboard Screenshot Frame & Hotspots ── */
-    .dashboard-preview-card {
-      position: relative;
-      background: rgba(10, 16, 26, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 6px;
-      overflow: hidden;
+    /* ── Native InternTrack App Shell inside Laptop ── */
+    .dashboard-app-shell {
       display: flex;
-      flex-direction: column;
-    }
-
-    .dashboard-preview-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 5px 8px;
-      background: rgba(15, 23, 42, 0.88);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      font-size: 9px;
-      font-family: 'JetBrains Mono', monospace;
-      color: #94a3b8;
-      flex-shrink: 0;
-    }
-
-    .dashboard-preview-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 1.5px 5px;
-      border-radius: 3px;
-      font-size: 7.5px;
-      font-weight: 700;
-      background: rgba(16, 185, 129, 0.15);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      letter-spacing: 0.04em;
-    }
-
-    .dashboard-img-container {
-      position: relative;
       flex: 1;
       width: 100%;
       height: 100%;
       min-height: 0;
+      background: #060b13;
       overflow: hidden;
-      background: #020617;
     }
 
-    .dashboard-preview-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top left;
-      display: block;
-      transition: transform 0.4s ease, filter 0.3s ease;
-      filter: contrast(1.02) brightness(0.97);
+    /* Forest Green Sidebar */
+    .dashboard-sidebar {
+      width: 155px;
+      flex-shrink: 0;
+      background: #092015;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      z-index: 5;
     }
 
-    .dashboard-img-container:hover .dashboard-preview-img {
-      transform: scale(1.03);
-    }
-
-    .dashboard-img-glare {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 45%);
-    }
-
-    .dashboard-hotspot {
-      position: absolute;
+    .sb-brand {
       display: flex;
       align-items: center;
-      gap: 5px;
-      padding: 2.5px 6.5px;
-      border-radius: 9999px;
-      background: rgba(10, 18, 30, 0.94);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7), 0 0 10px rgba(56, 189, 248, 0.2);
+      gap: 7px;
+      padding: 9px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .sb-brand-logo {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+    }
+
+    .sb-brand-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .sb-tier-badge {
+      display: inline-block;
+      font-size: 7.5px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #6ee7b7;
+      margin-top: 2px;
+    }
+
+    .sb-nav {
+      flex: 1;
+      padding: 6px 5px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5px;
+    }
+
+    .sb-cat-header {
+      font-size: 7px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(167, 243, 208, 0.45);
+      padding: 5px 6px 2px;
+    }
+
+    .sb-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 7px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 500;
+      color: #94a3b8;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .sb-link:hover {
+      background: rgba(255, 255, 255, 0.04);
       color: #f1f5f9;
+    }
+
+    .sb-link.active {
+      background: rgba(16, 185, 129, 0.18);
+      color: #34d399;
+      font-weight: 700;
+      border-left: 2px solid #10b981;
+    }
+
+    .sb-user-card {
+      padding: 7px 9px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .sb-user-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      font-size: 8.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Native Viewport Area */
+    .dashboard-viewport {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      background: #070e17;
+    }
+
+    .dash-profile-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: rgba(15, 23, 42, 0.7);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      flex-shrink: 0;
+    }
+
+    .dash-profile-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dash-avatar-lg {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10b981;
+      font-size: 10px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dash-profile-info h4 {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #f1f5f9;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dash-profile-info p {
+      font-size: 8.5px;
+      color: #94a3b8;
+      margin: 0;
+    }
+
+    .dash-profile-stats {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 9px;
+    }
+
+    .skill-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      min-height: 18px;
+      margin-top: 4px;
+    }
+
+    .skill-pill {
       font-size: 8px;
       font-weight: 600;
-      backdrop-filter: blur(8px);
-      z-index: 6;
-      pointer-events: auto;
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 1.5px 5.5px;
+      border-radius: 3px;
+      animation: popPill 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    .dashboard-hotspot:hover {
-      transform: scale(1.05);
-      border-color: #38bdf8;
+    @keyframes popPill {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
-    .dashboard-hotspot-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: #38bdf8;
-      box-shadow: 0 0 6px #38bdf8;
-      animation: pulse-dot 2s infinite;
-      flex-shrink: 0;
+    .sim-active {
+      transform: scale(0.96) !important;
+      filter: brightness(1.25) !important;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.6) !important;
+    }
+
+    .sub-badge.draft {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .sub-badge.queued {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    /* Virtual Cursor Hidden for display-only fluid loop */
+    .sim-cursor {
+      display: none !important;
     }
 
     /* ── Workflow 0: Placements Elements ── */
@@ -1960,7 +2095,7 @@
       <!-- 7. Caseplate Photo -->
       <img class="caseplate" id="caseplate" alt="" crossorigin="anonymous">
 
-      <!-- 8. Laptop Display with Live Autonomous Internship OS -->
+            <!-- 8. Laptop Display with Live Autonomous Internship OS -->
       <div class="screen" id="screen">
         <div class="os-shell" id="os-shell">
           <!-- OS Top App Bar -->
@@ -1978,27 +2113,23 @@
               <!-- Module Switcher Tabs inside Laptop -->
               <div class="os-tabs">
                 <button class="os-tab active" id="tab0" data-idx="0">
-                  <span>🏢 Matching</span>
-                  <span class="os-tab-badge">MOU</span>
+                  <span>🎓 Student Intern</span>
+                  <span class="os-tab-badge">TIER 1</span>
                 </button>
                 <button class="os-tab" id="tab1" data-idx="1">
-                  <span>📍 GPS Logbook</span>
-                  <span class="os-tab-badge">LIVE</span>
+                  <span>🏢 Host Mentor</span>
+                  <span class="os-tab-badge">TIER 2</span>
                 </button>
                 <button class="os-tab" id="tab2" data-idx="2">
-                  <span>✍️ Mentor Sign-Off</span>
-                  <span class="os-tab-badge">1-TAP</span>
-                </button>
-                <button class="os-tab" id="tab3" data-idx="3">
-                  <span>⚖️ Scoring Rubric</span>
-                  <span class="os-tab-badge">MAK</span>
+                  <span>⚖️ Faculty Dean</span>
+                  <span class="os-tab-badge">TIER 4</span>
                 </button>
               </div>
             </div>
             <div class="os-topbar-right">
               <div class="os-telemetry-pill">
                 <span class="os-live-dot"></span>
-                <span id="os-clock">15:30:00 EAT</span>
+                <span id="os-clock">11:48:00 EAT</span>
                 <span>•</span>
                 <span style="color:#10b981;">1.2ms SYNC</span>
               </div>
@@ -2011,342 +2142,310 @@
 
           <!-- OS System Breadcrumb & Subbar -->
           <div class="os-subbar">
-            <div class="os-subbar-left">
-              <span>INSTITUTION: <b>MAKERERE UNIVERSITY (COCIS)</b></span>
-              <span>ATTACHMENT TERM: <b>RECESS 2026</b></span>
-              <span>SUPERVISOR: <b>DR. K. SEMPALA</b></span>
+            <div class="os-subbar-left" id="os-breadcrumb">
+              INSTITUTION: <b>MAKERERE UNIVERSITY (COCIS)</b> &bull; TERM: <b>RECESS 2026</b> &bull; HOST: <b>NILE ANALYTICS</b>
             </div>
-            <div>
-              <span>SECURITY: <b style="color:#10b981;">CRYPTOGRAPHIC GEOFENCE ACTIVE</b></span>
+            <div id="os-security-status">
+              SECURITY: <b style="color:#10b981;">CRYPTOGRAPHIC GEOFENCE ACTIVE</b>
             </div>
           </div>
 
-          <!-- OS Main Workspace -->
-          <div class="os-workspace">
-            <!-- ── VIEW 0: PLACEMENTS & HOST MATCHING ── -->
-            <div class="wf-view active" id="wf0">
-              <div class="wf-kpis">
-                <div class="wf-kpi">
-                  <span class="wf-kpi-lbl">Total Attached Interns</span>
-                  <div class="wf-kpi-val">1,420 <span class="up">+14 today</span></div>
-                  <span class="wf-kpi-sub">98.6% Placement Rate</span>
+          <!-- Native InternTrack App Shell (Real Dashboard UI) -->
+          <div class="dashboard-app-shell">
+            <!-- Forest Green Sidebar -->
+            <aside class="dashboard-sidebar">
+              <!-- Brand Header -->
+              <div class="sb-brand">
+                <div class="sb-brand-logo">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                  </svg>
                 </div>
-                <div class="wf-kpi">
-                  <span class="wf-kpi-lbl">Accredited Enterprises</span>
-                  <div class="wf-kpi-val">380 <span class="chip" style="background:rgba(56,189,248,0.2); color:#38bdf8;">ACTIVE</span></div>
-                  <span class="wf-kpi-sub">Tech, Banking & Research</span>
-                </div>
-                <div class="wf-kpi">
-                  <span class="wf-kpi-lbl">Tripartite MOUs</span>
-                  <div class="wf-kpi-val" style="color:#10b981;">100% <span class="chip" style="background:rgba(16,185,129,0.2); color:#10b981;">RATIFIED</span></div>
-                  <span class="wf-kpi-sub">Cryptographic Nonces Validated</span>
+                <div>
+                  <div class="sb-brand-title">InternTrack</div>
+                  <div class="sb-tier-badge" id="sb-tier-badge">Tier 1 • Student</div>
                 </div>
               </div>
 
-              <div class="wf-split">
-                <!-- Left: Live Placements Dashboard Screen Capture -->
-                <div class="wf-card dashboard-preview-card" style="flex: 1.45;">
-                  <div class="dashboard-preview-head">
-                    <span>🏢 ACCREDITED PLACEMENTS & MATCHING</span>
-                    <span class="dashboard-preview-tag">
-                      <span class="os-live-dot" style="width:4.5px; height:4.5px;"></span>
-                      <span>ACTUAL DASHBOARD</span>
-                    </span>
+              <!-- Navigation Menu -->
+              <nav class="sb-nav">
+                <div class="sb-cat-header">Overview</div>
+                <div class="sb-link" id="sb-link-dashboard">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+                  <span>Dashboard</span>
+                </div>
+
+                <div class="sb-cat-header">Tracking & Logbook</div>
+                <div class="sb-link active" id="sb-link-logbook">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
+                  <span>Digital Logbook</span>
+                </div>
+                <div class="sb-link" id="sb-link-attendance">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="m9 16 2 2 4-4"/></svg>
+                  <span>Attendance & Clock</span>
+                </div>
+                <div class="sb-link" id="sb-link-milestones">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h13l4-3.5L18 6Z"/><path d="M12 13v8"/></svg>
+                  <span>Milestones</span>
+                </div>
+
+                <div class="sb-cat-header">Supervisory Controls</div>
+                <div class="sb-link" id="sb-link-review">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
+                  <span>Review Queue</span>
+                </div>
+                <div class="sb-link" id="sb-link-evaluations">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                  <span>Evaluations & Rubric</span>
+                </div>
+
+                <div class="sb-cat-header">Governance & Records</div>
+                <div class="sb-link" id="sb-link-reports">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M10 12h4M10 16h4"/></svg>
+                  <span>Reports & Dossier</span>
+                </div>
+              </nav>
+
+              <!-- Sidebar User Card -->
+              <div class="sb-user-card">
+                <div class="sb-user-avatar" id="sb-user-avatar">AN</div>
+                <div style="min-width:0; flex:1;">
+                  <div style="font-size:9px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="sb-user-name">Alice Nakato</div>
+                  <div style="font-size:7.5px; color:#94a3b8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="sb-user-role">BIS III Student</div>
+                </div>
+              </div>
+            </aside>
+
+            <!-- Main Viewport Canvas -->
+            <main class="dashboard-viewport">
+              <!-- Top Profile Strip -->
+              <div class="dash-profile-strip">
+                <div class="dash-profile-left">
+                  <div class="dash-avatar-lg" id="dash-avatar-main">AN</div>
+                  <div class="dash-profile-info">
+                    <h4 id="dash-profile-title">Alice Nakato <span style="font-size:8.5px; color:#38bdf8; font-weight:600;">23/U/0482/EVE</span></h4>
+                    <p id="dash-profile-sub">Host: Nile Analytics Institute &bull; Supervisor: Dr. K. Sempala</p>
                   </div>
-                  <div class="dashboard-img-container">
-                    <img src="screenshots/assignments.png" alt="InternTrack Placements Matrix" class="dashboard-preview-img">
-                    <div class="dashboard-img-glare"></div>
-                    <div class="dashboard-hotspot" style="top: 10px; right: 10px;">
-                      <span class="dashboard-hotspot-dot"></span>
-                      <span>1,420 Placements • 380 Host Enterprises</span>
+                </div>
+                <div class="dash-profile-stats">
+                  <div class="os-user-pill" id="dash-badge-status" style="font-size:9px; padding:2.5px 8px;">
+                    <span class="os-live-dot" style="width:5px; height:5px;"></span>
+                    <span>GPS Geofence: Active (50m)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Content Views Container -->
+              <div style="position:relative; flex:1; min-height:0;">
+                <!-- ── VIEW 0: STUDENT INTERN WORKSPACE ── -->
+                <div class="wf-view active" id="wf0">
+                  <div class="wf-kpis">
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Current Shift Duration</span>
+                      <div class="wf-kpi-val" style="color:#10b981; font-family:'JetBrains Mono', monospace;">08:34:12</div>
+                      <span class="wf-kpi-sub">● Biometric Geofence Active</span>
+                    </div>
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Curriculum Contact Hours</span>
+                      <div class="wf-kpi-val">328 / 400 <span class="up">82.0%</span></div>
+                      <span class="wf-kpi-sub">Week 8 of 10 Required Weeks</span>
+                    </div>
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Weekly Supervisor Sign-Offs</span>
+                      <div class="wf-kpi-val" style="color:#38bdf8;">08 / 08 <span class="chip" style="background:rgba(56,189,248,0.2); color:#38bdf8;">SIGNED</span></div>
+                      <span class="wf-kpi-sub">Zero Unsigned Timecards</span>
                     </div>
                   </div>
-                  <div class="host-cards" style="margin-top: 6px; flex: none;">
-                    <div class="host-item highlighted" id="host-item-nile">
-                      <div class="host-item-info">
-                        <span class="host-item-title">Nile Analytics Institute</span>
-                        <span class="host-item-desc">Data Engineering & Applied Machine Learning • Kampala HQ</span>
+
+                  <div class="wf-split">
+                    <!-- Left: Digital Daily Technical Logbook -->
+                    <div class="wf-card" style="flex: 1.35;">
+                      <div class="wf-card-head">
+                        <span>📝 STUDENT DAILY TECHNICAL LOGBOOK (DAY 38)</span>
+                        <span class="sub-badge draft" id="log-status-badge">DRAFT // PENDING REVIEW</span>
                       </div>
-                      <button class="host-apply-btn" id="btn-apply-nile">Apply & Dispatch MOU</button>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Right: Placement Stream & Live Attestation -->
-                <div class="wf-card" style="flex: 1;">
-                  <div class="wf-card-head">
-                    <span>⚡ LIVE MATCHING STREAM</span>
-                    <span style="font-size:9.5px; color:#10b981;">REAL-TIME</span>
-                  </div>
-                  <div class="host-cards">
-                    <div class="host-item">
-                      <div class="host-item-info">
-                        <span class="host-item-title">Stanbic Bank Innovation Lab</span>
-                        <span class="host-item-desc">Cloud Infrastructure & Security Systems</span>
+                      <div class="log-editor">
+                        <div class="log-input-row">
+                          <input class="log-input" style="flex:1;" value="Category: Distributed Systems & DB Optimization" readonly>
+                          <input class="log-input" style="width:75px; text-align:center;" value="8.0 Hrs" readonly>
+                        </div>
+                        <div style="font-size:8px; color:#94a3b8; font-weight:700;">DAILY ACTIVITY & ARCHITECTURAL IMPLEMENTATION:</div>
+                        <textarea class="log-textarea" id="log-text-entry" style="height:55px; min-height:55px;" placeholder="Simulating student work log entry..."></textarea>
+                        <div style="font-size:8px; color:#94a3b8; font-weight:700; margin-top:2px;">COMPETENCIES & CORE SKILLS:</div>
+                        <div class="skill-pills" id="student-skill-pills"></div>
+                        <button class="log-submit-btn" id="btn-submit-log" style="width:100%; margin-top:auto; padding:7px 10px; font-size:10px;">Submit Day 38 Log for Mentor Review</button>
                       </div>
-                      <button class="host-apply-btn applied">Quota Filled</button>
                     </div>
-                    <div class="host-item">
-                      <div class="host-item-info">
-                        <span class="host-item-title">UN Pulse Lab Kampala</span>
-                        <span class="host-item-desc">Applied AI for Sustainable Development</span>
+
+                    <!-- Right: GPS Geofence Radar & Attendance -->
+                    <div class="wf-card" style="flex: 1;">
+                      <div class="wf-card-head">
+                        <span>📍 BIOMETRIC GEOFENCE & ATTENDANCE</span>
+                        <span style="font-size:8.5px; color:#10b981; font-weight:700;">RADIUS 150M</span>
                       </div>
-                      <button class="host-apply-btn applied">Approved</button>
-                    </div>
-                  </div>
-                  <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.06); flex: 1; display: flex; flex-direction: column;">
-                    <div style="font-size: 8.5px; color: #94a3b8; font-weight: 700; margin-bottom: 4px; display: flex; justify-content: space-between;">
-                      <span>RECENT ATTESTATIONS</span>
-                      <span style="color:#10b981;">VERIFIED</span>
-                    </div>
-                    <div class="host-cards" id="stream-feed-wf0" style="flex: 1;"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ── VIEW 1: GPS GEOFENCE & STUDENT DAILY LOGBOOK ── -->
-            <div class="wf-view" id="wf1">
-              <div class="wf-kpis">
-                <div class="wf-kpi">
-                  <span class="wf-kpi-lbl">Current Shift Duration</span>
-                  <div class="wf-kpi-val" id="shift-clock-val" style="color:#10b981; font-family:'JetBrains Mono', monospace;">08:34:12</div>
-                  <span class="wf-kpi-sub">● Biometric Geofence Active</span>
-                </div>
-                <div class="wf-kpi">
-                  <span class="wf-kpi-lbl">Curriculum Contact Hours</span>
-                  <div class="wf-kpi-val">153 / 320 <span class="up">47.8%</span></div>
-                  <span class="wf-kpi-sub">Week 6 of 10 Required Weeks</span>
-                </div>
-                <div class="wf-kpi">
-                  <span class="wf-kpi-lbl">Weekly Supervisor Sign-Offs</span>
-                  <div class="wf-kpi-val" style="color:#38bdf8;">06 / 06 <span class="chip" style="background:rgba(56,189,248,0.2); color:#38bdf8;">SIGNED</span></div>
-                  <span class="wf-kpi-sub">Zero Unsigned Timecards</span>
-                </div>
-              </div>
-
-              <div class="wf-split">
-                <!-- Left: Daily Logbook Dashboard Screen -->
-                <div class="wf-card dashboard-preview-card" style="flex: 1.4;">
-                  <div class="dashboard-preview-head">
-                    <span>💻 STUDENT DAILY TECHNICAL LOGBOOK</span>
-                    <span class="dashboard-preview-tag">
-                      <span class="os-live-dot" style="width:4.5px; height:4.5px;"></span>
-                      <span>ACTUAL DASHBOARD</span>
-                    </span>
-                  </div>
-                  <div class="dashboard-img-container">
-                    <img src="screenshots/logbook.png" alt="Student Daily Technical Logbook" class="dashboard-preview-img">
-                    <div class="dashboard-img-glare"></div>
-                    <div class="dashboard-hotspot" style="top: 10px; right: 10px;">
-                      <span class="dashboard-hotspot-dot" style="background:#10b981; box-shadow:0 0 6px #10b981;"></span>
-                      <span>Day 28 • Week 6 • 8.0 Hrs Logged</span>
-                    </div>
-                  </div>
-                  <div class="log-editor" style="margin-top: 6px; padding: 6px 8px; background: rgba(8,13,22,0.85); border-radius: 5px; flex: none;">
-                    <div class="log-input-row">
-                      <input class="log-input" style="flex:1;" value="Category: Distributed Systems & DB Optimization" readonly>
-                      <input class="log-input" style="width:75px;" value="8.0 Hrs" readonly>
-                    </div>
-                    <textarea class="log-textarea" id="log-text-entry" style="height:36px; min-height:36px;" placeholder="Simulating student work log entry..."></textarea>
-                    <button class="log-submit-btn" id="btn-submit-log" style="padding: 5px 10px;">Submit Day 28 Log for Mentor Review</button>
-                  </div>
-                </div>
-
-                <!-- Right: GPS Geofence Radar & Attendance Screen -->
-                <div class="wf-card dashboard-preview-card" style="flex: 1;">
-                  <div class="dashboard-preview-head">
-                    <span>📍 BIOMETRIC GEOFENCE & ATTENDANCE</span>
-                    <span class="dashboard-preview-tag">
-                      <span class="os-live-dot" style="width:4.5px; height:4.5px;"></span>
-                      <span>RADIUS 150M</span>
-                    </span>
-                  </div>
-                  <div class="dashboard-img-container">
-                    <img src="screenshots/attendance.png" alt="Geofence Attendance Dashboard" class="dashboard-preview-img">
-                    <div class="dashboard-img-glare"></div>
-                    <div class="dashboard-hotspot" style="top: 10px; left: 10px;">
-                      <span class="dashboard-hotspot-dot"></span>
-                      <span>Geofence Validated • 08:31 AM</span>
-                    </div>
-                  </div>
-                  <div class="radar-box" style="padding: 8px; margin-top: 6px; flex: none;">
-                    <div style="font-family:'JetBrains Mono', monospace; font-size:8.5px; color:#cbd5e1; text-align:center;">
-                      Lat: 0.3476° N • Lon: 32.5825° E<br>
-                      <span id="geofence-status-text" style="color:#10b981; font-weight:700;">Within Campus Perimeter</span>
-                    </div>
-                    <button class="radar-btn" id="btn-verify-gps" style="margin-top: 5px; padding: 6px 10px;">
-                      <span>📡 Verify Geofence Clock-In</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- ── VIEW 2: MENTOR 1-TAP CRYPTOGRAPHIC SIGN-OFF ── -->
-            <div class="wf-view" id="wf2">
-              <div class="wf-kpis">
-                <div class="wf-kpi">
-                  <span class="wf-kpi-lbl">Workplace Mentor</span>
-                  <div class="wf-kpi-val" style="font-size:15px; color:#f1f5f9;">Dr. K. Sempala</div>
-                  <span class="wf-kpi-sub">Lead Mentor • Nile Analytics</span>
-                </div>
-                <div class="wf-kpi">
-                  <span class="wf-kpi-lbl">Pending Review Item</span>
-                  <div class="wf-kpi-val" style="color:#fbbf24;">1 Pending <span class="chip" style="background:rgba(245,158,11,0.2); color:#fbbf24;">AWAITING</span></div>
-                  <span class="wf-kpi-sub">Day 28 Attachment Evidence</span>
-                </div>
-                <div class="wf-kpi">
-                  <span class="wf-kpi-lbl">Cryptographic Nonce Security</span>
-                  <div class="wf-kpi-val" style="color:#10b981;">ECDSA <span class="chip" style="background:rgba(16,185,129,0.2); color:#10b981;">SECP256K1</span></div>
-                  <span class="wf-kpi-sub">Tamper-Proof Audit Chain</span>
-                </div>
-              </div>
-
-              <div class="wf-split">
-                <!-- Left: Supervisor Review Dashboard Screen -->
-                <div class="wf-card dashboard-preview-card" style="flex: 1.35;">
-                  <div class="dashboard-preview-head">
-                    <span>📑 SUPERVISOR REVIEW DASHBOARD</span>
-                    <span class="dashboard-preview-tag">
-                      <span class="os-live-dot" style="width:4.5px; height:4.5px;"></span>
-                      <span>ACTUAL DASHBOARD</span>
-                    </span>
-                  </div>
-                  <div class="dashboard-img-container">
-                    <img src="screenshots/review.png" alt="Mentor Review Dashboard" class="dashboard-preview-img">
-                    <div class="dashboard-img-glare"></div>
-                    <div class="dashboard-hotspot" style="top: 10px; left: 10px;">
-                      <span class="dashboard-hotspot-dot" style="background:#fbbf24; box-shadow:0 0 6px #fbbf24;"></span>
-                      <span>Alice Nakato • 8.0 Hrs Pending Sign-Off</span>
-                    </div>
-                  </div>
-                  <div class="mentor-submission-card" id="mentor-submission-card" style="margin-top: 6px; padding: 7px 10px; flex: none;">
-                    <div class="sub-head">
-                      <div>
-                        <div class="sub-title">Alice Nakato — BIS, Year 3</div>
-                        <div style="font-size:8.5px; color:#94a3b8;">Task: PostgreSQL Indexing & Redis Cluster (Git #9a4f21)</div>
+                      <div class="radar-box" style="padding:4px 0;">
+                        <div class="radar-circle" style="width:105px; height:105px;">
+                          <div class="radar-ring r1" style="width:35px; height:35px;"></div>
+                          <div class="radar-ring r2" style="width:70px; height:70px;"></div>
+                          <div class="radar-sweep"></div>
+                          <div class="radar-blip" style="top:44%; left:52%;"></div>
+                        </div>
+                        <div style="font-family:'JetBrains Mono', monospace; font-size:8px; color:#cbd5e1; text-align:center; line-height:1.4;">
+                          Nile Analytics HQ &bull; Plot 14 Lumumba Ave<br>
+                          Lat: 0.3476° N &bull; Lon: 32.5825° E<br>
+                          <span id="geofence-status-text" style="color:#10b981; font-weight:700;">● Verified on Campus Perimeter (±1.8m)</span>
+                        </div>
+                        <button class="radar-btn" id="btn-verify-gps" style="width:100%; justify-content:center; padding:7px 10px; font-size:10px; margin-top:auto;">
+                          <span>📡 Verify Geofence Clock-In</span>
+                        </button>
                       </div>
-                      <span class="sub-badge" id="mentor-status-badge">AWAITING 1-TAP APPROVAL</span>
                     </div>
                   </div>
                 </div>
 
-                <!-- Right: 1-Tap Cryptographic Sign-Off Station -->
-                <div class="wf-card" style="flex: 1;">
-                  <div class="wf-card-head">
-                    <span>✍️ 1-TAP VERIFICATION STATION</span>
-                    <span class="os-live-dot"></span>
-                  </div>
-                  <div class="mentor-sign-station">
-                    <div style="font-size:9.5px; color:#94a3b8; text-align:center; line-height:1.4; padding:0 10px;">
-                      Workplace mentor ratifies verified hours with an immutable ECDSA cryptographic signature.
+                <!-- ── VIEW 1: WORKPLACE MENTOR VERIFICATION CONSOLE ── -->
+                <div class="wf-view" id="wf1">
+                  <div class="wf-kpis">
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Workplace Mentor</span>
+                      <div class="wf-kpi-val" style="font-size:14.5px; color:#f1f5f9;">Dr. K. Sempala</div>
+                      <span class="wf-kpi-sub">Lead Mentor &bull; Nile Analytics</span>
                     </div>
-                    <button class="mentor-sign-btn" id="btn-mentor-sign">
-                      <span>✍️ 1-Tap Cryptographic Sign-Off</span>
-                    </button>
-                    <!-- Cryptographic Seal that stamps down -->
-                    <div class="crypto-seal" id="crypto-seal">
-                      <span class="crypto-seal-star">🛡️</span>
-                      <span class="crypto-seal-title">OFFICIALLY RATIFIED</span>
-                      <span class="crypto-seal-mentor">DR. K. SEMPALA</span>
-                      <span class="crypto-seal-nonce">NONCE: 0x9f4a...e12b</span>
-                      <span style="font-size:7.5px; color:#a7f3d0;">2026-11-11 • MAK COCIS</span>
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Pending Review Item</span>
+                      <div class="wf-kpi-val" style="color:#fbbf24;">1 Pending <span class="chip" style="background:rgba(245,158,11,0.2); color:#fbbf24;">AWAITING</span></div>
+                      <span class="wf-kpi-sub">Day 38 Attachment Evidence</span>
+                    </div>
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Cryptographic Security</span>
+                      <div class="wf-kpi-val" style="color:#10b981;">ECDSA <span class="chip" style="background:rgba(16,185,129,0.2); color:#10b981;">SECP256K1</span></div>
+                      <span class="wf-kpi-sub">Tamper-Proof Audit Chain</span>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
 
-            <!-- ── VIEW 3: DUAL SUPERVISION SCORING RUBRIC ── -->
-            <div class="wf-view" id="wf3">
-              <div class="wf-kpis">
-                <div class="wf-kpi">
-                  <span class="wf-kpi-lbl">Workplace Mentor Assessment (40%)</span>
-                  <div class="wf-kpi-val" style="color:#34d399;" id="score-mentor">39.5 / 40.0</div>
-                  <span class="wf-kpi-sub">Workplace Discipline & Technical Output</span>
-                </div>
-                <div class="wf-kpi">
-                  <span class="wf-kpi-lbl">University Academic Assessor (60%)</span>
-                  <div class="wf-kpi-val" style="color:#60a5fa;" id="score-uni">57.0 / 60.0</div>
-                  <span class="wf-kpi-sub">Field Visit, Defense & Logbook Dossier</span>
-                </div>
-                <div class="wf-kpi" style="border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.06);">
-                  <span class="wf-kpi-lbl">Composite Institutional Grade</span>
-                  <div class="wf-kpi-val" style="color:#10b981;" id="score-total">96.5% <span class="chip" style="background:#10b981; color:#062b1b;">GRADE A</span></div>
-                  <span class="wf-kpi-sub">First Class Honours Distinction</span>
-                </div>
-              </div>
+                  <div class="wf-split">
+                    <!-- Left: Supervisor Review Queue -->
+                    <div class="wf-card" style="flex: 1.35;">
+                      <div class="wf-card-head">
+                        <span>📑 SUPERVISOR REVIEW DASHBOARD</span>
+                        <span class="sub-badge" id="mentor-status-badge">AWAITING 1-TAP APPROVAL</span>
+                      </div>
+                      <div class="mentor-submission-card" id="mentor-submission-card" style="padding:8px; gap:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                          <div>
+                            <div style="font-weight:700; color:#fff; font-size:11px;">Alice Nakato &bull; BIS Year 3</div>
+                            <div style="font-size:8px; color:#94a3b8;">Task: PostgreSQL Indexing & Redis Cluster (8.0 Hours)</div>
+                          </div>
+                          <span style="font-family:'JetBrains Mono',monospace; font-size:8px; color:#38bdf8; background:rgba(56,189,248,0.12); padding:1.5px 5px; border-radius:3px;">git #9a4f21d</span>
+                        </div>
+                        <div style="font-family:'JetBrains Mono',monospace; font-size:8.5px; color:#a7f3d0; background:rgba(6,10,16,0.8); border:1px solid rgba(255,255,255,0.06); padding:6px 8px; border-radius:4px; line-height:1.4;">
+                          "Implemented PostgreSQL partition pruning, optimized index scans on 4.2M records, and integrated Redis cache cluster. Query p99 latency decreased from 140ms to 4.2ms."
+                        </div>
+                        <div style="font-size:8px; color:#94a3b8; font-weight:700; margin-top:2px;">SUPERVISOR ENDORSEMENT & ASSESSMENT:</div>
+                        <textarea class="log-textarea" id="mentor-feedback-text" style="height:48px; min-height:48px; font-size:9.5px; color:#f8fafc;" placeholder="Simulating supervisor feedback..."></textarea>
+                      </div>
+                    </div>
 
-              <div class="wf-split">
-                <!-- Left: Institutional Evaluations Dashboard Screen -->
-                <div class="wf-card dashboard-preview-card" style="flex: 1.4;">
-                  <div class="dashboard-preview-head">
-                    <span>⚖️ INSTITUTIONAL EVALUATION & RUBRICS</span>
-                    <span class="dashboard-preview-tag">
-                      <span class="os-live-dot" style="width:4.5px; height:4.5px;"></span>
-                      <span>ACTUAL DASHBOARD</span>
-                    </span>
-                  </div>
-                  <div class="dashboard-img-container">
-                    <img src="screenshots/evaluations.png" alt="Evaluations & Scoring Rubric" class="dashboard-preview-img">
-                    <div class="dashboard-img-glare"></div>
-                    <div class="dashboard-hotspot" style="bottom: 10px; left: 10px;">
-                      <span class="dashboard-hotspot-dot"></span>
-                      <span>40% Mentor (39.5) + 60% Faculty (57.0) = 96.5% Grade A</span>
-                    </div>
-                  </div>
-                  <div class="rubric-sliders" style="margin-top: 6px; padding: 6px 8px; background: rgba(8,13,22,0.85); border-radius: 5px; flex: none;">
-                    <div class="rubric-row">
-                      <div class="rubric-row-head"><span>Workplace Professionalism & Discipline</span> <b id="rubric-val-1">10.0 / 10.0</b></div>
-                      <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-1" style="width:100%;"></div></div>
-                    </div>
-                    <div class="rubric-row">
-                      <div class="rubric-row-head"><span>Technical Problem Solving & Execution</span> <b id="rubric-val-2">19.5 / 20.0</b></div>
-                      <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-2" style="width:97.5%;"></div></div>
+                    <!-- Right: 1-Tap Cryptographic Verification Station -->
+                    <div class="wf-card" style="flex: 1;">
+                      <div class="wf-card-head">
+                        <span>✍️ 1-TAP VERIFICATION STATION</span>
+                        <span class="os-live-dot"></span>
+                      </div>
+                      <div class="mentor-sign-station" style="padding:4px 0;">
+                        <div style="font-size:8.5px; color:#94a3b8; text-align:center; line-height:1.3; padding:0 6px;">
+                          Workplace mentor ratifies verified hours with an immutable ECDSA cryptographic signature.
+                        </div>
+                        <button class="mentor-sign-btn" id="btn-mentor-sign" style="width:100%; justify-content:center; padding:8px 12px; font-size:10px;">
+                          <span>✍️ 1-Tap Cryptographic Sign-Off</span>
+                        </button>
+                        <div class="crypto-seal" id="crypto-seal" style="width:115px; height:115px; margin-top:auto;">
+                          <span class="crypto-seal-star">🛡️</span>
+                          <span class="crypto-seal-title">OFFICIALLY RATIFIED</span>
+                          <span class="crypto-seal-mentor" style="font-size:8.5px;">DR. K. SEMPALA</span>
+                          <span class="crypto-seal-nonce" style="font-size:7px;">NONCE: 0x9f4a...e12b</span>
+                          <span style="font-size:6.5px; color:#a7f3d0;">2026-11-12 &bull; MAK COCIS</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <!-- Right: Senate Transcript & Attestation Badge -->
-                <div class="wf-card" style="flex: 1; align-items:center; justify-content:center; text-align:center; padding: 12px 14px;">
-                  <div style="font-size:28px; line-height:1;">🏛️</div>
-                  <div style="font-size:11.5px; font-weight:800; color:#fff; letter-spacing:0.02em; margin-top: 4px;">MAKERERE UNIVERSITY</div>
-                  <div style="font-size:9px; color:#94a3b8;">Faculty Board of Examiners & Academic Registrar</div>
-                  <div style="background:#10b981; color:#062b1b; font-size:9px; font-weight:800; padding:2px 8px; border-radius:4px; margin-top:4px;">
-                    SENATE RATIFIED
+                <!-- ── VIEW 2: FACULTY DEAN & SENATE EVALUATION ── -->
+                <div class="wf-view" id="wf2">
+                  <div class="wf-kpis">
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Workplace Mentor Assessment (40%)</span>
+                      <div class="wf-kpi-val" style="color:#34d399;" id="score-mentor">39.5 / 40.0</div>
+                      <span class="wf-kpi-sub">Workplace Discipline & Output</span>
+                    </div>
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">University Academic Assessor (60%)</span>
+                      <div class="wf-kpi-val" style="color:#60a5fa;" id="score-uni">57.0 / 60.0</div>
+                      <span class="wf-kpi-sub">Field Visit, Defense & Logbook</span>
+                    </div>
+                    <div class="wf-kpi" style="border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.06);">
+                      <span class="wf-kpi-lbl">Composite Institutional Grade</span>
+                      <div class="wf-kpi-val" style="color:#10b981;" id="score-total">96.5% <span class="chip" style="background:#10b981; color:#062b1b;">GRADE A</span></div>
+                      <span class="wf-kpi-sub">First Class Honours Distinction</span>
+                    </div>
                   </div>
-                  <div style="font-family:'JetBrains Mono', monospace; font-size:8px; color:#38bdf8; margin-top:2px;">
-                    CREDENTIAL: MAK-2026-BIS-0482
+
+                  <div class="wf-split">
+                    <!-- Left: Institutional Scoring Rubric -->
+                    <div class="wf-card" style="flex: 1.35;">
+                      <div class="wf-card-head">
+                        <span>⚖️ DUAL-SUPERVISION SCORING RUBRIC</span>
+                        <span class="chip" style="background:rgba(56,189,248,0.18); color:#38bdf8; font-size:8px;">COCIS RATIFIED</span>
+                      </div>
+                      <div class="rubric-sliders" style="padding:4px 0; gap:7px;">
+                        <div class="rubric-row">
+                          <div class="rubric-row-head"><span>Workplace Professionalism & Discipline</span> <b id="rubric-val-1">10.0 / 10.0</b></div>
+                          <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-1" style="width:100%;"></div></div>
+                        </div>
+                        <div class="rubric-row">
+                          <div class="rubric-row-head"><span>Technical Problem Solving & Architecture</span> <b id="rubric-val-2">19.5 / 20.0</b></div>
+                          <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-2" style="width:97.5%;"></div></div>
+                        </div>
+                        <div class="rubric-row">
+                          <div class="rubric-row-head"><span>Digital Logbook Dossier & Documentation</span> <b id="rubric-val-3">20.0 / 20.0</b></div>
+                          <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-3" style="width:100%;"></div></div>
+                        </div>
+                        <div class="rubric-row">
+                          <div class="rubric-row-head"><span>Faculty Field Visit & Oral Defense</span> <b id="rubric-val-4">47.0 / 50.0</b></div>
+                          <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-4" style="width:94.0%;"></div></div>
+                        </div>
+                        <div style="font-size:8px; color:#34d399; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:4px; padding:4px 8px; text-align:center; font-family:'JetBrains Mono',monospace; margin-top:auto;">
+                          40% Mentor (39.5) + 60% Faculty (57.0) = 96.5% Grade A
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Right: Senate Credentials & Transcript -->
+                    <div class="wf-card" style="flex: 1; align-items:center; text-align:center; padding:10px 12px;">
+                      <div style="font-size:24px; line-height:1;">🏛️</div>
+                      <div style="font-size:11px; font-weight:800; color:#fff; letter-spacing:0.02em; margin-top:2px;">MAKERERE UNIVERSITY</div>
+                      <div style="font-size:8px; color:#94a3b8;">Faculty Board of Examiners & Academic Registrar</div>
+                      <div style="background:#10b981; color:#062b1b; font-size:8px; font-weight:800; padding:1.5px 7px; border-radius:3px; margin-top:3px;">
+                        SENATE RATIFIED
+                      </div>
+                      <div style="font-family:'JetBrains Mono', monospace; font-size:7.5px; color:#38bdf8; margin-top:2px;">
+                        CREDENTIAL: MAK-2026-BIS-0482
+                      </div>
+                      <div style="font-size:8px; color:#cbd5e1; line-height:1.5; margin:6px 0; background:rgba(255,255,255,0.02); padding:5px 7px; border-radius:4px; width:100%; text-align:left;">
+                        ✓ 328/400 Contact Hours Verified via GPS<br>
+                        ✓ 8/8 Weekly Mentor Nonces Certified<br>
+                        ✓ Oral Defense Passed with Distinction
+                      </div>
+                      <button class="transcript-btn" id="btn-gen-transcript" style="width:100%; margin-top:auto; padding:7px 10px; font-size:10px;">
+                        <span>🏛️ Issue Official Senate Transcript</span>
+                      </button>
+                    </div>
                   </div>
-                  <button class="transcript-btn" id="btn-gen-transcript" style="margin-top: 10px; width: 100%;">
-                    <span>🏛️ Issue Official Senate Transcript</span>
-                  </button>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <!-- In-Screen Modal: Tripartite Agreement Confirmation -->
-          <div class="screen-modal" id="modal-mou">
-            <div class="screen-modal-dialog">
-              <div class="modal-head">
-                <span>📑 TRIPARTITE ATTACHMENT AGREEMENT</span>
-                <span style="font-size:9px; color:#10b981;">READY TO DISPATCH</span>
-              </div>
-              <div class="modal-body">
-                Student: <b>Alice Nakato (23/U/0482/EVE)</b><br>
-                Host Partner: <b>Nile Analytics Institute</b><br>
-                Term: <b>10 Weeks (320 Contact Hours)</b><br>
-                Workplace Mentor: <b>Dr. K. Sempala</b><br>
-                University Supervisor: <b>Dr. Florence Namaganda</b><br><br>
-                Cryptographic MOU Nonce generated. Both the university faculty board and the host organisation agree to all attachment bylaws.
-              </div>
-              <div class="modal-actions">
-                <button class="modal-btn ghost" id="modal-mou-cancel">Cancel</button>
-                <button class="modal-btn primary" id="modal-mou-confirm">Confirm & Dispatch Agreement</button>
-              </div>
-            </div>
+            </main>
           </div>
 
           <!-- In-Screen Modal: Official University Transcript -->
@@ -2362,22 +2461,13 @@
                 Program: <b>Bachelor of Information Systems & Tech</b><br>
                 Composite Grade: <b style="color:#10b981;">96.5% (Grade A - First Class Honours)</b><br>
                 Transcript Serial: <span style="font-family:'JetBrains Mono', monospace; color:#38bdf8;">MAK-COCIS-2026-0482</span><br><br>
-                ✓ All 320 contact hours verified with GPS biometric geofencing.<br>
-                ✓ 10/10 weekly supervisor cryptographic sign-offs committed to permanent institutional ledger.
+                ✓ All 328 contact hours verified with GPS biometric geofencing.<br>
+                ✓ 8/8 weekly supervisor cryptographic sign-offs committed to permanent institutional ledger.
               </div>
               <div class="modal-actions">
                 <button class="modal-btn primary" id="modal-transcript-close">Close Credential View</button>
               </div>
             </div>
-          </div>
-
-          <!-- ── THE VIRTUAL CURSOR / AUTONOMOUS POINTER ── -->
-          <div class="sim-cursor" id="sim-cursor">
-            <svg class="sim-cursor-icon" viewBox="0 0 24 24" fill="none">
-              <path d="M3 2L9 20L12.5 13.5L19 17L21 14L14.5 10.5L21 4L3 2Z" fill="#0b1710" stroke="#34d399" stroke-width="1.8" stroke-linejoin="round"/>
-            </svg>
-            <div class="sim-cursor-badge" id="sim-cursor-badge">Autopilot: Matching</div>
-            <div class="sim-cursor-ripple" id="sim-cursor-ripple"></div>
           </div>
 
           <!-- In-Screen Live Toast -->
@@ -2443,23 +2533,18 @@
       <div class="s2-hud-stages" id="s2-hud-stages">
         <button class="s2-stage-pill active" id="s2-stage-0" data-idx="0" type="button">
           <span class="s2-stage-num">01</span>
-          <span class="s2-stage-name">Matching Hub</span>
+          <span class="s2-stage-name">Student Logbook</span>
           <span class="s2-stage-prog" id="s2-prog-0"></span>
         </button>
         <button class="s2-stage-pill" id="s2-stage-1" data-idx="1" type="button">
           <span class="s2-stage-num">02</span>
-          <span class="s2-stage-name">GPS Logbook</span>
+          <span class="s2-stage-name">Mentor Sign-Off</span>
           <span class="s2-stage-prog" id="s2-prog-1"></span>
         </button>
         <button class="s2-stage-pill" id="s2-stage-2" data-idx="2" type="button">
           <span class="s2-stage-num">03</span>
-          <span class="s2-stage-name">Mentor Sign-Off</span>
+          <span class="s2-stage-name">Senate Rubric</span>
           <span class="s2-stage-prog" id="s2-prog-2"></span>
-        </button>
-        <button class="s2-stage-pill" id="s2-stage-3" data-idx="3" type="button">
-          <span class="s2-stage-num">04</span>
-          <span class="s2-stage-name">Supervision Rubric</span>
-          <span class="s2-stage-prog" id="s2-prog-3"></span>
         </button>
       </div>
 
@@ -2557,30 +2642,23 @@
 
       const WORKFLOW_DATA = [
         {
-          stageTag: 'STAGE 01 // ENTERPRISE MATCHING',
-          title: 'Placements & Tripartite MOU Hub',
-          desc: 'Undergraduates browse accredited industry hosts, submit placement requests and auto-generate legally binding tripartite agreements.',
-          tags: ['1,420 Placements', '380 Accredited Hosts', '100% Ratified Nonces'],
+          stageTag: 'STAGE 01 // STUDENT WORKSPACE',
+          title: 'GPS Geofenced Digital Daily Logbook',
+          desc: 'Undergraduates verify physical campus presence within 150m geofence, submit daily technical tasks, document competencies, and track contact hours.',
+          tags: ['Biometric GPS Lock', '328 / 400 Contact Hrs', 'Day 38 Submitted'],
           user: 'Alice Nakato (BIS III Student)'
         },
         {
-          stageTag: 'STAGE 02 // GPS LOGBOOK VERIFICATION',
-          title: 'GPS Geofence & Digital Daily Logbook',
-          desc: 'Biometric GPS geofencing validates physical campus presence within 150m. Interns submit daily technical reports directly to mentors.',
-          tags: ['Lat 0.3476° N, 32.5825° E', '153 / 320 Contact Hrs', '100% Geofence Lock'],
-          user: 'Alice Nakato (BIS III Student)'
-        },
-        {
-          stageTag: 'STAGE 03 // MENTOR VERIFICATION',
+          stageTag: 'STAGE 02 // WORKPLACE SUPERVISION',
           title: 'Workplace Mentor 1-Tap Cryptographic Sign-Off',
-          desc: 'Workplace mentors inspect daily technical milestones, verify Git attestation hashes, and ratify logs with permanent ECDSA nonces.',
-          tags: ['Dr. K. Sempala (Nile)', 'Git #9a4f21 Verified', 'ECDSA Secp256k1 Seal'],
+          desc: 'Workplace mentors inspect code artifacts, benchmark pull requests, and ratify daily logbooks with permanent ECDSA cryptographic nonces.',
+          tags: ['Dr. K. Sempala (Nile)', 'Git #9a4f21d Verified', 'ECDSA Secp256k1 Seal'],
           user: 'Dr. K. Sempala (Lead Mentor)'
         },
         {
-          stageTag: 'STAGE 04 // SENATE EVALUATION',
-          title: 'Dual Supervision Rubric & Transcripts',
-          desc: 'Joint scoring matrix combines workplace mentor rating (40%) and university academic assessor visit (60%) into certified senate credentials.',
+          stageTag: 'STAGE 03 // ACADEMIC GOVERNANCE',
+          title: 'Dual Supervision Rubric & Senate Transcripts',
+          desc: 'Joint scoring matrix balances workplace mentor rating (40%) and university faculty assessment (60%) into certified Makerere credentials.',
           tags: ['Composite Grade: 96.5%', 'First Class Honours', 'MAK-COCIS-2026-0482'],
           user: 'Prof. M. Bwambale (Academic Assessor)'
         }
@@ -2627,14 +2705,12 @@
       const s2StagePills = [
         document.getElementById('s2-stage-0'),
         document.getElementById('s2-stage-1'),
-        document.getElementById('s2-stage-2'),
-        document.getElementById('s2-stage-3')
+        document.getElementById('s2-stage-2')
       ];
       const s2ProgressBars = [
         document.getElementById('s2-prog-0'),
         document.getElementById('s2-prog-1'),
-        document.getElementById('s2-prog-2'),
-        document.getElementById('s2-prog-3')
+        document.getElementById('s2-prog-2')
       ];
 
       const s2IntelCard = document.getElementById('s2-intel-card');
@@ -2649,14 +2725,12 @@
       const osTabs = [
         document.getElementById('tab0'),
         document.getElementById('tab1'),
-        document.getElementById('tab2'),
-        document.getElementById('tab3')
+        document.getElementById('tab2')
       ];
       const wfViews = [
         document.getElementById('wf0'),
         document.getElementById('wf1'),
-        document.getElementById('wf2'),
-        document.getElementById('wf3')
+        document.getElementById('wf2')
       ];
       const osClock = document.getElementById('os-clock');
       const osUserName = document.getElementById('os-user-name');
@@ -2870,129 +2944,212 @@
         clearInterval(typeTimer);
       }
 
+      /* ── Update Native Dashboard Sidebar & Header For Role ── */
+      function updateSidebarForRole(idx) {
+        const allSbLinks = document.querySelectorAll('.sb-link');
+        allSbLinks.forEach(link => link.classList.remove('active'));
+
+        const sbTierBadge = document.getElementById('sb-tier-badge');
+        const sbUserAvatar = document.getElementById('sb-user-avatar');
+        const sbUserName = document.getElementById('sb-user-name');
+        const sbUserRole = document.getElementById('sb-user-role');
+        const osBreadcrumb = document.getElementById('os-breadcrumb');
+        const osSecurityStatus = document.getElementById('os-security-status');
+        const dashAvatarMain = document.getElementById('dash-avatar-main');
+        const dashProfileTitle = document.getElementById('dash-profile-title');
+        const dashProfileSub = document.getElementById('dash-profile-sub');
+        const dashBadgeStatus = document.getElementById('dash-badge-status');
+
+        if (idx === 0) {
+          const activeLink = document.getElementById('sb-link-logbook');
+          if (activeLink) activeLink.classList.add('active');
+          if (sbTierBadge) sbTierBadge.textContent = 'Tier 1 • Student';
+          if (sbUserAvatar) sbUserAvatar.textContent = 'AN';
+          if (sbUserName) sbUserName.textContent = 'Alice Nakato';
+          if (sbUserRole) sbUserRole.textContent = 'BIS III Student';
+          if (osBreadcrumb) osBreadcrumb.innerHTML = 'INSTITUTION: <b>MAKERERE UNIVERSITY (COCIS)</b> &bull; TERM: <b>RECESS 2026</b> &bull; HOST: <b>NILE ANALYTICS</b>';
+          if (osSecurityStatus) osSecurityStatus.innerHTML = 'SECURITY: <b style="color:#10b981;">CRYPTOGRAPHIC GEOFENCE ACTIVE</b>';
+          if (dashAvatarMain) dashAvatarMain.textContent = 'AN';
+          if (dashProfileTitle) dashProfileTitle.innerHTML = 'Alice Nakato <span style="font-size:8.5px; color:#38bdf8; font-weight:600;">23/U/0482/EVE</span>';
+          if (dashProfileSub) dashProfileSub.textContent = 'Host: Nile Analytics Institute • Supervisor: Dr. K. Sempala';
+          if (dashBadgeStatus) dashBadgeStatus.innerHTML = '<span class="os-live-dot" style="width:5px; height:5px;"></span><span>GPS Geofence: Active (50m)</span>';
+        } else if (idx === 1) {
+          const activeLink = document.getElementById('sb-link-review');
+          if (activeLink) activeLink.classList.add('active');
+          if (sbTierBadge) sbTierBadge.textContent = 'Tier 2 • Supervisor';
+          if (sbUserAvatar) sbUserAvatar.textContent = 'KS';
+          if (sbUserName) sbUserName.textContent = 'Dr. K. Sempala';
+          if (sbUserRole) sbUserRole.textContent = 'Lead Workplace Mentor';
+          if (osBreadcrumb) osBreadcrumb.innerHTML = 'ORGANIZATION: <b>NILE ANALYTICS INSTITUTE</b> &bull; CODE: <b>NLE-MAK-08</b> &bull; INTERN: <b>ALICE NAKATO</b>';
+          if (osSecurityStatus) osSecurityStatus.innerHTML = 'SECURITY: <b style="color:#10b981;">ECDSA SECP256K1 ACTIVE</b>';
+          if (dashAvatarMain) dashAvatarMain.textContent = 'KS';
+          if (dashProfileTitle) dashProfileTitle.innerHTML = 'Dr. K. Sempala <span style="font-size:8.5px; color:#34d399; font-weight:600;">Lead Mentor</span>';
+          if (dashProfileSub) dashProfileSub.textContent = 'Nile Analytics Institute • Data & Systems Engineering';
+          if (dashBadgeStatus) dashBadgeStatus.innerHTML = '<span class="os-live-dot" style="width:5px; height:5px;"></span><span>Review Queue: 1 Pending</span>';
+        } else if (idx === 2) {
+          const activeLink = document.getElementById('sb-link-evaluations');
+          if (activeLink) activeLink.classList.add('active');
+          if (sbTierBadge) sbTierBadge.textContent = 'Tier 4 • Assessor';
+          if (sbUserAvatar) sbUserAvatar.textContent = 'MB';
+          if (sbUserName) sbUserName.textContent = 'Prof. M. Bwambale';
+          if (sbUserRole) sbUserRole.textContent = 'Academic Assessor / Dean';
+          if (osBreadcrumb) osBreadcrumb.innerHTML = 'FACULTY: <b>COCIS BOARD OF EXAMINERS</b> &bull; PROGRAM: <b>BIST FIELD ATTACHMENT</b> &bull; YEAR: <b>2026</b>';
+          if (osSecurityStatus) osSecurityStatus.innerHTML = 'SECURITY: <b style="color:#10b981;">SENATE RATIFIED CREDENTIALS</b>';
+          if (dashAvatarMain) dashAvatarMain.textContent = 'MB';
+          if (dashProfileTitle) dashProfileTitle.innerHTML = 'Prof. M. Bwambale <span style="font-size:8.5px; color:#a78bfa; font-weight:600;">Academic Dean</span>';
+          if (dashProfileSub) dashProfileSub.textContent = 'Makerere University • College of Computing & IS';
+          if (dashBadgeStatus) dashBadgeStatus.innerHTML = '<span class="os-live-dot" style="width:5px; height:5px;"></span><span>Institutional Rubric: Ratified</span>';
+        }
+      }
+
       function runWorkflowScript(idx) {
         clearWorkflowScript();
         if (RM || userManualOverride || !tourPlaying) return;
 
         // Reset modals & state
-        if (modalMou) modalMou.classList.remove('open');
         if (modalTranscript) modalTranscript.classList.remove('open');
 
         if (idx === 0) {
-          // ── Workflow 0: Matching & MOU ──
-          moveCursorTo('tab0', 'Autopilot: Enterprise Matching', 500);
+          // ── Workflow 0: Student Intern Workspace ──
+          if (logTextEntry) logTextEntry.value = '';
+          if (btnSubmitLog) {
+            btnSubmitLog.textContent = 'Submit Day 38 Log for Mentor Review';
+            btnSubmitLog.classList.remove('submitted');
+          }
+          const logBadge = document.getElementById('log-status-badge');
+          if (logBadge) {
+            logBadge.textContent = 'DRAFT // PENDING REVIEW';
+            logBadge.className = 'sub-badge draft';
+          }
+          if (btnVerifyGps) {
+            btnVerifyGps.classList.remove('locked');
+            btnVerifyGps.innerHTML = '<span>📡 Verify Geofence Clock-In</span>';
+          }
+          if (geofenceStatusText) {
+            geofenceStatusText.textContent = '● Verifying Campus Perimeter...';
+            geofenceStatusText.style.color = '#38bdf8';
+          }
+          const pillsContainer = document.getElementById('student-skill-pills');
+          if (pillsContainer) pillsContainer.innerHTML = '';
 
+          // Step 1: GPS Lock
           currentScriptTimeout.push(setTimeout(() => {
-            moveCursorTo('host-item-nile', 'Inspect: Nile Analytics AI Lab', 700);
-            if (hostItemNile) hostItemNile.classList.add('highlighted');
+            playPing();
+            if (btnVerifyGps) {
+              btnVerifyGps.classList.add('sim-active');
+              setTimeout(() => btnVerifyGps.classList.remove('sim-active'), 180);
+              btnVerifyGps.classList.add('locked');
+              btnVerifyGps.innerHTML = '<span>✓ Geofence Locked (08:31 AM)</span>';
+            }
+            if (geofenceStatusText) {
+              geofenceStatusText.textContent = '● Verified on Campus Perimeter (±1.8m)';
+              geofenceStatusText.style.color = '#10b981';
+            }
+            showToast('📡', 'Biometric GPS Locked to Nile Campus Perimeter');
           }, 800));
 
+          // Step 2: Live Typing Log Entry
           currentScriptTimeout.push(setTimeout(() => {
-            clickTarget('btn-apply-nile', 'Click: Apply & Dispatch MOU', () => {
-              if (modalMou) modalMou.classList.add('open');
-              playChime();
-            }, 650);
-          }, 2200));
-
-          currentScriptTimeout.push(setTimeout(() => {
-            clickTarget('modal-mou-confirm', 'Click: Ratify Tripartite MOU', () => {
-              if (modalMou) modalMou.classList.remove('open');
-              if (btnApplyNile) {
-                btnApplyNile.textContent = '✓ Tripartite Ratified';
-                btnApplyNile.classList.add('applied');
+            const sampleReport = 'Implemented PostgreSQL partition pruning, optimized index scans on 4.2M records, and integrated Redis cache cluster. Query p99 latency decreased from 140ms to 4.2ms.';
+            simulateTyping(sampleReport, logTextEntry, () => {
+              // Step 3: Pop Skills
+              if (pillsContainer) {
+                const skills = ['PostgreSQL 16', 'Redis Cache', 'DB Indexing', 'Distributed Systems'];
+                skills.forEach((skill, sIdx) => {
+                  currentScriptTimeout.push(setTimeout(() => {
+                    const pill = document.createElement('span');
+                    pill.className = 'skill-pill';
+                    pill.textContent = skill;
+                    pillsContainer.appendChild(pill);
+                    playKey();
+                  }, sIdx * 220));
+                });
               }
-              playChime();
-              showToast('📑', 'Tripartite MOU Ratified (Nonce: 0x7a3f...c91e)');
-            }, 700);
-          }, 4800));
+            });
+          }, 1800));
 
+          // Step 4: Submit Log
           currentScriptTimeout.push(setTimeout(() => {
-            moveCursorTo('stream-feed-wf0', 'Verified: Live Matching Stream', 700);
-          }, 7400));
+            if (btnSubmitLog) {
+              btnSubmitLog.classList.add('sim-active');
+              setTimeout(() => btnSubmitLog.classList.remove('sim-active'), 180);
+              btnSubmitLog.textContent = '✓ Day 38 Log Submitted to Mentor';
+              btnSubmitLog.classList.add('submitted');
+            }
+            if (logBadge) {
+              logBadge.textContent = '✓ QUEUED FOR MENTOR SIGN-OFF';
+              logBadge.className = 'sub-badge queued';
+            }
+            playChime();
+            showToast('📝', 'Day 38 Technical Log Submitted to Dr. Sempala');
+          }, 6600));
 
         } else if (idx === 1) {
-          // ── Workflow 1: GPS Geofence & Digital Logbook ──
-          moveCursorTo('tab1', 'Autopilot: GPS Logbook', 500);
+          // ── Workflow 1: Workplace Mentor Console ──
+          const mentorBadge = document.getElementById('mentor-status-badge');
+          const mentorFeedback = document.getElementById('mentor-feedback-text');
+          if (mentorFeedback) mentorFeedback.value = '';
+          if (cryptoSeal) cryptoSeal.classList.remove('stamped');
+          if (mentorBadge) {
+            mentorBadge.textContent = 'AWAITING 1-TAP APPROVAL';
+            mentorBadge.className = 'sub-badge';
+          }
 
+          // Step 1: Live Type Mentor Feedback
           currentScriptTimeout.push(setTimeout(() => {
-            clickTarget('btn-verify-gps', 'Click: Verify Geofence GPS', () => {
-              playPing();
-              if (btnVerifyGps) {
-                btnVerifyGps.classList.add('locked');
-                btnVerifyGps.innerHTML = '<span>✓ Geofence Locked (150m)</span>';
-              }
-              if (geofenceStatusText) {
-                geofenceStatusText.textContent = '● Verified on Campus Perimeter';
-              }
-              showToast('📡', 'Biometric GPS Locked to Nile Campus Perimeter');
-            }, 700);
-          }, 1200));
+            const feedback = 'Verified database benchmark graphs and Git pull request #42. Execution meets industry standards. 8.0 hours approved.';
+            simulateTyping(feedback, mentorFeedback);
+          }, 900));
 
+          // Step 2: 1-Tap Cryptographic Sign-Off Stamp
           currentScriptTimeout.push(setTimeout(() => {
-            moveCursorTo('log-text-entry', 'Type: Daily Technical Report', 650);
-            const sampleReport = 'Refactored distributed PostgreSQL indexing and deployed Redis cache. Latency dropped from 180ms to 9ms.';
-            simulateTyping(sampleReport, logTextEntry);
-          }, 2800));
-
-          currentScriptTimeout.push(setTimeout(() => {
-            clickTarget('btn-submit-log', 'Click: Submit Day 28 Log', () => {
-              if (btnSubmitLog) {
-                btnSubmitLog.textContent = '✓ Log Submitted to Mentor';
-                btnSubmitLog.classList.add('submitted');
-              }
-              playChime();
-              showToast('📝', 'Day 28 Technical Log Submitted to Dr. Sempala');
-            }, 650);
-          }, 7000));
-
-        } else if (idx === 2) {
-          // ── Workflow 2: Mentor 1-Tap Cryptographic Sign-Off ──
-          moveCursorTo('tab2', 'Autopilot: Mentor Sign-Off', 500);
-
-          currentScriptTimeout.push(setTimeout(() => {
-            moveCursorTo('mentor-submission-card', 'Inspect: Alice Day 28 Entry', 800);
-          }, 1000));
-
-          currentScriptTimeout.push(setTimeout(() => {
-            clickTarget('btn-mentor-sign', '1-Tap Sign-Off: Dr. Sempala', () => {
-              playStamp();
-              if (cryptoSeal) cryptoSeal.classList.add('stamped');
-              if (mentorStatusBadge) {
-                mentorStatusBadge.textContent = '✓ CRYPTOGRAPHICALLY CERTIFIED';
-                mentorStatusBadge.classList.add('verified');
-              }
-              showToast('🛡️', 'Mentor Attestation Ratified (ECDSA Nonce 0x9f4a)');
-            }, 700);
-          }, 3400));
-
-          currentScriptTimeout.push(setTimeout(() => {
-            moveCursorTo('crypto-seal', 'Nonce: 0x9f4a...e12b Ratified', 600);
-          }, 6800));
-
-        } else if (idx === 3) {
-          // ── Workflow 3: Dual Supervision Rubric & Transcripts ──
-          moveCursorTo('tab3', 'Autopilot: Scoring Rubric', 500);
-
-          currentScriptTimeout.push(setTimeout(() => {
-            moveCursorTo('score-mentor', 'Mentor Rating: 39.5 / 40.0', 700);
-          }, 1200));
-
-          currentScriptTimeout.push(setTimeout(() => {
-            moveCursorTo('score-uni', 'Faculty Rating: 57.0 / 60.0', 700);
-          }, 2600));
-
-          currentScriptTimeout.push(setTimeout(() => {
-            clickTarget('btn-gen-transcript', 'Click: Issue Senate Transcript', () => {
-              playChime();
-              if (modalTranscript) modalTranscript.classList.add('open');
-              showToast('🏛️', 'Makerere Senate Transcript Generated');
-            }, 700);
+            if (btnMentorSign) {
+              btnMentorSign.classList.add('sim-active');
+              setTimeout(() => btnMentorSign.classList.remove('sim-active'), 180);
+            }
+            playStamp();
+            if (cryptoSeal) cryptoSeal.classList.add('stamped');
+            if (mentorBadge) {
+              mentorBadge.textContent = '✓ CRYPTOGRAPHICALLY CERTIFIED (0x9f4a...e12b)';
+              mentorBadge.className = 'sub-badge verified';
+            }
+            showToast('🛡️', 'Mentor Attestation Ratified (ECDSA Nonce 0x9f4a)');
           }, 4400));
 
+        } else if (idx === 2) {
+          // ── Workflow 2: Faculty Dean & University Senate Evaluation ──
+          const rubric1 = document.getElementById('rubric-fill-1');
+          const rubric2 = document.getElementById('rubric-fill-2');
+          const rubric3 = document.getElementById('rubric-fill-3');
+          const rubric4 = document.getElementById('rubric-fill-4');
+          if (rubric1) rubric1.style.width = '0%';
+          if (rubric2) rubric2.style.width = '0%';
+          if (rubric3) rubric3.style.width = '0%';
+          if (rubric4) rubric4.style.width = '0%';
+
+          // Step 1: Smooth rubric bars fill
           currentScriptTimeout.push(setTimeout(() => {
-            clickTarget('modal-transcript-close', 'Close Credential View', () => {
-              if (modalTranscript) modalTranscript.classList.remove('open');
-            }, 700);
+            playPing();
+            if (rubric1) rubric1.style.width = '100%';
+            if (rubric2) rubric2.style.width = '97.5%';
+            if (rubric3) rubric3.style.width = '100%';
+            if (rubric4) rubric4.style.width = '94.0%';
+          }, 600));
+
+          // Step 2: Issue Official Senate Transcript Modal
+          currentScriptTimeout.push(setTimeout(() => {
+            if (btnGenTranscript) {
+              btnGenTranscript.classList.add('sim-active');
+              setTimeout(() => btnGenTranscript.classList.remove('sim-active'), 180);
+            }
+            playChime();
+            if (modalTranscript) modalTranscript.classList.add('open');
+            showToast('🏛️', 'Makerere Senate Transcript Generated');
+          }, 3600));
+
+          // Step 3: Close modal before transition
+          currentScriptTimeout.push(setTimeout(() => {
+            if (modalTranscript) modalTranscript.classList.remove('open');
           }, 7600));
         }
       }
@@ -3040,6 +3197,9 @@
         if (userInitiated) {
           playClick();
         }
+
+        // Update native dashboard sidebar and header
+        updateSidebarForRole(idx);
 
         // Run simulation script for this workflow
         runWorkflowScript(idx);
@@ -3761,6 +3921,10 @@
           }
         }
       });
+      // Deep link to laptop mode
+      if (window.location.hash === '#case' || window.location.search.includes('case')) {
+        setTimeout(toCase, 600);
+      }
     })();
   </script>
 </body>
