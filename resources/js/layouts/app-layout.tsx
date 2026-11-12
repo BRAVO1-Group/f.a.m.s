@@ -328,7 +328,7 @@ export function AppShell({
 
         {/* Role Quick Switcher in Sidebar Footer */}
         <div className="border-t border-sidebar-border p-3 space-y-2 bg-sidebar-accent/20">
-          <p className="px-2 text-[10px] font-bold uppercase tracking-wider text-sidebar-foreground/50">
+          <p className="px-2 text-[10px] font-bold uppercase tracking-wider text-secondary">
             Switch Persona (RBAC Demo)
           </p>
           <div className="grid grid-cols-2 gap-1.5">
