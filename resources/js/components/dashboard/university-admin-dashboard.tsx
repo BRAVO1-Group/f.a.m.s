@@ -402,18 +402,12 @@ export function UniversityAdminDashboard({
           <Button
             onClick={() => handleOpenAssignModal("student-4")}
             size="sm"
-            variant="outline"
             className="rounded-xl font-semibold text-xs h-9"
           >
             <UserCheck className="mr-1.5 size-4" />
             Assign Mentors
           </Button>
-          <Button
-            asChild
-            size="sm"
-            variant="outline"
-            className="rounded-xl font-semibold text-xs h-9"
-          >
+          <Button asChild size="sm" className="rounded-xl font-semibold text-xs h-9">
             <Link to="/reports">
               <FileBarChart className="mr-1.5 size-4" />
               Dossier (PDF)
