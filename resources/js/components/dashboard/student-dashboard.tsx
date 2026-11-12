@@ -1,49 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
-  Activity,
-  AlertTriangle,
-  Award,
-  BookOpen,
-  Briefcase,
-  Building2,
-  CalendarCheck,
-  Check,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
-  ExternalLink,
-  FileBarChart,
-  FileCheck,
-  Filter,
-  GraduationCap,
-  Info,
-  Key,
-  Laptop,
-  Layers,
-  Lock,
-  Mail,
-  MapPin,
-  MessageSquareCheck,
-  Milestone,
-  Phone,
-  Plus,
-  RefreshCw,
-  RotateCcw,
-  Search,
-  Settings2,
-  Shield,
-  ShieldAlert,
-  ShieldCheck,
-  Sliders,
-  Sparkles,
-  TrendingUp,
-  UserCheck,
-  UserPlus,
-  Users,
-  FileText,
-} from "lucide-react";
-import {
   Bar,
   BarChart,
   CartesianGrid,
@@ -247,7 +204,6 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
           <div className="max-w-2xl">
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">
-                <Sparkles className="size-3.5 text-emerald-300" />
                 Active Placement • Week 9 of 12
               </span>
               <span className="text-xs text-primary-foreground/70 hidden sm:inline">
@@ -274,10 +230,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               size="default"
               className="rounded-xl bg-white text-primary hover:bg-white/90 shadow-sm font-semibold"
             >
-              <Link to="/logbook">
-                <Plus className="mr-1.5 size-4" />
-                Add Today's Log
-              </Link>
+              <Link to="/logbook">Add Today's Log</Link>
             </Button>
             <Button
               size="default"
@@ -285,7 +238,6 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               onClick={handleClockToggle}
               className="rounded-xl border-white/30 bg-white/10 text-white hover:bg-white/20 backdrop-blur font-semibold"
             >
-              <Clock className="mr-1.5 size-4" />
               {isCheckedIn ? "Clock Out" : "Clock In"}
             </Button>
             <Button
@@ -294,10 +246,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               variant="outline"
               className="rounded-xl border-white/30 bg-transparent text-white hover:bg-white/10 font-semibold"
             >
-              <Link to="/reports">
-                <FileBarChart className="mr-1.5 size-4" />
-                Export PDF
-              </Link>
+              <Link to="/reports">Export PDF</Link>
             </Button>
           </div>
         </div>
@@ -309,9 +258,6 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
           <CardContent className="p-4 sm:p-4.5">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                  <Building2 className="size-5" />
-                </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -335,14 +281,10 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               </div>
             </div>
             <div className="mt-2.5 flex flex-wrap items-center gap-3 pt-2.5 border-t border-border/60 text-[11px] text-muted-foreground">
-              <span className="flex items-center gap-1 font-mono">
-                <Mail className="size-3 text-primary" />
+              <span className="font-mono">
                 {orgSupervisor?.email ?? "james.otieno@techcorp.co.ke"}
               </span>
-              <span className="flex items-center gap-1 font-mono">
-                <Phone className="size-3 text-primary" />
-                {orgSupervisor?.phone ?? "+254 722 001 122"}
-              </span>
+              <span className="font-mono">{orgSupervisor?.phone ?? "+254 722 001 122"}</span>
             </div>
           </CardContent>
         </Card>
@@ -351,9 +293,6 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
           <CardContent className="p-4 sm:p-4.5">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-                  <GraduationCap className="size-5" />
-                </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -377,14 +316,10 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               </div>
             </div>
             <div className="mt-2.5 flex flex-wrap items-center gap-3 pt-2.5 border-t border-border/60 text-[11px] text-muted-foreground">
-              <span className="flex items-center gap-1 font-mono">
-                <Mail className="size-3 text-primary" />
+              <span className="font-mono">
                 {academicSupervisor?.email ?? "dean@university.ac.ke"}
               </span>
-              <span className="flex items-center gap-1 font-mono">
-                <Phone className="size-3 text-primary" />
-                {academicSupervisor?.phone ?? "+254 701 234 567"}
-              </span>
+              <span className="font-mono">{academicSupervisor?.phone ?? "+254 701 234 567"}</span>
             </div>
           </CardContent>
         </Card>
@@ -397,9 +332,6 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Days Completed
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <CalendarCheck className="size-4.5" />
               </span>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
@@ -415,8 +347,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               </div>
               <Progress value={completionRate} className="h-2" />
             </div>
-            <p className="mt-3 text-[11px] text-success flex items-center gap-1 font-medium">
-              <TrendingUp className="size-3" />
+            <p className="mt-3 text-[11px] text-success flex items-center font-medium">
               On track for graduation verification
             </p>
           </CardContent>
@@ -427,9 +358,6 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Total Logged Hours
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-accent/20 text-accent-foreground">
-                <Clock className="size-4.5" />
               </span>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
@@ -454,9 +382,6 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Approved Activities
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-success/10 text-success">
-                <FileCheck className="size-4.5" />
               </span>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
@@ -486,9 +411,6 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Verified Skills
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-info/10 text-info">
-                <Award className="size-4.5" />
               </span>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
@@ -547,10 +469,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                 <span className="font-semibold">17:00 PM</span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground flex items-center gap-1">
-                  <MapPin className="size-3 text-muted-foreground" />
-                  Location mode:
-                </span>
+                <span className="text-muted-foreground flex items-center">Location mode:</span>
                 <span className="font-medium text-foreground">TechCorp Westlands (On-Site)</span>
               </div>
             </div>
@@ -561,7 +480,6 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                 variant={isCheckedIn ? "outline" : "default"}
                 className="w-full text-xs font-semibold rounded-xl"
               >
-                <Clock className="mr-1.5 size-3.5" />
                 {isCheckedIn ? "Record Clock-Out" : "Record Clock-In"}
               </Button>
               <Button
@@ -598,9 +516,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               variant="ghost"
               className="text-xs text-primary font-semibold"
             >
-              <Link to="/milestones">
-                View Roadmap <ChevronRight className="ml-1 size-3.5" />
-              </Link>
+              <Link to="/milestones">View Roadmap</Link>
             </Button>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -622,17 +538,8 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               {activeMilestone.tasks.map((task) => (
                 <div
                   key={task.id}
-                  className="flex items-center gap-2.5 rounded-lg border border-border bg-card/60 px-3 py-2 text-xs"
+                  className="flex items-center rounded-lg border border-border bg-card/60 px-3 py-2 text-xs"
                 >
-                  <span
-                    className={`flex size-4.5 shrink-0 items-center justify-center rounded-md ${
-                      task.completed
-                        ? "bg-primary text-primary-foreground"
-                        : "border border-border text-transparent"
-                    }`}
-                  >
-                    <Check className="size-3" strokeWidth={3} />
-                  </span>
                   <span
                     className={
                       task.completed
@@ -839,10 +746,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               className="rounded-xl border border-border bg-card p-4 transition hover:border-primary/30 hover:shadow-xs space-y-2.5"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="flex size-7 items-center justify-center rounded-lg bg-secondary text-secondary-foreground">
-                    <BookOpen className="size-3.5" />
-                  </span>
+                <div className="flex items-center">
                   <h4 className="font-semibold text-sm text-foreground">{act.title}</h4>
                 </div>
                 <div className="flex items-center gap-2">
@@ -855,13 +759,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                         : ""
                     }`}
                   >
-                    {act.status === "approved" ? (
-                      <>
-                        <CheckCircle2 className="mr-1 size-3" /> Approved
-                      </>
-                    ) : (
-                      "Pending Review"
-                    )}
+                    {act.status === "approved" ? "Approved" : "Pending Review"}
                   </Badge>
                 </div>
               </div>
@@ -883,8 +781,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                 </div>
 
                 {act.supervisor_feedback && (
-                  <span className="text-[11px] text-primary flex items-center gap-1 font-medium italic">
-                    <MessageSquareCheck className="size-3" />
+                  <span className="text-[11px] text-primary flex items-center font-medium italic">
                     Feedback from James Otieno attached
                   </span>
                 )}
