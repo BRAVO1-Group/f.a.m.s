@@ -294,73 +294,73 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
 
       {/* ── KPI Cards ── */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-success bg-success text-success-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
                 Assigned Interns
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-success-foreground/10 text-success-foreground">
                 <Users className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {assignedStudents.length}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">Alice Wanjiku & Kevin Kiprono</p>
+            <p className="mt-2 text-xs text-success-foreground/80">Alice Wanjiku & Kevin Kiprono</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-info bg-info text-info-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
                 Pending Approvals
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-warning/15 text-warning-foreground">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-info-foreground/10 text-info-foreground">
                 <Clock className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {pendingActivities.length}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">Submissions awaiting sign-off</p>
+            <p className="mt-2 text-xs text-info-foreground/80">Submissions awaiting sign-off</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-info bg-info text-info-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
                 Approved Deliverables
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-success/10 text-success">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-info-foreground/10 text-info-foreground">
                 <CheckCircle2 className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {approvedActivities.length}
             </p>
-            <p className="mt-2 text-xs text-success flex items-center gap-1 font-medium">
+            <p className="mt-2 flex items-center gap-1 text-xs font-medium text-info-foreground/80">
               <TrendingUp className="size-3" /> Signed off by Host Org
             </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-success bg-success text-success-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
                 University MOU Status
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-info/10 text-info">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-success-foreground/10 text-success-foreground">
                 <ShieldCheck className="size-4.5" />
               </span>
             </div>
-            <p className="mt-3 font-display text-xl font-bold tracking-tight text-foreground">
+            <p className="mt-3 font-display text-xl font-bold tracking-tight text-success-foreground">
               Accredited
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">University of Nairobi Partner</p>
+            <p className="mt-2 text-xs text-success-foreground/80">University of Nairobi Partner</p>
           </CardContent>
         </Card>
       </div>

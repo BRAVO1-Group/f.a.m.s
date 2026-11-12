@@ -327,36 +327,39 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
 
       {/* ── Executive KPI Cards (4 Cards) ── */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="shadow-card border-border/80 transition-all hover:border-primary/40 hover:shadow-elevated">
+        <Card className="shadow-card border-success bg-success text-success-foreground transition-all hover:border-success/80 hover:shadow-elevated">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
                 Attendance Days Completed
               </span>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="font-display text-3xl font-bold tracking-tight">{presentDays}</span>
-              <span className="text-sm font-medium text-muted-foreground">
+              <span className="text-sm font-medium text-success-foreground/80">
                 / {requiredDays} days
               </span>
             </div>
             <div className="mt-3">
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
+              <div className="mb-1 flex justify-between text-xs text-success-foreground/80">
                 <span>Approved activities progress</span>
-                <span className="font-semibold text-foreground">{completionRate}%</span>
+                <span className="font-semibold text-success-foreground">{completionRate}%</span>
               </div>
-              <Progress value={completionRate} className="h-2" />
+              <Progress
+                value={completionRate}
+                className="h-2 bg-success-foreground/25 [&>div]:bg-success-foreground"
+              />
             </div>
-            <p className="mt-3 text-[11px] text-success flex items-center font-medium">
+            <p className="mt-3 flex items-center text-[11px] font-medium text-success-foreground/80">
               On track for graduation verification
             </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80 transition-all hover:border-primary/40 hover:shadow-elevated">
+        <Card className="shadow-card border-info bg-info text-info-foreground transition-all hover:border-info/80 hover:shadow-elevated">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
                 Total Logged Hours
               </span>
             </div>
@@ -364,23 +367,23 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               <span className="font-display text-3xl font-bold tracking-tight">
                 {estimatedHours}.0
               </span>
-              <span className="text-sm font-medium text-muted-foreground">hours</span>
+              <span className="text-sm font-medium text-info-foreground/80">hours</span>
             </div>
-            <p className="mt-4 text-xs text-muted-foreground">
-              Average <span className="font-semibold text-foreground">8.0 hrs</span> per recorded
-              day
+            <p className="mt-4 text-xs text-info-foreground/80">
+              Average <span className="font-semibold text-info-foreground">8.0 hrs</span> per
+              recorded day
             </p>
-            <div className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-              <span className="size-1.5 rounded-full bg-success" />
+            <div className="mt-3 flex items-center gap-1.5 text-[11px] text-info-foreground/80">
+              <span className="size-1.5 rounded-full bg-info-foreground/70" />
               40 hrs logged this week
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80 transition-all hover:border-primary/40 hover:shadow-elevated">
+        <Card className="shadow-card border-info bg-info text-info-foreground transition-all hover:border-info/80 hover:shadow-elevated">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
                 Approved Activities
               </span>
             </div>
@@ -388,28 +391,28 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               <span className="font-display text-3xl font-bold tracking-tight">
                 {approvedCount}
               </span>
-              <span className="text-sm font-medium text-muted-foreground">
+              <span className="text-sm font-medium text-info-foreground/80">
                 of {acts.length} logged
               </span>
             </div>
             <div className="mt-4 flex items-center gap-2">
               <Badge
                 variant="outline"
-                className="border-success/30 bg-success/10 text-success text-xs font-medium"
+                className="border-info-foreground/30 bg-info-foreground/10 text-info-foreground text-xs font-medium"
               >
                 {submittedCount} in review queue
               </Badge>
             </div>
-            <p className="mt-3 text-[11px] text-muted-foreground">
+            <p className="mt-3 text-[11px] text-info-foreground/80">
               0 revision requests from supervisor
             </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80 transition-all hover:border-primary/40 hover:shadow-elevated">
+        <Card className="shadow-card border-success bg-success text-success-foreground transition-all hover:border-success/80 hover:shadow-elevated">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
                 Verified Skills
               </span>
             </div>
@@ -417,24 +420,24 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               <span className="font-display text-3xl font-bold tracking-tight">
                 {uniqueSkills.length}
               </span>
-              <span className="text-sm font-medium text-muted-foreground">competencies</span>
+              <span className="text-sm font-medium text-success-foreground/80">competencies</span>
             </div>
             <div className="mt-3 flex flex-wrap gap-1">
               {uniqueSkills.slice(0, 3).map((s) => (
                 <span
                   key={s}
-                  className="rounded-md border border-border bg-secondary/50 px-1.5 py-0.5 text-[10px] font-medium text-secondary-foreground"
+                  className="rounded-md border border-success-foreground/20 bg-success-foreground/10 px-1.5 py-0.5 text-[10px] font-medium text-success-foreground"
                 >
                   {s}
                 </span>
               ))}
               {uniqueSkills.length > 3 && (
-                <span className="text-[10px] text-muted-foreground font-medium self-center">
+                <span className="self-center text-[10px] font-medium text-success-foreground/80">
                   +{uniqueSkills.length - 3} more
                 </span>
               )}
             </div>
-            <p className="mt-3 text-[11px] text-muted-foreground">Portfolio export ready</p>
+            <p className="mt-3 text-[11px] text-success-foreground/80">Portfolio export ready</p>
           </CardContent>
         </Card>
       </div>

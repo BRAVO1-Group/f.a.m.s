@@ -444,74 +444,78 @@ export function UniversityAdminDashboard({
 
       {/* ── Institutional Metrics KPI Cards ── */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-success bg-success text-success-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
                 Enrolled Cohort
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-success-foreground/10 text-success-foreground">
                 <GraduationCap className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {universityCohort.length}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">Active placement candidates</p>
+            <p className="mt-2 text-xs text-success-foreground/80">Active placement candidates</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-info bg-info text-info-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
                 Supervisor Roster
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-accent/20 text-accent-foreground">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-info-foreground/10 text-info-foreground">
                 <Users className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {supervisorsList.length}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">
+            <p className="mt-2 text-xs text-info-foreground/80">
               {orgSupervisors.length} Org Mentors • {uniSupervisors.length} Faculty
             </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-info bg-info text-info-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
                 Dual-Supervision Rate
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-success/10 text-success">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-info-foreground/10 text-info-foreground">
                 <ShieldCheck className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {Math.round((dualAssignedCount / universityCohort.length) * 100)}%
             </p>
-            <p className="mt-2 text-xs text-success flex items-center gap-1 font-medium">
+            <p className="mt-2 flex items-center gap-1 text-xs font-medium text-info-foreground/80">
               <TrendingUp className="size-3" /> {dualAssignedCount} of {universityCohort.length}{" "}
               fully paired
             </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-success bg-success text-success-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
                 RBAC Security Tier
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-info/10 text-info-foreground">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-success-foreground/10 text-success-foreground">
                 <Key className="size-4.5" />
               </span>
             </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">Tier 4</p>
-            <p className="mt-2 text-xs text-muted-foreground">Institutional Governance Active</p>
+            <p className="mt-3 font-display text-3xl font-bold tracking-tight text-success-foreground">
+              Tier 4
+            </p>
+            <p className="mt-2 text-xs text-success-foreground/80">
+              Institutional Governance Active
+            </p>
           </CardContent>
         </Card>
       </div>
