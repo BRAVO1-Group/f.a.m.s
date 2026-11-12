@@ -289,7 +289,12 @@ export function AppShell({
         <nav className="flex-1 space-y-4 overflow-y-auto px-3 py-4">
           {groupedItems.map((group) => (
             <div key={group.category} className="space-y-1">
-              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-sidebar-foreground/50">
+              <p
+                className={cn(
+                  "px-3 text-[10px] font-bold uppercase tracking-wider",
+                  group.category === "core" ? "text-secondary" : "text-sidebar-foreground/50",
+                )}
+              >
                 {group.label}
               </p>
               {group.items.map((item) => {
