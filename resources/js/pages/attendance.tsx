@@ -97,32 +97,34 @@ export default function AttendancePage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card className="shadow-card">
+        <Card className="shadow-card border-success bg-success text-success-foreground">
           <CardHeader className="pb-2">
-            <CardDescription>Days present</CardDescription>
+            <CardDescription className="text-success-foreground/80">Days present</CardDescription>
             <CardTitle className="text-3xl">{daysPresent}</CardTitle>
           </CardHeader>
-          <CardContent className="text-xs text-muted-foreground">
+          <CardContent className="text-xs text-success-foreground/80">
             of {required} required days
           </CardContent>
         </Card>
-        <Card className="shadow-card">
+        <Card className="shadow-card border-info bg-info text-info-foreground">
           <CardHeader className="pb-2">
-            <CardDescription>Attendance rate</CardDescription>
+            <CardDescription className="text-info-foreground/80">Attendance rate</CardDescription>
             <CardTitle className="text-3xl">{rate}%</CardTitle>
           </CardHeader>
           <CardContent>
-            <Progress value={rate} />
+            <Progress value={rate} className="bg-info-foreground/25 [&>div]:bg-info-foreground" />
           </CardContent>
         </Card>
-        <Card className="shadow-card">
+        <Card className="shadow-card border-success bg-success text-success-foreground">
           <CardHeader className="pb-2">
-            <CardDescription>Today</CardDescription>
+            <CardDescription className="text-success-foreground/80">Today</CardDescription>
             <CardTitle className="text-base">
               {todayRow?.check_out ? (
                 <Badge>Completed</Badge>
               ) : todayRow?.check_in ? (
-                <Badge variant="secondary">Checked in {fmt(todayRow.check_in)}</Badge>
+                <Badge variant="secondary" className="bg-background/20 text-foreground">
+                  Checked in {fmt(todayRow.check_in)}
+                </Badge>
               ) : (
                 <Badge variant="outline">Not checked in</Badge>
               )}
