@@ -162,10 +162,10 @@ export default function AttendancePage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Check in</TableHead>
-                    <TableHead>Check out</TableHead>
-                    <TableHead className="text-right">Hours</TableHead>
+                    <TableHead className="text-success">Date</TableHead>
+                    <TableHead className="text-success">Check in</TableHead>
+                    <TableHead className="text-success">Check out</TableHead>
+                    <TableHead className="text-right text-success">Hours</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
