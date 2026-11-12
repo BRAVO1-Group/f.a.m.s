@@ -291,7 +291,7 @@ export function AppShell({
             <div key={group.category} className="space-y-1">
               <p
                 className={cn(
-                  "px-3 text-[10px] font-bold uppercase tracking-wider",
+                  "px-3 py-1 text-[13px] leading-5 font-bold uppercase tracking-wider",
                   group.category === "core" ||
                     group.category === "tracking" ||
                     group.category === "supervision" ||
