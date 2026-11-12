@@ -602,7 +602,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                     <Bar
                       dataKey="entries"
                       name="Entries"
-                      fill="var(--color-primary)"
+                      fill="var(--primary)"
                       radius={[6, 6, 0, 0]}
                     />
                   </BarChart>
