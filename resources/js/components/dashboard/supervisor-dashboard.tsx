@@ -252,7 +252,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
           </div>
         </div>
         <div className="text-right shrink-0">
-          <span className="inline-flex items-center text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+          <span className="inline-flex items-center text-xs font-medium text-success bg-success/10 px-2.5 py-1 rounded-full border border-success/30">
             Direct Approval Authority
           </span>
         </div>
@@ -527,7 +527,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                 {correctionActivities.length > 0 && (
                   <Badge
                     variant="secondary"
-                    className="px-1.5 py-0 text-[10px] bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold"
+                    className="px-1.5 py-0 text-[10px] bg-warning/10 text-warning font-bold"
                   >
                     {correctionActivities.length}
                   </Badge>
@@ -598,10 +598,10 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                         }
                         className={`text-xs capitalize ${
                           act.status === "approved"
-                            ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
+                            ? "bg-success/10 text-success border-success/30"
                             : act.status === "needs_correction"
-                              ? "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30"
-                              : "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/30"
+                              ? "bg-warning/10 text-warning border-warning/30"
+                              : "bg-info/10 text-info-foreground border-info/30"
                         }`}
                       >
                         {act.status.replace("_", " ")}
@@ -646,8 +646,8 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                     <div
                       className={`rounded-lg p-2.5 text-xs border ${
                         act.status === "approved"
-                          ? "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900 text-emerald-900 dark:text-emerald-200"
-                          : "bg-amber-50/60 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900 text-amber-900 dark:text-amber-200"
+                          ? "bg-success/10 border-success/30 text-success"
+                          : "bg-warning/10 border-warning/30 text-warning"
                       }`}
                     >
                       <span className="font-semibold block mb-0.5">
@@ -774,7 +774,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               type="button"
               variant="outline"
               onClick={() => handleReviewAction("needs_correction")}
-              className="text-xs font-semibold border-amber-500/40 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40"
+              className="text-xs font-semibold border-warning/40 text-warning hover:bg-warning/10"
             >
               Request Revisions
             </Button>

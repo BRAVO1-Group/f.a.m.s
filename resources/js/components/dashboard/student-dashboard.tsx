@@ -265,7 +265,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                     </span>
                     <Badge
                       variant="outline"
-                      className="border-amber-300 text-amber-700 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-300 text-[10px]"
+                      className="border-warning/40 text-warning bg-warning/10 text-[10px]"
                     >
                       Host Org
                     </Badge>
@@ -300,7 +300,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                     </span>
                     <Badge
                       variant="outline"
-                      className="border-indigo-300 text-indigo-700 bg-indigo-50 dark:bg-indigo-950/40 dark:text-indigo-300 text-[10px]"
+                      className="border-info/40 text-info-foreground bg-info/10 text-[10px]"
                     >
                       University
                     </Badge>
@@ -371,7 +371,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               day
             </p>
             <div className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-              <span className="size-1.5 rounded-full bg-emerald-500" />
+              <span className="size-1.5 rounded-full bg-success" />
               40 hrs logged this week
             </div>
           </CardContent>
@@ -451,7 +451,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                 }`}
               >
                 <span
-                  className={`size-2 rounded-full ${isCheckedIn ? "bg-emerald-500 animate-pulse" : "bg-muted-foreground"}`}
+                  className={`size-2 rounded-full ${isCheckedIn ? "bg-success animate-pulse" : "bg-muted-foreground"}`}
                 />
                 {isCheckedIn ? "Checked In" : "Off Duty"}
               </span>

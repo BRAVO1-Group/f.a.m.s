@@ -512,7 +512,7 @@ export function UniversityAdminDashboard({
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 RBAC Security Tier
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-info/10 text-info-foreground">
                 <Key className="size-4.5" />
               </span>
             </div>
@@ -611,7 +611,7 @@ export function UniversityAdminDashboard({
                           ) : (
                             <Badge
                               variant="outline"
-                              className="border-amber-300 text-amber-700 bg-amber-50 text-[10px]"
+                              className="border-warning/40 text-warning bg-warning/10 text-[10px]"
                             >
                               Pending Mentor
                             </Badge>
@@ -640,7 +640,7 @@ export function UniversityAdminDashboard({
                             className={`text-xs ${
                               isDualAssigned
                                 ? "bg-success/10 text-success border-success/30"
-                                : "bg-amber-500/10 text-amber-700 border-amber-300"
+                                : "bg-warning/10 text-warning border-warning/30"
                             }`}
                           >
                             {isDualAssigned ? "Dual-Supervised" : "Needs Allocation"}
@@ -752,8 +752,8 @@ export function UniversityAdminDashboard({
                               <AvatarFallback
                                 className={`text-xs font-semibold ${
                                   isOrg
-                                    ? "bg-amber-500/10 text-amber-700"
-                                    : "bg-indigo-500/10 text-indigo-700"
+                                    ? "bg-warning/10 text-warning"
+                                    : "bg-info/10 text-info-foreground"
                                 }`}
                               >
                                 {sup.full_name
@@ -777,8 +777,8 @@ export function UniversityAdminDashboard({
                             variant="outline"
                             className={`text-[10px] font-semibold shrink-0 ${
                               isOrg
-                                ? "border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"
-                                : "border-indigo-300 bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300"
+                                ? "border-warning/40 bg-warning/10 text-warning"
+                                : "border-info/40 bg-info/10 text-info-foreground"
                             }`}
                           >
                             {isOrg ? "Host Org" : "University"}
@@ -900,7 +900,7 @@ export function UniversityAdminDashboard({
                           <TableCell className="text-xs">
                             {orgSup ? (
                               <div className="flex items-center gap-1.5">
-                                <span className="size-2 rounded-full bg-emerald-500" />
+                                <span className="size-2 rounded-full bg-success" />
                                 <span className="font-medium text-foreground">
                                   {orgSup.full_name}
                                 </span>
@@ -908,7 +908,7 @@ export function UniversityAdminDashboard({
                             ) : (
                               <Badge
                                 variant="outline"
-                                className="text-[10px] text-amber-700 border-amber-300"
+                                className="text-[10px] text-warning border-warning/40"
                               >
                                 Unassigned
                               </Badge>
@@ -917,7 +917,7 @@ export function UniversityAdminDashboard({
                           <TableCell className="text-xs">
                             {academicSup ? (
                               <div className="flex items-center gap-1.5">
-                                <span className="size-2 rounded-full bg-indigo-500" />
+                                <span className="size-2 rounded-full bg-info" />
                                 <span className="font-medium text-foreground">
                                   {academicSup.full_name}
                                 </span>
@@ -934,7 +934,7 @@ export function UniversityAdminDashboard({
                               className={`text-xs ${
                                 isComplete
                                   ? "bg-success/10 text-success border-success/30"
-                                  : "bg-amber-500/10 text-amber-700 border-amber-300"
+                                  : "bg-warning/10 text-warning border-warning/30"
                               }`}
                             >
                               {isComplete ? "Dual-Supervised" : "Pending Assessor"}
@@ -1360,7 +1360,7 @@ export function UniversityAdminDashboard({
                 <Label className="text-xs font-semibold">Host Organization Mentor (Field)</Label>
                 <Badge
                   variant="outline"
-                  className="text-[9px] border-amber-300 text-amber-700 bg-amber-50"
+                  className="text-[9px] border-warning/40 text-warning bg-warning/10"
                 >
                   Company
                 </Badge>
@@ -1387,7 +1387,7 @@ export function UniversityAdminDashboard({
                 </Label>
                 <Badge
                   variant="outline"
-                  className="text-[9px] border-indigo-300 text-indigo-700 bg-indigo-50"
+                  className="text-[9px] border-info/40 text-info-foreground bg-info/10"
                 >
                   Faculty
                 </Badge>
