@@ -295,7 +295,8 @@ export function AppShell({
                   group.category === "core" ||
                     group.category === "tracking" ||
                     group.category === "supervision" ||
-                    group.category === "governance"
+                    group.category === "governance" ||
+                    group.category === "account"
                     ? "text-secondary"
                     : "text-sidebar-foreground/50",
                 )}
