@@ -1002,11 +1002,11 @@ export default function LandingPage() {
               </p>
 
               {/* Persona Tab Buttons */}
-              <div className="mt-8 inline-flex rounded-xl border border-border bg-background p-1.5 shadow-xs">
+              <div className="mt-8 flex w-full flex-col rounded-xl border border-border bg-background p-1.5 shadow-xs sm:inline-flex sm:w-auto sm:flex-row">
                 <button
                   type="button"
                   onClick={() => setActiveRoleTab("students")}
-                  className={`rounded-lg px-4 py-2 text-xs sm:text-sm font-semibold transition ${
+                  className={`w-full rounded-lg px-4 py-2 text-xs font-semibold transition sm:w-auto sm:text-sm ${
                     activeRoleTab === "students"
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
@@ -1017,7 +1017,7 @@ export default function LandingPage() {
                 <button
                   type="button"
                   onClick={() => setActiveRoleTab("supervisors")}
-                  className={`rounded-lg px-4 py-2 text-xs sm:text-sm font-semibold transition ${
+                  className={`w-full rounded-lg px-4 py-2 text-xs font-semibold transition sm:w-auto sm:text-sm ${
                     activeRoleTab === "supervisors"
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
@@ -1028,7 +1028,7 @@ export default function LandingPage() {
                 <button
                   type="button"
                   onClick={() => setActiveRoleTab("universities")}
-                  className={`rounded-lg px-4 py-2 text-xs sm:text-sm font-semibold transition ${
+                  className={`w-full rounded-lg px-4 py-2 text-xs font-semibold transition sm:w-auto sm:text-sm ${
                     activeRoleTab === "universities"
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"

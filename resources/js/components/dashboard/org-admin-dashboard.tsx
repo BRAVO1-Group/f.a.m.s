@@ -470,7 +470,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
 
       {/* ── Submissions Requiring Host Organization Approval ── */}
       <Card className="shadow-card border-border/80">
-        <CardHeader className="flex flex-row items-center justify-between pb-3">
+        <CardHeader className="flex flex-col items-start justify-between gap-3 pb-3 sm:flex-row sm:items-center">
           <div>
             <CardTitle className="text-base font-semibold">
               Submissions Requiring Host Org Sign-Off
@@ -508,7 +508,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground line-clamp-1">{act.description}</p>
-                    <div className="flex items-center gap-1.5 pt-1">
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
                       {act.tools_used.map((t) => (
                         <Badge key={t} variant="secondary" className="text-[10px] py-0">
                           {t}

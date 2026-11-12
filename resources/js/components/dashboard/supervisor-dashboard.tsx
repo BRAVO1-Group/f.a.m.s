@@ -262,7 +262,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
       <div className="rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Badge
                 variant="outline"
                 className="border-white/30 bg-white/10 text-white text-xs font-semibold"
@@ -453,8 +453,8 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                   </div>
 
                   {/* Contacts & Direct Filter Action */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1 border-t border-border/60">
-                    <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                  <div className="flex flex-col items-start justify-between gap-2 border-t border-border/60 pt-1 xl:flex-row xl:items-center">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
                       <span>{student.email}</span>
                       <span>{student.phone}</span>
                     </div>
@@ -491,10 +491,10 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               </CardDescription>
             </div>
             {/* Mentee filter selector */}
-            <div className="flex items-center gap-2">
+            <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
               <span className="text-xs font-medium text-muted-foreground">Filter Mentee:</span>
               <Select value={selectedStudentFilter} onValueChange={setSelectedStudentFilter}>
-                <SelectTrigger className="w-[220px] text-xs h-9">
+                <SelectTrigger className="h-9 w-full text-xs sm:w-[220px]">
                   <SelectValue placeholder="All Mentees" />
                 </SelectTrigger>
                 <SelectContent>

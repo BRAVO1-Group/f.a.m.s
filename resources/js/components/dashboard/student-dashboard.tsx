@@ -259,7 +259,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                       Host Industry Mentor
                     </span>
@@ -443,8 +443,8 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
       </div>
 
       {/* ── Today's Attendance & Shift Status ── */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        <Card className="shadow-card border-border/80 lg:col-span-1">
+      <div className="grid gap-4 xl:grid-cols-3">
+        <Card className="shadow-card border-border/80 xl:col-span-1">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-semibold">Today's Shift Status</CardTitle>
@@ -497,10 +497,10 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
         </Card>
 
         {/* Active Milestone Progress Card */}
-        <Card className="shadow-card border-border/80 lg:col-span-2">
-          <CardHeader className="pb-3 flex flex-row items-center justify-between space-y-0">
+        <Card className="shadow-card border-border/80 xl:col-span-2">
+          <CardHeader className="flex flex-col items-start justify-between gap-2 space-y-0 pb-3 sm:flex-row sm:items-center">
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Badge
                   variant="outline"
                   className="border-primary/25 bg-primary/5 text-primary text-xs"
@@ -657,10 +657,12 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                   JO
                 </AvatarFallback>
               </Avatar>
-              <div>
+              <div className="min-w-0">
                 <h4 className="font-semibold text-sm">James Otieno</h4>
                 <p className="text-xs text-muted-foreground">Senior Staff Engineer</p>
-                <p className="text-[11px] text-primary mt-0.5">james.otieno@techcorp.co.ke</p>
+                <p className="mt-0.5 break-all text-[11px] text-primary">
+                  james.otieno@techcorp.co.ke
+                </p>
               </div>
             </div>
 
@@ -694,7 +696,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
             <CardDescription>Daily tasks submitted for mentor verification</CardDescription>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <div className="flex rounded-lg border border-border p-0.5 text-xs">
               <button
                 type="button"

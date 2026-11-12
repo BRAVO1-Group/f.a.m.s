@@ -266,15 +266,26 @@ export default function MilestonesPage() {
 
       {/* Tabs Filter */}
       <Tabs value={filter} onValueChange={(v: string) => setFilter(v as Filter)}>
-        <TabsList>
-          <TabsTrigger value="all">All Phases ({data.length})</TabsTrigger>
-          <TabsTrigger value="in_progress">
+        <TabsList className="grid w-full grid-cols-2 md:inline-flex md:w-auto">
+          <TabsTrigger value="all" className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm">
+            All Phases ({data.length})
+          </TabsTrigger>
+          <TabsTrigger
+            value="in_progress"
+            className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm"
+          >
             In Progress ({data.filter((m) => m.status === "in_progress").length})
           </TabsTrigger>
-          <TabsTrigger value="completed">
+          <TabsTrigger
+            value="completed"
+            className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm"
+          >
             Completed ({data.filter((m) => m.status === "completed").length})
           </TabsTrigger>
-          <TabsTrigger value="upcoming">
+          <TabsTrigger
+            value="upcoming"
+            className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm"
+          >
             Upcoming (
             {data.filter((m) => m.status === "not_started" || m.status === "under_review").length})
           </TabsTrigger>
