@@ -1,163 +1,170 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { toast } from "sonner";
 import {
-  AlertCircle,
   ArrowRight,
-  Award,
-  BookOpen,
-  Building2,
-  CalendarCheck,
   Check,
-  CheckCircle2,
-  CheckSquare,
-  ChevronRight,
-  Clock,
-  Compass,
-  ExternalLink,
-  FileCheck,
-  FileText,
   GraduationCap,
   Layers,
-  LayoutDashboard,
-  MessageSquareCheck,
-  Milestone,
-  RotateCcw,
+  Menu,
   ShieldCheck,
   Sparkles,
-  TrendingUp,
-  Users,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-
-type PreviewTab = "student" | "supervisor" | "university";
+import { HeroPreview } from "@/components/landing/hero-preview";
+import { TrustBar } from "@/components/landing/trust-bar";
+import { BentoGrid } from "@/components/landing/bento-grid";
+import { LifecycleJourney } from "@/components/landing/lifecycle-journey";
+import { StakeholderShowcase } from "@/components/landing/stakeholder-showcase";
+import { ComplianceSecurity } from "@/components/landing/compliance-security";
+import { FaqSection } from "@/components/landing/faq-section";
+import { CtaBanner } from "@/components/landing/cta-banner";
+import { LandingFooter } from "@/components/landing/landing-footer";
 
 export default function LandingPage() {
-  const [activePreview, setActivePreview] = useState<PreviewTab>("student");
-  const [activeRoleTab, setActiveRoleTab] = useState<"students" | "supervisors" | "universities">(
-    "students",
-  );
-
-  // ── Interactive Simulation State (Landing Page Sandbox) ──
-  const [simActiveEntry, setSimActiveEntry] = useState<1 | 2>(1);
-  const [simStatusEntry1, setSimStatusEntry1] = useState<
-    "approved" | "pending" | "needs_correction"
-  >("approved");
-  const [simStatusEntry2, setSimStatusEntry2] = useState<
-    "approved" | "pending" | "needs_correction"
-  >("pending");
-  const [simFeedbackEntry1, setSimFeedbackEntry1] = useState(
-    "Excellent work! The automated test coverage is impressive. Tomorrow let's wire these endpoints up to the frontend client.",
-  );
-  const [simFeedbackEntry2, setSimFeedbackEntry2] = useState(
-    "Solid indexing strategy. Make sure to double check foreign key constraints on the logs table.",
-  );
-  const [simClockedIn, setSimClockedIn] = useState(false);
-  const [simVerifiedDays, setSimVerifiedDays] = useState(42);
-  const [simMarkApproved, setSimMarkApproved] = useState(false);
-
-  const handleResetSimulation = () => {
-    setSimActiveEntry(1);
-    setSimStatusEntry1("approved");
-    setSimStatusEntry2("pending");
-    setSimFeedbackEntry1(
-      "Excellent work! The automated test coverage is impressive. Tomorrow let's wire these endpoints up to the frontend client.",
-    );
-    setSimFeedbackEntry2(
-      "Solid indexing strategy. Make sure to double check foreign key constraints on the logs table.",
-    );
-    setSimClockedIn(false);
-    setSimVerifiedDays(42);
-    setSimMarkApproved(false);
-    toast.info("Simulation reset to initial state");
-  };
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
-      {/* ── Top Announcement Banner ── */}
-      <div className="relative z-20 border-b border-primary/20 bg-primary/10 px-4 py-2 text-center text-xs font-medium text-foreground sm:px-6">
-        <span className="inline-flex items-center gap-1.5 font-semibold text-primary">
-          <Sparkles className="size-3.5" />
-          InternTrack 2.5 is here
-        </span>
-        <span className="mx-2 hidden text-muted-foreground sm:inline">•</span>
-        <span className="hidden sm:inline text-muted-foreground">
-          Interactive student milestones, live supervisor approvals, and accredited report exports.
-        </span>
-        <Link
-          to="/auth"
-          className="ml-2 inline-flex items-center gap-1 font-semibold text-primary underline underline-offset-4 hover:opacity-80"
-        >
-          Explore interactive demo <ChevronRight className="size-3" />
-        </Link>
+      {/* ── Top Announcement Bar ── */}
+      <div className="relative z-40 border-b border-primary/20 bg-primary/10 px-4 py-2 text-center text-xs font-medium text-foreground backdrop-blur-sm">
+        <div className="mx-auto flex max-w-7xl items-center justify-center gap-2">
+          <span className="flex size-2 rounded-full bg-primary animate-pulse" />
+          <span className="font-semibold text-primary">InternTrack 2.0 Live:</span>
+          <span className="hidden sm:inline text-muted-foreground">
+            Accredited dual-supervision workflow & automated university defense dossiers.
+          </span>
+          <Link
+            to="/auth"
+            className="ml-1 inline-flex items-center gap-1 font-semibold text-primary underline underline-offset-4 hover:opacity-80 transition-opacity"
+          >
+            Launch Interactive Demo <ArrowRight className="size-3" />
+          </Link>
+        </div>
       </div>
 
       {/* ── Navigation Header ── */}
       <header className="sticky top-0 z-30 border-b border-border/80 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 sm:px-8">
           <Link to="/" className="flex items-center gap-3 group" aria-label="InternTrack home">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-gradient-hero text-primary-foreground shadow-sm transition-transform group-hover:scale-105">
+            <span className="flex size-10 items-center justify-center rounded-xl bg-gradient-hero text-primary-foreground shadow-xs transition-transform group-hover:scale-105">
               <GraduationCap className="size-5" />
             </span>
             <div className="flex flex-col">
-              <span className="font-display text-lg font-bold tracking-tight">InternTrack</span>
+              <span className="font-display text-lg font-bold tracking-tight text-foreground">
+                InternTrack
+              </span>
               <span className="text-[10px] font-semibold tracking-wider uppercase text-muted-foreground">
-                Internship OS
+                Internship Operating System
               </span>
             </div>
           </Link>
 
+          {/* Desktop Nav */}
           <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
             <a className="transition hover:text-foreground" href="#features">
               Features
             </a>
             <a className="transition hover:text-foreground" href="#roles">
-              Who It's For
+              Stakeholders
             </a>
             <a className="transition hover:text-foreground" href="#how-it-works">
-              How It Works
+              Workflow
             </a>
             <a className="transition hover:text-foreground" href="#faq">
               FAQ
             </a>
           </nav>
 
-          <div className="flex items-center gap-3">
-            <Link
-              to="/auth"
-              className="text-xs font-semibold uppercase tracking-wider text-muted-foreground transition hover:text-foreground sm:text-sm sm:normal-case sm:tracking-normal"
-            >
-              Sign in
-            </Link>
+          <div className="hidden sm:flex items-center gap-3">
+            <Button variant="ghost" asChild size="sm" className="text-xs font-semibold">
+              <Link to="/auth">Sign in</Link>
+            </Button>
             <Button
               asChild
               size="sm"
-              className="rounded-xl px-4 shadow-sm bg-primary text-primary-foreground hover:bg-primary/90"
+              className="rounded-xl px-4 shadow-xs bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
             >
               <Link to="/auth">
                 Launch Workspace <ArrowRight className="ml-1.5 size-4" />
               </Link>
             </Button>
           </div>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            type="button"
+            className="md:hidden text-muted-foreground hover:text-foreground p-1.5"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+          </button>
         </div>
+
+        {/* Mobile Dropdown Nav */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-b border-border bg-card px-5 py-4 space-y-3">
+            <nav className="flex flex-col space-y-2.5 text-sm font-medium">
+              <a
+                href="#features"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-muted-foreground hover:text-foreground py-1"
+              >
+                Features
+              </a>
+              <a
+                href="#roles"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-muted-foreground hover:text-foreground py-1"
+              >
+                Stakeholders
+              </a>
+              <a
+                href="#how-it-works"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-muted-foreground hover:text-foreground py-1"
+              >
+                Workflow
+              </a>
+              <a
+                href="#faq"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-muted-foreground hover:text-foreground py-1"
+              >
+                FAQ
+              </a>
+            </nav>
+            <div className="pt-3 border-t border-border flex flex-col gap-2">
+              <Button asChild variant="outline" size="sm" className="w-full justify-center">
+                <Link to="/auth">Sign in</Link>
+              </Button>
+              <Button asChild size="sm" className="w-full justify-center">
+                <Link to="/auth">Launch Workspace</Link>
+              </Button>
+            </div>
+          </div>
+        )}
       </header>
 
       <main>
         {/* ── Hero Section ── */}
-        <section className="relative isolate overflow-hidden bg-grid-pattern pt-12 pb-20 sm:pt-20 sm:pb-28">
+        <section className="relative isolate overflow-hidden bg-grid-pattern pt-14 pb-20 sm:pt-22 sm:pb-28">
+          {/* Ambient Background Glows */}
           <div className="pointer-events-none absolute -left-40 top-0 -z-10 size-[32rem] rounded-full bg-primary/10 blur-3xl" />
           <div className="pointer-events-none absolute -right-36 top-20 -z-10 size-[36rem] rounded-full bg-accent/15 blur-3xl" />
 
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <h1 className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-[4.25rem] lg:leading-[1.08]">
+              {/* Eyebrow Pill */}
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-3.5 py-1 text-xs font-semibold text-primary mb-6 shadow-2xs">
+                <ShieldCheck className="size-3.5 text-primary" />
+                <span>Accredited Higher Education Internship OS • CUE & TVETA Aligned</span>
+              </div>
+
+              {/* Main Headline */}
+              <h1 className="font-display text-4xl font-extrabold tracking-tight text-foreground sm:text-6xl lg:text-[4.25rem] lg:leading-[1.08]">
                 Where internship experience becomes{" "}
                 <span className="text-primary underline decoration-primary/30 decoration-wavy underline-offset-8">
                   verified proof
@@ -165,28 +172,30 @@ export default function LandingPage() {
                 .
               </h1>
 
+              {/* Subheading */}
               <p className="mt-6 text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-                Say goodbye to scattered paper logbooks, unread supervisor signatures, and
-                last-minute report panics. InternTrack empowers students, workplace mentors, and
-                universities with real-time logging, attendance, and accredited milestone tracking.
+                Say goodbye to lost paper logbooks, unverified attendance, and last-minute defense
+                panics. InternTrack unites students, workplace mentors, and university faculty
+                assessors into one real-time, accredited platform.
               </p>
 
+              {/* CTAs */}
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Button
                   asChild
                   size="lg"
-                  className="h-12 w-full rounded-xl px-7 text-sm font-semibold shadow-elevated sm:w-auto"
+                  className="h-12 w-full rounded-xl px-7 text-sm font-bold shadow-elevated sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   <Link to="/auth">
                     Try Interactive Demo <ArrowRight className="ml-2 size-4" />
                   </Link>
                 </Button>
                 <a
-                  href="#preview-sandbox"
-                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card/60 px-6 text-sm font-semibold text-foreground backdrop-blur transition hover:bg-card sm:w-auto"
+                  href="#features"
+                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card/70 px-6 text-sm font-semibold text-foreground backdrop-blur transition hover:bg-card hover:border-primary/40 sm:w-auto shadow-2xs"
                 >
                   <Layers className="size-4 text-muted-foreground" />
-                  Explore Live Preview
+                  Explore Capabilities
                 </a>
               </div>
 
@@ -198,11 +207,11 @@ export default function LandingPage() {
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Check className="size-4 text-primary" strokeWidth={2.5} />
-                  Instant role simulation
+                  Pre-configured demo personas
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Check className="size-4 text-primary" strokeWidth={2.5} />
-                  Institution-ready accreditation format
+                  Accredited defense rubric format
                 </span>
               </div>
             </div>
@@ -842,92 +851,20 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── Partner / Institution Ticker ── */}
-        <section className="border-y border-border bg-card/40 py-10">
-          <div className="mx-auto max-w-7xl px-5 text-center sm:px-8">
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              Designed for leading universities, tech leaders, and industrial partners
-            </p>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-70">
-              <span className="font-display text-lg font-bold tracking-tight">
-                University of Nairobi
-              </span>
-              <span className="font-display text-lg font-bold tracking-tight">TechCorp Kenya</span>
-              <span className="font-display text-lg font-bold tracking-tight">Safaricom PLC</span>
-              <span className="font-display text-lg font-bold tracking-tight">KCB Group</span>
-              <span className="font-display text-lg font-bold tracking-tight">
-                Strathmore Institute
-              </span>
-            </div>
-          </div>
-        </section>
+        {/* ── Partner & Institutional Trust Bar ── */}
+        <TrustBar />
 
         {/* ── Core Value Pillars (Bento Grid) ── */}
-        <section id="features" className="py-20 sm:py-28">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8">
-            <div className="mx-auto max-w-2xl text-center">
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary uppercase tracking-wider">
-                Full-Lifecycle Solution
-              </span>
-              <h2 className="mt-4 font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-                Engineered for every stage of your placement
-              </h2>
-              <p className="mt-4 text-base text-muted-foreground">
-                Everything required to transform loose notes into accredited professional
-                achievements.
-              </p>
-            </div>
+        <BentoGrid />
 
-            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {/* Feature 1 */}
-              <div className="rounded-2xl border border-border bg-card p-6 shadow-card transition-all hover:border-primary/40 hover:shadow-elevated">
-                <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <BookOpen className="size-6" />
-                </div>
-                <h3 className="mt-5 font-display text-xl font-semibold">
-                  Structured Digital Logbook
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Record daily tasks, software tools, key challenges, and solutions. Rich markdown
-                  support keeps every lesson structured and searchable.
-                </p>
-                <div className="mt-5 flex items-center gap-2 text-xs font-semibold text-primary">
-                  <span>Smart skill tagging</span>
-                  <ChevronRight className="size-3" />
-                </div>
-              </div>
+        {/* ── 4-Stage Placement Lifecycle ── */}
+        <LifecycleJourney />
 
-              {/* Feature 2 */}
-              <div className="rounded-2xl border border-border bg-card p-6 shadow-card transition-all hover:border-primary/40 hover:shadow-elevated">
-                <div className="flex size-12 items-center justify-center rounded-xl bg-accent/20 text-accent-foreground">
-                  <CalendarCheck className="size-6" />
-                </div>
-                <h3 className="mt-5 font-display text-xl font-semibold">Effortless Attendance</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Clock in and out in seconds. Monitor progress against required institutional hours
-                  (e.g. 60 mandatory days) with automated notifications.
-                </p>
-                <div className="mt-5 flex items-center gap-2 text-xs font-semibold text-primary">
-                  <span>Audit-proof timestamps</span>
-                  <ChevronRight className="size-3" />
-                </div>
-              </div>
+        {/* ── Stakeholder Perspectives Showcase ── */}
+        <StakeholderShowcase />
 
-              {/* Feature 3 */}
-              <div className="rounded-2xl border border-border bg-card p-6 shadow-card transition-all hover:border-primary/40 hover:shadow-elevated">
-                <div className="flex size-12 items-center justify-center rounded-xl bg-info/10 text-info">
-                  <Milestone className="size-6" />
-                </div>
-                <h3 className="mt-5 font-display text-xl font-semibold">Milestone Roadmap</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Break down your 12-week internship into clear thematic phases: Orientation, Core
-                  Engineering, Performance Testing, and Capstone Defense.
-                </p>
-                <div className="mt-5 flex items-center gap-2 text-xs font-semibold text-primary">
-                  <span>Step-by-step guidance</span>
-                  <ChevronRight className="size-3" />
-                </div>
-              </div>
+        {/* ── Compliance, Governance & Accreditation ── */}
+        <ComplianceSecurity />
 
               {/* Feature 4 */}
               <div className="rounded-2xl border border-border bg-card p-6 shadow-card transition-all hover:border-primary/40 hover:shadow-elevated">
@@ -1368,80 +1305,11 @@ export default function LandingPage() {
         </section>
 
         {/* ── High-Impact Conversion CTA Banner ── */}
-        <section className="relative isolate overflow-hidden bg-gradient-hero py-20 sm:py-24 text-primary-foreground shadow-elevated">
-          <div className="mx-auto max-w-7xl px-5 sm:px-8 text-center">
-            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-              Ready to elevate your internship experience?
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-primary-foreground/80 sm:text-lg">
-              Explore the entire workspace now. Test out daily logging, instant supervisor reviews,
-              and automated report exports in our interactive sandbox.
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Button
-                asChild
-                size="lg"
-                variant="secondary"
-                className="h-12 rounded-xl px-7 font-semibold text-secondary-foreground shadow-sm"
-              >
-                <Link to="/auth">
-                  Open Interactive Workspace <ArrowRight className="ml-2 size-4" />
-                </Link>
-              </Button>
-            </div>
-
-            <p className="mt-5 text-xs text-primary-foreground/60">
-              Instant access • Realistic demonstration data • No sign-up required
-            </p>
-          </div>
-        </section>
+        <CtaBanner />
       </main>
 
       {/* ── Modern Footer ── */}
-      <footer className="border-t border-border bg-card">
-        <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8">
-          <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-                <GraduationCap className="size-5" />
-              </div>
-              <div>
-                <span className="font-display text-lg font-bold tracking-tight">InternTrack</span>
-                <p className="text-xs text-muted-foreground">
-                  The Modern Internship Operating System
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
-              <a href="#features" className="hover:text-foreground transition">
-                Features
-              </a>
-              <a href="#roles" className="hover:text-foreground transition">
-                Who It's For
-              </a>
-              <a href="#how-it-works" className="hover:text-foreground transition">
-                Journey
-              </a>
-              <a href="#faq" className="hover:text-foreground transition">
-                FAQ
-              </a>
-              <Link to="/auth" className="font-semibold text-primary hover:underline">
-                Launch Demo
-              </Link>
-            </div>
-          </div>
-
-          <div className="mt-8 border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-            <p>© {new Date().getFullYear()} InternTrack. All rights reserved.</p>
-            <div className="flex items-center gap-2">
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>System operational • Prototype Edition</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <LandingFooter />
     </div>
   );
 }
