@@ -234,6 +234,14 @@ svg.lucide {
   display: none !important;
 }
 
+.dashboard-sidebar svg.lucide {
+  display: inline-block !important;
+}
+
+.dashboard-sidebar :not(button):not(a):has(> svg.lucide:only-child) {
+  display: flex !important;
+}
+
 .dashboard-page {
   width: 100%;
   max-width: 96rem;
