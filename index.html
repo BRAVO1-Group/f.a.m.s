@@ -1,0 +1,4164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>FAMS — Field Attachment Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Inter+Tight:wght@100..900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ── Colour Tokens & Variables ── */
+    :root {
+      --green-950: #051910;
+      --green-900: #0b2f20;
+      --green-800: #11402c;
+      --green-700: #1a5a40;
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.4);
+      --mint: #cfeee0;
+      --ink: #0d0f0e;
+      --n: 1px;
+      --mbs: 1;
+      --glide: 0s;
+    }
+
+    @property --m0 {
+      syntax: '<length>';
+      inherits: true;
+      initial-value: 0px;
+    }
+
+    @property --mt {
+      syntax: '<length>';
+      inherits: true;
+      initial-value: 0px;
+    }
+
+    @property --mb {
+      syntax: '<length>';
+      inherits: true;
+      initial-value: 0px;
+    }
+
+    @property --ms {
+      syntax: '<length>';
+      inherits: true;
+      initial-value: 0px;
+    }
+
+    /* ── Global Reset ── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--green-900);
+      color: #fff;
+      font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* ── Stage ── */
+    .stage {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(180deg, #0c3523 0%, #14503a 45%, #9fd8bf 100%);
+    }
+
+    /* ── The 1440x810 Frame ── */
+    .frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1440px;
+      height: 810px;
+      transform-origin: 0 0;
+      will-change: transform;
+    }
+
+    .frame.glide {
+      transition: transform var(--glide) cubic-bezier(.65, 0, .35, 1);
+    }
+
+    /* ── Layer Overhangs & Masking ── */
+    .plate {
+      position: absolute;
+      left: 0;
+      top: -73.125px;
+      width: 1440px;
+      height: 956.25px;
+      pointer-events: none;
+      --o: 73.125px;
+      --ob: 73.125px;
+      will-change: transform, filter;
+    }
+
+    .caseplate {
+      position: absolute;
+      left: 0;
+      top: -105.47px;
+      width: 1440px;
+      height: 956.25px;
+      opacity: 0;
+      pointer-events: none;
+      --o: 105.47px;
+      --ob: 40.78px;
+      z-index: 7;
+      will-change: opacity, filter;
+    }
+
+    .trans {
+      position: absolute;
+      inset: 0;
+      width: 1440px;
+      height: 810px;
+      object-fit: cover;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 6;
+      --o: 0px;
+      --ob: 0px;
+    }
+
+    .plate,
+    .trans,
+    .caseplate {
+      mask-image:
+        linear-gradient(180deg,
+          transparent calc(var(--o, 0px) + var(--m0)),
+          rgba(0, 0, 0, .35) calc(var(--o, 0px) + var(--m0) + var(--mt) * .37),
+          #000 calc(var(--o, 0px) + var(--m0) + var(--mt)),
+          #000 calc(100% - var(--ob, 0px) - var(--mb)),
+          transparent calc(100% - var(--ob, 0px))),
+        linear-gradient(90deg, transparent 0, #000 var(--ms), #000 calc(100% - var(--ms)), transparent 100%);
+      -webkit-mask-image:
+        linear-gradient(180deg,
+          transparent calc(var(--o, 0px) + var(--m0)),
+          rgba(0, 0, 0, .35) calc(var(--o, 0px) + var(--m0) + var(--mt) * .37),
+          #000 calc(var(--o, 0px) + var(--m0) + var(--mt)),
+          #000 calc(100% - var(--ob, 0px) - var(--mb)),
+          transparent calc(100% - var(--ob, 0px))),
+        linear-gradient(90deg, transparent 0, #000 var(--ms), #000 calc(100% - var(--ms)), transparent 100%);
+      mask-composite: intersect;
+      -webkit-mask-composite: source-in;
+      transition:
+        --m0 var(--glide) cubic-bezier(.65, 0, .35, 1),
+        --mt var(--glide) cubic-bezier(.65, 0, .35, 1),
+        --mb var(--glide) cubic-bezier(.65, 0, .35, 1),
+        --ms var(--glide) cubic-bezier(.65, 0, .35, 1);
+    }
+
+    .d-fade {
+      --m0: 0px;
+      --mt: 0px;
+      --mb: 0px;
+      --ms: 0px;
+    }
+
+    .d-fade.m-case {
+      --m0: 0px;
+      --mt: 110px;
+      --mb: 60px;
+      --ms: 170px;
+    }
+
+    .m-fade {
+      --m0: 0px;
+      --mt: 190px;
+      --mb: 0px;
+      --ms: 140px;
+    }
+
+    .m-fade.m-case {
+      --m0: 48px;
+      --mt: 40px;
+      --mb: 70px;
+      --ms: 140px;
+    }
+
+    /* ── Scene 1: Wordmark "FAMS" ── */
+    svg.wm {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1440px;
+      height: 380px;
+      overflow: visible;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* ── Scene 1: Man Cutout ── */
+    img.cut {
+      position: absolute;
+      left: 0;
+      top: -73.125px;
+      width: 1440px;
+      height: 956.25px;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    /* ── Scene 1: Handwriting Script ── */
+    .script {
+      position: absolute;
+      top: 148px;
+      left: 88px;
+      z-index: 6;
+      font-family: 'Caveat Brush', cursive;
+      font-size: 82px;
+      line-height: 1;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      transform: rotate(-8deg);
+      transform-origin: 0 50%;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, .18);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    /* ── Scene 1: Lanyard Badge ── */
+    .badge {
+      position: absolute;
+      left: 986px;
+      top: -165px;
+      width: 582px;
+      height: 1030px;
+      transform-origin: 288px 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .badge-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .card {
+      position: absolute;
+      left: 172px;
+      top: 536px;
+      width: 238px;
+      height: 392px;
+      padding: 20px 16px 0 16px;
+      color: #141615;
+      font-family: 'Inter Tight', sans-serif;
+      pointer-events: none;
+    }
+
+    .card h4 {
+      font-size: 30px;
+      line-height: 0.95;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+      color: #141615;
+    }
+
+    .card .yr {
+      position: absolute;
+      right: 16px;
+      top: 62px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #141615;
+    }
+
+    .card .role {
+      margin-top: 12px;
+      padding-top: 5px;
+      border-top: 1px solid #222;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      color: #141615;
+    }
+
+    .card .ph {
+      width: 92px;
+      height: 112px;
+      margin: 12px auto;
+      border-radius: 6px;
+      background-color: #dfe4e1;
+      background-image: url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261111_001143_ec356b1a-50a2-4b50-82fc-e346c914a406.png&w=2048&q=85');
+      background-size: 471px 313px;
+      background-position: -212px -16px;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06);
+    }
+
+    .card .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 6px 0 3px;
+      border-bottom: 1.5px dotted #333;
+      color: #141615;
+    }
+
+    .badge .hit {
+      position: absolute;
+      left: 160px;
+      top: 470px;
+      width: 262px;
+      height: 440px;
+      pointer-events: auto;
+      cursor: grab;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       SCENE 2: LAPTOP DISPLAY & AUTONOMOUS OS WORKSTATION
+       ═══════════════════════════════════════════════════ */
+    .screen {
+      position: absolute;
+      left: 272.8px;
+      top: 102.7px;
+      width: 894.4px;
+      height: 604.7px;
+      border-radius: 5px;
+      background: #070c12;
+      overflow: hidden;
+      opacity: 0;
+      z-index: 8;
+      pointer-events: auto;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 30px rgba(0, 0, 0, 0.8);
+      font-family: 'Inter Tight', sans-serif;
+    }
+
+    .screen::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 35%);
+      z-index: 15;
+    }
+
+    .screen .flash {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 25;
+    }
+
+    /* OS Frame Shell */
+    .os-shell {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      background: #080d15;
+      color: #f1f5f9;
+      user-select: none;
+    }
+
+    /* OS Top Header */
+    .os-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 36px;
+      padding: 0 14px;
+      background: #0d1522;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .os-topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .os-traffic-lights {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .os-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .os-dot.r {
+      background: #ef4444;
+      box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+    }
+
+    .os-dot.y {
+      background: #f59e0b;
+      box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+    }
+
+    .os-dot.g {
+      background: #10b981;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+    }
+
+    .os-branding {
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: #cfeee0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .os-version {
+      font-size: 9px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.12);
+      padding: 1px 5px;
+      border-radius: 4px;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    /* OS Navigation Tabs inside Laptop */
+    .os-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 8px;
+    }
+
+    .os-tab {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #94a3b8;
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .os-tab:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .os-tab.active {
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+    }
+
+    .os-tab-badge {
+      font-size: 8px;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .os-tab.active .os-tab-badge {
+      background: #10b981;
+      color: #062b1b;
+    }
+
+    .os-topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 10px;
+    }
+
+    .os-telemetry-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 3px 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-family: 'JetBrains Mono', monospace;
+      color: #94a3b8;
+      font-size: 9.5px;
+    }
+
+    .os-live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: livePulse 1.8s infinite;
+    }
+
+    @keyframes livePulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.35);
+        opacity: 0.4;
+      }
+    }
+
+    .os-user-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      color: #a7f3d0;
+      font-weight: 600;
+    }
+
+    /* Sub-header / System Status Strip */
+    .os-subbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 26px;
+      padding: 0 14px;
+      background: #09101a;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 9.5px;
+      color: #64748b;
+      font-family: 'JetBrains Mono', monospace;
+      flex-shrink: 0;
+    }
+
+    .os-subbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .os-subbar b {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    /* Workspace Content Area */
+    .os-workspace {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Workspace Views */
+    .wf-view {
+      position: absolute;
+      inset: 0;
+      padding: 14px 16px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(6px) scale(0.99);
+      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .wf-view.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Dashboard KPI Strip */
+    .wf-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .wf-kpi {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wf-kpi::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #10b981, transparent);
+    }
+
+    .wf-kpi-lbl {
+      font-size: 9px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .wf-kpi-val {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .wf-kpi-val .up {
+      font-size: 10px;
+      font-weight: 700;
+      color: #10b981;
+    }
+
+    .wf-kpi-val .chip {
+      font-size: 8.5px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .wf-kpi-sub {
+      font-size: 9.5px;
+      color: #64748b;
+    }
+
+    /* Split Panes */
+    .wf-split {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .wf-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .wf-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #e2e8f0;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      flex-shrink: 0;
+    }
+
+    /* ── 3D Auto-Motion Stage & Authentic InternTrack App Shell inside Laptop ── */
+    .it-3d-stage {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      perspective: 1450px;
+      perspective-origin: 50% 48%;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 50% 35%, #0c2217 0%, #050d09 65%, #030705 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+    }
+
+    #screen-3d-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .dashboard-app-shell {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      background: #f8f6f0;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow:
+        0 24px 55px -12px rgba(0, 0, 0, 0.82),
+        0 0 0 1px rgba(16, 185, 129, 0.24),
+        0 0 40px -10px rgba(16, 185, 129, 0.28);
+      transform-style: preserve-3d;
+      will-change: transform;
+      overflow: visible;
+    }
+
+    /* Authentic Deep Forest Green Sidebar (#0e291b) */
+    .dashboard-sidebar {
+      width: 156px;
+      flex-shrink: 0;
+      background: #0e291b;
+      border-right: 1px solid #183d29;
+      border-radius: 9px 0 0 9px;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      z-index: 5;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.55s ease;
+    }
+
+    .dashboard-app-shell.exploded .dashboard-sidebar {
+      transform: translateZ(26px) translateX(-5px);
+      box-shadow: 12px 14px 28px rgba(0, 0, 0, 0.45);
+    }
+
+    .sb-brand {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 10px;
+      border-bottom: 1px solid #183d29;
+    }
+
+    .sb-brand-logo {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      background: linear-gradient(120deg, #e0962b 0%, #d06f24 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #161411;
+      box-shadow: 0 3px 8px rgba(224, 150, 43, 0.35);
+      flex-shrink: 0;
+    }
+
+    .sb-brand-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #f2efe9;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .sb-tier-badge {
+      display: inline-block;
+      font-size: 7.5px;
+      font-weight: 600;
+      color: #9bb5a5;
+      margin-top: 2px;
+    }
+
+    .sb-nav {
+      flex: 1;
+      padding: 6px 6px;
+      overflow-y: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5px;
+    }
+
+    .sb-cat-header {
+      font-size: 6.8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(155, 181, 165, 0.55);
+      padding: 4px 6px 1.5px;
+    }
+
+    .sb-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      padding: 4px 7px;
+      border-radius: 5px;
+      font-size: 8.5px;
+      font-weight: 500;
+      color: #b7ccc0;
+      transition: all 0.22s ease;
+      cursor: pointer;
+    }
+
+    .sb-link-left {
+      display: flex;
+      align-items: center;
+      gap: 5.5px;
+      min-width: 0;
+    }
+
+    .sb-link:hover {
+      background: rgba(24, 61, 41, 0.65);
+      color: #ffffff;
+    }
+
+    .sb-link.active {
+      background: #183d29;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: inset 2.5px 0 0 #e0962b;
+    }
+
+    .sb-link.locked {
+      opacity: 0.34;
+      pointer-events: none;
+    }
+
+    .sb-lock-tag {
+      font-size: 6.5px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.5px 3.5px;
+      border-radius: 3px;
+      background: rgba(0, 0, 0, 0.28);
+      color: #9bb5a5;
+    }
+
+    .sb-user-card {
+      margin: 5px 6px 7px;
+      padding: 6px 7px;
+      border-radius: 7px;
+      border: 1px solid #214d35;
+      background: rgba(24, 61, 41, 0.65);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sb-user-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(224, 150, 43, 0.22);
+      border: 1px solid rgba(224, 150, 43, 0.5);
+      color: #f5b95f;
+      font-size: 8px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Warm Ivory/Cream Main Workspace (#f8f6f0) */
+    .dashboard-viewport {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: #f8f6f0;
+      color: #18241d;
+      border-radius: 0 9px 9px 0;
+      transform-style: preserve-3d;
+      overflow: visible;
+    }
+
+    /* Top Warm Cream App Header Strip */
+    .dash-profile-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      background: rgba(248, 246, 240, 0.94);
+      border-bottom: 1px solid #e5e0d3;
+      border-radius: 0 9px 0 0;
+      flex-shrink: 0;
+      transform-style: preserve-3d;
+    }
+
+    .dash-profile-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dash-avatar-lg {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e6f4ed;
+      border: 1px solid #b7e1cd;
+      color: #145236;
+      font-size: 9px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dash-profile-info h4 {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #18241d;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dash-profile-info p {
+      font-size: 7.8px;
+      color: #5b6b61;
+      margin: 0;
+    }
+
+    .dash-profile-stats {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 8px;
+    }
+
+    /* Workspace Views (4 Role Perspectives) */
+    .wf-view {
+      position: absolute;
+      inset: 0;
+      padding: 9px 11px 10px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateZ(-25px) rotateX(4deg) scale(0.97);
+      transform-style: preserve-3d;
+      transition: opacity 0.42s ease, transform 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .wf-view.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateZ(0px) rotateX(0deg) scale(1);
+    }
+
+    /* Authentic Emerald Hero Banner inside each role view */
+    .it-hero-banner {
+      background: linear-gradient(135deg, #0b3422 0%, #145236 60%, #1f7347 100%);
+      border-radius: 8px;
+      padding: 7px 11px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: 0 6px 16px -6px rgba(11, 52, 34, 0.4);
+      flex-shrink: 0;
+      transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease;
+    }
+
+    .dashboard-app-shell.exploded .it-hero-banner {
+      transform: translateZ(30px);
+      box-shadow: 0 18px 32px -8px rgba(11, 52, 34, 0.55);
+    }
+
+    .it-hero-banner.pop-z {
+      transform: translateZ(42px) scale(1.015) !important;
+      box-shadow: 0 22px 38px -8px rgba(11, 52, 34, 0.65), 0 0 0 1.5px #f59e0b !important;
+    }
+
+    .it-hero-left {
+      min-width: 0;
+    }
+
+    .it-hero-Badges {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 2px;
+    }
+
+    .it-pill-amber {
+      font-size: 7.5px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 99px;
+      background: linear-gradient(120deg, #e0962b 0%, #d06f24 100%);
+      color: #161411;
+    }
+
+    .it-pill-glass {
+      font-size: 7.5px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #ecfdf5;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .it-hero-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      line-height: 1.15;
+    }
+
+    .it-hero-sub {
+      font-size: 8px;
+      color: rgba(236, 253, 245, 0.85);
+      margin-top: 1px;
+    }
+
+    /* Authentic Crisp White KPI Strip */
+    .wf-kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+      flex-shrink: 0;
+      transform-style: preserve-3d;
+    }
+
+    .wf-kpi {
+      background: #ffffff;
+      border: 1px solid #e5e0d3;
+      border-radius: 7px;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5px;
+      box-shadow: 0 2px 6px rgba(18, 38, 27, 0.05);
+      transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease, border-color 0.35s ease;
+    }
+
+    .dashboard-app-shell.exploded .wf-kpi {
+      transform: translateZ(20px);
+      box-shadow: 0 12px 22px rgba(18, 38, 27, 0.16);
+    }
+
+    .wf-kpi.pop-z {
+      transform: translateZ(44px) scale(1.03) !important;
+      border-color: #145236 !important;
+      box-shadow: 0 20px 34px -8px rgba(18, 38, 27, 0.32), 0 0 0 2px rgba(20, 82, 54, 0.25) !important;
+      z-index: 12;
+    }
+
+    .wf-kpi-lbl {
+      font-size: 7.2px;
+      font-weight: 700;
+      color: #647067;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .wf-kpi-val {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #18241d;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      line-height: 1.15;
+    }
+
+    .wf-kpi-sub {
+      font-size: 7.5px;
+      color: #647067;
+    }
+
+    /* Split Panes & Crisp White Cards */
+    .wf-split {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      min-height: 0;
+      transform-style: preserve-3d;
+    }
+
+    .wf-card {
+      background: #ffffff;
+      border: 1px solid #e5e0d3;
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(18, 38, 27, 0.06);
+      transform-style: preserve-3d;
+      transition: transform 0.48s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.48s ease, border-color 0.35s ease;
+    }
+
+    .dashboard-app-shell.exploded .wf-card {
+      transform: translateZ(34px);
+      box-shadow: 0 18px 34px -8px rgba(18, 38, 27, 0.24);
+    }
+
+    .wf-card.pop-z {
+      transform: translateZ(52px) scale(1.018) !important;
+      border-color: #145236 !important;
+      box-shadow:
+        0 26px 46px -10px rgba(11, 52, 34, 0.38),
+        0 0 0 2px rgba(20, 82, 54, 0.28) !important;
+      z-index: 15;
+    }
+
+    .wf-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 9px;
+      font-weight: 800;
+      color: #18241d;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #ece7da;
+      flex-shrink: 0;
+    }
+
+    /* Buttons, Inputs, & Pills in Warm Cream Theme */
+    .it-btn-primary {
+      font-size: 8.5px;
+      font-weight: 700;
+      padding: 5px 9px;
+      border-radius: 6px;
+      background: #145236;
+      color: #ffffff;
+      border: 1px solid #0e3f28;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(20, 82, 54, 0.22);
+    }
+
+    .it-btn-primary:hover {
+      background: #1a6644;
+    }
+
+    .it-btn-amber {
+      font-size: 8.5px;
+      font-weight: 800;
+      padding: 5px 9px;
+      border-radius: 6px;
+      background: linear-gradient(120deg, #e0962b 0%, #d06f24 100%);
+      color: #161411;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+      box-shadow: 0 3px 8px rgba(224, 150, 43, 0.3);
+    }
+
+    .it-btn-outline {
+      font-size: 8px;
+      font-weight: 700;
+      padding: 4px 7px;
+      border-radius: 5px;
+      background: #f8f6f0;
+      color: #145236;
+      border: 1px solid #d5cebe;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3.5px;
+      transition: all 0.2s ease;
+    }
+
+    .it-textarea {
+      width: 100%;
+      background: #fbfaf6;
+      border: 1px solid #dcd5c5;
+      border-radius: 6px;
+      padding: 5px 7px;
+      font-size: 8.2px;
+      color: #18241d;
+      font-family: 'Inter Tight', sans-serif;
+      line-height: 1.4;
+      resize: none;
+      outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .it-textarea.polished {
+      background: #f0fdf4;
+      border-color: #86efac;
+      color: #064e3b;
+    }
+
+    .skill-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3.5px;
+      min-height: 15px;
+    }
+
+    .skill-pill {
+      font-size: 7.2px;
+      font-weight: 700;
+      color: #145236;
+      background: #e6f4ed;
+      border: 1px solid #b7e1cd;
+      padding: 1px 5px;
+      border-radius: 4px;
+      animation: popPill 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    @keyframes popPill {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .sim-active {
+      transform: scale(0.95) !important;
+      filter: brightness(1.12) !important;
+      box-shadow: 0 0 14px rgba(20, 82, 54, 0.55) !important;
+    }
+
+    .sub-badge {
+      font-size: 7.2px;
+      font-weight: 700;
+      padding: 1.5px 5.5px;
+      border-radius: 99px;
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    .sub-badge.draft {
+      background: #fef3c7;
+      color: #92400e;
+      border-color: #fde68a;
+    }
+
+    .sub-badge.queued,
+    .sub-badge.verified {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #86efac;
+    }
+
+    /* Rubric Sliders in Light Theme */
+    .rubric-sliders {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+    }
+
+    .rubric-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .rubric-row-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8px;
+      font-weight: 600;
+      color: #334139;
+    }
+
+    .rubric-row-head b {
+      font-family: 'JetBrains Mono', monospace;
+      color: #145236;
+      font-weight: 800;
+    }
+
+    .rubric-bar {
+      height: 5px;
+      border-radius: 99px;
+      background: #ebe6d9;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .rubric-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #145236, #10b981);
+      transition: width 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* 3D Camera HUD Badge inside Screen */
+    .it-3d-cam-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.32);
+      color: #6ee7b7;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .it-3d-cam-pill:hover,
+    .it-3d-cam-pill.active {
+      background: #10b981;
+      color: #052e16;
+      font-weight: 700;
+    }
+
+    /* In-Screen Modals */
+    .screen-modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 22, 15, 0.78);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .screen-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .screen-modal-dialog {
+      background: #ffffff;
+      border: 1px solid #d5cebe;
+      border-radius: 10px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55);
+      padding: 14px 16px;
+      width: 430px;
+      color: #18241d;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transform: scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .screen-modal.open .screen-modal-dialog {
+      transform: scale(1);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 800;
+      font-size: 11px;
+      color: #0e291b;
+      border-bottom: 1px solid #e5e0d3;
+      padding-bottom: 5px;
+    }
+
+    .modal-body {
+      font-size: 9px;
+      color: #334139;
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .modal-btn {
+      font-size: 8.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .modal-btn.primary {
+      background: #145236;
+      color: #ffffff;
+    }
+
+    .sim-cursor {
+      display: none !important;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       THE VIRTUAL CURSOR (AUTONOMOUS DASHBOARD SIMULATOR)
+       ═══════════════════════════════════════════════════ */
+    .sim-cursor {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 22px;
+      height: 22px;
+      pointer-events: none;
+      z-index: 50;
+      transform: translate(0, 0);
+      transition: left 0.55s cubic-bezier(0.25, 0.1, 0.25, 1), top 0.55s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
+    }
+
+    .sim-cursor-icon {
+      width: 22px;
+      height: 22px;
+    }
+
+    .sim-cursor-badge {
+      position: absolute;
+      left: 18px;
+      top: 14px;
+      background: rgba(10, 25, 18, 0.95);
+      border: 1px solid rgba(52, 211, 153, 0.5);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #34d399;
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: 0.02em;
+    }
+
+    .sim-cursor-ripple {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #10b981;
+      transform: scale(0.2);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .sim-cursor-ripple.pulse {
+      animation: rippleAnim 0.45s ease-out;
+    }
+
+    @keyframes rippleAnim {
+      0% {
+        transform: scale(0.2);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1.8);
+        opacity: 0;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════
+       VIEWPORT-PINNED FIXED UI (HERO OVERVIEW & SCENE 2)
+       ═══════════════════════════════════════════════════ */
+    .ui {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    /* Scene 1 Nav Tags */
+    .tag {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: calc(37 * var(--n));
+      padding: 0 calc(18 * var(--n));
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 650;
+      font-size: calc(16.5 * var(--n));
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      background: #ffffff;
+      border: none;
+      text-decoration: none;
+      white-space: nowrap;
+      pointer-events: auto;
+      cursor: pointer;
+      box-shadow: 0 calc(3 * var(--n)) 0 rgba(0, 0, 0, .18), 0 calc(6 * var(--n)) calc(14 * var(--n)) rgba(0, 0, 0, .18);
+      transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s cubic-bezier(.2, .8, .2, 1), opacity .3s;
+    }
+
+    .tag:hover {
+      transform: translateY(calc(-2 * var(--n))) rotate(-1.5deg);
+      box-shadow: 0 calc(5 * var(--n)) 0 rgba(0, 0, 0, .22), 0 calc(10 * var(--n)) calc(18 * var(--n)) rgba(0, 0, 0, .2);
+    }
+
+    .tag:active {
+      transform: translateY(calc(1 * var(--n)));
+      box-shadow: 0 calc(1 * var(--n)) 0 rgba(0, 0, 0, .18);
+    }
+
+    .t1 {
+      left: calc(30 * var(--n));
+      top: calc(7 * var(--n));
+    }
+
+    .t2 {
+      left: calc(233 * var(--n));
+      top: calc(7 * var(--n));
+    }
+
+    .t3 {
+      right: calc(244 * var(--n));
+      top: calc(7 * var(--n));
+    }
+
+    .t4 {
+      right: calc(32 * var(--n));
+      top: calc(7 * var(--n));
+    }
+
+    /* Sound Control Tag */
+    .sound-tag {
+      position: absolute;
+      right: calc(470 * var(--n));
+      top: calc(7 * var(--n));
+      height: calc(37 * var(--n));
+      padding: 0 calc(12 * var(--n));
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 4px;
+      color: #fff;
+      font-size: calc(13 * var(--n));
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: all 0.2s ease;
+    }
+
+    .sound-tag:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Scroll Hint */
+    .hint {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(22 * var(--n));
+      font-family: 'Inter Tight', sans-serif;
+      font-size: calc(12 * var(--n));
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: #fff;
+      opacity: 0.85;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: calc(10 * var(--n));
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+
+    .hint-line {
+      width: calc(1.5 * var(--n));
+      height: calc(22 * var(--n));
+      background: rgba(255, 255, 255, .35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hint-bead {
+      width: 100%;
+      height: 40%;
+      background: #fff;
+      position: absolute;
+      top: -40%;
+      animation: drip 1.6s cubic-bezier(.6, 0, .4, 1) infinite;
+    }
+
+    @keyframes drip {
+      0% {
+        top: -40%;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════
+       NEW SCENE 2 SURROUNDING UI (EXECUTIVE HUD & INTEL)
+       ═══════════════════════════════════════════════════ */
+    /* Top Navigation & Workflow HUD */
+    .s2-header {
+      position: absolute;
+      top: calc(14 * var(--n));
+      left: calc(24 * var(--n));
+      right: calc(24 * var(--n));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: calc(12 * var(--n));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transform: translateY(-12px);
+      z-index: 35;
+    }
+
+    .s2-header-left {
+      display: flex;
+      align-items: center;
+      gap: calc(10 * var(--n));
+      flex-shrink: 0;
+    }
+
+    .s2-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: calc(36 * var(--n));
+      padding: 0 calc(16 * var(--n));
+      border-radius: 9999px;
+      background: rgba(9, 24, 17, 0.9);
+      border: 1px solid rgba(52, 211, 153, 0.35);
+      backdrop-filter: blur(20px);
+      color: #ffffff;
+      font-size: calc(12.5 * var(--n));
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      pointer-events: auto;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .s2-back-btn:hover {
+      background: rgba(16, 50, 35, 0.95);
+      border-color: #34d399;
+      transform: translateX(-3px);
+      box-shadow: 0 6px 24px rgba(16, 185, 129, 0.25);
+    }
+
+    .s2-back-arrow {
+      font-size: calc(14 * var(--n));
+      transition: transform 0.2s ease;
+    }
+
+    .s2-back-btn:hover .s2-back-arrow {
+      transform: translateX(-2px);
+    }
+
+    /* Centered Segmented Workflow Stage Switcher */
+    .s2-hud-stages {
+      display: flex;
+      align-items: center;
+      gap: calc(4 * var(--n));
+      background: rgba(7, 18, 13, 0.92);
+      border: 1px solid rgba(52, 211, 153, 0.28);
+      backdrop-filter: blur(24px);
+      border-radius: 9999px;
+      padding: calc(4 * var(--n));
+      box-shadow: 0 calc(10 * var(--n)) calc(30 * var(--n)) rgba(0, 0, 0, 0.5);
+      pointer-events: auto;
+    }
+
+    .s2-stage-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(7 * var(--n));
+      height: calc(32 * var(--n));
+      padding: 0 calc(14 * var(--n));
+      border-radius: 9999px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: #94a3b8;
+      font-size: calc(11.5 * var(--n));
+      font-weight: 700;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      transition: all 0.25s ease;
+    }
+
+    .s2-stage-pill:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .s2-stage-pill.active {
+      color: #ffffff;
+      background: rgba(16, 185, 129, 0.16);
+      border-color: rgba(52, 211, 153, 0.45);
+      box-shadow: 0 0 calc(16 * var(--n)) rgba(16, 185, 129, 0.15);
+    }
+
+    .s2-stage-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: calc(9.5 * var(--n));
+      font-weight: 800;
+      padding: calc(1 * var(--n)) calc(5 * var(--n));
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+    }
+
+    .s2-stage-pill.active .s2-stage-num {
+      background: #10b981;
+      color: #062416;
+    }
+
+    .s2-stage-name {
+      letter-spacing: 0.01em;
+    }
+
+    .s2-stage-prog {
+      position: absolute;
+      bottom: 0;
+      left: calc(12 * var(--n));
+      right: calc(12 * var(--n));
+      height: calc(2.2 * var(--n));
+      background: #34d399;
+      border-radius: 2px;
+      transform-origin: left;
+      transform: scaleX(0);
+      opacity: 0;
+      transition: transform 0.1s linear, opacity 0.2s ease;
+    }
+
+    .s2-stage-pill.active .s2-stage-prog {
+      opacity: 1;
+    }
+
+    /* Right Header Action Cluster */
+    .s2-header-right {
+      display: flex;
+      align-items: center;
+      gap: calc(8 * var(--n));
+      flex-shrink: 0;
+    }
+
+    .s2-action-pill {
+      height: calc(36 * var(--n));
+      padding: 0 calc(14 * var(--n));
+      border-radius: 9999px;
+      background: rgba(9, 24, 17, 0.9);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      backdrop-filter: blur(20px);
+      color: #ffffff;
+      font-size: calc(11.5 * var(--n));
+      font-weight: 700;
+      cursor: pointer;
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+      transition: all 0.2s ease;
+    }
+
+    .s2-action-pill:hover {
+      background: rgba(16, 50, 35, 0.95);
+      border-color: #34d399;
+    }
+
+    .s2-cta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: calc(36 * var(--n));
+      padding: 0 calc(16 * var(--n));
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      font-size: calc(11.5 * var(--n));
+      font-weight: 800;
+      text-decoration: none;
+      pointer-events: auto;
+      box-shadow: 0 4px 18px rgba(16, 185, 129, 0.4);
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .s2-cta-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 22px rgba(16, 185, 129, 0.55);
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+    }
+
+    /* Bottom-Left Executive Stage Intel Card */
+    .s2-intel-card {
+      position: absolute;
+      left: calc(24 * var(--n));
+      bottom: calc(20 * var(--n));
+      width: calc(380 * var(--n));
+      max-width: 440px;
+      background: rgba(8, 22, 16, 0.92);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      backdrop-filter: blur(24px);
+      border-radius: calc(12 * var(--n));
+      padding: calc(14 * var(--n)) calc(18 * var(--n));
+      box-shadow: 0 calc(16 * var(--n)) calc(40 * var(--n)) rgba(0, 0, 0, 0.6), 0 0 calc(25 * var(--n)) rgba(16, 185, 129, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: calc(6 * var(--n));
+      z-index: 35;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(16px);
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .s2-intel-badge {
+      display: flex;
+      align-items: center;
+      gap: calc(7 * var(--n));
+      font-size: calc(9 * var(--n));
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #34d399;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .s2-live-indicator {
+      width: calc(6 * var(--n));
+      height: calc(6 * var(--n));
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 calc(8 * var(--n)) #10b981;
+      animation: pulseLive 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulseLive {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.4;
+        transform: scale(0.85);
+      }
+    }
+
+    .s2-intel-title {
+      font-size: calc(16 * var(--n));
+      font-weight: 800;
+      line-height: 1.2;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+    }
+
+    .s2-intel-desc {
+      font-size: calc(11.5 * var(--n));
+      line-height: 1.45;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .s2-intel-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: calc(5 * var(--n));
+      margin-top: calc(4 * var(--n));
+    }
+
+    .s2-intel-tag {
+      font-size: calc(9.5 * var(--n));
+      font-family: 'JetBrains Mono', monospace;
+      padding: calc(3 * var(--n)) calc(8 * var(--n));
+      border-radius: calc(4 * var(--n));
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+
+    .s2-intel-tag.highlight {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.35);
+      color: #34d399;
+    }
+
+    /* In-Screen Toast Popup inside Laptop */
+    .os-toast {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      background: rgba(9, 26, 18, 0.96);
+      border: 1px solid #10b981;
+      border-radius: 6px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(16, 185, 129, 0.2);
+      transform: translateY(40px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      z-index: 60;
+    }
+
+    .os-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .os-toast-icon {
+      font-size: 11px;
+      color: #10b981;
+      font-weight: 800;
+    }
+
+    .os-toast-text {
+      font-size: 10px;
+      font-weight: 700;
+      color: #ffffff;
+      font-family: 'Inter Tight', sans-serif;
+    }
+
+    /* Tactile Click Feedback on Simulated Elements */
+    .sim-active {
+      transform: scale(0.96) !important;
+      filter: brightness(1.25) !important;
+      transition: transform 0.1s ease !important;
+    }
+
+    /* ── State Visibility Toggles ── */
+    body.is-case .tag,
+    body.is-case .sound-tag,
+    body.is-case .hint,
+    body.busy .hint {
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    body.is-case .s2-header,
+    body.is-case .s2-intel-card {
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+    }
+
+    .js .pre {
+      opacity: 0 !important;
+    }
+
+    .m-only {
+      display: none;
+    }
+
+    /* ── Mobile Responsive Rules (<= 820px) ── */
+    @media (max-width: 820px) {
+
+      .frame .wm,
+      .frame .script,
+      .frame .badge,
+      .sound-tag {
+        display: none !important;
+      }
+
+      .m-only {
+        display: block;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      .stage {
+        background: #0b3b2a;
+      }
+
+      .stage::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, #1b4a34 0%, #1b4a34 55%, #2f6a50 80%, #7fb79d 100%);
+        opacity: 0;
+        transition: opacity 1.6s ease;
+        pointer-events: none;
+      }
+
+      .stage.m-case::before {
+        opacity: 1;
+      }
+
+      .tag {
+        font-size: 13px;
+        height: 30px;
+        padding: 0 12px;
+      }
+
+      .t1 {
+        left: 12px;
+        top: 12px;
+      }
+
+      .t2 {
+        right: 12px;
+        top: 12px;
+        left: auto;
+      }
+
+      .t3 {
+        left: 12px;
+        top: calc(12px + 44 * var(--n));
+        right: auto;
+      }
+
+      .t4 {
+        right: 12px;
+        top: calc(12px + 44 * var(--n));
+      }
+
+      body.is-case .t3,
+      body.is-case .t4 {
+        visibility: hidden;
+      }
+
+      svg.m-wm {
+        position: absolute;
+        left: 3vw;
+        top: calc(12px + 96 * var(--n));
+        width: 94vw;
+        height: auto;
+        overflow: visible;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .m-script {
+        position: absolute;
+        right: 6vw;
+        top: calc(12px + 96 * var(--n) + 14vw);
+        font-size: 15vw;
+        font-family: 'Caveat Brush', cursive;
+        color: #ffffff;
+        transform: rotate(-7deg);
+        text-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+        pointer-events: none;
+        z-index: 2;
+        white-space: nowrap;
+      }
+
+      .m-badge {
+        position: absolute;
+        right: 2vw;
+        top: calc(12px + 96 * var(--n) + 9vw);
+        width: 27vw;
+        height: calc(27vw * 1030 / 582);
+        z-index: 1;
+        pointer-events: none;
+        overflow: visible;
+      }
+
+      .m-badge .badge {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 582px;
+        height: 1030px;
+        transform-origin: 0 0;
+        transform: scale(var(--mbs)) translate(calc(-288px + 13.5vw), 0);
+      }
+
+      .hint {
+        bottom: 18px;
+        font-size: 11px;
+      }
+
+      /* Mobile Scene 2 Overrides */
+      .s2-header {
+        top: 8px !important;
+        left: 10px !important;
+        right: 10px !important;
+        gap: 6px !important;
+      }
+
+      .s2-back-btn {
+        height: 32px !important;
+        padding: 0 10px !important;
+        font-size: 11px !important;
+      }
+
+      .s2-hud-stages {
+        padding: 2px !important;
+        gap: 2px !important;
+      }
+
+      .s2-stage-pill {
+        height: 28px !important;
+        padding: 0 8px !important;
+        font-size: 10px !important;
+      }
+
+      .s2-stage-pill:not(.active) .s2-stage-name {
+        display: none !important;
+      }
+
+      .s2-cta-link {
+        display: none !important;
+      }
+
+      .s2-action-pill {
+        height: 32px !important;
+        padding: 0 8px !important;
+        font-size: 10px !important;
+      }
+
+      .s2-intel-card {
+        left: 10px !important;
+        right: 10px !important;
+        bottom: 12px !important;
+        width: auto !important;
+        max-width: none !important;
+        padding: 10px 14px !important;
+      }
+
+      .s2-intel-desc,
+      .s2-intel-tags {
+        display: none !important;
+      }
+
+      .s2-intel-title {
+        font-size: 13px !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+
+<body>
+  <!-- ── Stage Container ── -->
+  <div class="stage" id="stage">
+    <div class="frame" id="frame">
+      <!-- 1. Plate Photo -->
+      <img class="plate" id="plate" alt="" crossorigin="anonymous">
+
+      <!-- 2. Wordmark "FAMS" -->
+      <svg class="wm pre" id="wm" viewBox="0 0 1440 380" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="wm-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="1" />
+            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9" />
+            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.28" />
+          </linearGradient>
+        </defs>
+        <text x="14" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400"
+          letter-spacing="-6px" fill="url(#wm-grad)">FAMS</text>
+      </svg>
+
+      <!-- 3. Man Cutout -->
+      <img class="cut" id="cut" alt="" crossorigin="anonymous">
+
+      <!-- 4. Lanyard ID Badge -->
+      <div class="badge pre" id="badge">
+        <img class="badge-img" id="badge-img" alt="" crossorigin="anonymous">
+        <div class="card">
+          <h4>INTERN<br>CARD</h4>
+          <span class="yr">2026</span>
+          <div class="role">FIELD ATTACHMENT // STUDENT</div>
+          <div class="ph"></div>
+          <div class="row"><span>NAME</span><b>A. NAKATO</b></div>
+          <div class="row"><span>PROGRAM</span><b>BIS, YEAR 3</b></div>
+          <div class="row"><span>HOST</span><b>NILE ANALYTICS</b></div>
+          <div class="row"><span>EMAIL</span><b>HELLO@FAMS.APP</b></div>
+        </div>
+        <div class="hit" id="badge-hit" title="Field Attachment ID"></div>
+      </div>
+
+      <!-- 5. Handwriting Script -->
+      <div class="script pre" id="script">field-attachment</div>
+
+      <!-- 6. Camera Push Video -->
+      <video class="trans" id="trans" playsinline muted preload="auto" crossorigin="anonymous"></video>
+
+      <!-- 7. Caseplate Photo -->
+      <img class="caseplate" id="caseplate" alt="" crossorigin="anonymous">
+
+      <!-- 8. Laptop Display with Live Autonomous Internship OS -->
+      <div class="screen" id="screen">
+        <div class="os-shell" id="os-shell">
+          <!-- OS Top App Bar -->
+          <div class="os-topbar">
+            <div class="os-topbar-left">
+              <div class="os-traffic-lights">
+                <span class="os-dot r"></span>
+                <span class="os-dot y"></span>
+                <span class="os-dot g"></span>
+              </div>
+              <div class="os-branding">
+                <span>🛡️ FAMS WORKSTATION</span>
+                <span class="os-version">v4.2</span>
+              </div>
+              <!-- Module Switcher Tabs inside Laptop -->
+              <div class="os-tabs">
+                <button class="os-tab active" id="tab0" data-idx="0">
+                  <span>🎓 Student Intern</span>
+                  <span class="os-tab-badge">TIER 1</span>
+                </button>
+                <button class="os-tab" id="tab1" data-idx="1">
+                  <span>🏢 Host Mentor</span>
+                  <span class="os-tab-badge">TIER 2</span>
+                </button>
+                <button class="os-tab" id="tab2" data-idx="2">
+                  <span>⚖️ Faculty Dean</span>
+                  <span class="os-tab-badge">TIER 4</span>
+                </button>
+              </div>
+            </div>
+            <div class="os-topbar-right">
+              <div class="os-telemetry-pill">
+                <span class="os-live-dot"></span>
+                <span id="os-clock">11:48:00 EAT</span>
+                <span>•</span>
+                <span style="color:#10b981;">1.2ms SYNC</span>
+              </div>
+              <div class="os-user-pill" id="os-user-pill">
+                <span>👤</span>
+                <span id="os-user-name">Alice Nakato (BIS III)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- OS System Breadcrumb & Subbar -->
+          <div class="os-subbar">
+            <div class="os-subbar-left" id="os-breadcrumb">
+              INSTITUTION: <b>MAKERERE UNIVERSITY (COCIS)</b> &bull; TERM: <b>RECESS 2026</b> &bull; HOST: <b>NILE
+                ANALYTICS</b>
+            </div>
+            <div id="os-security-status">
+              SECURITY: <b style="color:#10b981;">CRYPTOGRAPHIC GEOFENCE ACTIVE</b>
+            </div>
+          </div>
+
+          <!-- Native InternTrack App Shell (Real Dashboard UI) -->
+          <div class="dashboard-app-shell">
+            <!-- Forest Green Sidebar -->
+            <aside class="dashboard-sidebar">
+              <!-- Brand Header -->
+              <div class="sb-brand">
+                <div class="sb-brand-logo">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                  </svg>
+                </div>
+                <div>
+                  <div class="sb-brand-title">InternTrack</div>
+                  <div class="sb-tier-badge" id="sb-tier-badge">Tier 1 • Student</div>
+                </div>
+              </div>
+
+              <!-- Navigation Menu -->
+              <nav class="sb-nav">
+                <div class="sb-cat-header">Overview</div>
+                <div class="sb-link" id="sb-link-dashboard">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="7" height="9" x="3" y="3" rx="1" />
+                    <rect width="7" height="5" x="14" y="3" rx="1" />
+                    <rect width="7" height="9" x="14" y="12" rx="1" />
+                    <rect width="7" height="5" x="3" y="16" rx="1" />
+                  </svg>
+                  <span>Dashboard</span>
+                </div>
+
+                <div class="sb-cat-header">Tracking & Logbook</div>
+                <div class="sb-link active" id="sb-link-logbook">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+                    <path d="M6 6h10M6 10h10" />
+                  </svg>
+                  <span>Digital Logbook</span>
+                </div>
+                <div class="sb-link" id="sb-link-attendance">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" />
+                    <path d="m9 16 2 2 4-4" />
+                  </svg>
+                  <span>Attendance & Clock</span>
+                </div>
+                <div class="sb-link" id="sb-link-milestones">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h13l4-3.5L18 6Z" />
+                    <path d="M12 13v8" />
+                  </svg>
+                  <span>Milestones</span>
+                </div>
+
+                <div class="sb-cat-header">Supervisory Controls</div>
+                <div class="sb-link" id="sb-link-review">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="8" height="4" x="8" y="2" rx="1" />
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                    <path d="m9 14 2 2 4-4" />
+                  </svg>
+                  <span>Review Queue</span>
+                </div>
+                <div class="sb-link" id="sb-link-evaluations">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="8" r="6" />
+                    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+                  </svg>
+                  <span>Evaluations & Rubric</span>
+                </div>
+
+                <div class="sb-cat-header">Governance & Records</div>
+                <div class="sb-link" id="sb-link-reports">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" />
+                    <path d="M10 12h4M10 16h4" />
+                  </svg>
+                  <span>Reports & Dossier</span>
+                </div>
+              </nav>
+
+              <!-- Sidebar User Card -->
+           <div class="sb-user-card">
+                <div class="sb-user-avatar" id="sb-user-avatar">AN</div>
+                <div style="min-width:0; flex:1;">
+                  <div
+                    style="font-size:9px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
+                    id="sb-user-name">Alice Nakato</div>
+                  <div
+                    style="font-size:7.5px; color:#94a3b8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
+                    id="sb-user-role">BIS III Student</div>
+                </div>
+              </div>
+            </aside>
+
+            <!-- Main Viewport Canvas -->
+            <main class="dashboard-viewport">
+              <!-- Top Profile Strip -->
+              <div class="dash-profile-strip">
+                <div class="dash-profile-left">
+                  <div class="dash-avatar-lg" id="dash-avatar-main">AN</div>
+                  <div class="dash-profile-info">
+                    <h4 id="dash-profile-title">Alice Nakato <span
+                        style="font-size:8.5px; color:#38bdf8; font-weight:600;">23/U/0482/EVE</span></h4>
+                    <p id="dash-profile-sub">Host: Nile Analytics Institute &bull; Supervisor: Dr. K. Sempala</p>
+                  </div>
+                </div>
+                <div class="dash-profile-stats">
+                  <div class="os-user-pill" id="dash-badge-status" style="font-size:9px; padding:2.5px 8px;">
+                    <span class="os-live-dot" style="width:5px; height:5px;"></span>
+                    <span>GPS Geofence: Active (50m)</span>
+                  </div>
+                </div>
+              </div>
+              <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+
+
+              <!-- Content Views Container -->
+              <div style="position:relative; flex:1; min-height:0;">
+                <!-- ── VIEW 0: STUDENT INTERN WORKSPACE ── -->
+                <div class="wf-view active" id="wf0">
+                  <div class="wf-kpis">
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Current Shift Duration</span>
+                      <div class="wf-kpi-val" style="color:#10b981; font-family:'JetBrains Mono', monospace;">08:34:12
+                      </div>
+                      <span class="wf-kpi-sub">● Biometric Geofence Active</span>
+                    </div>
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Curriculum Contact Hours</span>
+                      <div class="wf-kpi-val">328 / 400 <span class="up">82.0%</span></div>
+                      <span class="wf-kpi-sub">Week 8 of 10 Required Weeks</span>
+                    </div>
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Weekly Supervisor Sign-Offs</span>
+                      <div class="wf-kpi-val" style="color:#38bdf8;">08 / 08 <span class="chip"
+                          style="background:rgba(56,189,248,0.2); color:#38bdf8;">SIGNED</span></div>
+                      <span class="wf-kpi-sub">Zero Unsigned Timecards</span>
+                    </div>
+                  </div>
+
+                  <div class="wf-split">
+                    <!-- Left: Digital Daily Technical Logbook -->
+                    <div class="wf-card" style="flex: 1.35;">
+                      <div class="wf-card-head">
+                        <span>📝 STUDENT DAILY TECHNICAL LOGBOOK (DAY 38)</span>
+                        <span class="sub-badge draft" id="log-status-badge">DRAFT // PENDING REVIEW</span>
+                      </div>
+                      <div class="log-editor">
+                        <div class="log-input-row">
+                          <input class="log-input" style="flex:1;"
+                            value="Category: Distributed Systems & DB Optimization" readonly>
+                          <input class="log-input" style="width:75px; text-align:center;" value="8.0 Hrs" readonly>
+                        </div>
+                        <div style="font-size:8px; color:#94a3b8; font-weight:700;">DAILY ACTIVITY & ARCHITECTURAL
+                          IMPLEMENTATION:</div>
+                        <textarea class="log-textarea" id="log-text-entry" style="height:55px; min-height:55px;"
+                          placeholder="Simulating student work log entry..."></textarea>
+                        <div style="font-size:8px; color:#94a3b8; font-weight:700; margin-top:2px;">COMPETENCIES & CORE
+                          SKILLS:</div>
+                        <div class="skill-pills" id="student-skill-pills"></div>
+                        <button class="log-submit-btn" id="btn-submit-log"
+                          style="width:100%; margin-top:auto; padding:7px 10px; font-size:10px;">Submit Day 38 Log for
+                          Mentor Review</button>
+                      </div>
+                    </div>
+
+                    <!-- Right: GPS Geofence Radar & Attendance -->
+                    <div class="wf-card" style="flex: 1;">
+                      <div class="wf-card-head">
+                        <span>📍 BIOMETRIC GEOFENCE & ATTENDANCE</span>
+                        <span style="font-size:8.5px; color:#10b981; font-weight:700;">RADIUS 150M</span>
+                      </div>
+                      <div class="radar-box" style="padding:4px 0;">
+                        <div class="radar-circle" style="width:105px; height:105px;">
+                          <div class="radar-ring r1" style="width:35px; height:35px;"></div>
+                          <div class="radar-ring r2" style="width:70px; height:70px;"></div>
+                          <div class="radar-sweep"></div>
+                          <div class="radar-blip" style="top:44%; left:52%;"></div>
+                        </div>
+                        <div
+                          style="font-family:'JetBrains Mono', monospace; font-size:8px; color:#cbd5e1; text-align:center; line-height:1.4;">
+                          Nile Analytics HQ &bull; Plot 14 Lumumba Ave<br>
+                          Lat: 0.3476° N &bull; Lon: 32.5825° E<br>
+                          <span id="geofence-status-text" style="color:#10b981; font-weight:700;">● Verified on Campus
+                            Perimeter (±1.8m)</span>
+                        </div>
+                        <button class="radar-btn" id="btn-verify-gps"
+                          style="width:100%; justify-content:center; padding:7px 10px; font-size:10px; margin-top:auto;">
+                          <span>📡 Verify Geofence Clock-In</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ── VIEW 1: WORKPLACE MENTOR VERIFICATION CONSOLE ── -->
+                <div class="wf-view" id="wf1">
+                  <div class="wf-kpis">
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Workplace Mentor</span>
+                      <div class="wf-kpi-val" style="font-size:14.5px; color:#f1f5f9;">Dr. K. Sempala</div>
+                      <span class="wf-kpi-sub">Lead Mentor &bull; Nile Analytics</span>
+                    </div>
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Pending Review Item</span>
+                      <div class="wf-kpi-val" style="color:#fbbf24;">1 Pending <span class="chip"
+                          style="background:rgba(245,158,11,0.2); color:#fbbf24;">AWAITING</span></div>
+                      <span class="wf-kpi-sub">Day 38 Attachment Evidence</span>
+                    </div>
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Cryptographic Security</span>
+                      <div class="wf-kpi-val" style="color:#10b981;">ECDSA <span class="chip"
+                          style="background:rgba(16,185,129,0.2); color:#10b981;">SECP256K1</span></div>
+                      <span class="wf-kpi-sub">Tamper-Proof Audit Chain</span>
+                    </div>
+                  </div>
+
+                  <div class="wf-split">
+                    <!-- Left: Supervisor Review Queue -->
+                    <div class="wf-card" style="flex: 1.35;">
+                      <div class="wf-card-head">
+                        <span>📑 SUPERVISOR REVIEW DASHBOARD</span>
+                        <span class="sub-badge" id="mentor-status-badge">AWAITING 1-TAP APPROVAL</span>
+                      </div>
+                      <div class="mentor-submission-card" id="mentor-submission-card" style="padding:8px; gap:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                          <div>
+                            <div style="font-weight:700; color:#fff; font-size:11px;">Alice Nakato &bull; BIS Year 3
+                            </div>
+                            <div style="font-size:8px; color:#94a3b8;">Task: PostgreSQL Indexing & Redis Cluster (8.0
+                              Hours)</div>
+                          </div>
+                          <span
+                            style="font-family:'JetBrains Mono',monospace; font-size:8px; color:#38bdf8; background:rgba(56,189,248,0.12); padding:1.5px 5px; border-radius:3px;">git
+                            #9a4f21d</span>
+                        </div>
+                        <div
+                          style="font-family:'JetBrains Mono',monospace; font-size:8.5px; color:#a7f3d0; background:rgba(6,10,16,0.8); border:1px solid rgba(255,255,255,0.06); padding:6px 8px; border-radius:4px; line-height:1.4;">
+                          "Implemented PostgreSQL partition pruning, optimized index scans on 4.2M records, and
+                          integrated Redis cache cluster. Query p99 latency decreased from 140ms to 4.2ms."
+                        </div>
+                        <div style="font-size:8px; color:#94a3b8; font-weight:700; margin-top:2px;">SUPERVISOR
+                          ENDORSEMENT & ASSESSMENT:</div>
+                        <textarea class="log-textarea" id="mentor-feedback-text"
+                          style="height:48px; min-height:48px; font-size:9.5px; color:#f8fafc;"
+                          placeholder="Simulating supervisor feedback..."></textarea>
+                      </div>
+                    </div>
+
+                    <!-- Right: 1-Tap Cryptographic Verification Station -->
+                    <div class="wf-card" style="flex: 1;">
+                      <div class="wf-card-head">
+                        <span>✍️ 1-TAP VERIFICATION STATION</span>
+                        <span class="os-live-dot"></span>
+                      </div>
+                      <div class="mentor-sign-station" style="padding:4px 0;">
+                        <div style="font-size:8.5px; color:#94a3b8; text-align:center; line-height:1.3; padding:0 6px;">
+                          Workplace mentor ratifies verified hours with an immutable ECDSA cryptographic signature.
+                        </div>
+                        <button class="mentor-sign-btn" id="btn-mentor-sign"
+                          style="width:100%; justify-content:center; padding:8px 12px; font-size:10px;">
+                          <span>✍️ 1-Tap Cryptographic Sign-Off</span>
+                        </button>
+                        <div class="crypto-seal" id="crypto-seal" style="width:115px; height:115px; margin-top:auto;">
+                          <span class="crypto-seal-star">🛡️</span>
+                          <span class="crypto-seal-title">OFFICIALLY RATIFIED</span>
+                          <span class="crypto-seal-mentor" style="font-size:8.5px;">DR. K. SEMPALA</span>
+                          <span class="crypto-seal-nonce" style="font-size:7px;">NONCE: 0x9f4a...e12b</span>
+                          <span style="font-size:6.5px; color:#a7f3d0;">2026-11-12 &bull; MAK COCIS</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ── VIEW 2: FACULTY DEAN & SENATE EVALUATION ── -->
+                <div class="wf-view" id="wf2">
+                  <div class="wf-kpis">
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">Workplace Mentor Assessment (40%)</span>
+                      <div class="wf-kpi-val" style="color:#34d399;" id="score-mentor">39.5 / 40.0</div>
+                      <span class="wf-kpi-sub">Workplace Discipline & Output</span>
+                    </div>
+                    <div class="wf-kpi">
+                      <span class="wf-kpi-lbl">University Academic Assessor (60%)</span>
+                      <div class="wf-kpi-val" style="color:#60a5fa;" id="score-uni">57.0 / 60.0</div>
+                      <span class="wf-kpi-sub">Field Visit, Defense & Logbook</span>
+                    </div>
+                    <div class="wf-kpi" style="border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.06);">
+                      <span class="wf-kpi-lbl">Composite Institutional Grade</span>
+                      <div class="wf-kpi-val" style="color:#10b981;" id="score-total">96.5% <span class="chip"
+                          style="background:#10b981; color:#062b1b;">GRADE A</span></div>
+                      <span class="wf-kpi-sub">First Class Honours Distinction</span>
+                    </div>
+                  </div>
+
+                  <div class="wf-split">
+                    <!-- Left: Institutional Scoring Rubric -->
+                    <div class="wf-card" style="flex: 1.35;">
+                      <div class="wf-card-head">
+                        <span>⚖️ DUAL-SUPERVISION SCORING RUBRIC</span>
+                        <span class="chip" style="background:rgba(56,189,248,0.18); color:#38bdf8; font-size:8px;">COCIS
+                          RATIFIED</span>
+                      </div>
+                      <div class="rubric-sliders" style="padding:4px 0; gap:7px;">
+                        <div class="rubric-row">
+                          <div class="rubric-row-head"><span>Workplace Professionalism & Discipline</span> <b
+                              id="rubric-val-1">10.0 / 10.0</b></div>
+                          <div class="rubric-bar">
+                            <div class="rubric-bar-fill" id="rubric-fill-1" style="width:100%;"></div>
+                          </div>
+                        </div>
+                        <div class="rubric-row">
+                          <div class="rubric-row-head"><span>Technical Problem Solving & Architecture</span> <b
+                              id="rubric-val-2">19.5 / 20.0</b></div>
+                          <div class="rubric-bar">
+                            <div class="rubric-bar-fill" id="rubric-fill-2" style="width:97.5%;"></div>
+                          </div>
+                        </div>
+                        <div class="rubric-row">
+                          <div class="rubric-row-head"><span>Digital Logbook Dossier & Documentation</span> <b
+                              id="rubric-val-3">20.0 / 20.0</b></div>
+                          <div class="rubric-bar">
+                            <div class="rubric-bar-fill" id="rubric-fill-3" style="width:100%;"></div>
+                          </div>
+                        </div>
+                        <div class="rubric-row">
+                          <div class="rubric-row-head"><span>Faculty Field Visit & Oral Defense</span> <b
+                              id="rubric-val-4">47.0 / 50.0</b></div>
+                          <div class="rubric-bar">
+                            <div class="rubric-bar-fill" id="rubric-fill-4" style="width:94.0%;"></div>
+                          </div>
+                        </div>
+                        <div
+                          style="font-size:8px; color:#34d399; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:4px; padding:4px 8px; text-align:center; font-family:'JetBrains Mono',monospace; margin-top:auto;">
+                          40% Mentor (39.5) + 60% Faculty (57.0) = 96.5% Grade A
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Right: Senate Credentials & Transcript -->
+                    <div class="wf-card" style="flex: 1; align-items:center; text-align:center; padding:10px 12px;">
+                      <div style="font-size:24px; line-height:1;">🏛️</div>
+                      <div style="font-size:11px; font-weight:800; color:#fff; letter-spacing:0.02em; margin-top:2px;">
+                        MAKERERE UNIVERSITY</div>
+                      <div style="font-size:8px; color:#94a3b8;">Faculty Board of Examiners & Academic Registrar</div>
+                      <div
+                        style="background:#10b981; color:#062b1b; font-size:8px; font-weight:800; padding:1.5px 7px; border-radius:3px; margin-top:3px;">
+                        SENATE RATIFIED
+                      </div>
+                      <div
+                        style="font-family:'JetBrains Mono', monospace; font-size:7.5px; color:#38bdf8; margin-top:2px;">
+                        CREDENTIAL: MAK-2026-BIS-0482
+                      </div>
+                      <div
+                        style="font-size:8px; color:#cbd5e1; line-height:1.5; margin:6px 0; background:rgba(255,255,255,0.02); padding:5px 7px; border-radius:4px; width:100%; text-align:left;">
+                        ✓ 328/400 Contact Hours Verified via GPS<br>
+                        ✓ 8/8 Weekly Mentor Nonces Certified<br>
+                        ✓ Oral Defense Passed with Distinction
+                      </div>
+                      <button class="transcript-btn" id="btn-gen-transcript"
+                        style="width:100%; margin-top:auto; padding:7px 10px; font-size:10px;">
+                        <span>🏛️ Issue Official Senate Transcript</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </div>
+
+          <!-- In-Screen Modal: Official University Transcript -->
+          <div class="screen-modal" id="modal-transcript">
+            <div class="screen-modal-dialog">
+              <div class="modal-head">
+                <span>🏛️ OFFICIAL MAKERERE TRANSCRIPT</span>
+                <span style="font-size:9px; color:#38bdf8;">CERTIFIED</span>
+              </div>
+              <div class="modal-body">
+                <b>MAKERERE UNIVERSITY — COCIS ACADEMIC REGISTRAR</b><br>
+                Candidate: <b>Alice Nakato</b> (Reg No: 23/U/0482/EVE)<br>
+                Program: <b>Bachelor of Information Systems & Tech</b><br>
+                Composite Grade: <b style="color:#10b981;">96.5% (Grade A - First Class Honours)</b><br>
+                Transcript Serial: <span
+                  style="font-family:'JetBrains Mono', monospace; color:#38bdf8;">MAK-COCIS-2026-0482</span><br><br>
+                ✓ All 328 contact hours verified with GPS biometric geofencing.<br>
+                ✓ 8/8 weekly supervisor cryptographic sign-offs committed to permanent institutional ledger.
+              </div>
+              <div class="modal-actions">
+                <button class="modal-btn primary" id="modal-transcript-close">Close Credential View</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- In-Screen Live Toast -->
+          <div class="os-toast" id="os-toast">
+            <span class="os-toast-icon" id="os-toast-icon">✓</span>
+            <span class="os-toast-text" id="os-toast-text">MOU Ratified Successfully</span>
+          </div>
+        </div>
+
+        <div class="flash" id="flash"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Viewport-Pinned Fixed UI ── -->
+  <div class="ui">
+    <!-- Scene 1 Nav Tags -->
+    <button class="tag t1 pre" id="btn-overview" type="button">overview</button>
+    <button class="tag t2 pre" id="btn-features" type="button">features</button>
+    <a class="tag t3 pre" id="btn-contacts" href="#contacts">contacts</a>
+    <a class="tag t4 pre" id="btn-demo" href="/auth">request a demo</a>
+
+    <!-- Sound Control -->
+    <button class="sound-tag pre" id="btn-sound" type="button" aria-label="Toggle SFX">
+      <span id="sound-icon">🔊</span> SFX
+    </button>
+
+    <!-- Scroll Hint -->
+    <div class="hint pre" id="hint">
+      <div class="hint-line">
+        <div class="hint-bead"></div>
+      </div>
+      <span>scroll into the system</span>
+    </div>
+
+    <!-- Mobile-Only Copies Layer -->
+    <div class="m-only" id="m-only">
+      <svg class="m-wm pre" id="m-wm" viewBox="0 0 1440 380" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="m-wm-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="1" />
+            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9" />
+            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.3" />
+          </linearGradient>
+        </defs>
+        <text x="10" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400"
+          letter-spacing="-6px" fill="url(#m-wm-grad)">FAMS</text>
+      </svg>
+      <div class="m-script pre" id="m-script">field-attachment</div>
+      <div class="m-badge" id="m-badge"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         SCENE 2 SURROUNDING UI (EXECUTIVE HUD & INTEL)
+         ═══════════════════════════════════════════════════ -->
+    <!-- Top Executive HUD -->
+    <div class="s2-header" id="s2-header">
+      <div class="s2-header-left">
+        <button class="s2-back-btn" id="s2-back-btn" type="button">
+          <span class="s2-back-arrow">←</span>
+          <span>Overview</span>
+        </button>
+      </div>
+
+      <!-- Centered Segmented Workflow Stage Switcher -->
+      <div class="s2-hud-stages" id="s2-hud-stages">
+        <button class="s2-stage-pill active" id="s2-stage-0" data-idx="0" type="button">
+          <span class="s2-stage-num">01</span>
+          <span class="s2-stage-name">Student Logbook</span>
+          <span class="s2-stage-prog" id="s2-prog-0"></span>
+        </button>
+        <button class="s2-stage-pill" id="s2-stage-1" data-idx="1" type="button">
+          <span class="s2-stage-num">02</span>
+          <span class="s2-stage-name">Mentor Sign-Off</span>
+          <span class="s2-stage-prog" id="s2-prog-1"></span>
+        </button>
+        <button class="s2-stage-pill" id="s2-stage-2" data-idx="2" type="button">
+          <span class="s2-stage-num">03</span>
+          <span class="s2-stage-name">Senate Rubric</span>
+          <span class="s2-stage-prog" id="s2-prog-2"></span>
+        </button>
+      </div>
+
+      <!-- Header Controls -->
+      <div class="s2-header-right">
+        <button class="s2-action-pill" id="s2-tour-toggle" type="button" title="Toggle Autopilot Tour (Space)">
+          <span id="s2-tour-icon">⏸</span>
+          <span id="s2-tour-text">Autopilot</span>
+        </button>
+        <button class="s2-action-pill" id="s2-sound-btn" type="button" title="Toggle Sound SFX">
+          <span id="s2-sound-icon">🔊</span>
+        </button>
+        <a href="/auth" class="s2-cta-link" id="s2-cta-link" title="Launch FAMS Live Application">
+          <span>Launch Workspace</span>
+          <span class="s2-cta-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Bottom-Left Executive Stage Intel Card -->
+    <div class="s2-intel-card" id="s2-intel-card">
+      <div class="s2-intel-badge">
+        <span class="s2-live-indicator"></span>
+        <span id="s2-intel-stage-tag">STAGE 01 // ENTERPRISE MATCHING</span>
+      </div>
+      <div class="s2-intel-title" id="s2-intel-title">Placements & Tripartite MOU Hub</div>
+      <div class="s2-intel-desc" id="s2-intel-desc">
+        Automates matching across accredited industry hosts with cryptographic student-host-university agreements.
+      </div>
+      <div class="s2-intel-tags" id="s2-intel-tags">
+        <span class="s2-intel-tag" id="s2-tag-1">1,420 Placements</span>
+        <span class="s2-intel-tag" id="s2-tag-2">380 Accredited Hosts</span>
+        <span class="s2-intel-tag highlight" id="s2-tag-3">100% Ratified Nonces</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ── 1. Audio Synthesizer (Micro-acoustic feedback) ── */
+      let audioCtx = null;
+      let sfxEnabled = true;
+
+      function getAudio() {
+        if (!audioCtx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) audioCtx = new AC();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        return audioCtx;
+      }
+
+      function playTone(freq, type, dur, vol) {
+        if (!sfxEnabled) return;
+        try {
+          const ctx = getAudio();
+          if (!ctx) return;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, ctx.currentTime);
+          gain.gain.setValueAtTime(vol, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + dur);
+        } catch (_) { }
+      }
+
+      function playClick() { playTone(1200, 'sine', 0.04, 0.08); }
+      function playSwell() { playTone(440, 'triangle', 0.35, 0.12); }
+      function playChime() { playTone(880, 'sine', 0.2, 0.1); }
+      function playPing() { playTone(1760, 'sine', 0.15, 0.09); }
+      function playStamp() {
+        playTone(180, 'triangle', 0.2, 0.2);
+        setTimeout(() => playTone(880, 'sine', 0.25, 0.1), 60);
+      }
+      function playKey() { playTone(900 + Math.random() * 400, 'triangle', 0.02, 0.03); }
+
+      /* ── 2. Asset URLs & Configuration ── */
+      const HX = (u) => 'https://images.higgs.ai/?default=1&output=webp&url=' + encodeURIComponent(u) + '&w=2048&q=85';
+      const CF = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/';
+
+      const ASSETS = {
+        plate: HX(CF + 'hf_20261111_001031_a09dc558-2c69-4e05-83a4-5f01ebdd1363.png'),
+        casePlate: HX(CF + 'hf_20261111_001031_4a7c3fd9-2168-4219-9736-096a17bbb0e2.png'),
+        cut: HX(CF + 'hf_20261111_001143_ec356b1a-50a2-4b50-82fc-e346c914a406.png'),
+        badge: 'https://images.higgs.ai/?default=1&output=webp&url=' + encodeURIComponent(CF + 'hf_20261111_001143_65c037e6-0768-4b12-9f17-17be132ce16b.png') + '&w=1200&q=85',
+        trans: CF + 'hf_20261111_001144_2b054228-95af-41d5-922d-b02979fe485b.mp4',
+      };
+
+      const WORKFLOW_DATA = [
+        {
+          stageTag: 'STAGE 01 // STUDENT WORKSPACE',
+          title: 'GPS Geofenced Digital Daily Logbook',
+          desc: 'Undergraduates verify physical campus presence within 150m geofence, submit daily technical tasks, document competencies, and track contact hours.',
+          tags: ['Biometric GPS Lock', '328 / 400 Contact Hrs', 'Day 38 Submitted'],
+          user: 'Alice Nakato (BIS III Student)'
+        },
+        {
+          stageTag: 'STAGE 02 // WORKPLACE SUPERVISION',
+          title: 'Workplace Mentor 1-Tap Cryptographic Sign-Off',
+          desc: 'Workplace mentors inspect code artifacts, benchmark pull requests, and ratify daily logbooks with permanent ECDSA cryptographic nonces.',
+          tags: ['Dr. K. Sempala (Nile)', 'Git #9a4f21d Verified', 'ECDSA Secp256k1 Seal'],
+          user: 'Dr. K. Sempala (Lead Mentor)'
+        },
+        {
+          stageTag: 'STAGE 03 // ACADEMIC GOVERNANCE',
+          title: 'Dual Supervision Rubric & Senate Transcripts',
+          desc: 'Joint scoring matrix balances workplace mentor rating (40%) and university faculty assessment (60%) into certified Makerere credentials.',
+          tags: ['Composite Grade: 96.5%', 'First Class Honours', 'MAK-COCIS-2026-0482'],
+          user: 'Prof. M. Bwambale (Academic Assessor)'
+        }
+      ];
+
+      /* ── 3. DOM Elements ── */
+      const frameEl = document.getElementById('frame');
+      const stageEl = document.getElementById('stage');
+      const plateImg = document.getElementById('plate');
+      const casePlateImg = document.getElementById('caseplate');
+      const cutImg = document.getElementById('cut');
+      const badgeImg = document.getElementById('badge-img');
+      const transVideo = document.getElementById('trans');
+      const screenEl = document.getElementById('screen');
+      const flashEl = document.getElementById('flash');
+
+      const wmSvg = document.getElementById('wm');
+      const scriptEl = document.getElementById('script');
+      const badgeEl = document.getElementById('badge');
+      const badgeHitEl = document.getElementById('badge-hit');
+      const hintEl = document.getElementById('hint');
+
+      const btnOverview = document.getElementById('btn-overview');
+      const btnFeatures = document.getElementById('btn-features');
+      const btnContacts = document.getElementById('btn-contacts');
+      const btnDemo = document.getElementById('btn-demo');
+      const btnSound = document.getElementById('btn-sound');
+      const soundIcon = document.getElementById('sound-icon');
+
+      const mWmSvg = document.getElementById('m-wm');
+      const mScriptEl = document.getElementById('m-script');
+      const mBadgeEl = document.getElementById('m-badge');
+
+      // Scene 2 Surrounding UI elements
+      const s2Header = document.getElementById('s2-header');
+      const s2BackBtn = document.getElementById('s2-back-btn');
+      const s2TourToggle = document.getElementById('s2-tour-toggle');
+      const s2TourIcon = document.getElementById('s2-tour-icon');
+      const s2TourText = document.getElementById('s2-tour-text');
+      const s2SoundBtn = document.getElementById('s2-sound-btn');
+      const s2SoundIcon = document.getElementById('s2-sound-icon');
+      const s2CtaLink = document.getElementById('s2-cta-link');
+
+      const s2StagePills = [
+        document.getElementById('s2-stage-0'),
+        document.getElementById('s2-stage-1'),
+        document.getElementById('s2-stage-2')
+      ];
+      const s2ProgressBars = [
+        document.getElementById('s2-prog-0'),
+        document.getElementById('s2-prog-1'),
+        document.getElementById('s2-prog-2')
+      ];
+
+      const s2IntelCard = document.getElementById('s2-intel-card');
+      const s2IntelStageTag = document.getElementById('s2-intel-stage-tag');
+      const s2IntelTitle = document.getElementById('s2-intel-title');
+      const s2IntelDesc = document.getElementById('s2-intel-desc');
+      const s2Tag1 = document.getElementById('s2-tag-1');
+      const s2Tag2 = document.getElementById('s2-tag-2');
+      const s2Tag3 = document.getElementById('s2-tag-3');
+
+      // In-Screen Elements
+      const osTabs = [
+        document.getElementById('tab0'),
+        document.getElementById('tab1'),
+        document.getElementById('tab2')
+      ];
+      const wfViews = [
+        document.getElementById('wf0'),
+        document.getElementById('wf1'),
+        document.getElementById('wf2')
+      ];
+      const osClock = document.getElementById('os-clock');
+      const osUserName = document.getElementById('os-user-name');
+      const osToast = document.getElementById('os-toast');
+      const osToastIcon = document.getElementById('os-toast-icon');
+      const osToastText = document.getElementById('os-toast-text');
+
+      // Virtual Cursor Elements
+      const simCursor = document.getElementById('sim-cursor');
+      const simCursorBadge = document.getElementById('sim-cursor-badge');
+      const simCursorRipple = document.getElementById('sim-cursor-ripple');
+
+      // In-screen interactive widgets
+      const streamFeedWf0 = document.getElementById('stream-feed-wf0');
+      const hostItemNile = document.getElementById('host-item-nile');
+      const btnApplyNile = document.getElementById('btn-apply-nile');
+      const modalMou = document.getElementById('modal-mou');
+      const modalMouCancel = document.getElementById('modal-mou-cancel');
+      const modalMouConfirm = document.getElementById('modal-mou-confirm');
+
+      const logTextEntry = document.getElementById('log-text-entry');
+      const btnSubmitLog = document.getElementById('btn-submit-log');
+      const btnVerifyGps = document.getElementById('btn-verify-gps');
+      const geofenceStatusText = document.getElementById('geofence-status-text');
+
+      const btnMentorSign = document.getElementById('btn-mentor-sign');
+      const cryptoSeal = document.getElementById('crypto-seal');
+      const mentorStatusBadge = document.getElementById('mentor-status-badge');
+
+      const btnGenTranscript = document.getElementById('btn-gen-transcript');
+      const modalTranscript = document.getElementById('modal-transcript');
+      const modalTranscriptClose = document.getElementById('modal-transcript-close');
+
+      /* ── 4. State ── */
+      let mode = 'hero';
+      let currentWorkflow = 0;
+      let busy = false;
+      let transReady = false;
+      let badgeSway = null;
+      let entered = false;
+      let tourPlaying = true;
+      let userManualOverride = false;
+      let manualOverrideTimer = null;
+      let simStepStartTime = 0;
+      const STEP_DURATION = 9200; // 9.2s per automated workflow demo
+      const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Assign image sources
+      plateImg.src = ASSETS.plate;
+      casePlateImg.src = ASSETS.casePlate;
+      cutImg.src = ASSETS.cut;
+      badgeImg.src = ASSETS.badge;
+
+      // Preload transition video
+      transVideo.src = ASSETS.trans;
+      transVideo.addEventListener('loadeddata', () => { transReady = true; });
+      transVideo.addEventListener('canplaythrough', () => { transReady = true; });
+
+      // Clone mobile badge
+      const mobileBadgeClone = badgeEl.cloneNode(true);
+      mobileBadgeClone.id = 'badge-mobile-clone';
+      mBadgeEl.appendChild(mobileBadgeClone);
+
+      /* ═══════════════════════════════════════════════════
+         CONTINUOUS BACKGROUND TELEMETRY & CLOCKS
+         ═══════════════════════════════════════════════════ */
+      setInterval(() => {
+        const d = new Date();
+        const hrs = String(d.getHours()).padStart(2, '0');
+        const mins = String(d.getMinutes()).padStart(2, '0');
+        const secs = String(d.getSeconds()).padStart(2, '0');
+        const str = `${hrs}:${mins}:${secs} EAT`;
+        if (osClock) osClock.textContent = str;
+      }, 1000);
+
+      let shiftSeconds = 8 * 3600 + 34 * 60 + 12;
+      const shiftClockVal = document.getElementById('shift-clock-val');
+      setInterval(() => {
+        shiftSeconds++;
+        const h = String(Math.floor(shiftSeconds / 3600)).padStart(2, '0');
+        const m = String(Math.floor((shiftSeconds % 3600) / 60)).padStart(2, '0');
+        const s = String(shiftSeconds % 60).padStart(2, '0');
+        if (shiftClockVal) shiftClockVal.textContent = `${h}:${m}:${s}`;
+      }, 1000);
+
+      // Workflow 0 Live Matching Stream
+      const STREAM_ITEMS = [
+        { name: 'Alice Nakato', host: 'Nile Analytics', role: 'AI & Data Eng' },
+        { name: 'David Ochieng', host: 'Ministry of ICT', role: 'Cloud Arch' },
+        { name: 'Sarah Namubiru', host: 'Stanbic Bank Lab', role: 'FinTech Sec' },
+        { name: 'Grace Atuhaire', host: 'Uganda Revenue Auth', role: 'DB Cluster' },
+        { name: 'Brian Kigozi', host: 'UN Pulse Lab', role: 'Applied ML' }
+      ];
+      let streamIdx = 0;
+      function renderStreamWf0() {
+        if (!streamFeedWf0) return;
+        const visible = [
+          STREAM_ITEMS[streamIdx % STREAM_ITEMS.length],
+          STREAM_ITEMS[(streamIdx + 1) % STREAM_ITEMS.length],
+          STREAM_ITEMS[(streamIdx + 2) % STREAM_ITEMS.length]
+        ];
+        streamFeedWf0.innerHTML = visible.map(item => `
+          <div class="host-item" style="padding:6px 8px; font-size:10px;">
+            <div>
+              <div style="font-weight:700; color:#fff;">${item.name}</div>
+              <div style="font-size:8.5px; color:#94a3b8;">${item.host} • ${item.role}</div>
+            </div>
+            <span style="font-size:8.5px; font-weight:700; color:#10b981; background:rgba(16,185,129,0.15); padding:2px 5px; border-radius:3px;">✓ Placed</span>
+          </div>
+        `).join('');
+      }
+      renderStreamWf0();
+      setInterval(() => {
+        streamIdx = (streamIdx + 1) % STREAM_ITEMS.length;
+        renderStreamWf0();
+      }, 3000);
+
+      /* ═══════════════════════════════════════════════════
+         TOAST NOTIFICATIONS (IN-SCREEN)
+         ═══════════════════════════════════════════════════ */
+      let toastTimer = null;
+      function showToast(icon, text, duration = 2800) {
+        if (!osToast) return;
+        if (osToastIcon) osToastIcon.textContent = icon;
+        if (osToastText) osToastText.textContent = text;
+        osToast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          osToast.classList.remove('show');
+        }, duration);
+      }
+
+      /* ═══════════════════════════════════════════════════
+         PRECISION VIRTUAL CURSOR / AUTONOMOUS ENGINE
+         ═══════════════════════════════════════════════════ */
+      function getElementScreenCoords(target, offsetX = 0.5, offsetY = 0.5) {
+        const el = typeof target === 'string' ? document.getElementById(target) : target;
+        if (!el || !screenEl) return null;
+        const sRect = screenEl.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        const s = sRect.width / 894.4;
+        if (!s || s <= 0) return null;
+        const x = (elRect.left - sRect.left) / s + (elRect.width / s) * offsetX;
+        const y = (elRect.top - sRect.top) / s + (elRect.height / s) * offsetY;
+        return { x: Math.round(x), y: Math.round(y), el };
+      }
+
+      function setCursorPos(x, y, actionText, duration = 650) {
+        if (!simCursor) return;
+        simCursor.style.transition = `left ${duration}ms cubic-bezier(0.22, 1, 0.36, 1), top ${duration}ms cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s`;
+        simCursor.style.left = `${x}px`;
+        simCursor.style.top = `${y}px`;
+        if (simCursorBadge && actionText) {
+          simCursorBadge.textContent = actionText;
+        }
+      }
+
+      function moveCursorTo(target, actionText, duration = 650, offsetX = 0.5, offsetY = 0.5) {
+        const coords = getElementScreenCoords(target, offsetX, offsetY);
+        if (!coords) return;
+        setCursorPos(coords.x, coords.y, actionText, duration);
+      }
+
+      function clickTarget(target, actionText, callback, duration = 650, offsetX = 0.5, offsetY = 0.5) {
+        const coords = getElementScreenCoords(target, offsetX, offsetY);
+        if (!coords) {
+          if (callback) callback();
+          return;
+        }
+        setCursorPos(coords.x, coords.y, actionText, duration);
+        const tId = setTimeout(() => {
+          coords.el.classList.add('sim-active');
+          setTimeout(() => coords.el.classList.remove('sim-active'), 180);
+          if (simCursorRipple) {
+            simCursorRipple.classList.remove('pulse');
+            void simCursorRipple.offsetWidth;
+            simCursorRipple.classList.add('pulse');
+          }
+          playClick();
+          if (callback) callback();
+        }, duration + 60);
+        currentScriptTimeout.push(tId);
+      }
+
+      // Simulate student typing into textarea
+      let typeTimer = null;
+      function simulateTyping(text, targetEl, callback) {
+        if (!targetEl) return;
+        targetEl.value = '';
+        let charIdx = 0;
+        clearInterval(typeTimer);
+        typeTimer = setInterval(() => {
+          if (charIdx < text.length) {
+            targetEl.value += text[charIdx];
+            charIdx++;
+            if (charIdx % 3 === 0) playKey();
+          } else {
+            clearInterval(typeTimer);
+            if (callback) callback();
+          }
+        }, 28);
+      }
+
+      /* ═══════════════════════════════════════════════════
+         SIMULATION TIMELINE PER WORKFLOW
+         ═══════════════════════════════════════════════════ */
+      let currentScriptTimeout = [];
+      function clearWorkflowScript() {
+        currentScriptTimeout.forEach(t => clearTimeout(t));
+        currentScriptTimeout = [];
+        clearInterval(typeTimer);
+      }
+
+      /* ── Update Native Dashboard Sidebar & Header For Role ── */
+      function updateSidebarForRole(idx) {
+        const allSbLinks = document.querySelectorAll('.sb-link');
+        allSbLinks.forEach(link => link.classList.remove('active'));
+
+        const sbTierBadge = document.getElementById('sb-tier-badge');
+        const sbUserAvatar = document.getElementById('sb-user-avatar');
+        const sbUserName = document.getElementById('sb-user-name');
+        const sbUserRole = document.getElementById('sb-user-role');
+        const osBreadcrumb = document.getElementById('os-breadcrumb');
+        const osSecurityStatus = document.getElementById('os-security-status');
+        const dashAvatarMain = document.getElementById('dash-avatar-main');
+        const dashProfileTitle = document.getElementById('dash-profile-title');
+        const dashProfileSub = document.getElementById('dash-profile-sub');
+        const dashBadgeStatus = document.getElementById('dash-badge-status');
+
+        if (idx === 0) {
+          const activeLink = document.getElementById('sb-link-logbook');
+          if (activeLink) activeLink.classList.add('active');
+          if (sbTierBadge) sbTierBadge.textContent = 'Tier 1 • Student';
+          if (sbUserAvatar) sbUserAvatar.textContent = 'AN';
+          if (sbUserName) sbUserName.textContent = 'Alice Nakato';
+          if (sbUserRole) sbUserRole.textContent = 'BIS III Student';
+          if (osBreadcrumb) osBreadcrumb.innerHTML = 'INSTITUTION: <b>MAKERERE UNIVERSITY (COCIS)</b> &bull; TERM: <b>RECESS 2026</b> &bull; HOST: <b>NILE ANALYTICS</b>';
+          if (osSecurityStatus) osSecurityStatus.innerHTML = 'SECURITY: <b style="color:#10b981;">CRYPTOGRAPHIC GEOFENCE ACTIVE</b>';
+          if (dashAvatarMain) dashAvatarMain.textContent = 'AN';
+          if (dashProfileTitle) dashProfileTitle.innerHTML = 'Alice Nakato <span style="font-size:8.5px; color:#38bdf8; font-weight:600;">23/U/0482/EVE</span>';
+          if (dashProfileSub) dashProfileSub.textContent = 'Host: Nile Analytics Institute • Supervisor: Dr. K. Sempala';
+          if (dashBadgeStatus) dashBadgeStatus.innerHTML = '<span class="os-live-dot" style="width:5px; height:5px;"></span><span>GPS Geofence: Active (50m)</span>';
+        } else if (idx === 1) {
+          const activeLink = document.getElementById('sb-link-review');
+          if (activeLink) activeLink.classList.add('active');
+          if (sbTierBadge) sbTierBadge.textContent = 'Tier 2 • Supervisor';
+          if (sbUserAvatar) sbUserAvatar.textContent = 'KS';
+          if (sbUserName) sbUserName.textContent = 'Dr. K. Sempala';
+          if (sbUserRole) sbUserRole.textContent = 'Lead Workplace Mentor';
+          if (osBreadcrumb) osBreadcrumb.innerHTML = 'ORGANIZATION: <b>NILE ANALYTICS INSTITUTE</b> &bull; CODE: <b>NLE-MAK-08</b> &bull; INTERN: <b>ALICE NAKATO</b>';
+          if (osSecurityStatus) osSecurityStatus.innerHTML = 'SECURITY: <b style="color:#10b981;">ECDSA SECP256K1 ACTIVE</b>';
+          if (dashAvatarMain) dashAvatarMain.textContent = 'KS';
+          if (dashProfileTitle) dashProfileTitle.innerHTML = 'Dr. K. Sempala <span style="font-size:8.5px; color:#34d399; font-weight:600;">Lead Mentor</span>';
+          if (dashProfileSub) dashProfileSub.textContent = 'Nile Analytics Institute • Data & Systems Engineering';
+          if (dashBadgeStatus) dashBadgeStatus.innerHTML = '<span class="os-live-dot" style="width:5px; height:5px;"></span><span>Review Queue: 1 Pending</span>';
+        } else if (idx === 2) {
+          const activeLink = document.getElementById('sb-link-evaluations');
+          if (activeLink) activeLink.classList.add('active');
+          if (sbTierBadge) sbTierBadge.textContent = 'Tier 4 • Assessor';
+          if (sbUserAvatar) sbUserAvatar.textContent = 'MB';
+          if (sbUserName) sbUserName.textContent = 'Prof. M. Bwambale';
+          if (sbUserRole) sbUserRole.textContent = 'Academic Assessor / Dean';
+          if (osBreadcrumb) osBreadcrumb.innerHTML = 'FACULTY: <b>COCIS BOARD OF EXAMINERS</b> &bull; PROGRAM: <b>BIST FIELD ATTACHMENT</b> &bull; YEAR: <b>2026</b>';
+          if (osSecurityStatus) osSecurityStatus.innerHTML = 'SECURITY: <b style="color:#10b981;">SENATE RATIFIED CREDENTIALS</b>';
+          if (dashAvatarMain) dashAvatarMain.textContent = 'MB';
+          if (dashProfileTitle) dashProfileTitle.innerHTML = 'Prof. M. Bwambale <span style="font-size:8.5px; color:#a78bfa; font-weight:600;">Academic Dean</span>';
+          if (dashProfileSub) dashProfileSub.textContent = 'Makerere University • College of Computing & IS';
+          if (dashBadgeStatus) dashBadgeStatus.innerHTML = '<span class="os-live-dot" style="width:5px; height:5px;"></span><span>Institutional Rubric: Ratified</span>';
+        }
+      }
+
+      function runWorkflowScript(idx) {
+        clearWorkflowScript();
+        if (RM || userManualOverride || !tourPlaying) return;
+
+        // Reset modals & state
+        if (modalTranscript) modalTranscript.classList.remove('open');
+
+        if (idx === 0) {
+          // ── Workflow 0: Student Intern Workspace ──
+          if (logTextEntry) logTextEntry.value = '';
+          if (btnSubmitLog) {
+            btnSubmitLog.textContent = 'Submit Day 38 Log for Mentor Review';
+            btnSubmitLog.classList.remove('submitted');
+          }
+          const logBadge = document.getElementById('log-status-badge');
+          if (logBadge) {
+            logBadge.textContent = 'DRAFT // PENDING REVIEW';
+            logBadge.className = 'sub-badge draft';
+          }
+          if (btnVerifyGps) {
+            btnVerifyGps.classList.remove('locked');
+            btnVerifyGps.innerHTML = '<span>📡 Verify Geofence Clock-In</span>';
+          }
+          if (geofenceStatusText) {
+            geofenceStatusText.textContent = '● Verifying Campus Perimeter...';
+            geofenceStatusText.style.color = '#38bdf8';
+          }
+          const pillsContainer = document.getElementById('student-skill-pills');
+          if (pillsContainer) pillsContainer.innerHTML = '';
+
+          // Step 1: GPS Lock
+          currentScriptTimeout.push(setTimeout(() => {
+            playPing();
+            if (btnVerifyGps) {
+              btnVerifyGps.classList.add('sim-active');
+              setTimeout(() => btnVerifyGps.classList.remove('sim-active'), 180);
+              btnVerifyGps.classList.add('locked');
+              btnVerifyGps.innerHTML = '<span>✓ Geofence Locked (08:31 AM)</span>';
+            }
+            if (geofenceStatusText) {
+              geofenceStatusText.textContent = '● Verified on Campus Perimeter (±1.8m)';
+              geofenceStatusText.style.color = '#10b981';
+            }
+            showToast('📡', 'Biometric GPS Locked to Nile Campus Perimeter');
+          }, 800));
+
+          // Step 2: Live Typing Log Entry
+          currentScriptTimeout.push(setTimeout(() => {
+            const sampleReport = 'Implemented PostgreSQL partition pruning, optimized index scans on 4.2M records, and integrated Redis cache cluster. Query p99 latency decreased from 140ms to 4.2ms.';
+            simulateTyping(sampleReport, logTextEntry, () => {
+              // Step 3: Pop Skills
+              if (pillsContainer) {
+                const skills = ['PostgreSQL 16', 'Redis Cache', 'DB Indexing', 'Distributed Systems'];
+                skills.forEach((skill, sIdx) => {
+                  currentScriptTimeout.push(setTimeout(() => {
+                    const pill = document.createElement('span');
+                    pill.className = 'skill-pill';
+                    pill.textContent = skill;
+                    pillsContainer.appendChild(pill);
+                    playKey();
+                  }, sIdx * 220));
+                });
+              }
+            });
+          }, 1800));
+
+          // Step 4: Submit Log
+          currentScriptTimeout.push(setTimeout(() => {
+            if (btnSubmitLog) {
+              btnSubmitLog.classList.add('sim-active');
+              setTimeout(() => btnSubmitLog.classList.remove('sim-active'), 180);
+              btnSubmitLog.textContent = '✓ Day 38 Log Submitted to Mentor';
+              btnSubmitLog.classList.add('submitted');
+            }
+            if (logBadge) {
+              logBadge.textContent = '✓ QUEUED FOR MENTOR SIGN-OFF';
+              logBadge.className = 'sub-badge queued';
+            }
+            playChime();
+            showToast('📝', 'Day 38 Technical Log Submitted to Dr. Sempala');
+          }, 6600));
+
+        } else if (idx === 1) {
+          // ── Workflow 1: Workplace Mentor Console ──
+          const mentorBadge = document.getElementById('mentor-status-badge');
+          const mentorFeedback = document.getElementById('mentor-feedback-text');
+          if (mentorFeedback) mentorFeedback.value = '';
+          if (cryptoSeal) cryptoSeal.classList.remove('stamped');
+          if (mentorBadge) {
+            mentorBadge.textContent = 'AWAITING 1-TAP APPROVAL';
+            mentorBadge.className = 'sub-badge';
+          }
+
+          // Step 1: Live Type Mentor Feedback
+          currentScriptTimeout.push(setTimeout(() => {
+            const feedback = 'Verified database benchmark graphs and Git pull request #42. Execution meets industry standards. 8.0 hours approved.';
+            simulateTyping(feedback, mentorFeedback);
+          }, 900));
+
+          // Step 2: 1-Tap Cryptographic Sign-Off Stamp
+          currentScriptTimeout.push(setTimeout(() => {
+            if (btnMentorSign) {
+              btnMentorSign.classList.add('sim-active');
+              setTimeout(() => btnMentorSign.classList.remove('sim-active'), 180);
+            }
+            playStamp();
+            if (cryptoSeal) cryptoSeal.classList.add('stamped');
+            if (mentorBadge) {
+              mentorBadge.textContent = '✓ CRYPTOGRAPHICALLY CERTIFIED (0x9f4a...e12b)';
+              mentorBadge.className = 'sub-badge verified';
+            }
+            showToast('🛡️', 'Mentor Attestation Ratified (ECDSA Nonce 0x9f4a)');
+          }, 4400));
+
+        } else if (idx === 2) {
+          // ── Workflow 2: Faculty Dean & University Senate Evaluation ──
+          const rubric1 = document.getElementById('rubric-fill-1');
+          const rubric2 = document.getElementById('rubric-fill-2');
+          const rubric3 = document.getElementById('rubric-fill-3');
+          const rubric4 = document.getElementById('rubric-fill-4');
+          if (rubric1) rubric1.style.width = '0%';
+          if (rubric2) rubric2.style.width = '0%';
+          if (rubric3) rubric3.style.width = '0%';
+          if (rubric4) rubric4.style.width = '0%';
+
+          // Step 1: Smooth rubric bars fill
+          currentScriptTimeout.push(setTimeout(() => {
+            playPing();
+            if (rubric1) rubric1.style.width = '100%';
+            if (rubric2) rubric2.style.width = '97.5%';
+            if (rubric3) rubric3.style.width = '100%';
+            if (rubric4) rubric4.style.width = '94.0%';
+          }, 600));
+
+          // Step 2: Issue Official Senate Transcript Modal
+          currentScriptTimeout.push(setTimeout(() => {
+            if (btnGenTranscript) {
+              btnGenTranscript.classList.add('sim-active');
+              setTimeout(() => btnGenTranscript.classList.remove('sim-active'), 180);
+            }
+            playChime();
+            if (modalTranscript) modalTranscript.classList.add('open');
+            showToast('🏛️', 'Makerere Senate Transcript Generated');
+          }, 3600));
+
+          // Step 3: Close modal before transition
+          currentScriptTimeout.push(setTimeout(() => {
+            if (modalTranscript) modalTranscript.classList.remove('open');
+          }, 7600));
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════
+         WORKFLOW SWITCHER & SYNCHRONIZATION
+         ═══════════════════════════════════════════════════ */
+      function selectWorkflow(idx, userInitiated = false) {
+        currentWorkflow = idx;
+        simStepStartTime = Date.now();
+
+        // Update Intel Card content
+        const d = WORKFLOW_DATA[idx];
+        if (s2IntelStageTag) s2IntelStageTag.textContent = d.stageTag;
+        if (s2IntelTitle) s2IntelTitle.textContent = d.title;
+        if (s2IntelDesc) s2IntelDesc.textContent = d.desc;
+        if (s2Tag1) s2Tag1.textContent = d.tags[0];
+        if (s2Tag2) s2Tag2.textContent = d.tags[1];
+        if (s2Tag3) s2Tag3.textContent = d.tags[2];
+        if (osUserName) osUserName.textContent = d.user;
+
+        // Update In-Screen Tabs & Views
+        osTabs.forEach((tab, i) => {
+          if (i === idx) tab.classList.add('active');
+          else tab.classList.remove('active');
+        });
+        wfViews.forEach((view, i) => {
+          if (i === idx) view.classList.add('active');
+          else view.classList.remove('active');
+        });
+
+        // Update Top HUD Stage Pills
+        s2StagePills.forEach((pill, i) => {
+          if (i === idx) pill.classList.add('active');
+          else pill.classList.remove('active');
+        });
+
+        // Reset progress bars
+        s2ProgressBars.forEach((p, i) => {
+          if (!p) return;
+          if (i < idx) p.style.transform = 'scaleX(1)';
+          else if (i > idx) p.style.transform = 'scaleX(0)';
+        });
+
+        if (userInitiated) {
+          playClick();
+        }
+
+        // Update native dashboard sidebar and header
+        updateSidebarForRole(idx);
+
+        // Run simulation script for this workflow
+        runWorkflowScript(idx);
+      }
+
+      /* ── Continuous Step Progress & Autopilot Loop ── */
+      function tickSimulationProgress() {
+        if (mode === 'case' && tourPlaying && !userManualOverride && !RM) {
+          const elapsed = Date.now() - simStepStartTime;
+          const p = Math.min(1, elapsed / STEP_DURATION);
+          if (s2ProgressBars[currentWorkflow]) {
+            s2ProgressBars[currentWorkflow].style.transform = `scaleX(${p})`;
+          }
+
+          if (elapsed >= STEP_DURATION) {
+            const nextIdx = (currentWorkflow + 1) % WORKFLOW_DATA.length;
+            selectWorkflow(nextIdx, false);
+          }
+        }
+        requestAnimationFrame(tickSimulationProgress);
+      }
+      requestAnimationFrame(tickSimulationProgress);
+
+      /* ── User Manual Interaction Override ── */
+      function pauseAutopilotForManual() {
+        userManualOverride = true;
+        clearWorkflowScript();
+        if (simCursor) simCursor.style.opacity = '0';
+        if (s2TourText) s2TourText.textContent = 'Manual Mode';
+        clearTimeout(manualOverrideTimer);
+        manualOverrideTimer = setTimeout(() => {
+          userManualOverride = false;
+          if (simCursor) simCursor.style.opacity = '1';
+          if (s2TourText) s2TourText.textContent = tourPlaying ? 'Autopilot' : 'Resume';
+          if (tourPlaying) {
+            selectWorkflow(currentWorkflow, false);
+          }
+        }, 4500);
+      }
+
+      if (screenEl) {
+        screenEl.addEventListener('pointerenter', pauseAutopilotForManual);
+        screenEl.addEventListener('pointermove', pauseAutopilotForManual);
+        screenEl.addEventListener('click', pauseAutopilotForManual);
+      }
+
+      /* ── Play / Pause Tour Toggle ── */
+      function toggleTour() {
+        tourPlaying = !tourPlaying;
+        if (s2TourIcon) s2TourIcon.textContent = tourPlaying ? '⏸' : '▶';
+        if (s2TourText) s2TourText.textContent = tourPlaying ? 'Autopilot' : 'Resume';
+        if (tourPlaying) {
+          playClick();
+          simStepStartTime = Date.now();
+          runWorkflowScript(currentWorkflow);
+        } else {
+          playClick();
+          clearWorkflowScript();
+        }
+      }
+
+      if (s2TourToggle) s2TourToggle.addEventListener('click', toggleTour);
+
+      /* ── Frame Fitting & Layout (pose) ── */
+      function pose(m) {
+        const W = window.innerWidth;
+        const H = window.innerHeight;
+        const isMobile = W <= 820;
+
+        const n = isMobile ? W / 430 : Math.min(W / 1440, H / 900);
+        document.documentElement.style.setProperty('--n', `${n}px`);
+
+        frameEl.classList.remove('d-fade', 'm-fade');
+        frameEl.classList.add(isMobile ? 'm-fade' : 'd-fade');
+
+        let s, x, y;
+        if (!isMobile) {
+          const cover = Math.max(W / 1440, H / 810);
+          const u = Math.min(W / 1440, H / 900);
+
+          if (m === 'hero') {
+            s = cover;
+            x = (W - 1440 * s) / 2;
+            y = 0;
+            fitHero(s, x, y, W, H);
+          } else {
+            const top = 56 * u;
+            const fit = (H - top - 32 * u) / (762 - 79);
+            if (fit >= cover) {
+              s = cover;
+              y = Math.min(0, Math.max(H - 810 * s, top - 79 * s));
+            } else {
+              s = fit;
+              y = top - 79 * fit;
+            }
+            x = (W - 1440 * s) / 2;
+          }
+        } else {
+          if (m === 'hero') {
+            s = Math.min(W / 650, (0.62 * H) / 810);
+            x = W / 2 - 805 * s;
+            y = H - 790 * s;
+          } else {
+            const navH = 0.022 * H + 42 + 22;
+            s = Math.min((W - 24) / 905, Math.max(0.2, (H - navH - 140) / (762 - 95)));
+            x = W / 2 - 720 * s;
+            y = H - navH - 755 * s;
+          }
+
+          const mbadgeW = 0.27 * W;
+          document.documentElement.style.setProperty('--mbs', (mbadgeW / 582).toString());
+        }
+
+        return { s, x, y };
+      }
+
+      function fitHero(s, x, y, W, H) {
+        const vl = Math.max(0, -x / s);
+        const vr = Math.min(1440, (W - x) / s);
+        const pad = 18 / s;
+
+        wmSvg.style.left = `${vl + 0.6 * pad}px`;
+        wmSvg.style.width = `${vr - vl - 1.2 * pad}px`;
+
+        const bLeft = Math.min(986, vr - pad - 417);
+        const vb = Math.min(810, (H - y) / s);
+        const bTop = Math.min(-165, vb - 56 / s - 935);
+        badgeEl.style.left = `${bLeft}px`;
+        badgeEl.style.top = `${bTop}px`;
+
+        scriptEl.style.left = `${vl + pad + 70}px`;
+      }
+
+      function place(m) {
+        const { s, x, y } = pose(m);
+        frameEl.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
+        if (m === 'case') {
+          frameEl.classList.add('m-case');
+          stageEl.classList.add('m-case');
+        } else {
+          frameEl.classList.remove('m-case');
+          stageEl.classList.remove('m-case');
+        }
+      }
+
+      place('hero');
+
+      window.addEventListener('resize', () => {
+        frameEl.classList.remove('glide');
+        place(mode);
+      });
+
+      /* ── 5. Entrance Sequence ── */
+      function runEntrance() {
+        if (entered) return;
+        entered = true;
+
+        document.querySelectorAll('.pre').forEach((el) => el.classList.remove('pre'));
+
+        if (RM) {
+          selectWorkflow(0);
+          return;
+        }
+
+        const tags = [btnOverview, btnFeatures, btnContacts, btnDemo, btnSound];
+        tags.forEach((tag, i) => {
+          if (!tag) return;
+          tag.animate(
+            [
+              { opacity: 0, transform: 'translateY(-40px) rotate(-4deg)' },
+              { opacity: 1, transform: 'none' },
+            ],
+            {
+              duration: 700,
+              delay: 120 + i * 80,
+              easing: 'cubic-bezier(.3, 1.5, .5, 1)',
+              fill: 'both',
+            }
+          );
+        });
+
+        [wmSvg, mWmSvg].forEach((wm) => {
+          if (!wm) return;
+          wm.animate(
+            [
+              { opacity: 0, transform: 'translateY(60px)', clipPath: 'inset(100% 0 0 0)' },
+              { opacity: 1, transform: 'translateY(0)', clipPath: 'inset(0)' },
+            ],
+            {
+              duration: 900,
+              delay: 200,
+              easing: 'cubic-bezier(.16, 1, .3, 1)',
+              fill: 'both',
+            }
+          );
+        });
+
+        [scriptEl, mScriptEl].forEach((sc) => {
+          if (!sc) return;
+          sc.animate(
+            [
+              { opacity: 0, clipPath: 'inset(0 100% 0 0)' },
+              { opacity: 1, clipPath: 'inset(0)' },
+            ],
+            {
+              duration: 900,
+              delay: 450,
+              easing: 'cubic-bezier(.2, .8, .2, 1)',
+              fill: 'both',
+            }
+          );
+        });
+
+        const bIn = badgeEl.animate(
+          [
+            { opacity: 0, transform: 'translateY(-110%) rotate(6deg)', offset: 0 },
+            { opacity: 1, transform: 'translateY(0) rotate(-2deg)', offset: 0.7 },
+            { opacity: 1, transform: 'rotate(0)', offset: 1 },
+          ],
+          {
+            duration: 1200,
+            delay: 400,
+            easing: 'cubic-bezier(.2, .8, .2, 1)',
+            fill: 'both',
+          }
+        );
+
+        bIn.finished.then(() => {
+          startBadgeSway();
+        });
+      }
+
+      function startBadgeSway() {
+        if (badgeSway) badgeSway.cancel();
+        badgeSway = badgeEl.animate(
+          [
+            { transform: 'rotate(-0.8deg)' },
+            { transform: 'rotate(0.8deg)' },
+            { transform: 'rotate(-0.8deg)' },
+          ],
+          {
+            duration: 5400,
+            iterations: Infinity,
+            easing: 'ease-in-out',
+          }
+        );
+      }
+
+      /* ── Drag & Flick on Lanyard Badge ── */
+      let dragging = false;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let badgeRot = 0;
+      let badgeVelocity = 0;
+      let lastDragX = 0;
+      let lastDragTime = 0;
+
+      badgeHitEl.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        badgeHitEl.setPointerCapture(e.pointerId);
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        lastDragX = e.clientX;
+        lastDragTime = Date.now();
+        if (badgeSway) badgeSway.pause();
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - dragStartX;
+        const now = Date.now();
+        const dt = Math.max(1, now - lastDragTime);
+        badgeVelocity = (e.clientX - lastDragX) / dt;
+        lastDragX = e.clientX;
+        lastDragTime = now;
+
+        badgeRot = Math.max(-18, Math.min(18, dx * 0.08));
+        badgeEl.style.transform = `rotate(${badgeRot}deg)`;
+      });
+
+      window.addEventListener('pointerup', (e) => {
+        if (!dragging) return;
+        dragging = false;
+        try { badgeHitEl.releasePointerCapture(e.pointerId); } catch (_) { }
+
+        const fling = Math.max(-25, Math.min(25, badgeRot + badgeVelocity * 12));
+        const settle = badgeEl.animate(
+          [
+            { transform: `rotate(${badgeRot}deg)` },
+            { transform: `rotate(${fling}deg)`, offset: 0.25 },
+            { transform: 'rotate(0deg)' },
+          ],
+          {
+            duration: 900,
+            easing: 'cubic-bezier(.17, .89, .32, 1.25)',
+          }
+        );
+
+        settle.finished.then(() => {
+          badgeEl.style.transform = '';
+          startBadgeSway();
+        });
+      });
+
+      // Sound button spin on hover
+      btnSound.addEventListener('mouseenter', () => {
+        if (!RM) {
+          btnSound.animate(
+            [
+              { transform: 'rotate(0)' },
+              { transform: 'rotate(-15deg)' },
+              { transform: 'rotate(10deg)' },
+              { transform: 'rotate(0)' },
+            ],
+            { duration: 1400, easing: 'ease-out', composite: 'add' }
+          );
+        }
+      });
+
+      const fontReady = document.fonts ? document.fonts.ready : Promise.resolve();
+      const plateReady = new Promise((resolve) => {
+        if (plateImg.complete && plateImg.naturalHeight > 0) resolve();
+        else {
+          plateImg.addEventListener('load', resolve, { once: true });
+          plateImg.addEventListener('error', resolve, { once: true });
+        }
+      });
+
+      Promise.race([
+        Promise.all([fontReady, plateReady]),
+        new Promise((r) => setTimeout(r, 2200)),
+      ]).then(() => {
+        requestAnimationFrame(runEntrance);
+      });
+      setTimeout(runEntrance, 3500);
+
+      /* ── 6. Hero -> Laptop Dive (toCase) ── */
+      function toCase() {
+        if (busy || mode === 'case') return;
+        busy = true;
+        playSwell();
+        document.body.classList.add('busy');
+
+        [wmSvg, mWmSvg].forEach((wm) => {
+          if (!wm) return;
+          wm.animate(
+            [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-40px)' }],
+            { duration: 380, easing: 'cubic-bezier(.5, 0, .75, 0)', fill: 'forwards' }
+          );
+        });
+
+        [scriptEl, mScriptEl].forEach((sc) => {
+          if (!sc) return;
+          sc.animate([{ opacity: 1 }, { opacity: 0 }], {
+            duration: 380,
+            easing: 'cubic-bezier(.5, 0, .75, 0)',
+            fill: 'forwards',
+          });
+        });
+
+        if (badgeSway) badgeSway.cancel();
+        badgeEl.animate(
+          [{ opacity: 1, transform: 'translateY(0) rotate(0)' }, { opacity: 0, transform: 'translateY(-110%) rotate(-6deg)' }],
+          { duration: 380, easing: 'cubic-bezier(.5, 0, .75, 0)', fill: 'forwards' }
+        );
+
+        setTimeout(() => {
+          if (RM || !transReady) {
+            place('case');
+            casePlateImg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, fill: 'forwards' });
+            arriveCase();
+            return;
+          }
+
+          transVideo.currentTime = 0;
+          transVideo.style.opacity = '1';
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              plateImg.style.visibility = 'hidden';
+              cutImg.animate([{ opacity: 1 }, { opacity: 0 }], {
+                duration: 260,
+                easing: 'ease-out',
+                fill: 'forwards',
+              });
+
+              frameEl.style.setProperty('--glide', '1.6s');
+              frameEl.classList.add('glide');
+              place('case');
+            });
+          });
+
+          transVideo.play().catch(() => { });
+          const duration = transVideo.duration || 5.04;
+
+          function tickSpeed() {
+            const cur = transVideo.currentTime;
+            const p = cur / duration;
+            const rate = Math.max(1.2, 1.8 + 2.4 * Math.sin(Math.PI * Math.min(p * 1.08, 1)));
+            transVideo.playbackRate = rate;
+
+            if (transVideo.ended || p >= 0.995) {
+              transVideo.pause();
+              casePlateImg.style.opacity = '1';
+              transVideo.style.opacity = '0';
+              arriveCase();
+            } else {
+              requestAnimationFrame(tickSpeed);
+            }
+          }
+          requestAnimationFrame(tickSpeed);
+        }, 330);
+      }
+
+      /* ── 7. Arrive in Case Mode ── */
+      function arriveCase() {
+        mode = 'case';
+        playChime();
+        document.body.classList.add('is-case');
+
+        plateImg.style.visibility = 'hidden';
+        cutImg.style.opacity = '0';
+        screenEl.style.opacity = '1';
+
+        flashEl.animate(
+          [{ opacity: 0 }, { opacity: 0.55 }, { opacity: 0 }],
+          { duration: 600, easing: 'ease-out' }
+        );
+
+        selectWorkflow(0, false);
+
+        setTimeout(() => {
+          busy = false;
+          document.body.classList.remove('busy');
+          frameEl.classList.remove('glide');
+        }, 700);
+      }
+
+      /* ── 8. Back to Hero (toHero) ── */
+      function toHero() {
+        if (busy || mode === 'hero') return;
+        busy = true;
+        playClick();
+        clearWorkflowScript();
+        document.body.classList.add('busy');
+
+        screenEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' });
+        document.body.classList.remove('is-case');
+
+        frameEl.style.setProperty('--glide', '.9s');
+        frameEl.classList.add('glide');
+        place('hero');
+
+        plateImg.style.visibility = 'visible';
+        cutImg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, delay: 150, fill: 'forwards' });
+
+        casePlateImg.animate(
+          [{ opacity: 1, filter: 'blur(0)' }, { opacity: 0, filter: 'blur(12px)' }],
+          { duration: 800, easing: 'cubic-bezier(.65, 0, .35, 1)', fill: 'forwards' }
+        );
+
+        plateImg.animate(
+          [{ transform: 'scale(1.12)', filter: 'blur(8px)' }, { transform: 'scale(1)', filter: 'blur(0)' }],
+          { duration: 900, easing: 'cubic-bezier(.2, .8, .2, 1)', fill: 'forwards' }
+        );
+
+        setTimeout(() => {
+          [wmSvg, mWmSvg].forEach((wm) => {
+            if (!wm) return;
+            wm.animate(
+              [{ opacity: 0, transform: 'translateY(40px)' }, { opacity: 1, transform: 'translateY(0)' }],
+              { duration: 700, fill: 'forwards' }
+            );
+          });
+
+          [scriptEl, mScriptEl].forEach((sc) => {
+            if (!sc) return;
+            sc.animate(
+              [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0)' }],
+              { duration: 700, delay: 250, fill: 'forwards' }
+            );
+          });
+
+          const bIn = badgeEl.animate(
+            [
+              { opacity: 0, transform: 'translateY(-110%) rotate(6deg)', offset: 0 },
+              { opacity: 1, transform: 'translateY(0) rotate(-2deg)', offset: 0.7 },
+              { opacity: 1, transform: 'rotate(0)', offset: 1 },
+            ],
+            { duration: 1100, fill: 'forwards' }
+          );
+
+          bIn.finished.then(() => {
+            startBadgeSway();
+          });
+
+          mode = 'hero';
+          currentWorkflow = 0;
+          screenEl.style.opacity = '0';
+
+          setTimeout(() => {
+            busy = false;
+            document.body.classList.remove('busy');
+            frameEl.classList.remove('glide');
+          }, 1000);
+        }, 250);
+      }
+
+      /* ── 9. Stepper Actions ── */
+      function nextWorkflow() {
+        if (busy) return;
+        const next = (currentWorkflow + 1) % WORKFLOW_DATA.length;
+        selectWorkflow(next, true);
+      }
+
+      function prevWorkflow() {
+        if (busy) return;
+        const prev = (currentWorkflow - 1 + WORKFLOW_DATA.length) % WORKFLOW_DATA.length;
+        selectWorkflow(prev, true);
+      }
+
+      /* ── 10. Event Listeners ── */
+      // Scene 1 Triggers
+      btnOverview.addEventListener('click', toHero);
+      btnFeatures.addEventListener('click', toCase);
+      btnContacts.addEventListener('click', (e) => e.preventDefault());
+      btnDemo.addEventListener('click', (e) => {
+        e.preventDefault();
+        try {
+          if (window.top && window.top !== window) {
+            window.top.location.href = '/auth';
+            return;
+          }
+        } catch (_) { }
+        window.location.href = '/auth';
+      });
+
+      // Sound Toggle
+      function toggleSound() {
+        sfxEnabled = !sfxEnabled;
+        const icon = sfxEnabled ? '🔊' : '🔇';
+        if (soundIcon) soundIcon.textContent = icon;
+        if (s2SoundIcon) s2SoundIcon.textContent = icon;
+        if (sfxEnabled) playClick();
+      }
+      btnSound.addEventListener('click', toggleSound);
+      if (s2SoundBtn) s2SoundBtn.addEventListener('click', toggleSound);
+
+      // Scene 2 Navigation Controls
+      if (s2BackBtn) s2BackBtn.addEventListener('click', toHero);
+
+      // HUD Stage Pills Click Handlers
+      s2StagePills.forEach((pill, idx) => {
+        if (pill) {
+          pill.addEventListener('click', () => {
+            selectWorkflow(idx, true);
+          });
+        }
+      });
+
+      // In-Screen Tabs Click Handlers
+      osTabs.forEach((tab, idx) => {
+        if (tab) {
+          tab.addEventListener('click', () => {
+            pauseAutopilotForManual();
+            selectWorkflow(idx, true);
+          });
+        }
+      });
+
+      // CTA Link
+      if (s2CtaLink) {
+        s2CtaLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          try {
+            if (window.top && window.top !== window) {
+              window.top.location.href = '/auth';
+              return;
+            }
+          } catch (_) { }
+          window.location.href = '/auth';
+        });
+      }
+
+      // In-Screen Interactive Action Listeners (Manual Clicks)
+      if (btnApplyNile) {
+        btnApplyNile.addEventListener('click', () => {
+          pauseAutopilotForManual();
+          if (modalMou) modalMou.classList.add('open');
+          playChime();
+        });
+      }
+      if (modalMouCancel) {
+        modalMouCancel.addEventListener('click', () => {
+          if (modalMou) modalMou.classList.remove('open');
+        });
+      }
+      if (modalMouConfirm) {
+        modalMouConfirm.addEventListener('click', () => {
+          if (modalMou) modalMou.classList.remove('open');
+          if (btnApplyNile) {
+            btnApplyNile.textContent = '✓ Tripartite Ratified';
+            btnApplyNile.classList.add('applied');
+          }
+          playChime();
+          showToast('📑', 'Tripartite MOU Ratified (Nonce: 0x7a3f...c91e)');
+        });
+      }
+
+      if (btnVerifyGps) {
+        btnVerifyGps.addEventListener('click', () => {
+          pauseAutopilotForManual();
+          playPing();
+          btnVerifyGps.classList.add('locked');
+          btnVerifyGps.innerHTML = '<span>✓ Geofence Locked (150m)</span>';
+          if (geofenceStatusText) geofenceStatusText.textContent = '● Verified on Campus Perimeter';
+          showToast('📡', 'Biometric GPS Locked to Nile Campus Perimeter');
+        });
+      }
+
+      if (btnSubmitLog) {
+        btnSubmitLog.addEventListener('click', () => {
+          pauseAutopilotForManual();
+          btnSubmitLog.textContent = '✓ Log Submitted to Mentor';
+          btnSubmitLog.classList.add('submitted');
+          playChime();
+          showToast('📝', 'Day 28 Technical Log Submitted to Dr. Sempala');
+        });
+      }
+
+      if (btnMentorSign) {
+        btnMentorSign.addEventListener('click', () => {
+          pauseAutopilotForManual();
+          playStamp();
+          if (cryptoSeal) cryptoSeal.classList.add('stamped');
+          if (mentorStatusBadge) {
+            mentorStatusBadge.textContent = '✓ CRYPTOGRAPHICALLY CERTIFIED';
+            mentorStatusBadge.classList.add('verified');
+          }
+          showToast('🛡️', 'Mentor Attestation Ratified (ECDSA Nonce 0x9f4a)');
+        });
+      }
+
+      if (btnGenTranscript) {
+        btnGenTranscript.addEventListener('click', () => {
+          pauseAutopilotForManual();
+          playChime();
+          if (modalTranscript) modalTranscript.classList.add('open');
+          showToast('🏛️', 'Makerere Senate Transcript Generated');
+        });
+      }
+      if (modalTranscriptClose) {
+        modalTranscriptClose.addEventListener('click', () => {
+          if (modalTranscript) modalTranscript.classList.remove('open');
+        });
+      }
+
+      // Wheel Navigation
+      let lastWheelTime = 0;
+      window.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const now = Date.now();
+        if (now - lastWheelTime < 800) return;
+        if (Math.abs(e.deltaY) < 18) return;
+
+        lastWheelTime = now;
+        if (mode === 'hero') {
+          if (e.deltaY > 0) toCase();
+        } else {
+          if (e.deltaY > 0) nextWorkflow();
+          else prevWorkflow();
+        }
+      }, { passive: false });
+
+      // Touch Gestures
+      let touchStartY = 0;
+      let touchStartX = 0;
+      window.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length) {
+          touchStartY = e.touches[0].clientY;
+          touchStartX = e.touches[0].clientX;
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', (e) => {
+        if (e.changedTouches && e.changedTouches.length) {
+          const dy = e.changedTouches[0].clientY - touchStartY;
+          const dx = e.changedTouches[0].clientX - touchStartX;
+
+          if (mode === 'hero') {
+            if (dy <= -40) toCase();
+          } else {
+            if (dy <= -40 || dx <= -40) nextWorkflow();
+            else if (dy >= 40 || dx >= 40) prevWorkflow();
+          }
+        }
+      }, { passive: true });
+
+      // Keyboard Controls
+      window.addEventListener('keydown', (e) => {
+        if (mode === 'hero') {
+          if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+            e.preventDefault();
+            toCase();
+          }
+        } else {
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            toHero();
+          } else if (e.key === ' ') {
+            e.preventDefault();
+            toggleTour();
+          } else if (['ArrowRight', 'ArrowDown', 'PageDown'].includes(e.key)) {
+            e.preventDefault();
+            nextWorkflow();
+          } else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {
+            e.preventDefault();
+            prevWorkflow();
+          }
+        }
+      });
+      // Deep link to laptop mode
+      if (window.location.hash === '#case' || window.location.search.includes('case')) {
+        setTimeout(toCase, 600);
+      }
+    })();
+  </script>
+</body>
+
+</html>
