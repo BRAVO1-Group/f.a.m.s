@@ -303,61 +303,65 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
 
       {/* ── Supervisor KPI Cards (Scoped to Assigned Students) ── */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-success bg-success text-success-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
                 Assigned Interns
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {assignedStudentsDetails.length}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">Alice Wanjiku & Kevin Kiprono</p>
+            <p className="mt-2 text-xs text-success-foreground/80">Alice Wanjiku & Kevin Kiprono</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-info bg-info text-info-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
                 Pending Approval
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {pendingActivities.length}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">Submissions awaiting your sign-off</p>
+            <p className="mt-2 text-xs text-info-foreground/80">
+              Submissions awaiting your sign-off
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-info bg-info text-info-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
                 Approved Deliverables
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {approvedActivities.length}
             </p>
-            <p className="mt-2 text-xs text-success flex items-center font-medium">
+            <p className="mt-2 text-xs text-info-foreground/80 flex items-center font-medium">
               Signed off by Host Org Mentor
             </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-success bg-success text-success-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
                 Revisions Requested
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {correctionActivities.length}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">Logs flagged for mentee correction</p>
+            <p className="mt-2 text-xs text-success-foreground/80">
+              Logs flagged for mentee correction
+            </p>
           </CardContent>
         </Card>
       </div>
