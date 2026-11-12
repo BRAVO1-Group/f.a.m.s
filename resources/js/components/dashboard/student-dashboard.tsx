@@ -194,7 +194,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
     : "TechCorp Kenya Ltd";
 
   return (
-    <div className="space-y-6 antialiased">
+    <div className="dashboard-page space-y-6 antialiased">
       {/* ── Welcome Header Banner ── */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
         <div className="pointer-events-none absolute -right-20 -top-20 size-72 rounded-full bg-white/10 blur-2xl" />
@@ -331,7 +331,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Days Completed
+                Attendance Days Completed
               </span>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
@@ -342,7 +342,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
             </div>
             <div className="mt-3">
               <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Progress to clearance</span>
+                <span>Approved activities progress</span>
                 <span className="font-semibold text-foreground">{completionRate}%</span>
               </div>
               <Progress value={completionRate} className="h-2" />

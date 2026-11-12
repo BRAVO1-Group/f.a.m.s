@@ -369,7 +369,7 @@ export function UniversityAdminDashboard({
   }).length;
 
   return (
-    <div className="space-y-6 antialiased">
+    <div className="dashboard-page space-y-6 antialiased">
       {/* ── Clean Dean Page Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>

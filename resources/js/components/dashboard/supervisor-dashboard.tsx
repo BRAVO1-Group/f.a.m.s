@@ -224,7 +224,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
   };
 
   return (
-    <div className="space-y-6 antialiased">
+    <div className="dashboard-page space-y-6 antialiased">
       {/* ── Corporate Received Logins Security Notice ── */}
       <div className="rounded-xl border border-primary/25 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
         <div className="flex items-start">

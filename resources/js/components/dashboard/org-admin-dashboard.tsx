@@ -206,7 +206,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
   };
 
   return (
-    <div className="space-y-6 antialiased">
+    <div className="dashboard-page space-y-6 antialiased">
       {/* ── Security & Scoping Notice: Received University Logins ── */}
       <div className="rounded-xl border border-primary/25 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
         <div className="flex items-start gap-3">

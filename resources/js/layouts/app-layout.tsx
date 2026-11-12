@@ -281,6 +281,7 @@ export function AppShell({
             aria-label="Close navigation"
           >
             <X className="size-5" />
+            Close
           </button>
         </div>
 
@@ -377,11 +378,12 @@ export function AppShell({
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card/80 px-4 py-3 backdrop-blur lg:px-8">
           <div className="flex items-center gap-3">
             <button
-              className="lg:hidden text-muted-foreground hover:text-foreground"
+              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground lg:hidden"
               onClick={() => setOpen(true)}
               aria-label="Open navigation"
             >
               <Menu className="size-5" />
+              Menu
             </button>
           </div>
 
@@ -446,7 +448,7 @@ export function AppShell({
           </div>
         </header>
 
-        <main className="px-4 py-6 lg:px-8 lg:py-8">{children}</main>
+        <main className="mx-auto w-full max-w-[96rem] px-4 py-6 lg:px-8 lg:py-8">{children}</main>
       </div>
     </div>
   );
