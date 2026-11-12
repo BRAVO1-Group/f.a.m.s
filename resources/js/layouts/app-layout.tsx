@@ -246,7 +246,7 @@ export function AppShell({
       .toUpperCase() || "IT";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="dashboard-layout min-h-screen bg-background">
       {/* ── Fixed Sidebar ── */}
       <aside
         className={cn(

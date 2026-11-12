@@ -226,6 +226,62 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
+.dashboard-layout {
+  --background: oklch(0.984152 0.003413 247.857544);
+  --foreground: oklch(0.279495 0.036848 260.030984);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.510938 0.086055 186.391359);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.703753 0.123018 182.502515);
+  --secondary-foreground: oklch(0.207682 0.039824 265.754874);
+  --muted: oklch(0.96826 0.006854 247.895567);
+  --muted-foreground: oklch(0.445533 0.037447 257.280836);
+  --accent: oklch(0.952651 0.049796 180.801231);
+  --accent-foreground: var(--primary);
+  --destructive: oklch(0.577099 0.215157 27.325049);
+  --destructive-foreground: oklch(1 0 0);
+  --success: oklch(0.722746 0.192007 149.57933);
+  --success-foreground: oklch(0.392532 0.089619 152.535272);
+  --warning: oklch(0.76859 0.164659 70.08039);
+  --warning-foreground: oklch(0.302 0.08 48);
+  --info: var(--primary);
+  --info-foreground: oklch(1 0 0);
+  --border: oklch(0.868981 0.019848 252.894302);
+  --input: var(--border);
+  --ring: var(--secondary);
+  --ring-offset-background: var(--background);
+  --chart-1: var(--primary);
+  --chart-2: var(--secondary);
+  --chart-3: var(--success);
+  --chart-4: var(--warning);
+  --chart-5: var(--destructive);
+  --gradient-hero: linear-gradient(135deg, var(--primary) 0%, oklch(0.455 0.078 186) 100%);
+  --gradient-accent: linear-gradient(120deg, var(--secondary) 0%, var(--primary) 100%);
+  --shadow-card:
+    0 1px 2px oklch(0.279495 0.036848 260.030984 / 0.06),
+    0 8px 24px -12px oklch(0.279495 0.036848 260.030984 / 0.14);
+  --shadow-elevated: 0 20px 50px -24px oklch(0.279495 0.036848 260.030984 / 0.28);
+  --sidebar: var(--primary);
+  --sidebar-foreground: var(--background);
+  --sidebar-primary: var(--secondary);
+  --sidebar-primary-foreground: var(--foreground);
+  --sidebar-accent: oklch(0.455 0.078 186);
+  --sidebar-accent-foreground: var(--background);
+  --sidebar-border: oklch(0.984152 0.003413 247.857544 / 0.2);
+  --sidebar-ring: var(--secondary);
+}
+
+.dashboard-layout [role="alert"][class*="bg-destructive/10"] {
+  color: oklch(0.395843 0.133073 25.722995);
+}
+
+.dashboard-layout [role="alert"][class*="bg-destructive/10"] button {
+  color: var(--destructive);
+}
+
 svg.lucide {
   display: none !important;
 }
