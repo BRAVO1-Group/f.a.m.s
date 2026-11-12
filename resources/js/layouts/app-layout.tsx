@@ -292,7 +292,9 @@ export function AppShell({
               <p
                 className={cn(
                   "px-3 text-[10px] font-bold uppercase tracking-wider",
-                  group.category === "core" || group.category === "tracking"
+                  group.category === "core" ||
+                  group.category === "tracking" ||
+                  group.category === "supervision"
                     ? "text-secondary"
                     : "text-sidebar-foreground/50",
                 )}
