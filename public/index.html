@@ -626,6 +626,109 @@
       flex-shrink: 0;
     }
 
+    /* ── Live Dashboard Screenshot Frame & Hotspots ── */
+    .dashboard-preview-card {
+      position: relative;
+      background: rgba(10, 16, 26, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dashboard-preview-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 8px;
+      background: rgba(15, 23, 42, 0.88);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 9px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #94a3b8;
+      flex-shrink: 0;
+    }
+
+    .dashboard-preview-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 1.5px 5px;
+      border-radius: 3px;
+      font-size: 7.5px;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      letter-spacing: 0.04em;
+    }
+
+    .dashboard-img-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+      background: #020617;
+    }
+
+    .dashboard-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top left;
+      display: block;
+      transition: transform 0.4s ease, filter 0.3s ease;
+      filter: contrast(1.02) brightness(0.97);
+    }
+
+    .dashboard-img-container:hover .dashboard-preview-img {
+      transform: scale(1.03);
+    }
+
+    .dashboard-img-glare {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 45%);
+    }
+
+    .dashboard-hotspot {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2.5px 6.5px;
+      border-radius: 9999px;
+      background: rgba(10, 18, 30, 0.94);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7), 0 0 10px rgba(56, 189, 248, 0.2);
+      color: #f1f5f9;
+      font-size: 8px;
+      font-weight: 600;
+      backdrop-filter: blur(8px);
+      z-index: 6;
+      pointer-events: auto;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .dashboard-hotspot:hover {
+      transform: scale(1.05);
+      border-color: #38bdf8;
+    }
+
+    .dashboard-hotspot-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 6px #38bdf8;
+      animation: pulse-dot 2s infinite;
+      flex-shrink: 0;
+    }
+
     /* ── Workflow 0: Placements Elements ── */
     .filter-tags {
       display: flex;
@@ -1941,17 +2044,24 @@
               </div>
 
               <div class="wf-split">
-                <!-- Left: Accredited Host Directory -->
-                <div class="wf-card" style="flex: 1.45;">
-                  <div class="wf-card-head">
-                    <span>🏢 ACCREDITED HOST ENTERPRISES</span>
-                    <div class="filter-tags">
-                      <span class="filter-tag active" id="tag-all">All</span>
-                      <span class="filter-tag" id="tag-ai">Data & AI</span>
-                      <span class="filter-tag" id="tag-fin">FinTech</span>
+                <!-- Left: Live Placements Dashboard Screen Capture -->
+                <div class="wf-card dashboard-preview-card" style="flex: 1.45;">
+                  <div class="dashboard-preview-head">
+                    <span>🏢 ACCREDITED PLACEMENTS & MATCHING</span>
+                    <span class="dashboard-preview-tag">
+                      <span class="os-live-dot" style="width:4.5px; height:4.5px;"></span>
+                      <span>ACTUAL DASHBOARD</span>
+                    </span>
+                  </div>
+                  <div class="dashboard-img-container">
+                    <img src="screenshots/assignments.png" alt="InternTrack Placements Matrix" class="dashboard-preview-img">
+                    <div class="dashboard-img-glare"></div>
+                    <div class="dashboard-hotspot" style="top: 10px; right: 10px;">
+                      <span class="dashboard-hotspot-dot"></span>
+                      <span>1,420 Placements • 380 Host Enterprises</span>
                     </div>
                   </div>
-                  <div class="host-cards">
+                  <div class="host-cards" style="margin-top: 6px; flex: none;">
                     <div class="host-item highlighted" id="host-item-nile">
                       <div class="host-item-info">
                         <span class="host-item-title">Nile Analytics Institute</span>
@@ -1959,6 +2069,16 @@
                       </div>
                       <button class="host-apply-btn" id="btn-apply-nile">Apply & Dispatch MOU</button>
                     </div>
+                  </div>
+                </div>
+
+                <!-- Right: Placement Stream & Live Attestation -->
+                <div class="wf-card" style="flex: 1;">
+                  <div class="wf-card-head">
+                    <span>⚡ LIVE MATCHING STREAM</span>
+                    <span style="font-size:9.5px; color:#10b981;">REAL-TIME</span>
+                  </div>
+                  <div class="host-cards">
                     <div class="host-item">
                       <div class="host-item-info">
                         <span class="host-item-title">Stanbic Bank Innovation Lab</span>
@@ -1974,16 +2094,12 @@
                       <button class="host-apply-btn applied">Approved</button>
                     </div>
                   </div>
-                </div>
-
-                <!-- Right: Placement Stream & Live Attestation -->
-                <div class="wf-card" style="flex: 1;">
-                  <div class="wf-card-head">
-                    <span>⚡ LIVE MATCHING STREAM</span>
-                    <span style="font-size:9.5px; color:#10b981;">REAL-TIME</span>
-                  </div>
-                  <div class="host-cards" id="stream-feed-wf0">
-                    <!-- Stream dynamically populated -->
+                  <div style="margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.06); flex: 1; display: flex; flex-direction: column;">
+                    <div style="font-size: 8.5px; color: #94a3b8; font-weight: 700; margin-bottom: 4px; display: flex; justify-content: space-between;">
+                      <span>RECENT ATTESTATIONS</span>
+                      <span style="color:#10b981;">VERIFIED</span>
+                    </div>
+                    <div class="host-cards" id="stream-feed-wf0" style="flex: 1;"></div>
                   </div>
                 </div>
               </div>
@@ -2010,40 +2126,56 @@
               </div>
 
               <div class="wf-split">
-                <!-- Left: Daily Logbook Entry Editor -->
-                <div class="wf-card" style="flex: 1.4;">
-                  <div class="wf-card-head">
-                    <span>💻 DAILY TECHNICAL WORK LOG</span>
-                    <span style="color:#10b981; font-size:9.5px;">DAY 28 • WEEK 6</span>
+                <!-- Left: Daily Logbook Dashboard Screen -->
+                <div class="wf-card dashboard-preview-card" style="flex: 1.4;">
+                  <div class="dashboard-preview-head">
+                    <span>💻 STUDENT DAILY TECHNICAL LOGBOOK</span>
+                    <span class="dashboard-preview-tag">
+                      <span class="os-live-dot" style="width:4.5px; height:4.5px;"></span>
+                      <span>ACTUAL DASHBOARD</span>
+                    </span>
                   </div>
-                  <div class="log-editor">
+                  <div class="dashboard-img-container">
+                    <img src="screenshots/logbook.png" alt="Student Daily Technical Logbook" class="dashboard-preview-img">
+                    <div class="dashboard-img-glare"></div>
+                    <div class="dashboard-hotspot" style="top: 10px; right: 10px;">
+                      <span class="dashboard-hotspot-dot" style="background:#10b981; box-shadow:0 0 6px #10b981;"></span>
+                      <span>Day 28 • Week 6 • 8.0 Hrs Logged</span>
+                    </div>
+                  </div>
+                  <div class="log-editor" style="margin-top: 6px; padding: 6px 8px; background: rgba(8,13,22,0.85); border-radius: 5px; flex: none;">
                     <div class="log-input-row">
                       <input class="log-input" style="flex:1;" value="Category: Distributed Systems & DB Optimization" readonly>
                       <input class="log-input" style="width:75px;" value="8.0 Hrs" readonly>
                     </div>
-                    <textarea class="log-textarea" id="log-text-entry" placeholder="Simulating student work log entry..."></textarea>
-                    <button class="log-submit-btn" id="btn-submit-log">Submit Day 28 Log for Mentor Review</button>
+                    <textarea class="log-textarea" id="log-text-entry" style="height:36px; min-height:36px;" placeholder="Simulating student work log entry..."></textarea>
+                    <button class="log-submit-btn" id="btn-submit-log" style="padding: 5px 10px;">Submit Day 28 Log for Mentor Review</button>
                   </div>
                 </div>
 
-                <!-- Right: GPS Geofence Radar Station -->
-                <div class="wf-card" style="flex: 1;">
-                  <div class="wf-card-head">
-                    <span>📍 GPS GEOFENCE RADAR</span>
-                    <span style="color:#38bdf8; font-size:9.5px;">RADIUS 150M</span>
+                <!-- Right: GPS Geofence Radar & Attendance Screen -->
+                <div class="wf-card dashboard-preview-card" style="flex: 1;">
+                  <div class="dashboard-preview-head">
+                    <span>📍 BIOMETRIC GEOFENCE & ATTENDANCE</span>
+                    <span class="dashboard-preview-tag">
+                      <span class="os-live-dot" style="width:4.5px; height:4.5px;"></span>
+                      <span>RADIUS 150M</span>
+                    </span>
                   </div>
-                  <div class="radar-box">
-                    <div class="radar-circle">
-                      <div class="radar-ring r1"></div>
-                      <div class="radar-ring r2"></div>
-                      <div class="radar-sweep"></div>
-                      <div class="radar-blip"></div>
+                  <div class="dashboard-img-container">
+                    <img src="screenshots/attendance.png" alt="Geofence Attendance Dashboard" class="dashboard-preview-img">
+                    <div class="dashboard-img-glare"></div>
+                    <div class="dashboard-hotspot" style="top: 10px; left: 10px;">
+                      <span class="dashboard-hotspot-dot"></span>
+                      <span>Geofence Validated • 08:31 AM</span>
                     </div>
-                    <div style="font-family:'JetBrains Mono', monospace; font-size:9px; color:#cbd5e1; text-align:center;">
+                  </div>
+                  <div class="radar-box" style="padding: 8px; margin-top: 6px; flex: none;">
+                    <div style="font-family:'JetBrains Mono', monospace; font-size:8.5px; color:#cbd5e1; text-align:center;">
                       Lat: 0.3476° N • Lon: 32.5825° E<br>
                       <span id="geofence-status-text" style="color:#10b981; font-weight:700;">Within Campus Perimeter</span>
                     </div>
-                    <button class="radar-btn" id="btn-verify-gps">
+                    <button class="radar-btn" id="btn-verify-gps" style="margin-top: 5px; padding: 6px 10px;">
                       <span>📡 Verify Geofence Clock-In</span>
                     </button>
                   </div>
@@ -2072,28 +2204,30 @@
               </div>
 
               <div class="wf-split">
-                <!-- Left: Intern Submitted Work Dossier -->
-                <div class="wf-card" style="flex: 1.3;">
-                  <div class="wf-card-head">
-                    <span>📑 SUBMITTED INTERN TIMECARD</span>
-                    <span class="sub-badge" id="mentor-status-badge">AWAITING 1-TAP APPROVAL</span>
+                <!-- Left: Supervisor Review Dashboard Screen -->
+                <div class="wf-card dashboard-preview-card" style="flex: 1.35;">
+                  <div class="dashboard-preview-head">
+                    <span>📑 SUPERVISOR REVIEW DASHBOARD</span>
+                    <span class="dashboard-preview-tag">
+                      <span class="os-live-dot" style="width:4.5px; height:4.5px;"></span>
+                      <span>ACTUAL DASHBOARD</span>
+                    </span>
                   </div>
-                  <div class="mentor-submission-card">
+                  <div class="dashboard-img-container">
+                    <img src="screenshots/review.png" alt="Mentor Review Dashboard" class="dashboard-preview-img">
+                    <div class="dashboard-img-glare"></div>
+                    <div class="dashboard-hotspot" style="top: 10px; left: 10px;">
+                      <span class="dashboard-hotspot-dot" style="background:#fbbf24; box-shadow:0 0 6px #fbbf24;"></span>
+                      <span>Alice Nakato • 8.0 Hrs Pending Sign-Off</span>
+                    </div>
+                  </div>
+                  <div class="mentor-submission-card" id="mentor-submission-card" style="margin-top: 6px; padding: 7px 10px; flex: none;">
                     <div class="sub-head">
                       <div>
                         <div class="sub-title">Alice Nakato — BIS, Year 3</div>
-                        <div style="font-size:9px; color:#94a3b8;">Shift: 08:30 - 17:00 EAT (8.0 Hrs) • GPS Verified</div>
+                        <div style="font-size:8.5px; color:#94a3b8;">Task: PostgreSQL Indexing & Redis Cluster (Git #9a4f21)</div>
                       </div>
-                      <span style="font-family:'JetBrains Mono', monospace; font-size:9px; color:#10b981;">✓ 100% GEOFENCE</span>
-                    </div>
-                    <div class="sub-code">
-                      -- Technical Task Execution:<br>
-                      Optimized PostgreSQL telemetry query execution plan & configured Redis cluster connection pools. Latency dropped from 180ms to 9ms.<br>
-                      -- Attachment Proof: Git Commit #9a4f21 (Verified)
-                    </div>
-                    <div style="display:flex; justify-content:space-between; font-size:9px; color:#cbd5e1; margin-top:2px;">
-                      <span>Weekly Milestone: <b>Database Architecture</b></span>
-                      <span>Field Assessor: <b>Dr. Florence N.</b></span>
+                      <span class="sub-badge" id="mentor-status-badge">AWAITING 1-TAP APPROVAL</span>
                     </div>
                   </div>
                 </div>
@@ -2105,6 +2239,9 @@
                     <span class="os-live-dot"></span>
                   </div>
                   <div class="mentor-sign-station">
+                    <div style="font-size:9.5px; color:#94a3b8; text-align:center; line-height:1.4; padding:0 10px;">
+                      Workplace mentor ratifies verified hours with an immutable ECDSA cryptographic signature.
+                    </div>
                     <button class="mentor-sign-btn" id="btn-mentor-sign">
                       <span>✍️ 1-Tap Cryptographic Sign-Off</span>
                     </button>
@@ -2142,13 +2279,24 @@
               </div>
 
               <div class="wf-split">
-                <!-- Left: Interactive Scoring Criteria Sliders -->
-                <div class="wf-card" style="flex: 1.4;">
-                  <div class="wf-card-head">
-                    <span>📊 INSTITUTIONAL SCORING RUBRIC CRITERIA</span>
-                    <span style="color:#10b981; font-weight:700;">FINAL DEFENSE</span>
+                <!-- Left: Institutional Evaluations Dashboard Screen -->
+                <div class="wf-card dashboard-preview-card" style="flex: 1.4;">
+                  <div class="dashboard-preview-head">
+                    <span>⚖️ INSTITUTIONAL EVALUATION & RUBRICS</span>
+                    <span class="dashboard-preview-tag">
+                      <span class="os-live-dot" style="width:4.5px; height:4.5px;"></span>
+                      <span>ACTUAL DASHBOARD</span>
+                    </span>
                   </div>
-                  <div class="rubric-sliders">
+                  <div class="dashboard-img-container">
+                    <img src="screenshots/evaluations.png" alt="Evaluations & Scoring Rubric" class="dashboard-preview-img">
+                    <div class="dashboard-img-glare"></div>
+                    <div class="dashboard-hotspot" style="bottom: 10px; left: 10px;">
+                      <span class="dashboard-hotspot-dot"></span>
+                      <span>40% Mentor (39.5) + 60% Faculty (57.0) = 96.5% Grade A</span>
+                    </div>
+                  </div>
+                  <div class="rubric-sliders" style="margin-top: 6px; padding: 6px 8px; background: rgba(8,13,22,0.85); border-radius: 5px; flex: none;">
                     <div class="rubric-row">
                       <div class="rubric-row-head"><span>Workplace Professionalism & Discipline</span> <b id="rubric-val-1">10.0 / 10.0</b></div>
                       <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-1" style="width:100%;"></div></div>
@@ -2157,31 +2305,23 @@
                       <div class="rubric-row-head"><span>Technical Problem Solving & Execution</span> <b id="rubric-val-2">19.5 / 20.0</b></div>
                       <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-2" style="width:97.5%;"></div></div>
                     </div>
-                    <div class="rubric-row">
-                      <div class="rubric-row-head"><span>University Field Inspection Assessment</span> <b id="rubric-val-3">18.5 / 20.0</b></div>
-                      <div class="rubric-bar"><div class="rubric-bar-fill blue" id="rubric-fill-3" style="width:92.5%;"></div></div>
-                    </div>
-                    <div class="rubric-row">
-                      <div class="rubric-row-head"><span>Attachment Defense & Written Comprehensive Report</span> <b id="rubric-val-4">28.5 / 30.0</b></div>
-                      <div class="rubric-bar"><div class="rubric-bar-fill blue" id="rubric-fill-4" style="width:95%;"></div></div>
-                    </div>
-                    <button class="transcript-btn" id="btn-gen-transcript">
-                      <span>🏛️ Ratify & Issue University Academic Transcript</span>
-                    </button>
                   </div>
                 </div>
 
-                <!-- Right: Faculty Attestation Badge -->
-                <div class="wf-card" style="flex: 1; align-items:center; justify-content:center; text-align:center;">
-                  <div style="font-size:32px; line-height:1;">🏛️</div>
-                  <div style="font-size:12px; font-weight:800; color:#fff; letter-spacing:0.02em;">MAKERERE UNIVERSITY</div>
-                  <div style="font-size:9.5px; color:#94a3b8;">Faculty Board of Examiners & Academic Registrar</div>
-                  <div style="background:#10b981; color:#062b1b; font-size:9.5px; font-weight:800; padding:3px 10px; border-radius:4px; margin-top:4px;">
+                <!-- Right: Senate Transcript & Attestation Badge -->
+                <div class="wf-card" style="flex: 1; align-items:center; justify-content:center; text-align:center; padding: 12px 14px;">
+                  <div style="font-size:28px; line-height:1;">🏛️</div>
+                  <div style="font-size:11.5px; font-weight:800; color:#fff; letter-spacing:0.02em; margin-top: 4px;">MAKERERE UNIVERSITY</div>
+                  <div style="font-size:9px; color:#94a3b8;">Faculty Board of Examiners & Academic Registrar</div>
+                  <div style="background:#10b981; color:#062b1b; font-size:9px; font-weight:800; padding:2px 8px; border-radius:4px; margin-top:4px;">
                     SENATE RATIFIED
                   </div>
-                  <div style="font-family:'JetBrains Mono', monospace; font-size:8.5px; color:#38bdf8; margin-top:2px;">
+                  <div style="font-family:'JetBrains Mono', monospace; font-size:8px; color:#38bdf8; margin-top:2px;">
                     CREDENTIAL: MAK-2026-BIS-0482
                   </div>
+                  <button class="transcript-btn" id="btn-gen-transcript" style="margin-top: 10px; width: 100%;">
+                    <span>🏛️ Issue Official Senate Transcript</span>
+                  </button>
                 </div>
               </div>
             </div>

@@ -37,6 +37,19 @@ export function HeroPreview() {
   const [hasApproved, setHasApproved] = useState(false);
   const [entrySubmitted, setEntrySubmitted] = useState(false);
   const [dossierExported, setDossierExported] = useState(false);
+  const [showLiveScreenshot, setShowLiveScreenshot] = useState(false);
+
+  function getCurrentScreenshot() {
+    if (rolePerspective === "student") {
+      if (studentTab === "logbook") return { src: "/screenshots/logbook.png", label: "Student Technical Daily Logbook" };
+      if (studentTab === "attendance") return { src: "/screenshots/attendance.png", label: "GPS Attendance & Geofence Station" };
+      return { src: "/screenshots/dashboard.png", label: "Student Executive Hub" };
+    }
+    if (rolePerspective === "supervisor") {
+      return { src: "/screenshots/review.png", label: "Host Org Field Supervisor Review & 1-Tap Sign-Off" };
+    }
+    return { src: "/screenshots/evaluations.png", label: "Faculty Dean Evaluation & Scoring Rubric" };
+  }
 
   return (
     <div id="preview-sandbox" className="relative mx-auto mt-12 sm:mt-16 max-w-5xl">
@@ -205,16 +218,66 @@ export function HeroPreview() {
                 <CalendarCheck className="size-3.5" />
                 <span>Attendance</span>
               </button>
+              <button
+                type="button"
+                onClick={() => setShowLiveScreenshot(!showLiveScreenshot)}
+                className={cn(
+                  "flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition border",
+                  showLiveScreenshot
+                    ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/40 shadow-xs"
+                    : "bg-background/80 text-muted-foreground border-border/60 hover:text-foreground",
+                )}
+              >
+                <Sparkles className="size-3 text-emerald-500" />
+                <span>{showLiveScreenshot ? "Screenshot Active" : "Live Dashboard View"}</span>
+              </button>
             </div>
           ) : (
-            <Badge
-              variant="outline"
-              className="text-xs font-mono text-primary border-primary/30 hidden sm:inline-flex"
-            >
-              {rolePerspective === "supervisor" ? "Host Org Dashboard" : "Dean's Faculty Console"}
-            </Badge>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowLiveScreenshot(!showLiveScreenshot)}
+                className={cn(
+                  "flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition border",
+                  showLiveScreenshot
+                    ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/40 shadow-xs"
+                    : "bg-background/80 text-muted-foreground border-border/60 hover:text-foreground",
+                )}
+              >
+                <Sparkles className="size-3 text-emerald-500" />
+                <span>{showLiveScreenshot ? "Screenshot Active" : "Live Dashboard View"}</span>
+              </button>
+              <Badge
+                variant="outline"
+                className="text-xs font-mono text-primary border-primary/30 hidden sm:inline-flex"
+              >
+                {rolePerspective === "supervisor" ? "Host Org Dashboard" : "Dean's Faculty Console"}
+              </Badge>
+            </div>
           )}
         </div>
+
+        {/* ── Optional Full Actual Dashboard Screenshot Mode ── */}
+        {showLiveScreenshot && (
+          <div className="p-5 sm:p-7 space-y-4 border-b border-border/60 bg-muted/20">
+            <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="font-semibold text-foreground">{getCurrentScreenshot().label}</span>
+              </div>
+              <Badge variant="outline" className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
+                Pixel-Perfect App Capture
+              </Badge>
+            </div>
+            <div className="relative rounded-2xl border border-border/80 overflow-hidden shadow-2xl bg-black/40">
+              <img
+                src={getCurrentScreenshot().src}
+                alt={getCurrentScreenshot().label}
+                className="w-full h-auto object-cover max-h-[520px] transition-transform duration-500 hover:scale-[1.01]"
+              />
+            </div>
+          </div>
+        )}
 
         {/* ── Perspective 1: STUDENT VIEW ── */}
         {rolePerspective === "student" && (
