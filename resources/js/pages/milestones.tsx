@@ -131,7 +131,9 @@ export default function MilestonesPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="font-display text-2xl font-bold tracking-tight">Milestones Roadmap</h1>
+            <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">
+              Milestones Roadmap
+            </h1>
             <Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary">
               12 Weeks
             </Badge>
