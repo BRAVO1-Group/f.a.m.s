@@ -131,7 +131,9 @@ export default function MilestonesPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="font-display text-2xl font-bold tracking-tight">Milestones Roadmap</h1>
+            <h1 className="font-display text-2xl font-bold tracking-tight text-foreground">
+              Milestones Roadmap
+            </h1>
             <Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary">
               12 Weeks
             </Badge>
@@ -264,15 +266,26 @@ export default function MilestonesPage() {
 
       {/* Tabs Filter */}
       <Tabs value={filter} onValueChange={(v: string) => setFilter(v as Filter)}>
-        <TabsList>
-          <TabsTrigger value="all">All Phases ({data.length})</TabsTrigger>
-          <TabsTrigger value="in_progress">
+        <TabsList className="grid w-full grid-cols-2 md:inline-flex md:w-auto">
+          <TabsTrigger value="all" className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm">
+            All Phases ({data.length})
+          </TabsTrigger>
+          <TabsTrigger
+            value="in_progress"
+            className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm"
+          >
             In Progress ({data.filter((m) => m.status === "in_progress").length})
           </TabsTrigger>
-          <TabsTrigger value="completed">
+          <TabsTrigger
+            value="completed"
+            className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm"
+          >
             Completed ({data.filter((m) => m.status === "completed").length})
           </TabsTrigger>
-          <TabsTrigger value="upcoming">
+          <TabsTrigger
+            value="upcoming"
+            className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm"
+          >
             Upcoming (
             {data.filter((m) => m.status === "not_started" || m.status === "under_review").length})
           </TabsTrigger>

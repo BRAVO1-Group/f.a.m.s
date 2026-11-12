@@ -133,7 +133,7 @@ export default function ReviewPage() {
                   variant="outline"
                   className="text-[11px] font-medium border-primary/30 text-primary"
                 >
-                  🏢 {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"}
+                  {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"}
                 </Badge>
                 <Badge variant="secondary" className="text-[11px] font-medium">
                   Received Enterprise Logins
@@ -323,8 +323,8 @@ export default function ReviewPage() {
                   >
                     <span className="font-semibold block mb-0.5">
                       {a.status === "approved"
-                        ? "✓ Verified Mentor Feedback:"
-                        : "⚠ Requested Revision Details:"}
+                        ? "Verified Mentor Feedback:"
+                        : "Requested Revision Details:"}
                     </span>
                     <p className="leading-relaxed">{a.supervisor_feedback}</p>
                     {a.reviewed_at && (

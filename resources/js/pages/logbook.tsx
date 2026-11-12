@@ -177,7 +177,7 @@ export default function LogbookPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-display text-2xl font-semibold">Digital logbook</h1>
+          <h1 className="font-display text-2xl font-semibold text-foreground">Digital logbook</h1>
           <p className="text-sm text-muted-foreground">
             Record what you did each day and submit it for supervisor approval.
           </p>
