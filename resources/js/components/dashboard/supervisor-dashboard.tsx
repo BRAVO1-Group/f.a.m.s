@@ -1,49 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
-  Activity,
-  AlertTriangle,
-  Award,
-  BookOpen,
-  Briefcase,
-  Building2,
-  CalendarCheck,
-  Check,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
-  ExternalLink,
-  FileBarChart,
-  FileCheck,
-  Filter,
-  GraduationCap,
-  Info,
-  Key,
-  Laptop,
-  Layers,
-  Lock,
-  Mail,
-  MapPin,
-  MessageSquareCheck,
-  Milestone,
-  Phone,
-  Plus,
-  RefreshCw,
-  RotateCcw,
-  Search,
-  Settings2,
-  Shield,
-  ShieldAlert,
-  ShieldCheck,
-  Sliders,
-  Sparkles,
-  TrendingUp,
-  UserCheck,
-  UserPlus,
-  Users,
-  FileText,
-} from "lucide-react";
-import {
   Bar,
   BarChart,
   CartesianGrid,
@@ -270,10 +227,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
     <div className="space-y-6 antialiased">
       {/* ── Corporate Received Logins Security Notice ── */}
       <div className="rounded-xl border border-primary/25 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-start gap-3">
-          <div className="rounded-lg bg-primary/10 p-2 text-primary shrink-0">
-            <Lock className="size-5" />
-          </div>
+        <div className="flex items-start">
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-semibold text-sm text-foreground">
@@ -283,7 +237,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                 variant="outline"
                 className="text-[11px] font-medium border-primary/30 text-primary"
               >
-                🏢 Received Enterprise Logins Only
+                Received Enterprise Logins Only
               </Badge>
               <Badge variant="secondary" className="text-[11px] font-medium">
                 Tier 2 • Host Org Supervisor
@@ -298,8 +252,8 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
           </div>
         </div>
         <div className="text-right shrink-0">
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
-            <ShieldCheck className="size-3.5" /> Direct Approval Authority
+          <span className="inline-flex items-center text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+            Direct Approval Authority
           </span>
         </div>
       </div>
@@ -313,7 +267,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                 variant="outline"
                 className="border-white/30 bg-white/10 text-white text-xs font-semibold"
               >
-                🏢 Host Organization Field Mentor
+                Host Organization Field Mentor
               </Badge>
               <span className="text-xs text-primary-foreground/75">
                 {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"} •{" "}
@@ -334,20 +288,14 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               asChild
               className="rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-xs shadow-sm"
             >
-              <Link to="/review">
-                <FileCheck className="mr-1.5 size-4" />
-                Review Queue ({pendingActivities.length})
-              </Link>
+              <Link to="/review">Review Queue ({pendingActivities.length})</Link>
             </Button>
             <Button
               asChild
               variant="outline"
               className="rounded-xl border-white/30 bg-white/10 text-white hover:bg-white/20 font-semibold text-xs"
             >
-              <Link to="/students">
-                <Users className="mr-1.5 size-4" />
-                Assigned Interns ({assignedStudentsDetails.length})
-              </Link>
+              <Link to="/students">Assigned Interns ({assignedStudentsDetails.length})</Link>
             </Button>
           </div>
         </div>
@@ -360,9 +308,6 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Assigned Interns
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Users className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
@@ -378,9 +323,6 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Pending Approval
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-warning/15 text-warning-foreground">
-                <Clock className="size-4.5" />
-              </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {pendingActivities.length}
@@ -395,15 +337,12 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Approved Deliverables
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-success/10 text-success">
-                <CheckCircle2 className="size-4.5" />
-              </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {approvedActivities.length}
             </p>
-            <p className="mt-2 text-xs text-success flex items-center gap-1 font-medium">
-              <TrendingUp className="size-3" /> Signed off by Host Org Mentor
+            <p className="mt-2 text-xs text-success flex items-center font-medium">
+              Signed off by Host Org Mentor
             </p>
           </CardContent>
         </Card>
@@ -413,9 +352,6 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Revisions Requested
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                <RotateCcw className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
@@ -430,8 +366,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h2 className="text-lg font-semibold tracking-tight text-foreground flex items-center gap-2">
-              <Users className="size-5 text-primary" />
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">
               My Assigned Student Interns
             </h2>
             <p className="text-xs text-muted-foreground">
@@ -516,14 +451,8 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                   {/* Contacts & Direct Filter Action */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1 border-t border-border/60">
                     <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <Mail className="size-3 text-muted-foreground" />
-                        {student.email}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Phone className="size-3 text-muted-foreground" />
-                        {student.phone}
-                      </span>
+                      <span>{student.email}</span>
+                      <span>{student.phone}</span>
                     </div>
                     <Button
                       size="sm"
@@ -549,8 +478,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
         <CardHeader className="space-y-4 pb-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <FileCheck className="size-5 text-primary" />
+              <CardTitle className="text-base font-semibold">
                 Submissions Made by Assigned Interns
               </CardTitle>
               <CardDescription>
@@ -615,7 +543,6 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
         <CardContent className="space-y-3">
           {displayedActivities.length === 0 ? (
             <div className="py-12 text-center text-sm text-muted-foreground border border-dashed rounded-xl border-border/80">
-              <CheckCircle2 className="mx-auto size-9 text-muted-foreground/60 mb-2" />
               <p className="font-semibold text-foreground">No submissions in this view</p>
               <p className="text-xs mt-1">
                 {activeTab === "submitted"
@@ -748,7 +675,6 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                       }}
                       className="h-8 rounded-lg text-xs font-semibold"
                     >
-                      <MessageSquareCheck className="mr-1.5 size-3.5" />
                       {act.status === "submitted" ? "Review & Feedback" : "Update Feedback"}
                     </Button>
 
@@ -758,7 +684,6 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                         onClick={() => handleQuickApprove(act)}
                         className="h-8 rounded-lg bg-primary text-primary-foreground text-xs font-semibold shadow-xs"
                       >
-                        <Check className="mr-1 size-3.5" />
                         Quick Approve
                       </Button>
                     )}
@@ -851,7 +776,6 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               onClick={() => handleReviewAction("needs_correction")}
               className="text-xs font-semibold border-amber-500/40 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40"
             >
-              <RotateCcw className="mr-1.5 size-3.5" />
               Request Revisions
             </Button>
             <Button
@@ -859,7 +783,6 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               onClick={() => handleReviewAction("approved")}
               className="text-xs font-semibold bg-primary text-primary-foreground"
             >
-              <Check className="mr-1.5 size-3.5" />
               Sign Off & Approve
             </Button>
           </DialogFooter>
