@@ -222,7 +222,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
                 variant="outline"
                 className="text-[11px] font-medium border-primary/30 text-primary"
               >
-                🏢 Received Logins Tied to Assigned Students
+                Received Logins Tied to Assigned Students
               </Badge>
               <Badge variant="secondary" className="text-[11px] font-medium">
                 Tier 3 • Host Org Mentor
@@ -253,7 +253,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
                 variant="outline"
                 className="border-white/30 bg-white/10 text-white text-xs font-semibold"
               >
-                🏢 Host Organization Field Supervision
+                Host Organization Field Supervision
               </Badge>
               <span className="text-xs text-primary-foreground/70">
                 {company.name} • Westlands HQ • University of Nairobi Partner

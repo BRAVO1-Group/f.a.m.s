@@ -652,8 +652,8 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                     >
                       <span className="font-semibold block mb-0.5">
                         {act.status === "approved"
-                          ? "✓ Host Org Mentor Feedback:"
-                          : "⚠ Revision Feedback to Intern:"}
+                          ? "Host Org Mentor Feedback:"
+                          : "Revision Feedback to Intern:"}
                       </span>
                       <p className="leading-relaxed">{act.supervisor_feedback}</p>
                       {act.reviewed_at && (

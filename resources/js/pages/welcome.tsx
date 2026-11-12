@@ -326,7 +326,7 @@ export default function LandingPage() {
                             }`}
                           >
                             <Clock className="size-3" />
-                            {simClockedIn ? "🟢 Clocked In (08:30)" : "Clock In"}
+                            {simClockedIn ? "Clocked In (08:30)" : "Clock In"}
                           </button>
                         </div>
                       </div>
@@ -477,7 +477,7 @@ export default function LandingPage() {
                         {/* Simulation hint */}
                         <div className="flex items-center justify-between border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
                           <span>
-                            💡 Tip: Switch to <strong>Supervisor View</strong> above to approve or
+                            Tip: Switch to <strong>Supervisor View</strong> above to approve or
                             update feedback for Alice!
                           </span>
                           <button
@@ -554,7 +554,7 @@ export default function LandingPage() {
                               }`}
                             >
                               {simStatusEntry2 === "approved"
-                                ? "✓ Approved"
+                                ? "Approved"
                                 : simStatusEntry2 === "needs_correction"
                                   ? "Revision Requested"
                                   : "In Review"}
@@ -599,7 +599,7 @@ export default function LandingPage() {
                                       setSimVerifiedDays((prev) => Math.min(60, prev + 1));
                                     }
                                     toast.success(
-                                      "✓ Approved by James Otieno! Digitally stamped for University clearance.",
+                                      "Approved by James Otieno! Digitally stamped for University clearance.",
                                     );
                                   }}
                                   className="h-7 text-xs bg-primary text-primary-foreground font-semibold"
@@ -616,9 +616,9 @@ export default function LandingPage() {
                               </p>
                               <div className="flex flex-wrap gap-1.5">
                                 {[
-                                  "Great database normalization! 👍",
-                                  "Solid indexing strategy on logs table. 🚀",
-                                  "Ready for staging migration. ✨",
+                                  "Great database normalization!",
+                                  "Solid indexing strategy on logs table.",
+                                  "Ready for staging migration.",
                                 ].map((preset) => (
                                   <button
                                     key={preset}
@@ -659,7 +659,7 @@ export default function LandingPage() {
                                   : "border-warning/40 text-warning-foreground bg-warning/10"
                               }`}
                             >
-                              {simMarkApproved ? "✓ Approved" : "In Review"}
+                              {simMarkApproved ? "Approved" : "In Review"}
                             </Badge>
                           </div>
 
@@ -680,12 +680,12 @@ export default function LandingPage() {
                               onClick={() => {
                                 setSimMarkApproved(true);
                                 toast.success(
-                                  "✓ Signed off for Mark Mwangi (Firewall configuration & VLAN isolation)",
+                                  "Signed off for Mark Mwangi (Firewall configuration & VLAN isolation)",
                                 );
                               }}
                               className="h-7 text-xs bg-primary text-primary-foreground font-semibold"
                             >
-                              {simMarkApproved ? "Approved ✓" : "Quick Approve"}
+                              {simMarkApproved ? "Approved" : "Quick Approve"}
                             </Button>
                           </div>
                         </div>
@@ -778,7 +778,7 @@ export default function LandingPage() {
                               size="sm"
                               onClick={() => {
                                 toast.success(
-                                  "✅ Mid-Term Audit Passed: 100% of Alice's submitted entries verified by TechCorp Kenya Ltd.",
+                                  "Mid-Term Audit Passed: 100% of Alice's submitted entries verified by TechCorp Kenya Ltd.",
                                 );
                               }}
                               className="h-7 text-xs bg-primary text-primary-foreground font-semibold"

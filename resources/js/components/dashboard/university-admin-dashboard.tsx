@@ -781,7 +781,7 @@ export function UniversityAdminDashboard({
                                 : "border-indigo-300 bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300"
                             }`}
                           >
-                            {isOrg ? "🏢 Host Org" : "🏛️ University"}
+                            {isOrg ? "Host Org" : "University"}
                           </Badge>
                         </div>
 
@@ -867,8 +867,8 @@ export function UniversityAdminDashboard({
                     <TableRow>
                       <TableHead>Student Candidate</TableHead>
                       <TableHead>Host Organization</TableHead>
-                      <TableHead>🏢 Assigned Field Mentor</TableHead>
-                      <TableHead>🏛️ Assigned Faculty Assessor</TableHead>
+                      <TableHead>Assigned Field Mentor</TableHead>
+                      <TableHead>Assigned Faculty Assessor</TableHead>
                       <TableHead>Pairing Status</TableHead>
                       <TableHead className="text-right">Action</TableHead>
                     </TableRow>

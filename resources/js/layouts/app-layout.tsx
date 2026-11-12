@@ -327,18 +327,12 @@ export function AppShell({
                   key={u.id}
                   onClick={() => switchPersona(u.id)}
                   className={cn(
-                    "text-[10px] font-medium py-1.5 px-2 rounded-md transition text-left truncate flex items-center gap-1",
+                    "text-[10px] font-medium py-1.5 px-2 rounded-md transition text-left truncate",
                     isSelected
                       ? "bg-primary text-primary-foreground font-semibold shadow-xs"
                       : "bg-sidebar/80 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                   )}
                 >
-                  <span>
-                    {u.role === "student" && "🎓"}
-                    {u.role === "supervisor" && "👔"}
-                    {u.role === "org_admin" && "🏢"}
-                    {u.role === "uni_admin" && "🏛️"}
-                  </span>
                   <span className="truncate">{u.full_name.split(" ")[0]}</span>
                 </button>
               );

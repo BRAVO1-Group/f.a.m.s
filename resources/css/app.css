@@ -225,3 +225,11 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
+
+svg.lucide {
+  display: none !important;
+}
+
+*:not(button):not(a):has(> svg.lucide:only-child) {
+  display: none !important;
+}
