@@ -633,8 +633,8 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                       type="monotone"
                       dataKey="hours"
                       name="Logged Hours"
-                      stroke="var(--color-chart-2)"
-                      fill="var(--color-chart-2)"
+                      stroke="var(--primary)"
+                      fill="var(--primary)"
                       fillOpacity={0.25}
                     />
                   </AreaChart>
