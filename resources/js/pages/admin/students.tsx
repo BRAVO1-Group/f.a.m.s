@@ -176,7 +176,7 @@ export default function StudentsPage() {
                   variant="outline"
                   className="text-[11px] font-medium border-primary/30 text-primary"
                 >
-                  🏢 {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"}
+                  {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"}
                 </Badge>
                 <Badge variant="secondary" className="text-[11px] font-medium">
                   Received Enterprise Logins

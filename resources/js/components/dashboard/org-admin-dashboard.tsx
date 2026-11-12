@@ -206,7 +206,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
   };
 
   return (
-    <div className="space-y-6 antialiased">
+    <div className="dashboard-page space-y-6 antialiased">
       {/* ── Security & Scoping Notice: Received University Logins ── */}
       <div className="rounded-xl border border-primary/25 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
         <div className="flex items-start gap-3">
@@ -222,7 +222,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
                 variant="outline"
                 className="text-[11px] font-medium border-primary/30 text-primary"
               >
-                🏢 Received Logins Tied to Assigned Students
+                Received Logins Tied to Assigned Students
               </Badge>
               <Badge variant="secondary" className="text-[11px] font-medium">
                 Tier 3 • Host Org Mentor
@@ -238,7 +238,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
           </div>
         </div>
         <div className="text-right shrink-0">
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-success bg-success/10 px-2.5 py-1 rounded-full border border-success/30">
             <ShieldCheck className="size-3.5" /> University Provisioned
           </span>
         </div>
@@ -253,7 +253,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
                 variant="outline"
                 className="border-white/30 bg-white/10 text-white text-xs font-semibold"
               >
-                🏢 Host Organization Field Supervision
+                Host Organization Field Supervision
               </Badge>
               <span className="text-xs text-primary-foreground/70">
                 {company.name} • Westlands HQ • University of Nairobi Partner
@@ -294,73 +294,73 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
 
       {/* ── KPI Cards ── */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-success bg-success text-success-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
                 Assigned Interns
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-success-foreground/10 text-success-foreground">
                 <Users className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {assignedStudents.length}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">Alice Wanjiku & Kevin Kiprono</p>
+            <p className="mt-2 text-xs text-success-foreground/80">Alice Wanjiku & Kevin Kiprono</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-info bg-info text-info-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
                 Pending Approvals
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-warning/15 text-warning-foreground">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-info-foreground/10 text-info-foreground">
                 <Clock className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {pendingActivities.length}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">Submissions awaiting sign-off</p>
+            <p className="mt-2 text-xs text-info-foreground/80">Submissions awaiting sign-off</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-info bg-info text-info-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
                 Approved Deliverables
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-success/10 text-success">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-info-foreground/10 text-info-foreground">
                 <CheckCircle2 className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {approvedActivities.length}
             </p>
-            <p className="mt-2 text-xs text-success flex items-center gap-1 font-medium">
+            <p className="mt-2 flex items-center gap-1 text-xs font-medium text-info-foreground/80">
               <TrendingUp className="size-3" /> Signed off by Host Org
             </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-success bg-success text-success-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
                 University MOU Status
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-info/10 text-info">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-success-foreground/10 text-success-foreground">
                 <ShieldCheck className="size-4.5" />
               </span>
             </div>
-            <p className="mt-3 font-display text-xl font-bold tracking-tight text-foreground">
+            <p className="mt-3 font-display text-xl font-bold tracking-tight text-success-foreground">
               Accredited
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">University of Nairobi Partner</p>
+            <p className="mt-2 text-xs text-success-foreground/80">University of Nairobi Partner</p>
           </CardContent>
         </Card>
       </div>
@@ -470,7 +470,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
 
       {/* ── Submissions Requiring Host Organization Approval ── */}
       <Card className="shadow-card border-border/80">
-        <CardHeader className="flex flex-row items-center justify-between pb-3">
+        <CardHeader className="flex flex-col items-start justify-between gap-3 pb-3 sm:flex-row sm:items-center">
           <div>
             <CardTitle className="text-base font-semibold">
               Submissions Requiring Host Org Sign-Off
@@ -508,7 +508,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground line-clamp-1">{act.description}</p>
-                    <div className="flex items-center gap-1.5 pt-1">
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
                       {act.tools_used.map((t) => (
                         <Badge key={t} variant="secondary" className="text-[10px] py-0">
                           {t}

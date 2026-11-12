@@ -225,3 +225,101 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
+
+.dashboard-layout {
+  --background: oklch(0.217686 0.035568 251.293515);
+  --foreground: oklch(0.932587 0.005189 247.879694);
+  --card: color-mix(in oklch, var(--background) 78%, var(--foreground));
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.573697 0.194603 257.857759);
+  --primary-foreground: var(--foreground);
+  --secondary: oklch(0.729406 0.150303 162.015038);
+  --secondary-foreground: var(--background);
+  --muted: color-mix(in oklch, var(--background) 85%, var(--foreground));
+  --muted-foreground: var(--foreground);
+  --accent: color-mix(in oklch, var(--secondary) 18%, var(--background));
+  --accent-foreground: var(--foreground);
+  --destructive: oklch(0.577099 0.215157 27.325049);
+  --destructive-foreground: oklch(1 0 0);
+  --success: var(--secondary);
+  --success-foreground: var(--secondary-foreground);
+  --warning: oklch(0.76859 0.164659 70.08039);
+  --warning-foreground: oklch(0.302 0.08 48);
+  --info: var(--primary);
+  --info-foreground: var(--primary-foreground);
+  --border: color-mix(in oklch, var(--background) 55%, var(--foreground));
+  --input: var(--border);
+  --ring: var(--primary);
+  --ring-offset-background: var(--background);
+  --chart-1: var(--primary);
+  --chart-2: var(--secondary);
+  --chart-3: var(--success);
+  --chart-4: var(--warning);
+  --chart-5: var(--destructive);
+  --gradient-hero: linear-gradient(135deg, var(--primary) 0%, var(--background) 100%);
+  --gradient-accent: linear-gradient(120deg, var(--primary) 0%, var(--primary) 100%);
+  --shadow-card: 0 1px 2px oklch(0.05 0.01 270 / 0.3), 0 8px 24px -12px oklch(0.05 0.01 270 / 0.55);
+  --shadow-elevated: 0 20px 50px -24px oklch(0.05 0.01 270 / 0.8);
+  --sidebar: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: color-mix(in oklch, var(--secondary) 18%, var(--background));
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--primary);
+}
+
+svg.lucide {
+  display: none !important;
+}
+
+*:not(button):not(a):has(> svg.lucide:only-child) {
+  display: none !important;
+}
+
+.dashboard-sidebar svg.lucide {
+  display: inline-block !important;
+}
+
+.dashboard-sidebar :not(button):not(a):has(> svg.lucide:only-child) {
+  display: flex !important;
+}
+
+.dashboard-page {
+  width: 100%;
+  max-width: 96rem;
+  margin-inline: auto;
+}
+
+.dashboard-page :where(.text-xs) {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.dashboard-page :where([class~="text-[9px]"], [class~="text-[10px]"], [class~="text-[11px]"]) {
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.dashboard-page :where([role="tablist"]) {
+  height: auto;
+  min-height: 2.75rem;
+  gap: 0.25rem;
+}
+
+.dashboard-page :where([role="tab"]) {
+  min-height: 2.5rem;
+  white-space: normal;
+  line-height: 1.35;
+}
+
+.dashboard-page :where(th, td, .recharts-text) {
+  font-size: 0.8125rem;
+}
+
+.dashboard-page :where(.grid > *) {
+  min-width: 0;
+}

@@ -369,7 +369,7 @@ export function UniversityAdminDashboard({
   }).length;
 
   return (
-    <div className="space-y-6 antialiased">
+    <div className="dashboard-page space-y-6 antialiased">
       {/* ── Clean Dean Page Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
@@ -402,18 +402,12 @@ export function UniversityAdminDashboard({
           <Button
             onClick={() => handleOpenAssignModal("student-4")}
             size="sm"
-            variant="outline"
             className="rounded-xl font-semibold text-xs h-9"
           >
             <UserCheck className="mr-1.5 size-4" />
             Assign Mentors
           </Button>
-          <Button
-            asChild
-            size="sm"
-            variant="outline"
-            className="rounded-xl font-semibold text-xs h-9"
-          >
+          <Button asChild size="sm" className="rounded-xl font-semibold text-xs h-9">
             <Link to="/reports">
               <FileBarChart className="mr-1.5 size-4" />
               Dossier (PDF)
@@ -450,74 +444,78 @@ export function UniversityAdminDashboard({
 
       {/* ── Institutional Metrics KPI Cards ── */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-success bg-success text-success-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
                 Enrolled Cohort
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-success-foreground/10 text-success-foreground">
                 <GraduationCap className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {universityCohort.length}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">Active placement candidates</p>
+            <p className="mt-2 text-xs text-success-foreground/80">Active placement candidates</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-info bg-info text-info-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
                 Supervisor Roster
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-accent/20 text-accent-foreground">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-info-foreground/10 text-info-foreground">
                 <Users className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {supervisorsList.length}
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">
+            <p className="mt-2 text-xs text-info-foreground/80">
               {orgSupervisors.length} Org Mentors • {uniSupervisors.length} Faculty
             </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-info bg-info text-info-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
                 Dual-Supervision Rate
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-success/10 text-success">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-info-foreground/10 text-info-foreground">
                 <ShieldCheck className="size-4.5" />
               </span>
             </div>
             <p className="mt-3 font-display text-3xl font-bold tracking-tight">
               {Math.round((dualAssignedCount / universityCohort.length) * 100)}%
             </p>
-            <p className="mt-2 text-xs text-success flex items-center gap-1 font-medium">
+            <p className="mt-2 flex items-center gap-1 text-xs font-medium text-info-foreground/80">
               <TrendingUp className="size-3" /> {dualAssignedCount} of {universityCohort.length}{" "}
               fully paired
             </p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-card border-border/80">
+        <Card className="shadow-card border-success bg-success text-success-foreground">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
                 RBAC Security Tier
               </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-success-foreground/10 text-success-foreground">
                 <Key className="size-4.5" />
               </span>
             </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">Tier 4</p>
-            <p className="mt-2 text-xs text-muted-foreground">Institutional Governance Active</p>
+            <p className="mt-3 font-display text-3xl font-bold tracking-tight text-success-foreground">
+              Tier 4
+            </p>
+            <p className="mt-2 text-xs text-success-foreground/80">
+              Institutional Governance Active
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -611,7 +609,7 @@ export function UniversityAdminDashboard({
                           ) : (
                             <Badge
                               variant="outline"
-                              className="border-amber-300 text-amber-700 bg-amber-50 text-[10px]"
+                              className="border-warning/40 text-warning bg-warning/10 text-[10px]"
                             >
                               Pending Mentor
                             </Badge>
@@ -640,7 +638,7 @@ export function UniversityAdminDashboard({
                             className={`text-xs ${
                               isDualAssigned
                                 ? "bg-success/10 text-success border-success/30"
-                                : "bg-amber-500/10 text-amber-700 border-amber-300"
+                                : "bg-warning/10 text-warning border-warning/30"
                             }`}
                           >
                             {isDualAssigned ? "Dual-Supervised" : "Needs Allocation"}
@@ -752,8 +750,8 @@ export function UniversityAdminDashboard({
                               <AvatarFallback
                                 className={`text-xs font-semibold ${
                                   isOrg
-                                    ? "bg-amber-500/10 text-amber-700"
-                                    : "bg-indigo-500/10 text-indigo-700"
+                                    ? "bg-warning/10 text-warning"
+                                    : "bg-info/10 text-info-foreground"
                                 }`}
                               >
                                 {sup.full_name
@@ -777,11 +775,11 @@ export function UniversityAdminDashboard({
                             variant="outline"
                             className={`text-[10px] font-semibold shrink-0 ${
                               isOrg
-                                ? "border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"
-                                : "border-indigo-300 bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300"
+                                ? "border-warning/40 bg-warning/10 text-warning"
+                                : "border-info/40 bg-info/10 text-info-foreground"
                             }`}
                           >
-                            {isOrg ? "🏢 Host Org" : "🏛️ University"}
+                            {isOrg ? "Host Org" : "University"}
                           </Badge>
                         </div>
 
@@ -867,8 +865,8 @@ export function UniversityAdminDashboard({
                     <TableRow>
                       <TableHead>Student Candidate</TableHead>
                       <TableHead>Host Organization</TableHead>
-                      <TableHead>🏢 Assigned Field Mentor</TableHead>
-                      <TableHead>🏛️ Assigned Faculty Assessor</TableHead>
+                      <TableHead>Assigned Field Mentor</TableHead>
+                      <TableHead>Assigned Faculty Assessor</TableHead>
                       <TableHead>Pairing Status</TableHead>
                       <TableHead className="text-right">Action</TableHead>
                     </TableRow>
@@ -900,7 +898,7 @@ export function UniversityAdminDashboard({
                           <TableCell className="text-xs">
                             {orgSup ? (
                               <div className="flex items-center gap-1.5">
-                                <span className="size-2 rounded-full bg-emerald-500" />
+                                <span className="size-2 rounded-full bg-success" />
                                 <span className="font-medium text-foreground">
                                   {orgSup.full_name}
                                 </span>
@@ -908,7 +906,7 @@ export function UniversityAdminDashboard({
                             ) : (
                               <Badge
                                 variant="outline"
-                                className="text-[10px] text-amber-700 border-amber-300"
+                                className="text-[10px] text-warning border-warning/40"
                               >
                                 Unassigned
                               </Badge>
@@ -917,7 +915,7 @@ export function UniversityAdminDashboard({
                           <TableCell className="text-xs">
                             {academicSup ? (
                               <div className="flex items-center gap-1.5">
-                                <span className="size-2 rounded-full bg-indigo-500" />
+                                <span className="size-2 rounded-full bg-info" />
                                 <span className="font-medium text-foreground">
                                   {academicSup.full_name}
                                 </span>
@@ -934,7 +932,7 @@ export function UniversityAdminDashboard({
                               className={`text-xs ${
                                 isComplete
                                   ? "bg-success/10 text-success border-success/30"
-                                  : "bg-amber-500/10 text-amber-700 border-amber-300"
+                                  : "bg-warning/10 text-warning border-warning/30"
                               }`}
                             >
                               {isComplete ? "Dual-Supervised" : "Pending Assessor"}
@@ -1360,7 +1358,7 @@ export function UniversityAdminDashboard({
                 <Label className="text-xs font-semibold">Host Organization Mentor (Field)</Label>
                 <Badge
                   variant="outline"
-                  className="text-[9px] border-amber-300 text-amber-700 bg-amber-50"
+                  className="text-[9px] border-warning/40 text-warning bg-warning/10"
                 >
                   Company
                 </Badge>
@@ -1387,7 +1385,7 @@ export function UniversityAdminDashboard({
                 </Label>
                 <Badge
                   variant="outline"
-                  className="text-[9px] border-indigo-300 text-indigo-700 bg-indigo-50"
+                  className="text-[9px] border-info/40 text-info-foreground bg-info/10"
                 >
                   Faculty
                 </Badge>

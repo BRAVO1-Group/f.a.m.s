@@ -330,7 +330,7 @@ export default function SupervisorsPage() {
                             : "border-indigo-300 bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300"
                         }`}
                       >
-                        {isOrg ? "🏢 Host Org" : "🏛️ University"}
+                        {isOrg ? "Host Org" : "University"}
                       </Badge>
                     </div>
 

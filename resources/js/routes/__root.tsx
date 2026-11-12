@@ -35,25 +35,25 @@ function NotFoundComponent() {
             href="/dashboard?role=student"
             className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent"
           >
-            🎓 Student
+            Student
           </a>
           <a
             href="/dashboard?role=supervisor"
             className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent"
           >
-            👔 Field Supervisor
+            Field Supervisor
           </a>
           <a
             href="/dashboard?role=org_admin"
             className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent"
           >
-            🏢 Company Mentor
+            Company Mentor
           </a>
           <a
             href="/dashboard?role=uni_admin"
             className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent"
           >
-            🏛️ Uni Dean
+            Uni Dean
           </a>
           <Link
             to="/"

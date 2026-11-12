@@ -246,11 +246,11 @@ export function AppShell({
       .toUpperCase() || "IT";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="dashboard-layout min-h-screen bg-background">
       {/* ── Fixed Sidebar ── */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-sidebar text-sidebar-foreground transition-transform lg:translate-x-0 shadow-lg lg:shadow-none border-r border-sidebar-border",
+          "dashboard-sidebar fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-sidebar text-sidebar-foreground transition-transform lg:translate-x-0 shadow-lg lg:shadow-none border-r border-sidebar-border",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
@@ -281,6 +281,7 @@ export function AppShell({
             aria-label="Close navigation"
           >
             <X className="size-5" />
+            Close
           </button>
         </div>
 
@@ -288,7 +289,18 @@ export function AppShell({
         <nav className="flex-1 space-y-4 overflow-y-auto px-3 py-4">
           {groupedItems.map((group) => (
             <div key={group.category} className="space-y-1">
-              <p className="px-3 text-[10px] font-bold uppercase tracking-wider text-sidebar-foreground/50">
+              <p
+                className={cn(
+                  "px-3 py-1 text-[13px] leading-5 font-bold uppercase tracking-wider",
+                  group.category === "core" ||
+                    group.category === "tracking" ||
+                    group.category === "supervision" ||
+                    group.category === "governance" ||
+                    group.category === "account"
+                    ? "text-secondary"
+                    : "text-sidebar-foreground/50",
+                )}
+              >
                 {group.label}
               </p>
               {group.items.map((item) => {
@@ -314,9 +326,32 @@ export function AppShell({
           ))}
         </nav>
 
-        {/* Sidebar Footer */}
-        <div className="border-t border-sidebar-border p-3 space-y-2">
-          <div className="flex items-center gap-2.5 rounded-lg px-2 py-1.5">
+        {/* Role Quick Switcher in Sidebar Footer */}
+        <div className="border-t border-sidebar-border p-3 space-y-2 bg-sidebar-accent/20">
+          <p className="px-2 py-1 text-xs leading-4 font-bold uppercase tracking-wide text-secondary whitespace-nowrap">
+            Switch Persona (RBAC Demo)
+          </p>
+          <div className="grid grid-cols-2 gap-1.5">
+            {DEMO_USERS.map((u) => {
+              const isSelected = u.id === currentUser?.id;
+              return (
+                <button
+                  key={u.id}
+                  onClick={() => switchPersona(u.id)}
+                  className={cn(
+                    "text-[10px] font-medium py-1.5 px-2 rounded-md transition text-left truncate",
+                    isSelected
+                      ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                      : "bg-sidebar/80 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+                  )}
+                >
+                  <span className="truncate">{u.full_name.split(" ")[0]}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 pt-2 border-t border-sidebar-border/60">
             <Avatar className="size-8">
               <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-xs font-semibold">
                 {initials}
@@ -354,11 +389,12 @@ export function AppShell({
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card/80 px-4 py-3 backdrop-blur lg:px-8">
           <div className="flex items-center gap-3">
             <button
-              className="lg:hidden text-muted-foreground hover:text-foreground"
+              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground lg:hidden"
               onClick={() => setOpen(true)}
               aria-label="Open navigation"
             >
               <Menu className="size-5" />
+              Menu
             </button>
           </div>
 
@@ -423,7 +459,7 @@ export function AppShell({
           </div>
         </header>
 
-        <main className="px-4 py-6 lg:px-8 lg:py-8">{children}</main>
+        <main className="mx-auto w-full max-w-[96rem] px-4 py-6 lg:px-8 lg:py-8">{children}</main>
       </div>
     </div>
   );
