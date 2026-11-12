@@ -90,7 +90,7 @@ export default function AttendancePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-semibold">Attendance</h1>
+        <h1 className="font-display text-2xl font-semibold text-foreground">Attendance</h1>
         <p className="text-sm text-muted-foreground">
           Check in when you arrive and check out when you leave. Times are recorded automatically.
         </p>
