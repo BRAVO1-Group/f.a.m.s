@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link } from "@inertiajs/react";
 import {
   ArrowRight,
   Check,
@@ -36,7 +36,7 @@ export default function LandingPage() {
             Accredited dual-supervision workflow & automated university defense dossiers.
           </span>
           <Link
-            to="/auth"
+            href="/auth"
             className="ml-1 inline-flex items-center gap-1 font-semibold text-primary underline underline-offset-4 hover:opacity-80 transition-opacity"
           >
             Launch Interactive Demo <ArrowRight className="size-3" />
@@ -47,7 +47,7 @@ export default function LandingPage() {
       {/* ── Navigation Header ── */}
       <header className="sticky top-0 z-30 border-b border-border/80 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 sm:px-8">
-          <Link to="/" className="flex items-center gap-3 group" aria-label="InternTrack home">
+          <Link href="/" className="flex items-center gap-3 group" aria-label="InternTrack home">
             <span className="flex size-10 items-center justify-center rounded-xl bg-gradient-hero text-primary-foreground shadow-xs transition-transform group-hover:scale-105">
               <GraduationCap className="size-5" />
             </span>
@@ -79,14 +79,14 @@ export default function LandingPage() {
 
           <div className="hidden sm:flex items-center gap-3">
             <Button variant="ghost" asChild size="sm" className="text-xs font-semibold">
-              <Link to="/auth">Sign in</Link>
+              <Link href="/auth">Sign in</Link>
             </Button>
             <Button
               asChild
               size="sm"
               className="rounded-xl px-4 shadow-xs bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
             >
-              <Link to="/auth">
+              <Link href="/auth">
                 Launch Workspace <ArrowRight className="ml-1.5 size-4" />
               </Link>
             </Button>
@@ -138,10 +138,10 @@ export default function LandingPage() {
             </nav>
             <div className="pt-3 border-t border-border flex flex-col gap-2">
               <Button asChild variant="outline" size="sm" className="w-full justify-center">
-                <Link to="/auth">Sign in</Link>
+                <Link href="/auth">Sign in</Link>
               </Button>
               <Button asChild size="sm" className="w-full justify-center">
-                <Link to="/auth">Launch Workspace</Link>
+                <Link href="/auth">Launch Workspace</Link>
               </Button>
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function LandingPage() {
                   size="lg"
                   className="h-12 w-full rounded-xl px-7 text-sm font-bold shadow-elevated sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90"
                 >
-                  <Link to="/auth">
+                  <Link href="/auth">
                     Try Interactive Demo <ArrowRight className="ml-2 size-4" />
                   </Link>
                 </Button>

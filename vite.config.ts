@@ -1,20 +1,21 @@
-import path from "node:path";
+
 import { defineConfig } from "vite";
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import laravel from "laravel-vite-plugin";
+import inertia from "@inertiajs/vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import path from "node:path";
 
 export default defineConfig({
   plugins: [
-    tailwindcss(),
-    tanstackStart({
-      srcDirectory: "resources/js",
-      server: {
-        entry: "server",
-      },
+    laravel({
+      input: ["resources/js/app.tsx"],
+      refresh: true,
     }),
+    inertia(),
     react(),
+    tailwindcss(),
     tsconfigPaths(),
   ],
 
@@ -24,3 +25,4 @@ export default defineConfig({
     },
   },
 });
+

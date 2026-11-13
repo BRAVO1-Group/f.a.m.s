@@ -1,5 +1,5 @@
 import { GraduationCap, ShieldCheck } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link } from "@inertiajs/react";
 
 export function LandingFooter() {
   return (
@@ -8,7 +8,7 @@ export function LandingFooter() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-border/60">
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
-            <Link to="/" className="flex items-center gap-3 group" aria-label="InternTrack home">
+            <Link href="/" className="flex items-center gap-3 group" aria-label="InternTrack home">
               <span className="flex size-10 items-center justify-center rounded-xl bg-gradient-hero text-primary-foreground shadow-xs transition-transform group-hover:scale-105">
                 <GraduationCap className="size-5" />
               </span>
@@ -122,7 +122,7 @@ export function LandingFooter() {
                 <span>Immutable Audit Trails</span>
               </li>
               <li>
-                <Link to="/auth" className="text-primary font-semibold hover:underline">
+                <Link href="/auth" className="text-primary font-semibold hover:underline">
                   Launch Interactive Demo →
                 </Link>
               </li>

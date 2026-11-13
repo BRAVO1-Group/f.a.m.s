@@ -1,0 +1,11 @@
+{
+  "resources/js/app.tsx": {
+    "file": "assets/app-kb2f_4LE.js",
+    "name": "app",
+    "src": "resources/js/app.tsx",
+    "isEntry": true,
+    "css": [
+      "assets/app-CCeTniWH.css"
+    ]
+  }
+}

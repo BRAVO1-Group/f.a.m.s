@@ -1,5 +1,5 @@
 import { ArrowRight, Check, GraduationCap, Sparkles } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 
 export function CtaBanner() {
@@ -32,7 +32,7 @@ export function CtaBanner() {
                 size="lg"
                 className="h-12 w-full sm:w-auto rounded-xl px-8 text-sm font-bold bg-white text-foreground hover:bg-white/90 shadow-elevated"
               >
-                <Link to="/auth">
+                <Link href="/auth">
                   Launch Interactive Demo <ArrowRight className="ml-2 size-4" />
                 </Link>
               </Button>
