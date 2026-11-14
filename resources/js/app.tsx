@@ -3,19 +3,18 @@ import { createInertiaApp } from "@inertiajs/react";
 import { createRoot } from "react-dom/client";
 import type { ComponentType } from "react";
 
-const pages = import.meta.glob("./pages/**/*.tsx", {
-  eager: true,
-});
+const pages = import.meta.glob<{ default: ComponentType }>("./pages/**/*.tsx");
 
 createInertiaApp({
-  resolve: (name) => {
-    const page = pages[`./pages/${name}.tsx`] as { default: ComponentType } | undefined;
+  resolve: async (name) => {
+    const page = pages[`./pages/${name}.tsx`];
 
     if (!page) {
       throw new Error(`Page not found: ${name}`);
     }
 
-    return page.default;
+    const module = await page();
+    return module.default;
   },
 
   setup({ el, App, props }) {

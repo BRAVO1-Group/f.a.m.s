@@ -1,0 +1,1 @@
+import{a as e,c as t,t as n}from"./app-wH2ReGvx.js";var r=t(e(),1);n();var i=(0,r.createContext)(null);function a(){let e=(0,r.useContext)(i);if(!e)throw Error(`useAppUser must be used inside AppUserProvider`);return e}export{a as t};
