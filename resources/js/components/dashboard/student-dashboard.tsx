@@ -12,6 +12,7 @@ import {
   AreaChart,
 } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -195,251 +196,103 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
 
   return (
     <div className="dashboard-page space-y-6 antialiased">
-      {/* ── Welcome Header Banner ── */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
-        <div className="pointer-events-none absolute -right-20 -top-20 size-72 rounded-full bg-white/10 blur-2xl" />
-        <div className="pointer-events-none absolute right-40 -bottom-20 size-60 rounded-full bg-primary-foreground/10 blur-2xl" />
+      {/* ── Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+        <div>
+          <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            {greeting}, {name.split(" ")[0]}
+          </h1>
+          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+            {myInternship?.position || "Software Engineering Intern"} · {orgName} · Week 9 of 12
+          </p>
+        </div>
 
-        <div className="relative z-10 flex flex-col justify-between gap-6 md:flex-row md:items-center">
-          <div className="max-w-2xl">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">
-                Active Placement • Week 9 of 12
-              </span>
-              <span className="text-xs text-primary-foreground/70 hidden sm:inline">
-                Target Defense: Sept 30, 2026
-              </span>
-            </div>
-
-            <h1 className="mt-3 font-display text-2xl font-bold sm:text-4xl tracking-tight">
-              {greeting}, {name.split(" ")[0]}!
-            </h1>
-
-            <p className="mt-2 text-sm sm:text-base text-primary-foreground/90 font-medium">
-              {myInternship?.position || "Software Engineering Intern"} • {orgName}
-            </p>
-
-            <p className="mt-1 text-xs sm:text-sm text-primary-foreground/70">
-              Department of Product Engineering • Supervised by James Otieno
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <Button
-              asChild
-              size="default"
-              className="rounded-xl bg-white text-primary hover:bg-white/90 shadow-sm font-semibold"
-            >
-              <Link to="/logbook">Add Today's Log</Link>
-            </Button>
-            <Button
-              size="default"
-              variant="outline"
-              onClick={handleClockToggle}
-              className="rounded-xl border-white/30 bg-white/10 text-white hover:bg-white/20 backdrop-blur font-semibold"
-            >
-              {isCheckedIn ? "Clock Out" : "Clock In"}
-            </Button>
-            <Button
-              asChild
-              size="default"
-              variant="outline"
-              className="rounded-xl border-white/30 bg-transparent text-white hover:bg-white/10 font-semibold"
-            >
-              <Link to="/reports">Export PDF</Link>
-            </Button>
-          </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild size="sm" className="rounded-xl text-xs font-semibold h-9">
+            <Link to="/logbook">Add Log</Link>
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleClockToggle}
+            className="rounded-xl text-xs font-semibold h-9"
+          >
+            {isCheckedIn ? "Clock Out" : "Clock In"}
+          </Button>
+          <Button asChild size="sm" variant="outline" className="rounded-xl text-xs font-semibold h-9">
+            <Link to="/reports">Export PDF</Link>
+          </Button>
         </div>
       </div>
 
-      {/* ── Assigned Dual Supervisors (RBAC Presentation) ── */}
+      {/* ── Assigned Dual Supervisors ── */}
       <div className="grid gap-3 sm:grid-cols-2">
-        <Card className="border-border/80 shadow-xs bg-card/60 backdrop-blur">
-          <CardContent className="p-4 sm:p-4.5">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                      Host Industry Mentor
-                    </span>
-                    <Badge
-                      variant="outline"
-                      className="border-warning/40 text-warning bg-warning/10 text-[10px]"
-                    >
-                      Host Org
-                    </Badge>
-                  </div>
-                  <p className="font-semibold text-sm text-foreground mt-0.5">
-                    {orgSupervisor?.full_name ?? "James Otieno"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {orgSupervisor?.title ?? "Senior Lead Architect"} •{" "}
-                    {orgSupervisor?.organization_name ?? orgName}
-                  </p>
-                </div>
-              </div>
+        <Card className="border-border/60 shadow-none">
+          <CardContent className="p-4 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground">Host Industry Mentor</p>
+              <p className="font-semibold text-sm text-foreground mt-0.5 truncate">
+                {orgSupervisor?.full_name ?? "James Otieno"}
+              </p>
+              <p className="text-xs text-muted-foreground truncate">
+                {orgSupervisor?.organization_name ?? orgName}
+              </p>
             </div>
-            <div className="mt-2.5 flex flex-wrap items-center gap-3 pt-2.5 border-t border-border/60 text-[11px] text-muted-foreground">
-              <span className="font-mono">
-                {orgSupervisor?.email ?? "james.otieno@techcorp.co.ke"}
-              </span>
-              <span className="font-mono">{orgSupervisor?.phone ?? "+254 722 001 122"}</span>
-            </div>
+            <span className="text-xs font-mono text-muted-foreground shrink-0 hidden sm:inline">
+              {orgSupervisor?.email ?? "james.otieno@techcorp.co.ke"}
+            </span>
           </CardContent>
         </Card>
 
-        <Card className="border-border/80 shadow-xs bg-card/60 backdrop-blur">
-          <CardContent className="p-4 sm:p-4.5">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                      Academic Faculty Assessor
-                    </span>
-                    <Badge
-                      variant="outline"
-                      className="border-info/40 text-info-foreground bg-info/10 text-[10px]"
-                    >
-                      University
-                    </Badge>
-                  </div>
-                  <p className="font-semibold text-sm text-foreground mt-0.5">
-                    {academicSupervisor?.full_name ?? "Dr. Peter Kamau"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {academicSupervisor?.title ?? "Dean of Computing"} •{" "}
-                    {academicSupervisor?.faculty_department ?? "School of Computing & Informatics"}
-                  </p>
-                </div>
-              </div>
+        <Card className="border-border/60 shadow-none">
+          <CardContent className="p-4 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground">Academic Faculty Assessor</p>
+              <p className="font-semibold text-sm text-foreground mt-0.5 truncate">
+                {academicSupervisor?.full_name ?? "Dr. Peter Kamau"}
+              </p>
+              <p className="text-xs text-muted-foreground truncate">
+                {academicSupervisor?.faculty_department ?? "School of Computing & Informatics"}
+              </p>
             </div>
-            <div className="mt-2.5 flex flex-wrap items-center gap-3 pt-2.5 border-t border-border/60 text-[11px] text-muted-foreground">
-              <span className="font-mono">
-                {academicSupervisor?.email ?? "dean@university.ac.ke"}
-              </span>
-              <span className="font-mono">{academicSupervisor?.phone ?? "+254 701 234 567"}</span>
-            </div>
+            <span className="text-xs font-mono text-muted-foreground shrink-0 hidden sm:inline">
+              {academicSupervisor?.email ?? "dean@university.ac.ke"}
+            </span>
           </CardContent>
         </Card>
       </div>
 
       {/* ── Executive KPI Cards (4 Cards) ── */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="shadow-card border-success bg-success text-success-foreground transition-all hover:border-success/80 hover:shadow-elevated">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
-                Attendance Days Completed
-              </span>
-            </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="font-display text-3xl font-bold tracking-tight">{presentDays}</span>
-              <span className="text-sm font-medium text-success-foreground/80">
-                / {requiredDays} days
-              </span>
-            </div>
-            <div className="mt-3">
-              <div className="mb-1 flex justify-between text-xs text-success-foreground/80">
-                <span>Approved activities progress</span>
-                <span className="font-semibold text-success-foreground">{completionRate}%</span>
-              </div>
-              <Progress
-                value={completionRate}
-                className="h-2 bg-success-foreground/25 [&>div]:bg-success-foreground"
-              />
-            </div>
-            <p className="mt-3 flex items-center text-[11px] font-medium text-success-foreground/80">
-              On track for graduation verification
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiCard
+          label="Attendance"
+          value={presentDays}
+          unit={`/ ${requiredDays} days`}
+          meta={`${completionRate}% complete`}
+        >
+          <Progress value={completionRate} className="h-1" />
+        </KpiCard>
 
-        <Card className="shadow-card border-info bg-info text-info-foreground transition-all hover:border-info/80 hover:shadow-elevated">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
-                Total Logged Hours
-              </span>
-            </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="font-display text-3xl font-bold tracking-tight">
-                {estimatedHours}.0
-              </span>
-              <span className="text-sm font-medium text-info-foreground/80">hours</span>
-            </div>
-            <p className="mt-4 text-xs text-info-foreground/80">
-              Average <span className="font-semibold text-info-foreground">8.0 hrs</span> per
-              recorded day
-            </p>
-            <div className="mt-3 flex items-center gap-1.5 text-[11px] text-info-foreground/80">
-              <span className="size-1.5 rounded-full bg-info-foreground/70" />
-              40 hrs logged this week
-            </div>
-          </CardContent>
-        </Card>
+        <KpiCard
+          label="Logged Hours"
+          value={`${estimatedHours}.0`}
+          unit="hrs"
+          meta="40 hrs this week"
+        />
 
-        <Card className="shadow-card border-info bg-info text-info-foreground transition-all hover:border-info/80 hover:shadow-elevated">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
-                Approved Activities
-              </span>
-            </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="font-display text-3xl font-bold tracking-tight">
-                {approvedCount}
-              </span>
-              <span className="text-sm font-medium text-info-foreground/80">
-                of {acts.length} logged
-              </span>
-            </div>
-            <div className="mt-4 flex items-center gap-2">
-              <Badge
-                variant="outline"
-                className="border-info-foreground/30 bg-info-foreground/10 text-info-foreground text-xs font-medium"
-              >
-                {submittedCount} in review queue
-              </Badge>
-            </div>
-            <p className="mt-3 text-[11px] text-info-foreground/80">
-              0 revision requests from supervisor
-            </p>
-          </CardContent>
-        </Card>
+        <KpiCard
+          label="Approved Activities"
+          value={approvedCount}
+          unit={`of ${acts.length}`}
+          meta={`${submittedCount} in review`}
+        />
 
-        <Card className="shadow-card border-success bg-success text-success-foreground transition-all hover:border-success/80 hover:shadow-elevated">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
-                Verified Skills
-              </span>
-            </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="font-display text-3xl font-bold tracking-tight">
-                {uniqueSkills.length}
-              </span>
-              <span className="text-sm font-medium text-success-foreground/80">competencies</span>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-1">
-              {uniqueSkills.slice(0, 3).map((s) => (
-                <span
-                  key={s}
-                  className="rounded-md border border-success-foreground/20 bg-success-foreground/10 px-1.5 py-0.5 text-[10px] font-medium text-success-foreground"
-                >
-                  {s}
-                </span>
-              ))}
-              {uniqueSkills.length > 3 && (
-                <span className="self-center text-[10px] font-medium text-success-foreground/80">
-                  +{uniqueSkills.length - 3} more
-                </span>
-              )}
-            </div>
-            <p className="mt-3 text-[11px] text-success-foreground/80">Portfolio export ready</p>
-          </CardContent>
-        </Card>
+        <KpiCard
+          label="Verified Skills"
+          value={uniqueSkills.length}
+          unit="competencies"
+          meta={uniqueSkills.slice(0, 3).join(" · ")}
+        />
       </div>
 
       {/* ── Today's Attendance & Shift Status ── */}

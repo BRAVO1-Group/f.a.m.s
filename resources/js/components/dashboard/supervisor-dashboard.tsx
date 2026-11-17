@@ -12,6 +12,7 @@ import {
   AreaChart,
 } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -141,6 +142,44 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
       avatarFallback: "AW",
     },
     {
+      id: "student-2",
+      name: "Brian Mwangi",
+      regNo: "CS/2021/0067",
+      role: "Cloud Infrastructure Intern",
+      department: "Infrastructure & Cloud",
+      company: "Safaricom PLC",
+      institution: "University of Nairobi",
+      degree: "BSc. Computer Science",
+      email: "brian@university.ac.ke",
+      phone: "+254 722 556 778",
+      academicSupervisor: "Dr. Joyce Chelangat (jchelangat@university.ac.ke)",
+      daysLogged: 36,
+      requiredDays: 60,
+      attendanceRate: "96.0%",
+      currentPhase: "Phase 2: Cloud Deployment & Monitoring",
+      status: "Active • On Track",
+      avatarFallback: "BM",
+    },
+    {
+      id: "student-3",
+      name: "Faith Njeri",
+      regNo: "CS/2021/0089",
+      role: "Data Analytics Intern",
+      department: "Business Intelligence",
+      company: "Kenya Commercial Bank",
+      institution: "University of Nairobi",
+      degree: "BSc. Information Systems",
+      email: "faith@university.ac.ke",
+      phone: "+254 733 112 233",
+      academicSupervisor: "Dr. Peter Kamau (dean@university.ac.ke)",
+      daysLogged: 40,
+      requiredDays: 60,
+      attendanceRate: "98.0%",
+      currentPhase: "Phase 2: BI Dashboards & ETL",
+      status: "Active • On Track",
+      avatarFallback: "FN",
+    },
+    {
       id: "student-4",
       name: "Kevin Kiprono",
       regNo: "CS/2021/0104",
@@ -225,145 +264,51 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
 
   return (
     <div className="dashboard-page space-y-6 antialiased">
-      {/* ── Corporate Received Logins Security Notice ── */}
-      <div className="rounded-xl border border-primary/25 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-start">
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-semibold text-sm text-foreground">
-                Corporate Host Organization Account
-              </span>
-              <Badge
-                variant="outline"
-                className="text-[11px] font-medium border-primary/30 text-primary"
-              >
-                Received Enterprise Logins Only
-              </Badge>
-              <Badge variant="secondary" className="text-[11px] font-medium">
-                Tier 2 • Host Org Supervisor
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-              Authenticated as <strong>{name}</strong> via pre-provisioned credentials issued by{" "}
-              <strong>{currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"}</strong>.
-              Supervisors cannot self-register; candidate access is scoped strictly to your assigned
-              interns.
-            </p>
-          </div>
-        </div>
-        <div className="text-right shrink-0">
-          <span className="inline-flex items-center text-xs font-medium text-success bg-success/10 px-2.5 py-1 rounded-full border border-success/30">
-            Direct Approval Authority
-          </span>
-        </div>
-      </div>
-
       {/* ── Supervisor Header ── */}
-      <div className="rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge
-                variant="outline"
-                className="border-white/30 bg-white/10 text-white text-xs font-semibold"
-              >
-                Host Organization Field Mentor
-              </Badge>
-              <span className="text-xs text-primary-foreground/75">
-                {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"} •{" "}
-                {currentSupervisor?.faculty_department ?? "Product Engineering"}
-              </span>
-            </div>
-            <h1 className="mt-2 font-display text-2xl font-bold sm:text-3xl tracking-tight">
-              {greeting}, {name}
-            </h1>
-            <p className="mt-1 text-sm text-primary-foreground/80">
-              Supervising {assignedStudentsDetails.length} assigned interns. Review engineering
-              logs, verify task deliverables, and sign off submissions.
-            </p>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+        <div>
+          <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            {greeting}, {name}
+          </h1>
+          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+            {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"} ·{" "}
+            {currentSupervisor?.faculty_department ?? "Product Engineering"} · Supervising{" "}
+            {assignedStudentsDetails.length} interns
+          </p>
+        </div>
 
-          <div className="flex flex-wrap gap-2">
-            <Button
-              asChild
-              className="rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-xs shadow-sm"
-            >
-              <Link to="/review">Review Queue ({pendingActivities.length})</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="rounded-xl border-white/30 bg-white/10 text-white hover:bg-white/20 font-semibold text-xs"
-            >
-              <Link to="/students">Assigned Interns ({assignedStudentsDetails.length})</Link>
-            </Button>
-          </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild size="sm" className="rounded-xl text-xs font-semibold h-9">
+            <Link to="/review">Review Queue ({pendingActivities.length})</Link>
+          </Button>
+          <Button asChild size="sm" variant="outline" className="rounded-xl text-xs font-semibold h-9">
+            <Link to="/students">Assigned Interns ({assignedStudentsDetails.length})</Link>
+          </Button>
         </div>
       </div>
 
       {/* ── Supervisor KPI Cards (Scoped to Assigned Students) ── */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="shadow-card border-success bg-success text-success-foreground">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
-                Assigned Interns
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {assignedStudentsDetails.length}
-            </p>
-            <p className="mt-2 text-xs text-success-foreground/80">Alice Wanjiku & Kevin Kiprono</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-info bg-info text-info-foreground">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
-                Pending Approval
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {pendingActivities.length}
-            </p>
-            <p className="mt-2 text-xs text-info-foreground/80">
-              Submissions awaiting your sign-off
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-info bg-info text-info-foreground">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
-                Approved Deliverables
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {approvedActivities.length}
-            </p>
-            <p className="mt-2 text-xs text-info-foreground/80 flex items-center font-medium">
-              Signed off by Host Org Mentor
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-success bg-success text-success-foreground">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
-                Revisions Requested
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {correctionActivities.length}
-            </p>
-            <p className="mt-2 text-xs text-success-foreground/80">
-              Logs flagged for mentee correction
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiCard
+          label="Assigned Interns"
+          value={assignedStudentsDetails.length}
+          meta={assignedStudentsDetails.map((s) => s.name).join(" · ") || "No interns assigned"}
+        />
+        <KpiCard
+          label="Pending Approval"
+          value={pendingActivities.length}
+          meta="Awaiting sign-off"
+        />
+        <KpiCard
+          label="Approved Deliverables"
+          value={approvedActivities.length}
+          meta={isOrgSupervisor ? "Signed off by host supervisor" : "Verified by university supervisor"}
+        />
+        <KpiCard
+          label="Revisions Requested"
+          value={correctionActivities.length}
+          meta="Flagged for correction"
+        />
       </div>
 
       {/* ── Assigned Student Details (Candidate Profile & Placement Cards) ── */}
@@ -374,8 +319,9 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               My Assigned Student Interns
             </h2>
             <p className="text-xs text-muted-foreground">
-              Comprehensive candidate profiles, placement tracks at TechCorp Kenya Ltd, and
-              attachment meters
+              {isOrgSupervisor
+                ? `Candidate profiles and placement tracks at ${currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"}`
+                : "Candidate profiles and academic supervision tracks across host organizations"}
             </p>
           </div>
           <Button asChild size="sm" variant="outline" className="text-xs font-semibold">

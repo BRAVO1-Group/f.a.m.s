@@ -144,12 +144,14 @@ export default function AuthPage() {
                           </p>
                           <p className="mt-0.5 truncate text-[11px] text-muted-foreground/80">
                             {user.id === "supervisor-1"
-                              ? "TechCorp Kenya Ltd • Field Supervisor (Tied to Alice & Kevin)"
-                              : user.role === "org_admin"
-                                ? "TechCorp Kenya Ltd • Field Mentor (Received University Login)"
-                                : user.role === "uni_admin"
-                                  ? "University of Nairobi • Dean & Assessor"
-                                  : "BSc. Computer Science Candidate"}
+                              ? "TechCorp Kenya Ltd • Host Supervisor (Tied to Alice & Kevin)"
+                              : user.id === "supervisor-2"
+                                ? "University of Nairobi • University Supervisor (Faculty Assessor)"
+                                : user.role === "org_admin"
+                                  ? "TechCorp Kenya Ltd • Field Mentor (Received University Login)"
+                                  : user.role === "uni_admin"
+                                    ? "University of Nairobi • Dean & Admin"
+                                    : "BSc. Computer Science Candidate"}
                           </p>
                         </div>
 

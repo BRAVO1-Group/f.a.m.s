@@ -1,15 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getRouteApi } from "@tanstack/react-router";
 import {
   Check,
-  MessageSquare,
   RotateCcw,
-  Building2,
-  Filter,
-  Users,
   CheckCircle2,
-  Lock,
-  ShieldCheck,
+  Clock,
+  Calendar,
+  Wrench,
+  AlertTriangle,
+  MessageSquare,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -37,12 +36,23 @@ const routeApi = getRouteApi("/_authenticated/review");
 
 type FilterType = "submitted" | "approved" | "needs_correction";
 
+function statusBadgeClass(status: MockActivity["status"]) {
+  if (status === "approved") {
+    return "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30";
+  }
+  if (status === "needs_correction") {
+    return "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30";
+  }
+  return "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/30";
+}
+
 export default function ReviewPage() {
   const { userId, role } = useAppUser();
   const search = routeApi.useSearch();
   const [filter, setFilter] = useState<FilterType>("submitted");
   const [menteeFilter, setMenteeFilter] = useState<string>(search.student || "all");
   const [activitiesList, setActivitiesList] = useState<MockActivity[]>(getStoredActivities);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -53,39 +63,55 @@ export default function ReviewPage() {
     return () => window.removeEventListener("internflow-activities-change", handler);
   }, []);
 
-  const isSupervisor = role === "supervisor";
+  const isSupervisor = role === "supervisor" || role === "org_admin";
   const supervisorsList = getStoredSupervisors();
   const currentSupervisor =
     supervisorsList.find((s) => s.user_id === userId || s.id === userId) ||
     supervisorsList.find((s) => s.type === "organization") ||
     supervisorsList[0];
 
-  // Scoped student IDs for host org supervisor (James Otieno supervises Alice Wanjiku & Kevin Kiprono at TechCorp)
-  const assignedStudentIds =
-    currentSupervisor?.assigned_student_ids && currentSupervisor.assigned_student_ids.length > 0
-      ? currentSupervisor.assigned_student_ids
-      : ["student-1", "student-4"];
+  const assignedStudentIds = useMemo(
+    () =>
+      currentSupervisor?.assigned_student_ids && currentSupervisor.assigned_student_ids.length > 0
+        ? currentSupervisor.assigned_student_ids
+        : ["student-1", "student-4"],
+    [currentSupervisor],
+  );
 
-  // Filter activities strictly to assigned students if supervisor
-  const scopedActivities = isSupervisor
-    ? activitiesList.filter((a) => assignedStudentIds.includes(a.student_id))
-    : activitiesList;
+  const assignedStudents = useMemo(
+    () => profiles.filter((p) => assignedStudentIds.includes(p.id)),
+    [assignedStudentIds],
+  );
 
-  const menteeFiltered = scopedActivities.filter((a) => {
-    if (menteeFilter !== "all" && a.student_id !== menteeFilter) return false;
-    return a.status === filter;
-  });
+  const scopedActivities = useMemo(
+    () =>
+      isSupervisor
+        ? activitiesList.filter((a) => assignedStudentIds.includes(a.student_id))
+        : activitiesList,
+    [activitiesList, isSupervisor, assignedStudentIds],
+  );
 
-  const rows = menteeFiltered.sort((a, b) =>
-    (a.submitted_at ?? "") < (b.submitted_at ?? "") ? 1 : -1,
+  const rows = useMemo(() => {
+    return scopedActivities
+      .filter((a) => {
+        if (menteeFilter !== "all" && a.student_id !== menteeFilter) return false;
+        return a.status === filter;
+      })
+      .sort((a, b) => ((a.submitted_at ?? "") < (b.submitted_at ?? "") ? 1 : -1));
+  }, [scopedActivities, menteeFilter, filter]);
+
+  const selectedActivity = useMemo(
+    () => rows.find((a) => a.id === selectedId) ?? rows[0] ?? null,
+    [rows, selectedId],
   );
 
   const pendingCount = scopedActivities.filter((a) => a.status === "submitted").length;
   const approvedCount = scopedActivities.filter((a) => a.status === "approved").length;
   const correctionsCount = scopedActivities.filter((a) => a.status === "needs_correction").length;
 
+  const profileOf = (id: string) => profiles.find((s) => s.id === id);
   const nameOf = (id: string) => {
-    const p = profiles.find((s) => s.id === id);
+    const p = profileOf(id);
     return p?.full_name || p?.email || "Intern";
   };
 
@@ -95,7 +121,7 @@ export default function ReviewPage() {
     const comment =
       feedback[id]?.trim() ||
       (status === "approved"
-        ? "Verified and signed off by Host Organization Mentor (TechCorp Kenya Ltd)."
+        ? `Verified and signed off by ${currentSupervisor?.full_name ?? "Supervisor"}.`
         : "Please revise this activity log with additional technical detail.");
 
     approveOrCorrectActivity(id, status, userId, comment);
@@ -115,66 +141,35 @@ export default function ReviewPage() {
     });
   }
 
+  const selectedStudent = selectedActivity ? profileOf(selectedActivity.student_id) : undefined;
+
   return (
     <div className="space-y-6 antialiased">
-      {/* ── Security & Scoping Notice for Host Org Supervisor ── */}
-      {isSupervisor && (
-        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
-          <div className="flex items-start gap-3">
-            <div className="rounded-lg bg-primary/10 p-2 text-primary shrink-0">
-              <Building2 className="size-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-semibold text-sm text-foreground">
-                  Host Organization Review Queue
-                </span>
-                <Badge
-                  variant="outline"
-                  className="text-[11px] font-medium border-primary/30 text-primary"
-                >
-                  {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"}
-                </Badge>
-                <Badge variant="secondary" className="text-[11px] font-medium">
-                  Received Enterprise Logins
-                </Badge>
-              </div>
-              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                Review queue scoped strictly to your assigned student mentees:{" "}
-                <strong>Alice Wanjiku</strong> and <strong>Kevin Kiprono</strong>. You have approval
-                authority to sign off on technical logbooks or request revisions.
-              </p>
-            </div>
-          </div>
-          <div className="text-right shrink-0">
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
-              <ShieldCheck className="size-3.5" /> Direct Sign-off Authority
-            </span>
-          </div>
-        </div>
-      )}
-
       {/* ── Page Header & Filter Controls ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="font-display text-2xl font-bold tracking-tight">Review Queue</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Approve daily activities, request revisions, and provide engineering feedback to your
-            interns.
+            Select a student submission to inspect its full logbook details and sign off.
           </p>
         </div>
 
-        {isSupervisor && (
+        {isSupervisor && assignedStudents.length > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-muted-foreground">Mentee:</span>
+            <span className="text-xs font-medium text-muted-foreground">Intern:</span>
             <Select value={menteeFilter} onValueChange={setMenteeFilter}>
               <SelectTrigger className="w-[220px] text-xs h-9">
-                <SelectValue placeholder="All Mentees" />
+                <SelectValue placeholder="All Assigned Interns" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Assigned Mentees (2)</SelectItem>
-                <SelectItem value="student-1">Alice Wanjiku (Software Eng.)</SelectItem>
-                <SelectItem value="student-4">Kevin Kiprono (Cybersecurity)</SelectItem>
+                <SelectItem value="all">
+                  All Assigned Interns ({assignedStudents.length})
+                </SelectItem>
+                {assignedStudents.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.full_name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -209,15 +204,15 @@ export default function ReviewPage() {
         </TabsList>
       </Tabs>
 
-      {/* ── Submission Feed ── */}
+      {/* ── Master-Detail Submission Workspace ── */}
       {rows.length === 0 ? (
-        <Card className="shadow-card border-dashed">
+        <Card className="border-border/60 border-dashed shadow-none">
           <CardContent className="p-12 text-center text-sm text-muted-foreground space-y-2">
             <CheckCircle2 className="mx-auto size-10 text-muted-foreground/60" />
             <p className="font-semibold text-foreground">No submissions found</p>
             <p className="text-xs text-muted-foreground">
               {filter === "submitted"
-                ? "All activities submitted by your assigned mentees have been reviewed."
+                ? "All activities submitted by your assigned interns have been reviewed."
                 : "No activities currently match this status filter."}
             </p>
             {menteeFilter !== "all" && (
@@ -227,149 +222,199 @@ export default function ReviewPage() {
                 onClick={() => setMenteeFilter("all")}
                 className="text-xs mt-2"
               >
-                Clear Mentee Filter
+                Clear Intern Filter
               </Button>
             )}
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-3.5">
-          {rows.map((a) => (
-            <Card
-              key={a.id}
-              className="shadow-card border-border/80 hover:border-primary/30 transition"
-            >
-              <CardHeader className="pb-3">
-                <div className="flex flex-wrap items-start justify-between gap-2">
-                  <div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <CardTitle className="text-base font-semibold">{a.title}</CardTitle>
-                      <Badge
-                        variant="outline"
-                        className="text-xs font-medium border-primary/30 text-primary"
-                      >
-                        {nameOf(a.student_id)}
-                      </Badge>
-                    </div>
-                    <CardDescription className="text-xs mt-0.5">
-                      Logged Date: {a.activity_date}
-                      {a.arrival_time &&
-                        ` • Hours: ${a.arrival_time} - ${a.departure_time || "17:00"}`}
+        <div className="grid gap-4 lg:grid-cols-12 items-start">
+          {/* Left: Submission List */}
+          <div className="lg:col-span-5 space-y-2">
+            {rows.map((a) => {
+              const isSelected = selectedActivity?.id === a.id;
+              return (
+                <button
+                  key={a.id}
+                  type="button"
+                  onClick={() => setSelectedId(a.id)}
+                  className={`w-full text-left rounded-xl border p-3.5 transition-colors cursor-pointer ${
+                    isSelected
+                      ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                      : "border-border/60 bg-card hover:bg-muted/40"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm font-semibold text-foreground leading-snug line-clamp-1">
+                      {a.title}
+                    </p>
+                    <Badge
+                      variant="outline"
+                      className={`shrink-0 text-[10px] capitalize ${statusBadgeClass(a.status)}`}
+                    >
+                      {a.status.replace("_", " ")}
+                    </Badge>
+                  </div>
+                  <div className="mt-1.5 flex items-center justify-between text-xs text-muted-foreground">
+                    <span className="font-medium text-foreground/80">{nameOf(a.student_id)}</span>
+                    <span>
+                      {a.activity_date}
+                      {a.arrival_time ? ` · ${a.arrival_time}–${a.departure_time || "17:00"}` : ""}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right: Detailed Submission Inspector */}
+          {selectedActivity && (
+            <Card className="lg:col-span-7 border-border/60 shadow-none lg:sticky lg:top-16">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="space-y-1">
+                    <CardTitle className="text-lg font-semibold leading-snug">
+                      {selectedActivity.title}
+                    </CardTitle>
+                    <CardDescription className="text-xs flex flex-wrap items-center gap-x-3 gap-y-1">
+                      <span className="font-medium text-foreground">
+                        {nameOf(selectedActivity.student_id)}
+                      </span>
+                      {selectedStudent?.course && <span>{selectedStudent.course}</span>}
+                      {selectedStudent?.email && (
+                        <span className="font-mono">{selectedStudent.email}</span>
+                      )}
                     </CardDescription>
                   </div>
                   <Badge
-                    variant={
-                      a.status === "approved"
-                        ? "default"
-                        : a.status === "needs_correction"
-                          ? "destructive"
-                          : "secondary"
-                    }
-                    className={`text-xs capitalize ${
-                      a.status === "approved"
-                        ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
-                        : a.status === "needs_correction"
-                          ? "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30"
-                          : "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/30"
-                    }`}
+                    variant="outline"
+                    className={`text-xs capitalize ${statusBadgeClass(selectedActivity.status)}`}
                   >
-                    {a.status.replace("_", " ")}
+                    {selectedActivity.status.replace("_", " ")}
                   </Badge>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-3.5 text-xs">
-                <div>
-                  <span className="font-semibold text-foreground block mb-1">
-                    Task Description:
+
+                <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Calendar className="size-3.5" />
+                    {selectedActivity.activity_date}
                   </span>
-                  <p className="whitespace-pre-line text-muted-foreground leading-relaxed">
-                    {a.description}
+                  {selectedActivity.arrival_time && (
+                    <span className="inline-flex items-center gap-1.5">
+                      <Clock className="size-3.5" />
+                      {selectedActivity.arrival_time} – {selectedActivity.departure_time || "17:00"}
+                    </span>
+                  )}
+                  {selectedActivity.submitted_at && (
+                    <span>
+                      Submitted {new Date(selectedActivity.submitted_at).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
+              </CardHeader>
+
+              <CardContent className="space-y-4 pt-4 text-xs">
+                <div>
+                  <h3 className="font-semibold text-foreground mb-1.5">Task Description</h3>
+                  <p className="whitespace-pre-line text-sm text-muted-foreground leading-relaxed">
+                    {selectedActivity.description}
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="text-muted-foreground font-medium">Tools used:</span>
-                  {a.tools_used.map((t) => (
-                    <Badge key={t} variant="secondary" className="text-xs font-normal">
-                      {t}
-                    </Badge>
-                  ))}
-                </div>
+                {selectedActivity.tools_used.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-1.5 inline-flex items-center gap-1.5">
+                      <Wrench className="size-3.5 text-muted-foreground" />
+                      Tools &amp; Technologies
+                    </h3>
+                    <div className="flex flex-wrap gap-1.5">
+                      {selectedActivity.tools_used.map((t) => (
+                        <Badge key={t} variant="secondary" className="text-xs font-normal">
+                          {t}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-                {a.challenges ? (
-                  <div className="rounded-lg bg-muted/40 p-2.5 space-y-1">
-                    <p className="text-muted-foreground">
-                      <span className="font-semibold text-foreground">
-                        Challenges Encountered:{" "}
-                      </span>
-                      {a.challenges}
+                {selectedActivity.challenges && (
+                  <div className="rounded-lg border border-border/60 bg-muted/40 p-3 space-y-2">
+                    <div className="flex items-center gap-1.5 font-semibold text-foreground">
+                      <AlertTriangle className="size-3.5 text-amber-500" />
+                      Challenges &amp; Solutions
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed">
+                      <span className="font-medium text-foreground">Challenges: </span>
+                      {selectedActivity.challenges}
                     </p>
-                    {a.solutions && (
-                      <p className="text-muted-foreground">
-                        <span className="font-semibold text-foreground">Applied Solutions: </span>
-                        {a.solutions}
+                    {selectedActivity.solutions && (
+                      <p className="text-muted-foreground leading-relaxed">
+                        <span className="font-medium text-foreground">Solutions: </span>
+                        {selectedActivity.solutions}
                       </p>
                     )}
                   </div>
-                ) : null}
+                )}
 
-                {a.supervisor_feedback ? (
+                {selectedActivity.supervisor_feedback && (
                   <div
-                    className={`rounded-lg p-3 text-xs border ${
-                      a.status === "approved"
+                    className={`rounded-lg p-3 border ${
+                      selectedActivity.status === "approved"
                         ? "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900 text-emerald-900 dark:text-emerald-200"
                         : "bg-amber-50/60 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900 text-amber-900 dark:text-amber-200"
                     }`}
                   >
-                    <span className="font-semibold block mb-0.5">
-                      {a.status === "approved"
-                        ? "Verified Mentor Feedback:"
-                        : "Requested Revision Details:"}
+                    <span className="font-semibold block mb-1">
+                      {selectedActivity.status === "approved"
+                        ? "Verified Mentor Feedback"
+                        : "Requested Revision Details"}
                     </span>
-                    <p className="leading-relaxed">{a.supervisor_feedback}</p>
-                    {a.reviewed_at && (
-                      <span className="text-[10px] opacity-75 block mt-1">
-                        Reviewed: {new Date(a.reviewed_at).toLocaleDateString()}
+                    <p className="leading-relaxed">{selectedActivity.supervisor_feedback}</p>
+                    {selectedActivity.reviewed_at && (
+                      <span className="text-[11px] opacity-75 block mt-1">
+                        Reviewed {new Date(selectedActivity.reviewed_at).toLocaleDateString()}
                       </span>
                     )}
                   </div>
-                ) : null}
+                )}
 
-                {a.status !== "approved" ? (
-                  <div className="space-y-2 pt-2 border-t border-border/60">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+                {selectedActivity.status !== "approved" && (
+                  <div className="space-y-2.5 pt-3 border-t border-border/60">
+                    <div className="flex items-center gap-1.5 font-semibold text-foreground">
                       <MessageSquare className="size-3.5 text-primary" />
-                      Mentor Guidance / Revision Note (Optional)
+                      Mentor Feedback / Revision Note
                     </div>
                     <Textarea
-                      rows={2}
-                      value={feedback[a.id] ?? ""}
+                      rows={3}
+                      value={feedback[selectedActivity.id] ?? ""}
                       placeholder="Add guidance, commendations, or specific instructions for revision..."
-                      onChange={(e) => setFeedback({ ...feedback, [a.id]: e.target.value })}
+                      onChange={(e) =>
+                        setFeedback({ ...feedback, [selectedActivity.id]: e.target.value })
+                      }
                       className="text-xs resize-none"
                     />
-                    <div className="flex flex-wrap gap-2 pt-1">
+                    <div className="flex flex-wrap gap-2">
                       <Button
                         size="sm"
-                        onClick={() => decide(a.id, "approved")}
-                        className="h-8 text-xs font-semibold bg-primary text-primary-foreground"
+                        onClick={() => decide(selectedActivity.id, "approved")}
+                        className="h-8 text-xs font-semibold"
                       >
-                        <Check className="mr-1.5 size-3.5" /> Sign Off & Approve
+                        <Check className="mr-1.5 size-3.5" /> Sign Off &amp; Approve
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => decide(a.id, "needs_correction")}
+                        onClick={() => decide(selectedActivity.id, "needs_correction")}
                         className="h-8 text-xs font-semibold border-amber-500/40 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40"
                       >
                         <RotateCcw className="mr-1.5 size-3.5" /> Request Revision
                       </Button>
                     </div>
                   </div>
-                ) : null}
+                )}
               </CardContent>
             </Card>
-          ))}
+          )}
         </div>
       )}
     </div>

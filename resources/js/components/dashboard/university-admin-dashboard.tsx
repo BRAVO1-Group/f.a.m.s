@@ -55,6 +55,7 @@ import {
   AreaChart,
 } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -373,20 +374,11 @@ export function UniversityAdminDashboard({
       {/* ── Clean Dean Page Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="font-display text-2xl font-bold sm:text-3xl tracking-tight text-foreground">
-              {greeting}, {name}
-            </h1>
-            <Badge
-              variant="outline"
-              className="text-xs border-primary/30 text-primary bg-primary/5 font-semibold"
-            >
-              University Dean
-            </Badge>
-          </div>
+          <h1 className="font-display text-2xl font-bold sm:text-3xl tracking-tight text-foreground">
+            {greeting}, {name}
+          </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            University of Nairobi • School of Computing &amp; Informatics • Placement &amp;
-            Mentorship Console
+            University of Nairobi · School of Computing &amp; Informatics
           </p>
         </div>
 
@@ -394,24 +386,17 @@ export function UniversityAdminDashboard({
           <Button
             onClick={() => setCreateSupervisorOpen(true)}
             size="sm"
-            className="rounded-xl font-semibold text-xs h-9 shadow-xs"
+            className="rounded-xl font-semibold text-xs h-9"
           >
-            <UserPlus className="mr-1.5 size-4" />
             Create Supervisor
           </Button>
           <Button
             onClick={() => handleOpenAssignModal("student-4")}
             size="sm"
+            variant="outline"
             className="rounded-xl font-semibold text-xs h-9"
           >
-            <UserCheck className="mr-1.5 size-4" />
             Assign Mentors
-          </Button>
-          <Button asChild size="sm" className="rounded-xl font-semibold text-xs h-9">
-            <Link to="/reports">
-              <FileBarChart className="mr-1.5 size-4" />
-              Dossier (PDF)
-            </Link>
           </Button>
         </div>
       </div>
@@ -443,81 +428,27 @@ export function UniversityAdminDashboard({
       </Alert>
 
       {/* ── Institutional Metrics KPI Cards ── */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="shadow-card border-success bg-success text-success-foreground">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
-                Enrolled Cohort
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-success-foreground/10 text-success-foreground">
-                <GraduationCap className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {universityCohort.length}
-            </p>
-            <p className="mt-2 text-xs text-success-foreground/80">Active placement candidates</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-info bg-info text-info-foreground">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
-                Supervisor Roster
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-info-foreground/10 text-info-foreground">
-                <Users className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {supervisorsList.length}
-            </p>
-            <p className="mt-2 text-xs text-info-foreground/80">
-              {orgSupervisors.length} Org Mentors • {uniSupervisors.length} Faculty
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-info bg-info text-info-foreground">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
-                Dual-Supervision Rate
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-info-foreground/10 text-info-foreground">
-                <ShieldCheck className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {Math.round((dualAssignedCount / universityCohort.length) * 100)}%
-            </p>
-            <p className="mt-2 flex items-center gap-1 text-xs font-medium text-info-foreground/80">
-              <TrendingUp className="size-3" /> {dualAssignedCount} of {universityCohort.length}{" "}
-              fully paired
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-success bg-success text-success-foreground">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
-                RBAC Security Tier
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-success-foreground/10 text-success-foreground">
-                <Key className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight text-success-foreground">
-              Tier 4
-            </p>
-            <p className="mt-2 text-xs text-success-foreground/80">
-              Institutional Governance Active
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiCard
+          label="Enrolled Cohort"
+          value={universityCohort.length}
+          meta="Active candidates"
+        />
+        <KpiCard
+          label="Supervisor Roster"
+          value={supervisorsList.length}
+          meta={`${orgSupervisors.length} host · ${uniSupervisors.length} faculty`}
+        />
+        <KpiCard
+          label="Dual-Supervision"
+          value={`${Math.round((dualAssignedCount / universityCohort.length) * 100)}%`}
+          meta={`${dualAssignedCount} of ${universityCohort.length} paired`}
+        />
+        <KpiCard
+          label="RBAC Tier"
+          value="Tier 4"
+          meta="Governance active"
+        />
       </div>
 
       {/* ── Main Administration Tabs ── */}

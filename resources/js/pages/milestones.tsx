@@ -28,37 +28,79 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAppUser } from "@/lib/app-user";
-import { milestones as defaultMilestones, uid, type MockMilestone } from "@/lib/mock-data";
+import {
+  getStoredSupervisors,
+  milestones as defaultMilestones,
+  profiles,
+  uid,
+  type MockMilestone,
+} from "@/lib/mock-data";
 
 type Filter = "all" | "in_progress" | "completed" | "upcoming";
 
 export default function MilestonesPage() {
-  const { role } = useAppUser();
+  const { userId, role } = useAppUser();
+  const isSupervisor = role === "supervisor" || role === "org_admin";
   const [data, setData] = useState<MockMilestone[]>(defaultMilestones);
   const [filter, setFilter] = useState<Filter>("all");
+  const [selectedStudent, setSelectedStudent] = useState<string>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [targetStudentId, setTargetStudentId] = useState("student-1");
   const [newTitle, setNewTitle] = useState("");
   const [newPhase, setNewPhase] = useState("Phase 3: Integration");
   const [newWeek, setNewWeek] = useState("Weeks 7 - 9");
   const [newDescription, setNewDescription] = useState("");
   const [newSkills, setNewSkills] = useState("");
+  const [reviewMilestone, setReviewMilestone] = useState<MockMilestone | null>(null);
+  const [feedbackDraft, setFeedbackDraft] = useState("");
 
-  const totalTasks = useMemo(() => data.flatMap((m) => m.tasks).length, [data]);
+  const assignedStudentIds = useMemo(() => {
+    if (!isSupervisor) return [userId];
+    const supervisors = getStoredSupervisors();
+    const current =
+      supervisors.find((s) => s.user_id === userId || s.id === userId) ||
+      supervisors.find((s) => s.type === "organization");
+    return current?.assigned_student_ids?.length ? current.assigned_student_ids : ["student-1"];
+  }, [isSupervisor, userId]);
+
+  const assignedStudents = useMemo(
+    () => profiles.filter((p) => assignedStudentIds.includes(p.id)),
+    [assignedStudentIds],
+  );
+
+  const scopedData = useMemo(() => {
+    const base = isSupervisor
+      ? data.filter((m) => assignedStudentIds.includes(m.student_id))
+      : data.filter((m) => m.student_id === userId || m.student_id === "student-1");
+    if (isSupervisor && selectedStudent !== "all") {
+      return base.filter((m) => m.student_id === selectedStudent);
+    }
+    return base;
+  }, [data, isSupervisor, assignedStudentIds, userId, selectedStudent]);
+
+  const totalTasks = useMemo(() => scopedData.flatMap((m) => m.tasks).length, [scopedData]);
   const completedTasks = useMemo(
-    () => data.flatMap((m) => m.tasks).filter((t) => t.completed).length,
-    [data],
+    () => scopedData.flatMap((m) => m.tasks).filter((t) => t.completed).length,
+    [scopedData],
   );
   const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   const filtered = useMemo(() => {
-    if (filter === "all") return data;
-    if (filter === "in_progress") return data.filter((m) => m.status === "in_progress");
-    if (filter === "completed") return data.filter((m) => m.status === "completed");
+    if (filter === "all") return scopedData;
+    if (filter === "in_progress") return scopedData.filter((m) => m.status === "in_progress");
+    if (filter === "completed") return scopedData.filter((m) => m.status === "completed");
     if (filter === "upcoming")
-      return data.filter((m) => m.status === "not_started" || m.status === "under_review");
-    return data;
-  }, [data, filter]);
+      return scopedData.filter((m) => m.status === "not_started" || m.status === "under_review");
+    return scopedData;
+  }, [scopedData, filter]);
 
   function toggleTask(milestoneId: string, taskId: string) {
     setData((prev) =>
@@ -97,7 +139,7 @@ export default function MilestonesPage() {
 
     const newMilestone: MockMilestone = {
       id: `m-${uid()}`,
-      student_id: "student-1",
+      student_id: targetStudentId || assignedStudentIds[0] || "student-1",
       internship_id: "intern-1",
       phase: newPhase,
       title: newTitle.trim(),
@@ -125,6 +167,24 @@ export default function MilestonesPage() {
     toast.success("New milestone goal added!");
   }
 
+  function handleSaveFeedback(markCompleted: boolean) {
+    if (!reviewMilestone) return;
+    setData((prev) =>
+      prev.map((m) => {
+        if (m.id !== reviewMilestone.id) return m;
+        return {
+          ...m,
+          supervisor_feedback: feedbackDraft.trim() || m.supervisor_feedback,
+          status: markCompleted ? "completed" : m.status,
+          completed_at: markCompleted ? new Date().toISOString() : m.completed_at,
+        };
+      }),
+    );
+    toast.success(markCompleted ? "Milestone signed off & completed" : "Mentor feedback saved");
+    setReviewMilestone(null);
+    setFeedbackDraft("");
+  }
+
   return (
     <div className="space-y-8">
       {/* Page Header */}
@@ -143,21 +203,40 @@ export default function MilestonesPage() {
           </p>
         </div>
 
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="size-4" />
-              Add Milestone
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Add Custom Milestone Goal</DialogTitle>
-              <DialogDescription>
-                Define a learning milestone or project deliverable for your internship plan.
-              </DialogDescription>
-            </DialogHeader>
+        {isSupervisor && (
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Plus className="size-4" />
+                Add Milestone
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Add Milestone Goal</DialogTitle>
+                <DialogDescription>
+                  Define a learning milestone or deliverable for the assigned intern.
+                </DialogDescription>
+              </DialogHeader>
             <form onSubmit={handleCreateGoal} className="space-y-4">
+              {assignedStudents.length > 0 && (
+                <div className="space-y-2">
+                  <Label htmlFor="m-student">Assigned Intern</Label>
+                  <Select value={targetStudentId} onValueChange={setTargetStudentId}>
+                    <SelectTrigger id="m-student">
+                      <SelectValue placeholder="Select intern" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {assignedStudents.map((s) => (
+                        <SelectItem key={s.id} value={s.id}>
+                          {s.full_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Label htmlFor="m-title">Milestone Title</Label>
                 <Input
@@ -218,8 +297,9 @@ export default function MilestonesPage() {
                 <Button type="submit">Create Milestone</Button>
               </DialogFooter>
             </form>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       {/* Progress Metric Card */}
@@ -244,7 +324,7 @@ export default function MilestonesPage() {
               <div>
                 <p className="text-xs text-muted-foreground">Phases Active</p>
                 <p className="text-lg font-bold text-foreground">
-                  {data.filter((m) => m.status === "in_progress").length} of {data.length}
+                  {scopedData.filter((m) => m.status === "in_progress").length} of {scopedData.length}
                 </p>
               </div>
             </div>
@@ -256,7 +336,7 @@ export default function MilestonesPage() {
               <div>
                 <p className="text-xs text-muted-foreground">Completed Milestones</p>
                 <p className="text-lg font-bold text-foreground">
-                  {data.filter((m) => m.status === "completed").length}
+                  {scopedData.filter((m) => m.status === "completed").length}
                 </p>
               </div>
             </div>
@@ -264,33 +344,55 @@ export default function MilestonesPage() {
         </CardContent>
       </Card>
 
-      {/* Tabs Filter */}
-      <Tabs value={filter} onValueChange={(v: string) => setFilter(v as Filter)}>
-        <TabsList className="grid w-full grid-cols-2 md:inline-flex md:w-auto">
-          <TabsTrigger value="all" className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm">
-            All Phases ({data.length})
-          </TabsTrigger>
-          <TabsTrigger
-            value="in_progress"
-            className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm"
-          >
-            In Progress ({data.filter((m) => m.status === "in_progress").length})
-          </TabsTrigger>
-          <TabsTrigger
-            value="completed"
-            className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm"
-          >
-            Completed ({data.filter((m) => m.status === "completed").length})
-          </TabsTrigger>
-          <TabsTrigger
-            value="upcoming"
-            className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm"
-          >
-            Upcoming (
-            {data.filter((m) => m.status === "not_started" || m.status === "under_review").length})
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
+      {/* Tabs Filter + Supervisor Student Filter */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <Tabs value={filter} onValueChange={(v: string) => setFilter(v as Filter)}>
+          <TabsList className="grid w-full grid-cols-2 md:inline-flex md:w-auto">
+            <TabsTrigger value="all" className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm">
+              All Phases ({scopedData.length})
+            </TabsTrigger>
+            <TabsTrigger
+              value="in_progress"
+              className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm"
+            >
+              In Progress ({scopedData.filter((m) => m.status === "in_progress").length})
+            </TabsTrigger>
+            <TabsTrigger
+              value="completed"
+              className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm"
+            >
+              Completed ({scopedData.filter((m) => m.status === "completed").length})
+            </TabsTrigger>
+            <TabsTrigger
+              value="upcoming"
+              className="w-full px-2 text-xs md:w-auto md:px-3 md:text-sm"
+            >
+              Upcoming (
+              {
+                scopedData.filter((m) => m.status === "not_started" || m.status === "under_review")
+                  .length
+              }
+              )
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {isSupervisor && assignedStudents.length > 1 && (
+          <Select value={selectedStudent} onValueChange={setSelectedStudent}>
+            <SelectTrigger className="w-full sm:w-56">
+              <SelectValue placeholder="Filter by intern" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Assigned Interns</SelectItem>
+              {assignedStudents.map((s) => (
+                <SelectItem key={s.id} value={s.id}>
+                  {s.full_name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+      </div>
 
       {/* Milestones List */}
       <div className="grid gap-6 lg:grid-cols-2">
@@ -298,7 +400,25 @@ export default function MilestonesPage() {
           const isCompleted = item.status === "completed";
           const isInProgress = item.status === "in_progress";
 
-          return (
+          function handleSaveFeedback(markCompleted: boolean) {
+    if (!reviewMilestone) return;
+    setData((prev) =>
+      prev.map((m) => {
+        if (m.id !== reviewMilestone.id) return m;
+        return {
+          ...m,
+          supervisor_feedback: feedbackDraft.trim() || m.supervisor_feedback,
+          status: markCompleted ? "completed" : m.status,
+          completed_at: markCompleted ? new Date().toISOString() : m.completed_at,
+        };
+      }),
+    );
+    toast.success(markCompleted ? "Milestone signed off & completed" : "Mentor feedback saved");
+    setReviewMilestone(null);
+    setFeedbackDraft("");
+  }
+
+  return (
             <Card
               key={item.id}
               className={`flex flex-col border transition-all shadow-xs ${
@@ -361,33 +481,45 @@ export default function MilestonesPage() {
                     {item.tasks.length})
                   </p>
                   <div className="space-y-2 pt-1">
-                    {item.tasks.map((task) => (
-                      <button
-                        key={task.id}
-                        type="button"
-                        onClick={() => toggleTask(item.id, task.id)}
-                        className="flex w-full items-start gap-2.5 text-left text-xs transition-opacity hover:opacity-80"
-                      >
-                        <div
-                          className={`mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border transition-colors ${
-                            task.completed
-                              ? "border-emerald-600 bg-emerald-600 text-white"
-                              : "border-muted-foreground/40 bg-background"
-                          }`}
-                        >
-                          {task.completed && <Check className="size-3" />}
+                    {item.tasks.map((task) => {
+                      const rowContent = (
+                        <>
+                          <div
+                            className={`mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border transition-colors ${
+                              task.completed
+                                ? "border-emerald-600 bg-emerald-600 text-white"
+                                : "border-muted-foreground/40 bg-background"
+                            }`}
+                          >
+                            {task.completed && <Check className="size-3" />}
+                          </div>
+                          <span
+                            className={`flex-1 leading-relaxed ${
+                              task.completed
+                                ? "line-through text-muted-foreground"
+                                : "text-foreground font-medium"
+                            }`}
+                          >
+                            {task.title}
+                          </span>
+                        </>
+                      );
+
+                      return isSupervisor ? (
+                        <div key={task.id} className="flex w-full items-start gap-2.5 text-left text-xs">
+                          {rowContent}
                         </div>
-                        <span
-                          className={`flex-1 leading-relaxed ${
-                            task.completed
-                              ? "line-through text-muted-foreground"
-                              : "text-foreground font-medium"
-                          }`}
+                      ) : (
+                        <button
+                          key={task.id}
+                          type="button"
+                          onClick={() => toggleTask(item.id, task.id)}
+                          className="flex w-full items-start gap-2.5 text-left text-xs transition-opacity hover:opacity-80 cursor-pointer"
                         >
-                          {task.title}
-                        </span>
-                      </button>
-                    ))}
+                          {rowContent}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -403,11 +535,67 @@ export default function MilestonesPage() {
                     </p>
                   </div>
                 )}
+
+                {isSupervisor && (
+                  <div className="flex justify-end pt-1">
+                    <Button
+                      size="sm"
+                      variant={isCompleted ? "outline" : "default"}
+                      className="text-xs"
+                      onClick={() => {
+                        setReviewMilestone(item);
+                        setFeedbackDraft(item.supervisor_feedback ?? "");
+                      }}
+                    >
+                      {isCompleted ? "Edit Feedback" : "Sign Off / Feedback"}
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           );
         })}
       </div>
+
+      {/* Supervisor Sign-Off & Feedback Dialog */}
+      <Dialog
+        open={Boolean(reviewMilestone)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setReviewMilestone(null);
+            setFeedbackDraft("");
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Milestone Sign-Off & Feedback</DialogTitle>
+            <DialogDescription>
+              {reviewMilestone?.title}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="m-feedback">Mentor Feedback</Label>
+              <Textarea
+                id="m-feedback"
+                rows={3}
+                placeholder="Provide constructive feedback or sign-off notes..."
+                value={feedbackDraft}
+                onChange={(e) => setFeedbackDraft(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button type="button" variant="outline" onClick={() => handleSaveFeedback(false)}>
+              Save Feedback
+            </Button>
+            <Button type="button" onClick={() => handleSaveFeedback(true)}>
+              Sign Off & Complete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

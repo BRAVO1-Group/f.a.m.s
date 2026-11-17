@@ -1,74 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
 
 export default function LandingPage() {
-  const [mode, setMode] = useState<"hero" | "case">("hero");
-  const [activeRole, setActiveRole] = useState(0);
-  const posterHandlesRef = useRef<PosterTransitionHandles | null>(null);
-
-  const handleEnterCase = useCallback(() => {
-    setActiveRole(0);
-    setMode("case");
-  }, []);
-
-  const handleExitCase = useCallback(() => {
-    setMode("hero");
-    setActiveRole(0);
-  }, []);
-
-  const handleSelectRole = useCallback((idx: number) => {
-    setActiveRole(idx);
-  }, []);
-
-  useEffect(() => {
-    let lastWheelTime = 0;
-
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      const now = Date.now();
-      if (now - lastWheelTime < 800 || Math.abs(e.deltaY) < 18) return;
-      lastWheelTime = now;
-
-      if (mode === "hero") {
-        if (e.deltaY > 0) {
-          posterHandlesRef.current?.toCase();
-        }
-      } else {
-        setActiveRole((prev) =>
-          e.deltaY > 0 ? (prev + 1) % FAMS_ROLES.length : (prev - 1 + FAMS_ROLES.length) % FAMS_ROLES.length,
-        );
-      }
-    };
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (mode === "hero") {
-        if (["ArrowDown", "PageDown", " "].includes(e.key)) {
-          e.preventDefault();
-          posterHandlesRef.current?.toCase();
-        }
-      } else {
-        if (e.key === "Escape") {
-          e.preventDefault();
-          posterHandlesRef.current?.toHero();
-        } else if (["ArrowRight", "ArrowDown", "PageDown"].includes(e.key)) {
-          e.preventDefault();
-          setActiveRole((prev) => (prev + 1) % FAMS_ROLES.length);
-        } else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) {
-          e.preventDefault();
-          setActiveRole((prev) => (prev - 1 + FAMS_ROLES.length) % FAMS_ROLES.length);
-        }
-      }
-    };
-
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [mode]);
-
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-[#0b2f20]">
       {/* ── The Complete FAMS Interactive Hero Experience ── */}

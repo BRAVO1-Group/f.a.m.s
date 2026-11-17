@@ -86,7 +86,7 @@ const NAV: NavItem[] = [
     to: "/milestones",
     label: "Milestones Roadmap",
     icon: Milestone,
-    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+    roles: ["student", "supervisor", "org_admin"],
     category: "tracking",
   },
 
@@ -95,21 +95,21 @@ const NAV: NavItem[] = [
     to: "/review",
     label: "Review Queue",
     icon: ClipboardList,
-    roles: ["supervisor", "org_admin", "uni_admin", "system_admin"],
+    roles: ["supervisor", "org_admin"],
     category: "supervision",
   },
   {
     to: "/students",
     label: "Assigned Interns",
     icon: Users,
-    roles: ["supervisor", "org_admin", "uni_admin", "system_admin"],
+    roles: ["supervisor", "org_admin"],
     category: "supervision",
   },
   {
     to: "/evaluations",
     label: "Performance Evaluations",
     icon: Award,
-    roles: ["supervisor", "uni_admin", "system_admin"],
+    roles: ["supervisor", "org_admin"],
     category: "supervision",
   },
 
@@ -148,7 +148,7 @@ const NAV: NavItem[] = [
     to: "/reports",
     label: "Reports & Dossier",
     icon: FileBarChart,
-    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+    roles: ["student", "supervisor", "org_admin"],
     category: "core",
   },
 
@@ -230,15 +230,28 @@ export function AppShell({
 
   // Filter items matching the active persona's roles
   const allowedItems = NAV.filter((i) => i.roles.some((r) => activeRoles.includes(r)));
+  const isRouteAllowed = allowedItems.some(
+    (item) => pathname === item.to || pathname.startsWith(item.to + "/"),
+  );
+
+  useEffect(() => {
+    if (!isRouteAllowed) {
+      navigate({ to: "/dashboard" });
+    }
+  }, [isRouteAllowed, navigate]);
+
   const currentNavItem =
     NAV.find((item) => pathname === item.to || pathname.startsWith(item.to + "/")) ?? NAV[0]!;
-  const CurrentNavIcon = currentNavItem.icon;
 
   const THEME_OPTIONS: { mode: ThemeMode; label: string; icon: typeof Sun }[] = [
     { mode: "light", label: "Light", icon: Sun },
     { mode: "dark", label: "Dark", icon: Moon },
     { mode: "system", label: "Auto", icon: Monitor },
   ];
+  const currentThemeIdx = THEME_OPTIONS.findIndex((o) => o.mode === theme);
+  const activeThemeOption = THEME_OPTIONS[currentThemeIdx === -1 ? 0 : currentThemeIdx]!;
+  const ActiveThemeIcon = activeThemeOption.icon;
+  const nextThemeOption = THEME_OPTIONS[(currentThemeIdx + 1) % THEME_OPTIONS.length]!;
 
   // Group by category in ordered sequence
   const categories: NavCategory[] = ["core", "tracking", "supervision", "governance", "account"];
@@ -386,87 +399,50 @@ export function AppShell({
 
       {/* Main Content Area */}
       <div className="lg:pl-64">
-        <header className="dashboard-header sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-card/85 px-4 py-2.5 backdrop-blur-md lg:px-8">
-          <div className="flex items-center gap-3 min-w-0">
+        <header className="dashboard-header sticky top-0 z-30 flex h-12 items-center justify-between gap-4 border-b border-border/60 bg-background/80 px-4 backdrop-blur-md lg:px-8">
+          <div className="flex items-center gap-2.5 min-w-0">
             <button
               type="button"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground lg:hidden"
+              className="inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground lg:hidden"
               onClick={() => setOpen(true)}
               aria-label="Open navigation"
             >
               <Menu className="size-4" />
-              <span>Menu</span>
             </button>
 
-            {/* Linear-style Breadcrumb Bar */}
-            <div className="flex items-center gap-2 text-xs min-w-0">
-              <span className="hidden sm:inline-flex items-center rounded-md border border-border/80 bg-muted/60 px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs min-w-0">
+              <span className="hidden sm:inline text-muted-foreground">
                 {CATEGORY_LABELS[currentNavItem.category]}
               </span>
               <span className="hidden sm:inline text-muted-foreground/40">/</span>
-              <div className="flex items-center gap-1.5 font-semibold text-foreground truncate">
-                <CurrentNavIcon className="size-3.5 text-primary shrink-0" />
-                <span className="truncate">{currentNavItem.label}</span>
-              </div>
-              <Badge
-                variant="outline"
-                className="hidden md:inline-flex text-[10px] font-mono py-0 px-1.5 text-muted-foreground border-border/80"
-              >
-                Tier {tier.tier} • {ROLE_LABELS[activeRole]}
-              </Badge>
-            </div>
+              <span className="font-medium text-foreground truncate">{currentNavItem.label}</span>
+            </nav>
           </div>
 
-          <div className="flex items-center gap-2.5 shrink-0">
-            {/* Segmented Theme Switcher */}
-            <div
-              className="inline-flex items-center rounded-xl border border-border bg-muted/60 p-0.5 text-xs"
-              role="group"
-              aria-label="Theme switcher"
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              type="button"
+              onClick={() => setTheme(nextThemeOption.mode)}
+              title={`Theme: ${activeThemeOption.label} (click for ${nextThemeOption.label})`}
+              aria-label={`Theme: ${activeThemeOption.label}`}
+              className="inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground cursor-pointer"
             >
-              {THEME_OPTIONS.map((option) => {
-                const isSelected = theme === option.mode;
-                const Icon = option.icon;
-                return (
-                  <button
-                    key={option.mode}
-                    type="button"
-                    onClick={() => setTheme(option.mode)}
-                    title={`Switch to ${option.label} mode`}
-                    aria-pressed={isSelected}
-                    className={cn(
-                      "inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] transition-all cursor-pointer",
-                      isSelected
-                        ? "bg-card text-foreground shadow-2xs font-semibold"
-                        : "text-muted-foreground hover:text-foreground",
-                    )}
-                  >
-                    <Icon className="size-3.5 shrink-0" />
-                    <span className="hidden sm:inline">{option.label}</span>
-                  </button>
-                );
-              })}
-            </div>
+              <ActiveThemeIcon className="size-4" />
+            </button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex items-center gap-2 rounded-xl border border-border bg-background px-2.5 py-1.5 text-xs font-medium shadow-2xs transition-colors hover:bg-muted focus:outline-hidden cursor-pointer"
+                  className="flex items-center gap-2 rounded-lg px-2 py-1 text-xs transition-colors hover:bg-muted focus:outline-hidden cursor-pointer"
                 >
                   <Avatar className="size-6">
                     <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-bold">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="hidden md:inline font-semibold text-foreground">{activeName}</span>
-                  <Badge
-                    variant="outline"
-                    className="text-[10px] py-0 px-1.5 text-muted-foreground font-normal hidden xl:inline-flex"
-                  >
-                    {ROLE_LABELS[activeRole]}
-                  </Badge>
-                  <ChevronDown className="size-3 text-muted-foreground" />
+                  <span className="hidden md:inline font-medium text-foreground">{activeName}</span>
+                  <ChevronDown className="size-3.5 text-muted-foreground" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64">
@@ -488,7 +464,11 @@ export function AppShell({
                       <div className="min-w-0 pr-2">
                         <p className="truncate font-medium text-foreground">{user.full_name}</p>
                         <p className="truncate text-[10px] text-muted-foreground">
-                          {ROLE_LABELS[user.role]}
+                          {user.id === "supervisor-1"
+                            ? "Host Supervisor"
+                            : user.id === "supervisor-2"
+                              ? "University Supervisor"
+                              : ROLE_LABELS[user.role]}
                         </p>
                       </div>
                       {isCurrent && <Check className="size-4 text-primary shrink-0" />}

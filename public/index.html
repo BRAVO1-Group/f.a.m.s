@@ -1043,11 +1043,6 @@
     <a class="tag t3 pre" id="btn-contacts" href="#contacts">contacts</a>
     <a class="tag t4 pre" id="btn-demo" href="/auth">request a demo</a>
 
-    <!-- Sound Control -->
-    <button class="sound-tag pre" id="btn-sound" type="button" aria-label="Toggle SFX">
-      <span id="sound-icon">🔊</span> SFX
-    </button>
-
     <!-- Scroll Hint -->
     <div class="hint pre" id="hint">
       <div class="hint-line">
@@ -1082,102 +1077,7 @@
     <!-- 1. 3D SPATIAL NETWORK & ORBITAL DATA CANVAS -->
     <canvas id="webgl-stage" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
 
-    <!-- 2. TOP EXECUTIVE DIRECTOR HUD & 4-ROLE SWITCHER -->
-    <header class="relative z-30 w-full max-w-[1360px] mx-auto pt-3 px-4 flex flex-wrap items-center justify-between gap-2">
-      <!-- Back to Overview + Brand -->
-      <div class="flex items-center gap-2">
-        <button id="s2-back-btn" type="button" class="px-3 py-2 rounded-2xl bg-zinc-900/90 hover:bg-zinc-800 border border-indigo-500/30 text-white text-xs font-bold backdrop-blur-xl shadow-lg flex items-center gap-1.5 transition" title="Return to Overview">
-          <span>&larr;</span>
-          <span>Overview</span>
-        </button>
-
-        <div class="flex items-center gap-2.5 bg-zinc-900/90 border border-indigo-500/25 px-3 py-1.5 rounded-2xl backdrop-blur-xl shadow-lg">
-          <div class="size-7 rounded-xl it-accent-gradient flex items-center justify-center text-white font-black shadow-md shrink-0">
-            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
-              <path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
-            </svg>
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-extrabold tracking-tight text-white">InternTrack 3D Auto-Motion Engine</span>
-              <span class="hidden sm:inline-flex text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 items-center gap-1">
-                <span class="size-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                ZINC + INDIGO DUAL THEME
-              </span>
-            </div>
-            <p class="hidden xl:block text-[11px] text-zinc-400">Simulating real role-exclusive permissions, workflows &amp; handoffs across the 3D workspace</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4-Role Selector Pills (Student, Field Supervisor, Uni Supervisor, Uni Admin) -->
-      <div class="flex flex-wrap items-center gap-1 bg-zinc-900/90 border border-indigo-500/25 p-1.5 rounded-2xl backdrop-blur-xl shadow-lg">
-        <button onclick="selectRole(0, true)" id="role-btn-0" type="button" class="role-pill relative overflow-hidden px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-indigo-500/20 text-white border border-indigo-400/50 shadow-sm">
-          <span class="size-5 rounded-lg bg-indigo-500/25 border border-indigo-400/40 text-indigo-300 flex items-center justify-center text-[10px] font-mono">T1</span>
-          <div class="text-left">
-            <div class="leading-none">Student Intern</div>
-            <div class="text-[9px] font-normal text-indigo-300/80 mt-0.5">Alice Wanjiku</div>
-          </div>
-          <div id="role-prog-0" class="absolute bottom-0 left-0 h-0.5 bg-indigo-400 transition-all duration-150" style="width: 0%"></div>
-        </button>
-
-        <button onclick="selectRole(1, true)" id="role-btn-1" type="button" class="role-pill relative overflow-hidden px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-zinc-400 hover:text-white border border-transparent">
-          <span class="size-5 rounded-lg bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center text-[10px] font-mono">T2</span>
-          <div class="text-left">
-            <div class="leading-none">Field Supervisor</div>
-            <div class="text-[9px] font-normal text-zinc-400 mt-0.5">James Otieno (Host)</div>
-          </div>
-          <div id="role-prog-1" class="absolute bottom-0 left-0 h-0.5 bg-emerald-400 transition-all duration-150" style="width: 0%"></div>
-        </button>
-
-        <button onclick="selectRole(2, true)" id="role-btn-2" type="button" class="role-pill relative overflow-hidden px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-zinc-400 hover:text-white border border-transparent">
-          <span class="size-5 rounded-lg bg-sky-500/20 border border-sky-400/40 text-sky-300 flex items-center justify-center text-[10px] font-mono">T3</span>
-          <div class="text-left">
-            <div class="leading-none">Uni Supervisor</div>
-            <div class="text-[9px] font-normal text-zinc-400 mt-0.5">Dr. Joyce Chelangat</div>
-          </div>
-          <div id="role-prog-2" class="absolute bottom-0 left-0 h-0.5 bg-sky-400 transition-all duration-150" style="width: 0%"></div>
-        </button>
-
-        <button onclick="selectRole(3, true)" id="role-btn-3" type="button" class="role-pill relative overflow-hidden px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-zinc-400 hover:text-white border border-transparent">
-          <span class="size-5 rounded-lg bg-purple-500/20 border border-purple-400/40 text-purple-300 flex items-center justify-center text-[10px] font-mono">T4</span>
-          <div class="text-left">
-            <div class="leading-none">Uni Admin (Dean)</div>
-            <div class="text-[9px] font-normal text-zinc-400 mt-0.5">Dr. Peter Kamau</div>
-          </div>
-          <div id="role-prog-3" class="absolute bottom-0 left-0 h-0.5 bg-purple-400 transition-all duration-150" style="width: 0%"></div>
-        </button>
-      </div>
-
-      <!-- 3D Camera, Theme, Audio & Workspace CTA Controls -->
-      <div class="flex items-center gap-1.5 bg-zinc-900/90 border border-indigo-500/25 p-1.5 rounded-2xl backdrop-blur-xl shadow-lg">
-        <button onclick="toggleThemeMode()" id="btn-theme-mode" type="button" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/15 text-zinc-100 border border-white/15 transition flex items-center gap-1.5">
-          <span id="theme-mode-icon">☀️</span>
-          <span id="theme-mode-text">Light</span>
-        </button>
-        <button onclick="toggleAutoMotion()" id="btn-automotion" type="button" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-500 text-white hover:bg-indigo-400 transition flex items-center gap-1.5 shadow-sm">
-          <span id="automotion-icon">⏸</span>
-          <span id="automotion-text" class="hidden sm:inline">3D Auto-Motion</span>
-        </button>
-        <button onclick="toggleExplodeLayers()" id="btn-explode" type="button" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-indigo-200 border border-white/10 transition flex items-center gap-1" title="Separate UI layers in 3D Z-space">
-          <span>🧊</span>
-          <span class="hidden lg:inline">3D Z-Layers</span>
-        </button>
-        <button onclick="resetCameraAngle()" type="button" class="px-2 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 transition" title="Reset 3D Camera">
-          🎯
-        </button>
-        <button id="s2-sound-btn" type="button" class="px-2 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 transition" title="Toggle Sound SFX">
-          <span id="s2-sound-icon">🔊</span>
-        </button>
-        <a href="/auth" id="s2-cta-link" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-400/40 shadow-sm transition flex items-center gap-1" style="text-decoration: none;" title="Launch InternTrack Live Workspace">
-          <span>Launch Workspace</span>
-          <span>↗</span>
-        </a>
-      </div>
-    </header>
-
-    <!-- 3. CENTER 3D PERSPECTIVE STAGE (THE AUTHENTIC INTERNTRACK APP) -->
+    <!-- 2. CENTER 3D PERSPECTIVE STAGE (THE AUTHENTIC INTERNTRACK APP) -->
     <main class="relative z-20 flex-1 flex items-center justify-center px-4 py-2 stage-viewport" id="stage-viewport">
       
       <!-- 3D Camera Rig (Animated automatically + draggable in 3D) -->
@@ -1901,56 +1801,24 @@
         </div>
       </div>
     </footer>
+
+    <!-- Floating Sign In CTA (zero layout height) -->
+    <a
+      href="/auth"
+      class="fixed top-3 right-4 z-50 inline-flex items-center gap-1.5 rounded-full bg-indigo-600/95 hover:bg-indigo-500 px-4 py-2 text-xs font-extrabold text-white border border-indigo-400/40 shadow-xl backdrop-blur-xl transition-all hover:scale-105"
+      style="text-decoration: none;"
+      aria-label="Sign In to InternTrack Workspace"
+    >
+      <span>Sign In</span>
+      <span>&rarr;</span>
+    </a>
   </div>
 
   <script>
     (function () {
       'use strict';
 
-      /* ── 1. Audio Synthesizer (Micro-acoustic feedback) ── */
-      let audioCtx = null;
-      let sfxEnabled = true;
-
-      function getAudio() {
-        if (!audioCtx) {
-          const AC = window.AudioContext || window.webkitAudioContext;
-          if (AC) audioCtx = new AC();
-        }
-        if (audioCtx && audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
-        return audioCtx;
-      }
-
-      function playTone(freq, type, dur, vol) {
-        if (!sfxEnabled) return;
-        try {
-          const ctx = getAudio();
-          if (!ctx) return;
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = type;
-          osc.frequency.setValueAtTime(freq, ctx.currentTime);
-          gain.gain.setValueAtTime(vol, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start();
-          osc.stop(ctx.currentTime + dur);
-        } catch (_) { }
-      }
-
-      function playClick() { playTone(1200, 'sine', 0.04, 0.08); }
-      function playSwell() { playTone(440, 'triangle', 0.35, 0.12); }
-      function playChime() { playTone(880, 'sine', 0.2, 0.1); }
-      function playPing() { playTone(1760, 'sine', 0.15, 0.09); }
-      function playStamp() {
-        playTone(180, 'triangle', 0.2, 0.2);
-        setTimeout(() => playTone(880, 'sine', 0.25, 0.1), 60);
-      }
-      function playKey() { playTone(900 + Math.random() * 400, 'triangle', 0.02, 0.03); }
-
-      /* ── 2. Asset URLs & Configuration ── */
+      /* ── 1. Asset URLs & Configuration ── */
       const HX = (u) => 'https://images.higgs.ai/?default=1&output=webp&url=' + encodeURIComponent(u) + '&w=2048&q=85';
       const CF = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/';
 
@@ -1983,17 +1851,10 @@
       const btnFeatures = document.getElementById('btn-features');
       const btnContacts = document.getElementById('btn-contacts');
       const btnDemo = document.getElementById('btn-demo');
-      const btnSound = document.getElementById('btn-sound');
-      const soundIcon = document.getElementById('sound-icon');
 
       const mWmSvg = document.getElementById('m-wm');
       const mScriptEl = document.getElementById('m-script');
       const mBadgeEl = document.getElementById('m-badge');
-
-      const s2BackBtn = document.getElementById('s2-back-btn');
-      const s2SoundBtn = document.getElementById('s2-sound-btn');
-      const s2SoundIcon = document.getElementById('s2-sound-icon');
-      const s2CtaLink = document.getElementById('s2-cta-link');
 
       /* ── 4. Scene State ── */
       let mode = 'hero';
@@ -2123,7 +1984,7 @@
       function setCameraTransform(rx, ry, rz, scale = 0.96, tx = 0, ty = 0) {
         camState = { rx, ry, rz, scale, tx, ty };
         if (!rigEl) return;
-        const vhFit = Math.min(1, Math.max(0.64, (window.innerHeight - 175) / 660));
+        const vhFit = Math.min(1, Math.max(0.64, (window.innerHeight - 115) / 660));
         const vwFit = Math.min(1, Math.max(0.6, (window.innerWidth - 48) / 1180));
         const finalScale = +(scale * Math.min(vhFit, vwFit)).toFixed(3);
         rigEl.style.transform = `translate3d(${tx}px, ${ty}px, 0px) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg) scale(${finalScale})`;
@@ -2191,7 +2052,6 @@
       }
 
       function triggerStudentClock() {
-        playPing();
         const btnLbl = document.getElementById('stu-clock-btn-label');
         const daysVal = document.getElementById('stu-days-val');
         const daysBar = document.getElementById('stu-days-bar');
@@ -2214,7 +2074,6 @@
       }
 
       function triggerStudentAiPolish() {
-        playPing();
         const desc = document.getElementById('stu-log-desc');
         const aiLbl = document.getElementById('stu-ai-label');
         const tags = document.getElementById('stu-skill-tags');
@@ -2231,7 +2090,6 @@
       }
 
       function triggerStudentSubmit() {
-        playChime();
         const badge = document.getElementById('stu-log-status-badge');
         const subLbl = document.getElementById('stu-submit-label');
         const qPill = document.getElementById('stu-queue-pill');
@@ -2252,7 +2110,6 @@
       }
 
       function triggerSupervisorApprove() {
-        playStamp();
         const status = document.getElementById('sup-sub-status');
         const pending = document.getElementById('sup-pending-badge');
         const approved = document.getElementById('sup-approved-badge');
@@ -2268,7 +2125,6 @@
       }
 
       function triggerUniEvaluation() {
-        playChime();
         const count = document.getElementById('uni-eval-count');
         const offers = document.getElementById('uni-eval-offers');
         const ready = document.getElementById('uni-eval-ready');
@@ -2286,7 +2142,6 @@
       }
 
       function triggerAdminPairSupervisor() {
-        playPing();
         const rate = document.getElementById('admin-dual-rate');
         const sub = document.getElementById('admin-dual-sub');
         const kevinRow = document.getElementById('admin-row-kevin');
@@ -2327,7 +2182,6 @@
       }
 
       function triggerAdminExportDossier() {
-        playChime();
         const lbl = document.getElementById('admin-export-label');
         const pill = document.getElementById('admin-export-pill');
         if (lbl) lbl.textContent = '✓ Graduation Board Dossier Exported (PDF)';
@@ -2513,8 +2367,6 @@
         stepStartTime = Date.now();
         const role = ROLES[idx];
 
-        if (manual) playClick();
-
         for (let i = 0; i < 4; i++) {
           const btn = document.getElementById(`role-btn-${i}`);
           const view = document.getElementById(`role-view-${i}`);
@@ -2571,7 +2423,6 @@
 
       function toggleAutoMotion() {
         autoMotion = !autoMotion;
-        playClick();
         const ic = document.getElementById('automotion-icon');
         const tx = document.getElementById('automotion-text');
         if (ic) ic.textContent = autoMotion ? '⏸' : '▶';
@@ -2586,7 +2437,6 @@
 
       function toggleExplodeLayers() {
         exploded = !exploded;
-        playClick();
         if (rigEl) rigEl.classList.toggle('exploded', exploded);
         const btn = document.getElementById('btn-explode');
         if (btn) {
@@ -2603,7 +2453,6 @@
 
       function resetCameraAngle() {
         exploded = false;
-        playClick();
         if (rigEl) rigEl.classList.remove('exploded');
         const btn = document.getElementById('btn-explode');
         if (btn) btn.className = 'px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-indigo-200 border border-white/10 transition flex items-center gap-1';
@@ -2819,7 +2668,6 @@
       }
 
       function toggleThemeMode() {
-        playClick();
         applyArtifactTheme(currentThemeMode === 'dark' ? 'light' : 'dark', true);
       }
 
@@ -2951,7 +2799,7 @@
           return;
         }
 
-        const tags = [btnOverview, btnFeatures, btnContacts, btnDemo, btnSound];
+        const tags = [btnOverview, btnFeatures, btnContacts, btnDemo];
         tags.forEach((tag, i) => {
           if (!tag) return;
           tag.animate(
@@ -3091,21 +2939,6 @@
         });
       });
 
-      // Sound button spin on hover
-      btnSound.addEventListener('mouseenter', () => {
-        if (!RM) {
-          btnSound.animate(
-            [
-              { transform: 'rotate(0)' },
-              { transform: 'rotate(-15deg)' },
-              { transform: 'rotate(10deg)' },
-              { transform: 'rotate(0)' },
-            ],
-            { duration: 1400, easing: 'ease-out', composite: 'add' }
-          );
-        }
-      });
-
       const fontReady = document.fonts ? document.fonts.ready : Promise.resolve();
       const plateReady = new Promise((resolve) => {
         if (plateImg.complete && plateImg.naturalHeight > 0) resolve();
@@ -3127,7 +2960,6 @@
       function toCase() {
         if (busy || mode === 'case') return;
         busy = true;
-        playSwell();
         document.body.classList.add('busy');
 
         [wmSvg, mWmSvg].forEach((wm) => {
@@ -3204,7 +3036,6 @@
       /* ── 7. Arrive in Case Mode (Activate Full #s2-3d-engine) ── */
       function arriveCase() {
         mode = 'case';
-        playChime();
         document.body.classList.add('is-case');
         if (s2Engine) s2Engine.setAttribute('aria-hidden', 'false');
 
@@ -3232,7 +3063,6 @@
       function toHero() {
         if (busy || mode === 'hero') return;
         busy = true;
-        playClick();
         clearRoleTimers();
         clearFocusCards();
         document.body.classList.add('busy');
@@ -3329,33 +3159,6 @@
         } catch (_) { }
         window.location.href = '/auth';
       });
-
-      // Sound Toggle
-      function toggleSound() {
-        sfxEnabled = !sfxEnabled;
-        const icon = sfxEnabled ? '🔊' : '🔇';
-        if (soundIcon) soundIcon.textContent = icon;
-        if (s2SoundIcon) s2SoundIcon.textContent = icon;
-        if (sfxEnabled) playClick();
-      }
-      btnSound.addEventListener('click', toggleSound);
-      if (s2SoundBtn) s2SoundBtn.addEventListener('click', toggleSound);
-
-      // Scene 2 Navigation & CTA Controls
-      if (s2BackBtn) s2BackBtn.addEventListener('click', toHero);
-
-      if (s2CtaLink) {
-        s2CtaLink.addEventListener('click', (e) => {
-          e.preventDefault();
-          try {
-            if (window.top && window.top !== window) {
-              window.top.location.href = '/auth';
-              return;
-            }
-          } catch (_) { }
-          window.location.href = '/auth';
-        });
-      }
 
       // Wheel Navigation
       let lastWheelTime = 0;
