@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link } from "@inertiajs/react";
 import {
   Award,
   BookOpen,
@@ -224,7 +224,7 @@ export default function StudentsPage() {
             asChild
             className="rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-xs shadow-sm h-9"
           >
-            <Link to="/review">
+            <Link href="/review">
               <BookOpen className="mr-1.5 size-4" />
               Review Submissions Queue
             </Link>
@@ -423,12 +423,10 @@ export default function StudentsPage() {
                           variant="ghost"
                           className="h-7 text-xs text-primary"
                         >
-                          <Link to="/review" search={{ student: student.studentId }}>
-                            Logs →
-                          </Link>
+                          <Link href="/review?student={student.studentId}">Logs →</Link>
                         </Button>
                         <Button asChild size="sm" variant="outline" className="h-7 text-xs">
-                          <Link to="/evaluations">Grade</Link>
+                          <Link href="/evaluations">Grade</Link>
                         </Button>
                       </div>
                     </TableCell>

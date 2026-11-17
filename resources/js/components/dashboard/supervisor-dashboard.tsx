@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link } from "@inertiajs/react";
 import {
   Activity,
   AlertTriangle,
@@ -334,7 +334,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               asChild
               className="rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-xs shadow-sm"
             >
-              <Link to="/review">
+              <Link href="/review">
                 <FileCheck className="mr-1.5 size-4" />
                 Review Queue ({pendingActivities.length})
               </Link>
@@ -344,7 +344,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               variant="outline"
               className="rounded-xl border-white/30 bg-white/10 text-white hover:bg-white/20 font-semibold text-xs"
             >
-              <Link to="/students">
+              <Link href="/students">
                 <Users className="mr-1.5 size-4" />
                 Assigned Interns ({assignedStudentsDetails.length})
               </Link>
@@ -440,7 +440,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
             </p>
           </div>
           <Button asChild size="sm" variant="outline" className="text-xs font-semibold">
-            <Link to="/students">View Full Cohort Roster</Link>
+            <Link href="/students">View Full Cohort Roster</Link>
           </Button>
         </div>
 

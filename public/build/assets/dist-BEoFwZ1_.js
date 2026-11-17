@@ -1,0 +1,1 @@
+import{f as e,h as t}from"./dist-BstIB0ki.js";var n=t(e(),1),r=globalThis?.document?n.useLayoutEffect:()=>{};export{r as t};

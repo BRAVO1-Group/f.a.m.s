@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link } from "@inertiajs/react";
 import {
   Activity,
   AlertTriangle,
@@ -414,7 +414,7 @@ export function UniversityAdminDashboard({
             variant="outline"
             className="rounded-xl font-semibold text-xs h-9"
           >
-            <Link to="/reports">
+            <Link href="/reports">
               <FileBarChart className="mr-1.5 size-4" />
               Dossier (PDF)
             </Link>

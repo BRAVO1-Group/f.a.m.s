@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link } from "@inertiajs/react";
 import {
   Activity,
   AlertTriangle,
@@ -274,7 +274,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               size="default"
               className="rounded-xl bg-white text-primary hover:bg-white/90 shadow-sm font-semibold"
             >
-              <Link to="/logbook">
+              <Link href="/logbook">
                 <Plus className="mr-1.5 size-4" />
                 Add Today's Log
               </Link>
@@ -294,7 +294,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               variant="outline"
               className="rounded-xl border-white/30 bg-transparent text-white hover:bg-white/10 font-semibold"
             >
-              <Link to="/reports">
+              <Link href="/reports">
                 <FileBarChart className="mr-1.5 size-4" />
                 Export PDF
               </Link>
@@ -569,7 +569,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                 variant="secondary"
                 className="text-xs font-semibold rounded-xl shrink-0"
               >
-                <Link to="/attendance">History</Link>
+                <Link href="/attendance">History</Link>
               </Button>
             </div>
           </CardContent>
@@ -598,7 +598,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               variant="ghost"
               className="text-xs text-primary font-semibold"
             >
-              <Link to="/milestones">
+              <Link href="/milestones">
                 View Roadmap <ChevronRight className="ml-1 size-3.5" />
               </Link>
             </Button>
@@ -827,7 +827,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               variant="outline"
               className="text-xs font-semibold rounded-lg"
             >
-              <Link to="/logbook">View Full Logbook</Link>
+              <Link href="/logbook">View Full Logbook</Link>
             </Button>
           </div>
         </CardHeader>

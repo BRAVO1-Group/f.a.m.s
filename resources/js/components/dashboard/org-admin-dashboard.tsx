@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link } from "@inertiajs/react";
 import {
   Activity,
   AlertTriangle,
@@ -273,7 +273,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
               asChild
               className="rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-xs shadow-sm"
             >
-              <Link to="/review">
+              <Link href="/review">
                 <FileCheck className="mr-1.5 size-4" />
                 Review Queue ({pendingActivities.length})
               </Link>
@@ -283,7 +283,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
               variant="outline"
               className="rounded-xl border-white/30 bg-white/10 text-white hover:bg-white/20 font-semibold text-xs"
             >
-              <Link to="/students">
+              <Link href="/students">
                 <Users className="mr-1.5 size-4" />
                 Assigned Interns ({assignedStudents.length})
               </Link>
@@ -378,7 +378,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
             </p>
           </div>
           <Button asChild size="sm" variant="outline" className="text-xs font-semibold">
-            <Link to="/students">View Candidate Roster</Link>
+            <Link href="/students">View Candidate Roster</Link>
           </Button>
         </div>
 
@@ -458,7 +458,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
                       variant="ghost"
                       className="text-xs text-primary font-semibold h-7"
                     >
-                      <Link to="/review">Review Submissions →</Link>
+                      <Link href="/review">Review Submissions →</Link>
                     </Button>
                   </div>
                 </CardContent>
@@ -480,7 +480,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
             </CardDescription>
           </div>
           <Button asChild size="sm" variant="outline" className="text-xs font-semibold">
-            <Link to="/review">Open Full Review Queue</Link>
+            <Link href="/review">Open Full Review Queue</Link>
           </Button>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -531,7 +531,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
                       variant="outline"
                       className="h-8 rounded-lg text-xs font-semibold"
                     >
-                      <Link to="/review">Review Details →</Link>
+                      <Link href="/review">Review Details →</Link>
                     </Button>
                   </div>
                 </div>

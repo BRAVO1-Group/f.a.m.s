@@ -13,9 +13,9 @@ class Role extends Model
         'category',
         'slug'
     ];
-
-    public function permissions(){
-        return $this->belongsToMany(permission::class)-> withTimestamps();
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class)->withTimestamps();
     }
 
     public function users(){
