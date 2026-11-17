@@ -374,20 +374,11 @@ export function UniversityAdminDashboard({
       {/* ── Clean Dean Page Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="font-display text-2xl font-bold sm:text-3xl tracking-tight text-foreground">
-              {greeting}, {name}
-            </h1>
-            <Badge
-              variant="outline"
-              className="text-xs border-primary/30 text-primary bg-primary/5 font-semibold"
-            >
-              University Dean
-            </Badge>
-          </div>
+          <h1 className="font-display text-2xl font-bold sm:text-3xl tracking-tight text-foreground">
+            {greeting}, {name}
+          </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            University of Nairobi • School of Computing &amp; Informatics • Placement &amp;
-            Mentorship Console
+            University of Nairobi · School of Computing &amp; Informatics
           </p>
         </div>
 
@@ -395,24 +386,20 @@ export function UniversityAdminDashboard({
           <Button
             onClick={() => setCreateSupervisorOpen(true)}
             size="sm"
-            className="rounded-xl font-semibold text-xs h-9 shadow-xs"
+            className="rounded-xl font-semibold text-xs h-9"
           >
-            <UserPlus className="mr-1.5 size-4" />
             Create Supervisor
           </Button>
           <Button
             onClick={() => handleOpenAssignModal("student-4")}
             size="sm"
+            variant="outline"
             className="rounded-xl font-semibold text-xs h-9"
           >
-            <UserCheck className="mr-1.5 size-4" />
             Assign Mentors
           </Button>
-          <Button asChild size="sm" className="rounded-xl font-semibold text-xs h-9">
-            <Link to="/reports">
-              <FileBarChart className="mr-1.5 size-4" />
-              Dossier (PDF)
-            </Link>
+          <Button asChild size="sm" variant="outline" className="rounded-xl font-semibold text-xs h-9">
+            <Link to="/reports">Dossier (PDF)</Link>
           </Button>
         </div>
       </div>

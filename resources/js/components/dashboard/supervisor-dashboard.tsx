@@ -226,79 +226,26 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
 
   return (
     <div className="dashboard-page space-y-6 antialiased">
-      {/* ── Corporate Received Logins Security Notice ── */}
-      <div className="rounded-xl border border-primary/25 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-start">
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-semibold text-sm text-foreground">
-                Corporate Host Organization Account
-              </span>
-              <Badge
-                variant="outline"
-                className="text-[11px] font-medium border-primary/30 text-primary"
-              >
-                Received Enterprise Logins Only
-              </Badge>
-              <Badge variant="secondary" className="text-[11px] font-medium">
-                Tier 2 • Host Org Supervisor
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-              Authenticated as <strong>{name}</strong> via pre-provisioned credentials issued by{" "}
-              <strong>{currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"}</strong>.
-              Supervisors cannot self-register; candidate access is scoped strictly to your assigned
-              interns.
-            </p>
-          </div>
-        </div>
-        <div className="text-right shrink-0">
-          <span className="inline-flex items-center text-xs font-medium text-success bg-success/10 px-2.5 py-1 rounded-full border border-success/30">
-            Direct Approval Authority
-          </span>
-        </div>
-      </div>
-
       {/* ── Supervisor Header ── */}
-      <div className="rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge
-                variant="outline"
-                className="border-white/30 bg-white/10 text-white text-xs font-semibold"
-              >
-                Host Organization Field Mentor
-              </Badge>
-              <span className="text-xs text-primary-foreground/75">
-                {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"} •{" "}
-                {currentSupervisor?.faculty_department ?? "Product Engineering"}
-              </span>
-            </div>
-            <h1 className="mt-2 font-display text-2xl font-bold sm:text-3xl tracking-tight">
-              {greeting}, {name}
-            </h1>
-            <p className="mt-1 text-sm text-primary-foreground/80">
-              Supervising {assignedStudentsDetails.length} assigned interns. Review engineering
-              logs, verify task deliverables, and sign off submissions.
-            </p>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+        <div>
+          <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            {greeting}, {name}
+          </h1>
+          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+            {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"} ·{" "}
+            {currentSupervisor?.faculty_department ?? "Product Engineering"} · Supervising{" "}
+            {assignedStudentsDetails.length} interns
+          </p>
+        </div>
 
-          <div className="flex flex-wrap gap-2">
-            <Button
-              asChild
-              className="rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-xs shadow-sm"
-            >
-              <Link to="/review">Review Queue ({pendingActivities.length})</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="rounded-xl border-white/30 bg-white/10 text-white hover:bg-white/20 font-semibold text-xs"
-            >
-              <Link to="/students">Assigned Interns ({assignedStudentsDetails.length})</Link>
-            </Button>
-          </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild size="sm" className="rounded-xl text-xs font-semibold h-9">
+            <Link to="/review">Review Queue ({pendingActivities.length})</Link>
+          </Button>
+          <Button asChild size="sm" variant="outline" className="rounded-xl text-xs font-semibold h-9">
+            <Link to="/students">Assigned Interns ({assignedStudentsDetails.length})</Link>
+          </Button>
         </div>
       </div>
 
