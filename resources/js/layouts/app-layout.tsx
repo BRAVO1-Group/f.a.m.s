@@ -326,32 +326,9 @@ export function AppShell({
           ))}
         </nav>
 
-        {/* Role Quick Switcher in Sidebar Footer */}
+        {/* User Card & Sign Out in Sidebar Footer */}
         <div className="border-t border-sidebar-border p-3 space-y-2 bg-sidebar-accent/20">
-          <p className="px-2 py-1 text-xs leading-4 font-bold uppercase tracking-wide text-secondary whitespace-nowrap">
-            Switch Persona (RBAC Demo)
-          </p>
-          <div className="grid grid-cols-2 gap-1.5">
-            {DEMO_USERS.map((u) => {
-              const isSelected = u.id === currentUser?.id;
-              return (
-                <button
-                  key={u.id}
-                  onClick={() => switchPersona(u.id)}
-                  className={cn(
-                    "text-[10px] font-medium py-1.5 px-2 rounded-md transition text-left truncate",
-                    isSelected
-                      ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                      : "bg-sidebar/80 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
-                  )}
-                >
-                  <span className="truncate">{u.full_name.split(" ")[0]}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 pt-2 border-t border-sidebar-border/60">
+          <div className="flex items-center gap-2.5 rounded-lg px-2 py-1.5">
             <Avatar className="size-8">
               <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-xs font-semibold">
                 {initials}
