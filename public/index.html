@@ -2788,7 +2788,7 @@
           return;
         }
 
-        const tags = [btnOverview, btnFeatures, btnContacts, btnDemo, btnSound];
+        const tags = [btnOverview, btnFeatures, btnContacts, btnDemo];
         tags.forEach((tag, i) => {
           if (!tag) return;
           tag.animate(
@@ -2926,21 +2926,6 @@
           badgeEl.style.transform = '';
           startBadgeSway();
         });
-      });
-
-      // Sound button spin on hover
-      btnSound.addEventListener('mouseenter', () => {
-        if (!RM) {
-          btnSound.animate(
-            [
-              { transform: 'rotate(0)' },
-              { transform: 'rotate(-15deg)' },
-              { transform: 'rotate(10deg)' },
-              { transform: 'rotate(0)' },
-            ],
-            { duration: 1400, easing: 'ease-out', composite: 'add' }
-          );
-        }
       });
 
       const fontReady = document.fonts ? document.fonts.ready : Promise.resolve();
