@@ -88,6 +88,19 @@ export default function LandingPage() {
         onSelectRole={handleSelectRole}
       />
 
+      {mode === "case" && (
+        <div className="fixed top-3 right-4 z-50 pointer-events-auto">
+          <Link
+            to="/auth"
+            className="inline-flex items-center gap-2 rounded-full bg-indigo-600/95 hover:bg-indigo-500 px-4 py-2 text-xs font-extrabold text-white border border-indigo-400/40 shadow-xl backdrop-blur-xl transition-all hover:scale-105 active:scale-95"
+            aria-label="Sign In to InternTrack Workspace"
+          >
+            <span>Sign In</span>
+            <ArrowRight className="size-3.5" />
+          </Link>
+        </div>
+      )}
+
       {mode === "hero" && (
         <div className="fixed bottom-5 right-5 sm:bottom-7 sm:right-7 z-50 pointer-events-auto">
           <div className="group relative flex items-center">
