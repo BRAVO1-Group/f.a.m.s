@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/dashboard/kpi-card";
 import {
   Table,
   TableBody,
@@ -96,56 +97,43 @@ export default function AttendancePage() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Card className="shadow-card border-success bg-success text-success-foreground">
-          <CardHeader className="pb-2">
-            <CardDescription className="text-success-foreground/80">Days present</CardDescription>
-            <CardTitle className="text-3xl">{daysPresent}</CardTitle>
-          </CardHeader>
-          <CardContent className="text-xs text-success-foreground/80">
-            of {required} required days
-          </CardContent>
-        </Card>
-        <Card className="shadow-card border-info bg-info text-info-foreground">
-          <CardHeader className="pb-2">
-            <CardDescription className="text-info-foreground/80">Attendance rate</CardDescription>
-            <CardTitle className="text-3xl">{rate}%</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Progress value={rate} className="bg-info-foreground/25 [&>div]:bg-info-foreground" />
-          </CardContent>
-        </Card>
-        <Card className="shadow-card border-success bg-success text-success-foreground">
-          <CardHeader className="pb-2">
-            <CardDescription className="text-success-foreground/80">Today</CardDescription>
-            <CardTitle className="text-base">
-              {todayRow?.check_out ? (
-                <Badge>Completed</Badge>
-              ) : todayRow?.check_in ? (
-                <Badge variant="secondary" className="bg-background/20 text-foreground">
-                  Checked in {fmt(todayRow.check_in)}
-                </Badge>
-              ) : (
-                <Badge variant="outline">Not checked in</Badge>
-              )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {!todayRow ? (
-              <Button className="w-full" onClick={checkIn}>
-                <LogIn className="size-4" /> Check in
-              </Button>
-            ) : !todayRow.check_out ? (
-              <Button className="w-full" variant="outline" onClick={() => checkOut(todayRow.id)}>
-                <LogOut className="size-4" /> Check out
-              </Button>
-            ) : (
-              <p className="text-xs text-muted-foreground">
-                {fmt(todayRow.check_in)} – {fmt(todayRow.check_out)}
-              </p>
-            )}
-          </CardContent>
-        </Card>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <KpiCard
+          label="Days present"
+          value={daysPresent}
+          unit={`/ ${required} days`}
+        />
+        <KpiCard
+          label="Attendance rate"
+          value={`${rate}%`}
+        >
+          <Progress value={rate} className="h-1" />
+        </KpiCard>
+        <KpiCard
+          label="Today"
+          value={
+            todayRow?.check_out
+              ? "Completed"
+              : todayRow?.check_in
+                ? `In ${fmt(todayRow.check_in)}`
+                : "Not checked in"
+          }
+          meta={
+            todayRow?.check_out
+              ? `${fmt(todayRow.check_in)} – ${fmt(todayRow.check_out)}`
+              : undefined
+          }
+        >
+          {!todayRow ? (
+            <Button size="sm" className="w-full" onClick={checkIn}>
+              <LogIn className="size-4" /> Check in
+            </Button>
+          ) : !todayRow.check_out ? (
+            <Button size="sm" className="w-full" variant="outline" onClick={() => checkOut(todayRow.id)}>
+              <LogOut className="size-4" /> Check out
+            </Button>
+          ) : null}
+        </KpiCard>
       </div>
 
       <Card className="shadow-card">

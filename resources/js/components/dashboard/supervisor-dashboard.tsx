@@ -12,6 +12,7 @@ import {
   AreaChart,
 } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -302,68 +303,27 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
       </div>
 
       {/* ── Supervisor KPI Cards (Scoped to Assigned Students) ── */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="shadow-card border-success bg-success text-success-foreground">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
-                Assigned Interns
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {assignedStudentsDetails.length}
-            </p>
-            <p className="mt-2 text-xs text-success-foreground/80">Alice Wanjiku & Kevin Kiprono</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-info bg-info text-info-foreground">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
-                Pending Approval
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {pendingActivities.length}
-            </p>
-            <p className="mt-2 text-xs text-info-foreground/80">
-              Submissions awaiting your sign-off
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-info bg-info text-info-foreground">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-info-foreground/80">
-                Approved Deliverables
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {approvedActivities.length}
-            </p>
-            <p className="mt-2 text-xs text-info-foreground/80 flex items-center font-medium">
-              Signed off by Host Org Mentor
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-success bg-success text-success-foreground">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-success-foreground/80">
-                Revisions Requested
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {correctionActivities.length}
-            </p>
-            <p className="mt-2 text-xs text-success-foreground/80">
-              Logs flagged for mentee correction
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiCard
+          label="Assigned Interns"
+          value={assignedStudentsDetails.length}
+          meta="Alice Wanjiku & Kevin Kiprono"
+        />
+        <KpiCard
+          label="Pending Approval"
+          value={pendingActivities.length}
+          meta="Awaiting sign-off"
+        />
+        <KpiCard
+          label="Approved Deliverables"
+          value={approvedActivities.length}
+          meta="Signed off by host mentor"
+        />
+        <KpiCard
+          label="Revisions Requested"
+          value={correctionActivities.length}
+          meta="Flagged for correction"
+        />
       </div>
 
       {/* ── Assigned Student Details (Candidate Profile & Placement Cards) ── */}
