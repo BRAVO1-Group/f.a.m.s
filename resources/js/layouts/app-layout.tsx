@@ -14,7 +14,10 @@ import {
   LogOut,
   Menu,
   Milestone,
+  Monitor,
+  Moon,
   Shield,
+  Sun,
   User as UserIcon,
   UserCheck,
   UserPlus,
@@ -42,6 +45,7 @@ import {
   type AppRole,
 } from "@/lib/auth";
 import { DEMO_USERS } from "@/lib/mock-data";
+import { useTheme, type ThemeMode } from "@/lib/theme";
 
 type NavCategory = "core" | "tracking" | "supervision" | "governance" | "account";
 
@@ -181,6 +185,7 @@ export function AppShell({
 }) {
   const [open, setOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(() => getDemoUser());
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
   const signOut = useSignOut();
@@ -225,6 +230,15 @@ export function AppShell({
 
   // Filter items matching the active persona's roles
   const allowedItems = NAV.filter((i) => i.roles.some((r) => activeRoles.includes(r)));
+  const currentNavItem =
+    NAV.find((item) => pathname === item.to || pathname.startsWith(item.to + "/")) ?? NAV[0]!;
+  const CurrentNavIcon = currentNavItem.icon;
+
+  const THEME_OPTIONS: { mode: ThemeMode; label: string; icon: typeof Sun }[] = [
+    { mode: "light", label: "Light", icon: Sun },
+    { mode: "dark", label: "Dark", icon: Moon },
+    { mode: "system", label: "Auto", icon: Monitor },
+  ];
 
   // Group by category in ordered sequence
   const categories: NavCategory[] = ["core", "tracking", "supervision", "governance", "account"];
@@ -246,7 +260,10 @@ export function AppShell({
       .toUpperCase() || "IT";
 
   return (
-    <div className="dashboard-layout min-h-screen bg-background">
+    <div
+      className="dashboard-layout min-h-screen bg-background text-foreground transition-colors duration-200"
+      data-theme={resolvedTheme}
+    >
       {/* ── Fixed Sidebar ── */}
       <aside
         className={cn(
@@ -255,70 +272,64 @@ export function AppShell({
         )}
       >
         {/* Brand Header */}
-        <div className="flex items-center gap-2.5 border-b border-sidebar-border px-5 py-4">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-accent shadow-xs">
-            <GraduationCap className="size-5 text-accent-foreground" />
+        <div className="flex items-center gap-2.5 border-b border-sidebar-border px-4 py-3.5">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-gradient-accent shadow-xs">
+            <GraduationCap className="size-4.5 text-white" />
           </div>
-          <div className="min-w-0">
-            <p className="font-display text-base font-bold leading-none tracking-tight">
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-sm font-bold leading-none tracking-tight text-sidebar-foreground">
               InternTrack
             </p>
             <div className="mt-1 flex items-center gap-1.5">
               <Badge
                 variant="outline"
-                className="text-[10px] font-semibold border-sidebar-border text-sidebar-foreground/75 px-1.5 py-0"
+                className="text-[10px] font-semibold border-sidebar-border bg-sidebar-accent/40 text-sidebar-foreground/80 px-1.5 py-0"
               >
                 Tier {tier.tier}
               </Badge>
-              <span className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60 font-mono">
+              <span className="truncate text-[10px] uppercase tracking-wider text-sidebar-foreground/55 font-mono">
                 {ROLE_LABELS[activeRole].split(" ")[0]}
               </span>
             </div>
           </div>
           <button
-            className="ml-auto lg:hidden text-sidebar-foreground/60 hover:text-sidebar-foreground"
+            type="button"
+            className="ml-auto inline-flex items-center justify-center rounded-lg p-1.5 lg:hidden text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground"
             onClick={() => setOpen(false)}
             aria-label="Close navigation"
           >
-            <X className="size-5" />
-            Close
+            <X className="size-4" />
           </button>
         </div>
 
         {/* Categorized Navigation */}
-        <nav className="flex-1 space-y-4 overflow-y-auto px-3 py-4">
+        <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-4">
           {groupedItems.map((group) => (
             <div key={group.category} className="space-y-1">
-              <p
-                className={cn(
-                  "px-3 py-1 text-[13px] leading-5 font-bold uppercase tracking-wider",
-                  group.category === "core" ||
-                    group.category === "tracking" ||
-                    group.category === "supervision" ||
-                    group.category === "governance" ||
-                    group.category === "account"
-                    ? "text-secondary"
-                    : "text-sidebar-foreground/50",
-                )}
-              >
+              <p className="px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-sidebar-foreground/45">
                 {group.label}
               </p>
               {group.items.map((item) => {
-                const active = pathname.startsWith(item.to);
+                const active = pathname === item.to || pathname.startsWith(item.to + "/");
                 return (
                   <Link
                     key={item.to}
                     to={item.to}
                     onClick={() => setOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-colors",
+                      "relative flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium transition-all",
                       active
-                        ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold shadow-xs"
-                        : "text-sidebar-foreground/75 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground",
+                        ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold shadow-2xs before:absolute before:left-0 before:top-1.5 before:bottom-1.5 before:w-1 before:rounded-r-full before:bg-primary"
+                        : "text-sidebar-foreground/75 hover:bg-sidebar-accent/55 hover:text-sidebar-accent-foreground",
                     )}
                   >
-                    <item.icon className="size-4 shrink-0" />
-                    <span>{item.label}</span>
+                    <item.icon
+                      className={cn(
+                        "size-4 shrink-0 transition-colors",
+                        active ? "text-primary" : "text-sidebar-foreground/55",
+                      )}
+                    />
+                    <span className="truncate">{item.label}</span>
                   </Link>
                 );
               })}
@@ -327,25 +338,37 @@ export function AppShell({
         </nav>
 
         {/* User Card & Sign Out in Sidebar Footer */}
-        <div className="border-t border-sidebar-border p-3 space-y-2 bg-sidebar-accent/20">
+        <div className="border-t border-sidebar-border p-3 space-y-2.5 bg-sidebar-accent/30">
           <div className="flex items-center gap-2.5 rounded-lg px-2 py-1.5">
-            <Avatar className="size-8">
-              <AvatarFallback className="bg-sidebar-accent text-sidebar-accent-foreground text-xs font-semibold">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
+            <div className="relative shrink-0">
+              <Avatar className="size-8 border border-sidebar-border">
+                <AvatarFallback className="bg-primary/15 text-primary text-xs font-bold">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <span
+                className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full bg-success ring-2 ring-sidebar"
+                title="Active session"
+              />
+            </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-semibold">{activeName}</p>
-              <p className="truncate text-[10px] text-sidebar-foreground/60">
-                {ROLE_LABELS[activeRole]}
+              <p className="truncate text-xs font-semibold text-sidebar-foreground">{activeName}</p>
+              <p className="truncate text-[10px] text-sidebar-foreground/60 font-mono">
+                {activeEmail}
               </p>
+              <Badge
+                variant="outline"
+                className="mt-1 text-[9px] py-0 px-1.5 border-sidebar-border text-sidebar-foreground/70 font-medium"
+              >
+                {ROLE_LABELS[activeRole]}
+              </Badge>
             </div>
           </div>
 
           <Button
             variant="ghost"
             size="sm"
-            className="w-full justify-start gap-2 text-xs text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground h-8"
+            className="w-full justify-start gap-2 text-xs text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8"
             onClick={signOut}
           >
             <LogOut className="size-3.5" /> Sign out
@@ -363,34 +386,83 @@ export function AppShell({
 
       {/* Main Content Area */}
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card/80 px-4 py-3 backdrop-blur lg:px-8">
-          <div className="flex items-center gap-3">
+        <header className="dashboard-header sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-card/85 px-4 py-2.5 backdrop-blur-md lg:px-8">
+          <div className="flex items-center gap-3 min-w-0">
             <button
-              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground lg:hidden"
+              type="button"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground lg:hidden"
               onClick={() => setOpen(true)}
               aria-label="Open navigation"
             >
-              <Menu className="size-5" />
-              Menu
+              <Menu className="size-4" />
+              <span>Menu</span>
             </button>
+
+            {/* Linear-style Breadcrumb Bar */}
+            <div className="flex items-center gap-2 text-xs min-w-0">
+              <span className="hidden sm:inline-flex items-center rounded-md border border-border/80 bg-muted/60 px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                {CATEGORY_LABELS[currentNavItem.category]}
+              </span>
+              <span className="hidden sm:inline text-muted-foreground/40">/</span>
+              <div className="flex items-center gap-1.5 font-semibold text-foreground truncate">
+                <CurrentNavIcon className="size-3.5 text-primary shrink-0" />
+                <span className="truncate">{currentNavItem.label}</span>
+              </div>
+              <Badge
+                variant="outline"
+                className="hidden md:inline-flex text-[10px] font-mono py-0 px-1.5 text-muted-foreground border-border/80"
+              >
+                Tier {tier.tier} • {ROLE_LABELS[activeRole]}
+              </Badge>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 shrink-0">
+            {/* Segmented Theme Switcher */}
+            <div
+              className="inline-flex items-center rounded-xl border border-border bg-muted/60 p-0.5 text-xs"
+              role="group"
+              aria-label="Theme switcher"
+            >
+              {THEME_OPTIONS.map((option) => {
+                const isSelected = theme === option.mode;
+                const Icon = option.icon;
+                return (
+                  <button
+                    key={option.mode}
+                    type="button"
+                    onClick={() => setTheme(option.mode)}
+                    title={`Switch to ${option.label} mode`}
+                    aria-pressed={isSelected}
+                    className={cn(
+                      "inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] transition-all cursor-pointer",
+                      isSelected
+                        ? "bg-card text-foreground shadow-2xs font-semibold"
+                        : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    <Icon className="size-3.5 shrink-0" />
+                    <span className="hidden sm:inline">{option.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex items-center gap-2 rounded-xl border border-border bg-background px-3 py-1.5 text-xs font-medium shadow-2xs transition-colors hover:bg-muted focus:outline-hidden"
+                  className="flex items-center gap-2 rounded-xl border border-border bg-background px-2.5 py-1.5 text-xs font-medium shadow-2xs transition-colors hover:bg-muted focus:outline-hidden cursor-pointer"
                 >
                   <Avatar className="size-6">
                     <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-bold">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="font-semibold text-foreground">{activeName}</span>
+                  <span className="hidden md:inline font-semibold text-foreground">{activeName}</span>
                   <Badge
                     variant="outline"
-                    className="text-[10px] py-0 px-1.5 text-muted-foreground font-normal hidden sm:inline-flex"
+                    className="text-[10px] py-0 px-1.5 text-muted-foreground font-normal hidden xl:inline-flex"
                   >
                     {ROLE_LABELS[activeRole]}
                   </Badge>

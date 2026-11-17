@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>FAMS — Field Attachment Management System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Inter+Tight:wght@100..900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Inter+Tight:wght@100..900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <style>
     /* ── Colour Tokens & Variables ── */
     :root {
@@ -23,19 +26,41 @@
       --glide: 0s;
     }
 
-    @property --m0 { syntax: '<length>'; inherits: true; initial-value: 0px; }
-    @property --mt { syntax: '<length>'; inherits: true; initial-value: 0px; }
-    @property --mb { syntax: '<length>'; inherits: true; initial-value: 0px; }
-    @property --ms { syntax: '<length>'; inherits: true; initial-value: 0px; }
+    @property --m0 {
+      syntax: '<length>';
+      inherits: true;
+      initial-value: 0px;
+    }
+
+    @property --mt {
+      syntax: '<length>';
+      inherits: true;
+      initial-value: 0px;
+    }
+
+    @property --mb {
+      syntax: '<length>';
+      inherits: true;
+      initial-value: 0px;
+    }
+
+    @property --ms {
+      syntax: '<length>';
+      inherits: true;
+      initial-value: 0px;
+    }
 
     /* ── Global Reset ── */
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    html, body {
+    html,
+    body {
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -113,7 +138,9 @@
       --ob: 0px;
     }
 
-    .plate, .trans, .caseplate {
+    .plate,
+    .trans,
+    .caseplate {
       mask-image:
         linear-gradient(180deg,
           transparent calc(var(--o, 0px) + var(--m0)),
@@ -139,10 +166,33 @@
         --ms var(--glide) cubic-bezier(.65, 0, .35, 1);
     }
 
-    .d-fade { --m0: 0px; --mt: 0px; --mb: 0px; --ms: 0px; }
-    .d-fade.m-case { --m0: 0px; --mt: 110px; --mb: 60px; --ms: 170px; }
-    .m-fade { --m0: 0px; --mt: 190px; --mb: 0px; --ms: 140px; }
-    .m-fade.m-case { --m0: 48px; --mt: 40px; --mb: 70px; --ms: 140px; }
+    .d-fade {
+      --m0: 0px;
+      --mt: 0px;
+      --mb: 0px;
+      --ms: 0px;
+    }
+
+    .d-fade.m-case {
+      --m0: 0px;
+      --mt: 110px;
+      --mb: 60px;
+      --ms: 170px;
+    }
+
+    .m-fade {
+      --m0: 0px;
+      --mt: 190px;
+      --mb: 0px;
+      --ms: 140px;
+    }
+
+    .m-fade.m-case {
+      --m0: 48px;
+      --mt: 40px;
+      --mb: 70px;
+      --ms: 140px;
+    }
 
     /* ── Scene 1: Wordmark "FAMS" ── */
     svg.wm {
@@ -316,15 +366,79 @@
       z-index: 25;
     }
 
-    /* OS Frame Shell */
+    /* OS Frame Shell — Dual Light + Dark Monochromatic Zinc & Indigo Theme */
     .os-shell {
       position: absolute;
       inset: 0;
       display: flex;
       flex-direction: column;
-      background: #080d15;
-      color: #f1f5f9;
       user-select: none;
+      transition: background 0.28s ease, color 0.28s ease;
+
+      /* Default Light Mode Variables (Linear/Vercel Crisp Zinc + Indigo) */
+      --os-bar-bg: #111115;
+      --os-bar-border: rgba(255, 255, 255, 0.08);
+      --os-stage-bg: radial-gradient(ellipse at 50% 30%, #1e293b 0%, #09090b 65%, #050507 100%);
+      --it-app-bg: #fafafa;
+      --it-surface: #ffffff;
+      --it-surface-muted: #f4f4f5;
+      --it-border: #e4e4e7;
+      --it-ink: #18181b;
+      --it-muted: #71717a;
+      --it-primary: #4f46e5;
+      --it-primary-soft: rgba(79, 70, 229, 0.1);
+      --it-primary-border: rgba(79, 70, 229, 0.25);
+      --it-sb-bg: #f4f4f5;
+      --it-sb-border: #e4e4e7;
+      --it-sb-ink: #3f3f46;
+      --it-sb-muted: #71717a;
+      --it-sb-active-bg: #ffffff;
+      --it-sb-active-ink: #09090b;
+      --it-hero-grad: linear-gradient(135deg, #18181b 0%, #312e81 58%, #4f46e5 100%);
+      --it-accent-grad: linear-gradient(120deg, #4f46e5 0%, #10b981 100%);
+      --it-success: #059669;
+      --it-success-soft: rgba(16, 185, 129, 0.12);
+      --it-warn-bg: #fef3c7;
+      --it-warn-ink: #92400e;
+      --it-warn-border: #fde68a;
+      --it-danger-bg: #fef2f2;
+      --it-danger-ink: #991b1b;
+      --it-danger-border: #fecaca;
+      --it-grid-color: rgba(99, 102, 241, 0.14);
+      background: #09090b;
+      color: #f4f4f5;
+    }
+
+    .os-shell.dark-theme {
+      --os-bar-bg: #09090b;
+      --os-bar-border: rgba(255, 255, 255, 0.08);
+      --os-stage-bg: radial-gradient(ellipse at 50% 30%, #1e1b4b 0%, #09090b 65%, #030305 100%);
+      --it-app-bg: #111114;
+      --it-surface: #18181b;
+      --it-surface-muted: #27272a;
+      --it-border: rgba(255, 255, 255, 0.1);
+      --it-ink: #fafafa;
+      --it-muted: #a1a1aa;
+      --it-primary: #6366f1;
+      --it-primary-soft: rgba(99, 102, 241, 0.16);
+      --it-primary-border: rgba(129, 140, 248, 0.35);
+      --it-sb-bg: #09090b;
+      --it-sb-border: rgba(255, 255, 255, 0.08);
+      --it-sb-ink: #d4d4d8;
+      --it-sb-muted: #71717a;
+      --it-sb-active-bg: #1e1e24;
+      --it-sb-active-ink: #ffffff;
+      --it-hero-grad: linear-gradient(135deg, #09090b 0%, #1e1b4b 55%, #3730a3 100%);
+      --it-accent-grad: linear-gradient(120deg, #6366f1 0%, #10b981 100%);
+      --it-success: #34d399;
+      --it-success-soft: rgba(16, 185, 129, 0.18);
+      --it-warn-bg: rgba(245, 158, 11, 0.15);
+      --it-warn-ink: #fcd34d;
+      --it-warn-border: rgba(245, 158, 11, 0.35);
+      --it-danger-bg: rgba(239, 68, 68, 0.15);
+      --it-danger-ink: #fca5a5;
+      --it-danger-border: rgba(239, 68, 68, 0.35);
+      --it-grid-color: rgba(99, 102, 241, 0.16);
     }
 
     /* OS Top Header */
@@ -333,9 +447,9 @@
       align-items: center;
       justify-content: space-between;
       height: 36px;
-      padding: 0 14px;
-      background: #0d1522;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0 12px;
+      background: var(--os-bar-bg);
+      border-bottom: 1px solid var(--os-bar-border);
       flex-shrink: 0;
       z-index: 10;
     }
@@ -343,119 +457,126 @@
     .os-topbar-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 9px;
+      min-width: 0;
     }
 
     .os-traffic-lights {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .os-dot {
-      width: 9px;
-      height: 9px;
+      width: 8.5px;
+      height: 8.5px;
       border-radius: 50%;
     }
 
-    .os-dot.r { background: #ef4444; box-shadow: 0 0 6px rgba(239, 68, 68, 0.4); }
-    .os-dot.y { background: #f59e0b; box-shadow: 0 0 6px rgba(245, 158, 11, 0.4); }
-    .os-dot.g { background: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.4); }
+    .os-dot.r { background: #ef4444; }
+    .os-dot.y { background: #f59e0b; }
+    .os-dot.g { background: #10b981; }
 
     .os-branding {
       font-weight: 800;
-      font-size: 11px;
-      letter-spacing: 0.04em;
-      color: #cfeee0;
+      font-size: 10.5px;
+      letter-spacing: -0.01em;
+      color: #f4f4f5;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      white-space: nowrap;
     }
 
     .os-version {
-      font-size: 9px;
+      font-size: 8px;
       font-family: 'JetBrains Mono', monospace;
-      color: #10b981;
-      background: rgba(16, 185, 129, 0.12);
+      color: #a5b4fc;
+      background: rgba(99, 102, 241, 0.16);
       padding: 1px 5px;
       border-radius: 4px;
-      border: 1px solid rgba(16, 185, 129, 0.25);
+      border: 1px solid rgba(99, 102, 241, 0.35);
     }
 
-    /* OS Navigation Tabs inside Laptop */
+    /* 4-Role Switcher Tabs inside Laptop */
     .os-tabs {
       display: flex;
       align-items: center;
-      gap: 4px;
-      margin-left: 8px;
+      gap: 3px;
+      margin-left: 4px;
     }
 
     .os-tab {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
+      gap: 4px;
+      padding: 3.5px 7.5px;
       border-radius: 5px;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 600;
-      color: #94a3b8;
+      color: #a1a1aa;
       background: transparent;
       border: 1px solid transparent;
       cursor: pointer;
+      white-space: nowrap;
       transition: all 0.2s ease;
     }
 
     .os-tab:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.04);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
     }
 
     .os-tab.active {
-      color: #10b981;
-      background: rgba(16, 185, 129, 0.1);
-      border-color: rgba(16, 185, 129, 0.3);
-      box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+      color: #ffffff;
+      background: rgba(99, 102, 241, 0.22);
+      border-color: rgba(129, 140, 248, 0.45);
+      box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
     }
 
     .os-tab-badge {
-      font-size: 8px;
-      padding: 1px 4px;
+      font-size: 7.5px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.5px 3.5px;
       border-radius: 3px;
       font-weight: 700;
       background: rgba(255, 255, 255, 0.08);
+      color: #d4d4d8;
     }
 
     .os-tab.active .os-tab-badge {
-      background: #10b981;
-      color: #062b1b;
+      background: #6366f1;
+      color: #ffffff;
     }
 
     .os-topbar-right {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 10px;
+      gap: 7px;
+      font-size: 9px;
+      shrink: 0;
     }
 
     .os-telemetry-pill {
       display: flex;
       align-items: center;
-      gap: 5px;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 3px 8px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 2.5px 7px;
+      border-radius: 99px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
       font-family: 'JetBrains Mono', monospace;
-      color: #94a3b8;
-      font-size: 9.5px;
+      color: #a1a1aa;
+      font-size: 8.5px;
+      white-space: nowrap;
     }
 
     .os-live-dot {
-      width: 6px;
-      height: 6px;
+      width: 5.5px;
+      height: 5.5px;
       border-radius: 50%;
       background: #10b981;
-      box-shadow: 0 0 8px #10b981;
+      box-shadow: 0 0 7px #10b981;
       animation: livePulse 1.8s infinite;
     }
 
@@ -465,16 +586,16 @@
     }
 
     .os-user-pill {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 10px;
-      color: #a7f3d0;
-      font-weight: 600;
+      gap: 5px;
+      background: var(--it-primary-soft);
+      border: 1px solid var(--it-primary-border);
+      padding: 2.5px 7px;
+      border-radius: 6px;
+      font-size: 8.5px;
+      color: var(--it-ink);
+      font-weight: 700;
     }
 
     /* Sub-header / System Status Strip */
@@ -482,12 +603,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 26px;
-      padding: 0 14px;
-      background: #09101a;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 9.5px;
-      color: #64748b;
+      height: 24px;
+      padding: 0 12px;
+      background: #141418;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      font-size: 8.5px;
+      color: #a1a1aa;
       font-family: 'JetBrains Mono', monospace;
       flex-shrink: 0;
     }
@@ -495,257 +616,214 @@
     .os-subbar-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .os-subbar b {
-      color: #38bdf8;
-      font-weight: 600;
+      color: #a5b4fc;
+      font-weight: 700;
     }
 
-    /* Workspace Content Area */
-    .os-workspace {
+    /* ── 3D Auto-Motion Stage & Monochromatic Zinc + Indigo InternTrack Shell ── */
+    .it-3d-stage {
       position: relative;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    /* Workspace Views */
-    .wf-view {
-      position: absolute;
-      inset: 0;
-      padding: 14px 16px 16px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(6px) scale(0.99);
-      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-
-    .wf-view.active {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0) scale(1);
-    }
-
-    /* Dashboard KPI Strip */
-    .wf-kpis {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      flex-shrink: 0;
-    }
-
-    .wf-kpi {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 6px;
-      padding: 8px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .wf-kpi::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, #10b981, transparent);
-    }
-
-    .wf-kpi-lbl {
-      font-size: 9px;
-      font-weight: 700;
-      color: #94a3b8;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .wf-kpi-val {
-      font-size: 18px;
-      font-weight: 800;
-      color: #ffffff;
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-    }
-
-    .wf-kpi-val .up {
-      font-size: 10px;
-      font-weight: 700;
-      color: #10b981;
-    }
-
-    .wf-kpi-val .chip {
-      font-size: 8.5px;
-      padding: 1px 5px;
-      border-radius: 4px;
-      font-weight: 700;
-    }
-
-    .wf-kpi-sub {
-      font-size: 9.5px;
-      color: #64748b;
-    }
-
-    /* Split Panes */
-    .wf-split {
-      display: flex;
-      gap: 10px;
-      flex: 1;
-      min-height: 0;
-    }
-
-    .wf-card {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 6px;
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      overflow: hidden;
-    }
-
-    .wf-card-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 10.5px;
-      font-weight: 700;
-      color: #e2e8f0;
-      padding-bottom: 6px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      flex-shrink: 0;
-    }
-
-    /* ── Native InternTrack App Shell inside Laptop ── */
-    .dashboard-app-shell {
-      display: flex;
       flex: 1;
       width: 100%;
       height: 100%;
       min-height: 0;
-      background: #060b13;
+      perspective: 1450px;
+      perspective-origin: 50% 48%;
       overflow: hidden;
+      background: var(--os-stage-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
     }
 
-    /* Forest Green Sidebar */
+    #screen-3d-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .dashboard-app-shell {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      background: var(--it-app-bg);
+      color: var(--it-ink);
+      border-radius: 10px;
+      border: 1px solid var(--it-border);
+      box-shadow:
+        0 26px 55px -12px rgba(0, 0, 0, 0.72),
+        0 0 0 1px rgba(99, 102, 241, 0.25),
+        0 0 36px -10px rgba(99, 102, 241, 0.25);
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1), background 0.28s ease, color 0.28s ease;
+      overflow: visible;
+    }
+
+    /* Linear-inspired Monochromatic Zinc Sidebar */
     .dashboard-sidebar {
-      width: 155px;
+      width: 152px;
       flex-shrink: 0;
-      background: #092015;
-      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--it-sb-bg);
+      border-right: 1px solid var(--it-sb-border);
+      border-radius: 9px 0 0 9px;
       display: flex;
       flex-direction: column;
       user-select: none;
       z-index: 5;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.55s ease, background 0.28s ease;
+    }
+
+    .dashboard-app-shell.exploded .dashboard-sidebar {
+      transform: translateZ(26px) translateX(-6px);
+      box-shadow: 12px 14px 28px rgba(0, 0, 0, 0.35);
     }
 
     .sb-brand {
       display: flex;
       align-items: center;
       gap: 7px;
-      padding: 9px 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--it-sb-border);
     }
 
     .sb-brand-logo {
       width: 22px;
       height: 22px;
-      border-radius: 5px;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border-radius: 6px;
+      background: var(--it-accent-grad);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
-      color: #fff;
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+      font-size: 10px;
+      color: #ffffff;
+      box-shadow: 0 3px 8px rgba(79, 70, 229, 0.35);
+      flex-shrink: 0;
     }
 
     .sb-brand-title {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 800;
-      color: #ffffff;
-      letter-spacing: -0.01em;
+      color: var(--it-sb-active-ink);
+      letter-spacing: -0.02em;
       line-height: 1;
     }
 
     .sb-tier-badge {
       display: inline-block;
-      font-size: 7.5px;
+      font-size: 7.2px;
+      font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
-      color: #6ee7b7;
+      color: var(--it-sb-muted);
       margin-top: 2px;
     }
 
     .sb-nav {
       flex: 1;
-      padding: 6px 5px;
-      overflow-y: auto;
+      padding: 6px 6px;
+      overflow-y: hidden;
       display: flex;
       flex-direction: column;
-      gap: 1.5px;
+      gap: 1px;
     }
 
     .sb-cat-header {
-      font-size: 7px;
-      font-weight: 800;
+      font-size: 6.8px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: rgba(167, 243, 208, 0.45);
-      padding: 5px 6px 2px;
+      letter-spacing: 0.07em;
+      color: var(--it-sb-muted);
+      padding: 4.5px 6px 1.5px;
     }
 
     .sb-link {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: space-between;
+      gap: 5px;
       padding: 4px 7px;
-      border-radius: 4px;
-      font-size: 9px;
+      border-radius: 5px;
+      font-size: 8.3px;
       font-weight: 500;
-      color: #94a3b8;
+      color: var(--it-sb-ink);
       transition: all 0.2s ease;
       cursor: pointer;
     }
 
-    .sb-link:hover {
-      background: rgba(255, 255, 255, 0.04);
-      color: #f1f5f9;
+    .sb-link-left {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .sb-link-dot {
+      width: 4.5px;
+      height: 4.5px;
+      border-radius: 50%;
+      background: var(--it-sb-muted);
+      opacity: 0.5;
+      flex-shrink: 0;
     }
 
     .sb-link.active {
-      background: rgba(16, 185, 129, 0.18);
-      color: #34d399;
+      background: var(--it-sb-active-bg);
+      color: var(--it-sb-active-ink);
       font-weight: 700;
-      border-left: 2px solid #10b981;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), inset 2.5px 0 0 var(--it-primary);
+    }
+
+    .sb-link.active .sb-link-dot {
+      background: var(--it-primary);
+      opacity: 1;
+    }
+
+    .sb-link.locked {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .sb-lock-tag {
+      font-size: 6.5px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--it-sb-muted);
     }
 
     .sb-user-card {
-      padding: 7px 9px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(0, 0, 0, 0.2);
+      margin: 5px 6px 7px;
+      padding: 6px 7px;
+      border-radius: 7px;
+      border: 1px solid var(--it-sb-border);
+      background: var(--it-sb-active-bg);
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
     }
 
     .sb-user-avatar {
       width: 22px;
       height: 22px;
       border-radius: 50%;
-      background: rgba(16, 185, 129, 0.2);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: #34d399;
-      font-size: 8.5px;
+      background: var(--it-primary-soft);
+      border: 1px solid var(--it-primary-border);
+      color: var(--it-primary);
+      font-size: 8px;
       font-weight: 800;
       display: flex;
       align-items: center;
@@ -753,87 +831,360 @@
       flex-shrink: 0;
     }
 
-    /* Native Viewport Area */
+    /* Main Workspace Canvas */
     .dashboard-viewport {
       flex: 1;
       min-width: 0;
       display: flex;
       flex-direction: column;
       position: relative;
-      overflow: hidden;
-      background: #070e17;
+      background: var(--it-app-bg);
+      color: var(--it-ink);
+      border-radius: 0 9px 9px 0;
+      transform-style: preserve-3d;
+      overflow: visible;
+      transition: background 0.28s ease;
     }
 
+    /* Top Breadcrumb & Persona Strip */
     .dash-profile-strip {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 12px;
-      background: rgba(15, 23, 42, 0.7);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 5.5px 11px;
+      background: var(--it-surface);
+      border-bottom: 1px solid var(--it-border);
+      border-radius: 0 9px 0 0;
       flex-shrink: 0;
+      transform-style: preserve-3d;
     }
 
     .dash-profile-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      min-width: 0;
     }
 
-    .dash-avatar-lg {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: #10b981;
-      font-size: 10px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .dash-crumb-cat {
+      font-size: 7.5px;
+      font-weight: 600;
+      padding: 1.5px 6px;
+      border-radius: 4px;
+      background: var(--it-surface-muted);
+      border: 1px solid var(--it-border);
+      color: var(--it-muted);
     }
 
     .dash-profile-info h4 {
-      font-size: 10.5px;
+      font-size: 9px;
       font-weight: 800;
-      color: #f1f5f9;
+      color: var(--it-ink);
       margin: 0;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .dash-profile-info p {
-      font-size: 8.5px;
-      color: #94a3b8;
+      font-size: 7.5px;
+      color: var(--it-muted);
       margin: 0;
     }
 
     .dash-profile-stats {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 9px;
+      gap: 6px;
+      font-size: 8px;
+      shrink: 0;
+    }
+
+    /* Workspace Views (4 Role Perspectives) */
+    .wf-view {
+      position: absolute;
+      inset: 0;
+      padding: 8px 10px 9px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6.5px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateZ(-25px) rotateX(4deg) scale(0.97);
+      transform-style: preserve-3d;
+      transition: opacity 0.42s ease, transform 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .wf-view.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateZ(0px) rotateX(0deg) scale(1);
+    }
+
+    /* Indigo-Zinc Hero Banner */
+    .it-hero-banner {
+      background: var(--it-hero-grad);
+      border-radius: 8px;
+      padding: 7px 11px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: 0 8px 18px -6px rgba(24, 24, 27, 0.35);
+      flex-shrink: 0;
+      transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease;
+    }
+
+    .dashboard-app-shell.exploded .it-hero-banner {
+      transform: translateZ(30px);
+      box-shadow: 0 18px 32px -8px rgba(79, 70, 229, 0.45);
+    }
+
+    .it-hero-banner.pop-z {
+      transform: translateZ(42px) scale(1.015) !important;
+      box-shadow: 0 22px 38px -8px rgba(79, 70, 229, 0.55), 0 0 0 1.5px #818cf8 !important;
+    }
+
+    .it-hero-left { min-width: 0; }
+    .it-hero-badges { display: flex; align-items: center; gap: 5px; margin-bottom: 2px; }
+
+    .it-pill-indigo {
+      font-size: 7.2px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 99px;
+      background: rgba(99, 102, 241, 0.35);
+      color: #e0e7ff;
+      border: 1px solid rgba(165, 180, 252, 0.45);
+    }
+
+    .it-pill-glass {
+      font-size: 7.2px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #f4f4f5;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .it-hero-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      line-height: 1.15;
+    }
+
+    .it-hero-sub {
+      font-size: 7.8px;
+      color: rgba(244, 244, 245, 0.85);
+      margin-top: 1px;
+    }
+
+    /* 4-Column KPI Strip */
+    .wf-kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6.5px;
+      flex-shrink: 0;
+      transform-style: preserve-3d;
+    }
+
+    .wf-kpi {
+      background: var(--it-surface);
+      border: 1px solid var(--it-border);
+      border-radius: 7px;
+      padding: 5.5px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease, border-color 0.35s ease;
+    }
+
+    .dashboard-app-shell.exploded .wf-kpi {
+      transform: translateZ(20px);
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.16);
+    }
+
+    .wf-kpi.pop-z {
+      transform: translateZ(44px) scale(1.03) !important;
+      border-color: var(--it-primary) !important;
+      box-shadow: 0 20px 34px -8px rgba(79, 70, 229, 0.32), 0 0 0 2px var(--it-primary-border) !important;
+      z-index: 12;
+    }
+
+    .wf-kpi-lbl {
+      font-size: 7px;
+      font-weight: 700;
+      color: var(--it-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .wf-kpi-val {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--it-ink);
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      line-height: 1.15;
+    }
+
+    .wf-kpi-sub {
+      font-size: 7.2px;
+      color: var(--it-muted);
+    }
+
+    /* Split Panes & Elevated Cards */
+    .wf-split {
+      display: flex;
+      gap: 7.5px;
+      flex: 1;
+      min-height: 0;
+      transform-style: preserve-3d;
+    }
+
+    .wf-card {
+      background: var(--it-surface);
+      border: 1px solid var(--it-border);
+      border-radius: 8px;
+      padding: 7.5px 9.5px;
+      display: flex;
+      flex-direction: column;
+      gap: 4.5px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+      transform-style: preserve-3d;
+      transition: transform 0.48s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.48s ease, border-color 0.35s ease;
+    }
+
+    .dashboard-app-shell.exploded .wf-card {
+      transform: translateZ(34px);
+      box-shadow: 0 18px 34px -8px rgba(0, 0, 0, 0.24);
+    }
+
+    .wf-card.pop-z {
+      transform: translateZ(52px) scale(1.018) !important;
+      border-color: var(--it-primary) !important;
+      box-shadow:
+        0 26px 46px -10px rgba(79, 70, 229, 0.35),
+        0 0 0 2px var(--it-primary-border) !important;
+      z-index: 15;
+    }
+
+    .wf-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 8.8px;
+      font-weight: 800;
+      color: var(--it-ink);
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--it-border);
+      flex-shrink: 0;
+    }
+
+    .it-surface-box {
+      background: var(--it-surface-muted);
+      border: 1px solid var(--it-border);
+      border-radius: 6px;
+      padding: 5.5px 7.5px;
+    }
+
+    /* Buttons, Inputs, & Pills */
+    .it-btn-primary {
+      font-size: 8px;
+      font-weight: 700;
+      padding: 4.5px 8.5px;
+      border-radius: 6px;
+      background: var(--it-primary);
+      color: #ffffff;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(79, 70, 229, 0.28);
+    }
+
+    .it-btn-primary:hover { filter: brightness(1.08); }
+
+    .it-btn-success {
+      font-size: 8px;
+      font-weight: 700;
+      padding: 4.5px 8.5px;
+      border-radius: 6px;
+      background: #059669;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.28);
+    }
+
+    .it-btn-outline {
+      font-size: 7.8px;
+      font-weight: 700;
+      padding: 3.5px 7px;
+      border-radius: 5px;
+      background: var(--it-surface);
+      color: var(--it-ink);
+      border: 1px solid var(--it-border);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3.5px;
+      transition: all 0.2s ease;
+    }
+
+    .it-textarea {
+      width: 100%;
+      background: var(--it-surface-muted);
+      border: 1px solid var(--it-border);
+      border-radius: 6px;
+      padding: 5px 7px;
+      font-size: 8px;
+      color: var(--it-ink);
+      font-family: 'Inter Tight', sans-serif;
+      line-height: 1.4;
+      resize: none;
+      outline: none;
+      transition: border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .it-textarea.polished {
+      background: var(--it-success-soft);
+      border-color: var(--it-success);
     }
 
     .skill-pills {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
-      min-height: 18px;
-      margin-top: 4px;
+      gap: 3.5px;
+      min-height: 14px;
     }
 
     .skill-pill {
-      font-size: 8px;
-      font-weight: 600;
-      color: #38bdf8;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      padding: 1.5px 5.5px;
-      border-radius: 3px;
-      animation: popPill 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      font-size: 7px;
+      font-weight: 700;
+      color: var(--it-primary);
+      background: var(--it-primary-soft);
+      border: 1px solid var(--it-primary-border);
+      padding: 1px 5px;
+      border-radius: 4px;
+      animation: popPill 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     @keyframes popPill {
@@ -842,479 +1193,151 @@
     }
 
     .sim-active {
-      transform: scale(0.96) !important;
-      filter: brightness(1.25) !important;
-      box-shadow: 0 0 16px rgba(16, 185, 129, 0.6) !important;
+      transform: scale(0.95) !important;
+      filter: brightness(1.15) !important;
+      box-shadow: 0 0 14px rgba(99, 102, 241, 0.55) !important;
     }
 
-    .sub-badge.draft {
-      background: rgba(245, 158, 11, 0.15);
-      color: #fbbf24;
-      border-color: rgba(245, 158, 11, 0.3);
-    }
-
-    .sub-badge.queued {
-      background: rgba(56, 189, 248, 0.15);
-      color: #38bdf8;
-      border-color: rgba(56, 189, 248, 0.3);
-    }
-
-    /* Virtual Cursor Hidden for display-only fluid loop */
-    .sim-cursor {
-      display: none !important;
-    }
-
-    /* ── Workflow 0: Placements Elements ── */
-    .filter-tags {
-      display: flex;
-      gap: 5px;
-    }
-
-    .filter-tag {
-      font-size: 9px;
-      font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.04);
-      color: #94a3b8;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .filter-tag.active {
-      background: rgba(16, 185, 129, 0.2);
-      border-color: #10b981;
-      color: #34d399;
-    }
-
-    .host-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    .host-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 10px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 5px;
-      transition: all 0.2s ease;
-    }
-
-    .host-item.highlighted {
-      background: rgba(16, 185, 129, 0.08);
-      border-color: rgba(16, 185, 129, 0.35);
-      box-shadow: 0 0 12px rgba(16, 185, 129, 0.1);
-    }
-
-    .host-item-info {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-    }
-
-    .host-item-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .host-item-desc {
-      font-size: 9.5px;
-      color: #94a3b8;
-    }
-
-    .host-apply-btn {
-      font-size: 9.5px;
-      font-weight: 700;
-      padding: 5px 10px;
-      border-radius: 4px;
-      background: #10b981;
-      color: #062b1b;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .host-apply-btn:hover {
-      background: #34d399;
-      transform: translateY(-1px);
-    }
-
-    .host-apply-btn.applied {
-      background: rgba(16, 185, 129, 0.2);
-      color: #10b981;
-      border: 1px solid #10b981;
-    }
-
-    /* ── Workflow 1: GPS Geofence Radar ── */
-    .radar-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      flex: 1;
-      position: relative;
-    }
-
-    .radar-circle {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, rgba(6, 13, 20, 0.8) 70%);
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
-    }
-
-    .radar-ring {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      border: 1px dashed rgba(16, 185, 129, 0.25);
-    }
-
-    .radar-ring.r1 { width: 45px; height: 45px; }
-    .radar-ring.r2 { width: 90px; height: 90px; }
-
-    .radar-sweep {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: conic-gradient(from 0deg, transparent 0deg, rgba(16, 185, 129, 0.35) 60deg, transparent 65deg);
-      animation: radarScan 3s linear infinite;
-    }
-
-    @keyframes radarScan {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .radar-blip {
-      position: absolute;
-      top: 42%;
-      left: 54%;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 10px #10b981;
-      transform: translate(-50%, -50%);
-    }
-
-    .radar-blip::after {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      border: 1px solid #10b981;
-      animation: blipWave 2s infinite;
-    }
-
-    @keyframes blipWave {
-      0% { transform: scale(1); opacity: 1; }
-      100% { transform: scale(2.6); opacity: 0; }
-    }
-
-    .radar-btn {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 6px 12px;
-      border-radius: 4px;
-      background: rgba(16, 185, 129, 0.2);
-      border: 1px solid #10b981;
-      color: #34d399;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-
-    .radar-btn:hover {
-      background: #10b981;
-      color: #062b1b;
-    }
-
-    .radar-btn.locked {
-      background: #10b981;
-      color: #062b1b;
-      box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
-    }
-
-    /* Logbook Editor */
-    .log-editor {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1;
-    }
-
-    .log-input-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    .log-input {
-      background: #060a10;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 4px;
-      padding: 6px 8px;
-      font-size: 10px;
-      color: #cbd5e1;
-      font-family: 'JetBrains Mono', monospace;
-      outline: none;
-    }
-
-    .log-textarea {
-      flex: 1;
-      background: #060a10;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 4px;
-      padding: 8px;
-      font-size: 10px;
-      color: #a7f3d0;
-      font-family: 'JetBrains Mono', monospace;
-      line-height: 1.5;
-      resize: none;
-      outline: none;
-    }
-
-    .log-submit-btn {
-      align-self: flex-start;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 6px 14px;
-      border-radius: 4px;
-      background: #10b981;
-      color: #062b1b;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .log-submit-btn:hover {
-      background: #34d399;
-    }
-
-    .log-submit-btn.submitted {
-      background: rgba(16, 185, 129, 0.2);
-      color: #10b981;
-      border: 1px solid #10b981;
-    }
-
-    /* ── Workflow 2: Mentor 1-Tap Cryptographic Verification ── */
-    .mentor-submission-card {
-      background: #060a10;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 5px;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 10px;
-      flex: 1;
-    }
-
-    .sub-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 6px;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
-    }
-
-    .sub-title { font-weight: 700; color: #fff; font-size: 11px; }
     .sub-badge {
-      font-size: 8.5px;
+      font-size: 7px;
       font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 3px;
-      background: rgba(245, 158, 11, 0.2);
-      color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 1.5px 5.5px;
+      border-radius: 99px;
+      background: var(--it-warn-bg);
+      color: var(--it-warn-ink);
+      border: 1px solid var(--it-warn-border);
     }
 
+    .sub-badge.queued,
     .sub-badge.verified {
-      background: rgba(16, 185, 129, 0.2);
-      color: #10b981;
-      border-color: rgba(16, 185, 129, 0.35);
+      background: var(--it-success-soft);
+      color: var(--it-success);
+      border-color: var(--it-success);
     }
 
-    .sub-code {
-      font-family: 'JetBrains Mono', monospace;
-      color: #94a3b8;
-      font-size: 9.5px;
-      line-height: 1.5;
-      background: rgba(255, 255, 255, 0.02);
-      padding: 6px 8px;
-      border-radius: 4px;
-    }
-
-    .mentor-sign-station {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      flex: 1;
-      position: relative;
-    }
-
-    .mentor-sign-btn {
-      font-size: 11px;
-      font-weight: 800;
-      padding: 10px 20px;
-      border-radius: 6px;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    /* Alert & Allocation Banners */
+    .it-alert-banner {
+      border-radius: 7px;
+      padding: 5.5px 9px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
-      transition: all 0.25s ease;
+      border: 1px solid var(--it-danger-border);
+      background: var(--it-danger-bg);
+      color: var(--it-danger-ink);
+      font-size: 7.8px;
+      flex-shrink: 0;
+      transform-style: preserve-3d;
+      transition: all 0.35s ease;
     }
 
-    .mentor-sign-btn:hover {
-      transform: translateY(-1px) scale(1.02);
-      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+    .it-alert-banner.resolved {
+      border-color: var(--it-success);
+      background: var(--it-success-soft);
+      color: var(--it-success);
     }
 
-    /* Cryptographic Wax Seal Stamp */
-    .crypto-seal {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      border: 3px double #10b981;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(6, 40, 25, 0.85) 100%);
-      box-shadow: 0 0 25px rgba(16, 185, 129, 0.3), inset 0 0 15px rgba(16, 185, 129, 0.25);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 10px;
-      gap: 3px;
-      opacity: 0;
-      transform: scale(1.4) rotate(-15deg);
-      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .crypto-seal.stamped {
-      opacity: 1;
-      transform: scale(1) rotate(0deg);
-    }
-
-    .crypto-seal-star { font-size: 14px; line-height: 1; }
-    .crypto-seal-title {
-      font-size: 8px;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      color: #10b981;
-      text-transform: uppercase;
-    }
-
-    .crypto-seal-mentor {
-      font-size: 9.5px;
-      font-weight: 800;
-      color: #ffffff;
-    }
-
-    .crypto-seal-nonce {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 7.5px;
-      color: #38bdf8;
-      background: rgba(56, 189, 248, 0.15);
-      padding: 1px 4px;
-      border-radius: 3px;
-    }
-
-    /* ── Workflow 3: Dual Supervision Rubric ── */
+    /* Rubric Sliders */
     .rubric-sliders {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4.5px;
       flex: 1;
     }
 
     .rubric-row {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 2px;
     }
 
     .rubric-row-head {
       display: flex;
       justify-content: space-between;
-      font-size: 9.5px;
-      color: #cbd5e1;
+      font-size: 7.8px;
+      font-weight: 600;
+      color: var(--it-ink);
     }
 
     .rubric-row-head b {
       font-family: 'JetBrains Mono', monospace;
-      color: #10b981;
+      color: var(--it-primary);
+      font-weight: 800;
     }
 
     .rubric-bar {
-      height: 6px;
-      border-radius: 3px;
-      background: rgba(255, 255, 255, 0.08);
+      height: 5px;
+      border-radius: 99px;
+      background: var(--it-surface-muted);
       overflow: hidden;
       position: relative;
     }
 
     .rubric-bar-fill {
       height: 100%;
-      border-radius: 3px;
-      background: linear-gradient(90deg, #10b981, #34d399);
-      transition: width 0.8s ease-out;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #4f46e5, #10b981);
+      transition: width 0.75s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .rubric-bar-fill.blue {
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    /* RBAC Switch Pill */
+    .it-switch {
+      width: 24px;
+      height: 13px;
+      border-radius: 99px;
+      background: var(--it-border);
+      position: relative;
+      transition: background 0.25s ease;
+      flex-shrink: 0;
+    }
+    .it-switch::after {
+      content: '';
+      position: absolute;
+      top: 1.5px;
+      left: 1.5px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ffffff;
+      transition: transform 0.25s ease;
+    }
+    .it-switch.on {
+      background: #10b981;
+    }
+    .it-switch.on::after {
+      transform: translateX(11px);
     }
 
-    .transcript-btn {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 7px 14px;
-      border-radius: 4px;
-      background: #3b82f6;
-      color: #ffffff;
-      border: none;
-      cursor: pointer;
-      display: flex;
+    /* 3D Camera & Theme HUD Buttons */
+    .it-3d-cam-pill {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
+      gap: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      padding: 2.5px 7px;
+      border-radius: 5px;
+      background: rgba(99, 102, 241, 0.16);
+      border: 1px solid rgba(129, 140, 248, 0.38);
+      color: #c7d2fe;
+      cursor: pointer;
       transition: all 0.2s ease;
     }
 
-    .transcript-btn:hover {
-      background: #60a5fa;
+    .it-3d-cam-pill:hover,
+    .it-3d-cam-pill.active {
+      background: #6366f1;
+      color: #ffffff;
+      font-weight: 700;
     }
 
     /* In-Screen Modals */
     .screen-modal {
       position: absolute;
       inset: 0;
-      background: rgba(7, 12, 18, 0.85);
-      backdrop-filter: blur(6px);
+      background: rgba(9, 9, 11, 0.76);
+      backdrop-filter: blur(5px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1330,15 +1353,16 @@
     }
 
     .screen-modal-dialog {
-      background: #0d1522;
-      border: 1px solid rgba(52, 211, 153, 0.3);
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(16, 185, 129, 0.15);
-      padding: 16px;
-      width: 440px;
+      background: var(--it-surface);
+      border: 1px solid var(--it-border);
+      border-radius: 10px;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55);
+      padding: 14px 16px;
+      width: 430px;
+      color: var(--it-ink);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       transform: scale(0.95);
       transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
@@ -1352,42 +1376,43 @@
       align-items: center;
       justify-content: space-between;
       font-weight: 800;
-      font-size: 12px;
-      color: #cfeee0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 6px;
+      font-size: 11px;
+      color: var(--it-ink);
+      border-bottom: 1px solid var(--it-border);
+      padding-bottom: 5px;
     }
 
     .modal-body {
-      font-size: 10px;
-      color: #94a3b8;
+      font-size: 9px;
+      color: var(--it-muted);
       line-height: 1.5;
     }
+
+    .modal-body b { color: var(--it-ink); }
 
     .modal-actions {
       display: flex;
       justify-content: flex-end;
-      gap: 8px;
-      margin-top: 4px;
+      gap: 6px;
+      margin-top: 2px;
     }
 
     .modal-btn {
-      font-size: 9.5px;
+      font-size: 8.5px;
       font-weight: 700;
-      padding: 5px 12px;
-      border-radius: 4px;
+      padding: 4px 10px;
+      border-radius: 5px;
       border: none;
       cursor: pointer;
     }
 
     .modal-btn.primary {
-      background: #10b981;
-      color: #062b1b;
+      background: var(--it-primary);
+      color: #ffffff;
     }
 
-    .modal-btn.ghost {
-      background: rgba(255, 255, 255, 0.06);
-      color: #fff;
+    .sim-cursor {
+      display: none !important;
     }
 
     /* ═══════════════════════════════════════════════════
@@ -1447,8 +1472,15 @@
     }
 
     @keyframes rippleAnim {
-      0% { transform: scale(0.2); opacity: 1; }
-      100% { transform: scale(1.8); opacity: 0; }
+      0% {
+        transform: scale(0.2);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1.8);
+        opacity: 0;
+      }
     }
 
     /* ═══════════════════════════════════════════════════
@@ -1494,10 +1526,25 @@
       box-shadow: 0 calc(1 * var(--n)) 0 rgba(0, 0, 0, .18);
     }
 
-    .t1 { left: calc(30 * var(--n)); top: calc(7 * var(--n)); }
-    .t2 { left: calc(233 * var(--n)); top: calc(7 * var(--n)); }
-    .t3 { right: calc(244 * var(--n)); top: calc(7 * var(--n)); }
-    .t4 { right: calc(32 * var(--n)); top: calc(7 * var(--n)); }
+    .t1 {
+      left: calc(30 * var(--n));
+      top: calc(7 * var(--n));
+    }
+
+    .t2 {
+      left: calc(233 * var(--n));
+      top: calc(7 * var(--n));
+    }
+
+    .t3 {
+      right: calc(244 * var(--n));
+      top: calc(7 * var(--n));
+    }
+
+    .t4 {
+      right: calc(32 * var(--n));
+      top: calc(7 * var(--n));
+    }
 
     /* Sound Control Tag */
     .sound-tag {
@@ -1521,7 +1568,9 @@
       transition: all 0.2s ease;
     }
 
-    .sound-tag:hover { background: rgba(255, 255, 255, 0.25); }
+    .sound-tag:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
 
     /* Scroll Hint */
     .hint {
@@ -1562,8 +1611,13 @@
     }
 
     @keyframes drip {
-      0% { top: -40%; }
-      100% { top: 100%; }
+      0% {
+        top: -40%;
+      }
+
+      100% {
+        top: 100%;
+      }
     }
 
     /* ═══════════════════════════════════════════════════
@@ -1600,8 +1654,8 @@
       height: calc(36 * var(--n));
       padding: 0 calc(16 * var(--n));
       border-radius: 9999px;
-      background: rgba(9, 24, 17, 0.9);
-      border: 1px solid rgba(52, 211, 153, 0.35);
+      background: rgba(17, 17, 21, 0.92);
+      border: 1px solid rgba(129, 140, 248, 0.35);
       backdrop-filter: blur(20px);
       color: #ffffff;
       font-size: calc(12.5 * var(--n));
@@ -1614,10 +1668,10 @@
     }
 
     .s2-back-btn:hover {
-      background: rgba(16, 50, 35, 0.95);
-      border-color: #34d399;
+      background: rgba(39, 39, 46, 0.96);
+      border-color: #818cf8;
       transform: translateX(-3px);
-      box-shadow: 0 6px 24px rgba(16, 185, 129, 0.25);
+      box-shadow: 0 6px 24px rgba(99, 102, 241, 0.28);
     }
 
     .s2-back-arrow {
@@ -1634,8 +1688,8 @@
       display: flex;
       align-items: center;
       gap: calc(4 * var(--n));
-      background: rgba(7, 18, 13, 0.92);
-      border: 1px solid rgba(52, 211, 153, 0.28);
+      background: rgba(14, 14, 18, 0.92);
+      border: 1px solid rgba(129, 140, 248, 0.3);
       backdrop-filter: blur(24px);
       border-radius: 9999px;
       padding: calc(4 * var(--n));
@@ -1646,14 +1700,14 @@
     .s2-stage-pill {
       display: inline-flex;
       align-items: center;
-      gap: calc(7 * var(--n));
+      gap: calc(6 * var(--n));
       height: calc(32 * var(--n));
-      padding: 0 calc(14 * var(--n));
+      padding: 0 calc(12 * var(--n));
       border-radius: 9999px;
       background: transparent;
       border: 1px solid transparent;
-      color: #94a3b8;
-      font-size: calc(11.5 * var(--n));
+      color: #a1a1aa;
+      font-size: calc(11 * var(--n));
       font-weight: 700;
       cursor: pointer;
       position: relative;
@@ -1664,29 +1718,29 @@
 
     .s2-stage-pill:hover {
       color: #ffffff;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.06);
     }
 
     .s2-stage-pill.active {
       color: #ffffff;
-      background: rgba(16, 185, 129, 0.16);
-      border-color: rgba(52, 211, 153, 0.45);
-      box-shadow: 0 0 calc(16 * var(--n)) rgba(16, 185, 129, 0.15);
+      background: rgba(99, 102, 241, 0.22);
+      border-color: rgba(129, 140, 248, 0.5);
+      box-shadow: 0 0 calc(16 * var(--n)) rgba(99, 102, 241, 0.2);
     }
 
     .s2-stage-num {
       font-family: 'JetBrains Mono', monospace;
-      font-size: calc(9.5 * var(--n));
+      font-size: calc(9 * var(--n));
       font-weight: 800;
       padding: calc(1 * var(--n)) calc(5 * var(--n));
       border-radius: 9999px;
       background: rgba(255, 255, 255, 0.08);
-      color: #94a3b8;
+      color: #a1a1aa;
     }
 
     .s2-stage-pill.active .s2-stage-num {
-      background: #10b981;
-      color: #062416;
+      background: #6366f1;
+      color: #ffffff;
     }
 
     .s2-stage-name {
@@ -1699,7 +1753,7 @@
       left: calc(12 * var(--n));
       right: calc(12 * var(--n));
       height: calc(2.2 * var(--n));
-      background: #34d399;
+      background: linear-gradient(90deg, #818cf8, #10b981);
       border-radius: 2px;
       transform-origin: left;
       transform: scaleX(0);
@@ -1723,8 +1777,8 @@
       height: calc(36 * var(--n));
       padding: 0 calc(14 * var(--n));
       border-radius: 9999px;
-      background: rgba(9, 24, 17, 0.9);
-      border: 1px solid rgba(52, 211, 153, 0.3);
+      background: rgba(17, 17, 21, 0.92);
+      border: 1px solid rgba(129, 140, 248, 0.32);
       backdrop-filter: blur(20px);
       color: #ffffff;
       font-size: calc(11.5 * var(--n));
@@ -1739,8 +1793,8 @@
     }
 
     .s2-action-pill:hover {
-      background: rgba(16, 50, 35, 0.95);
-      border-color: #34d399;
+      background: rgba(39, 39, 46, 0.96);
+      border-color: #818cf8;
     }
 
     .s2-cta-link {
@@ -1750,21 +1804,21 @@
       height: calc(36 * var(--n));
       padding: 0 calc(16 * var(--n));
       border-radius: 9999px;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       color: #ffffff;
       font-size: calc(11.5 * var(--n));
       font-weight: 800;
       text-decoration: none;
       pointer-events: auto;
-      box-shadow: 0 4px 18px rgba(16, 185, 129, 0.4);
+      box-shadow: 0 4px 18px rgba(79, 70, 229, 0.45);
       transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .s2-cta-link:hover {
       transform: translateY(-1px);
-      box-shadow: 0 6px 22px rgba(16, 185, 129, 0.55);
-      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      box-shadow: 0 6px 22px rgba(99, 102, 241, 0.6);
+      background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
     }
 
     /* Bottom-Left Executive Stage Intel Card */
@@ -1774,12 +1828,12 @@
       bottom: calc(20 * var(--n));
       width: calc(380 * var(--n));
       max-width: 440px;
-      background: rgba(8, 22, 16, 0.92);
-      border: 1px solid rgba(52, 211, 153, 0.3);
+      background: rgba(14, 14, 18, 0.92);
+      border: 1px solid rgba(129, 140, 248, 0.32);
       backdrop-filter: blur(24px);
       border-radius: calc(12 * var(--n));
       padding: calc(14 * var(--n)) calc(18 * var(--n));
-      box-shadow: 0 calc(16 * var(--n)) calc(40 * var(--n)) rgba(0, 0, 0, 0.6), 0 0 calc(25 * var(--n)) rgba(16, 185, 129, 0.1);
+      box-shadow: 0 calc(16 * var(--n)) calc(40 * var(--n)) rgba(0, 0, 0, 0.6), 0 0 calc(25 * var(--n)) rgba(99, 102, 241, 0.14);
       display: flex;
       flex-direction: column;
       gap: calc(6 * var(--n));
@@ -1797,7 +1851,7 @@
       font-size: calc(9 * var(--n));
       font-weight: 800;
       font-family: 'JetBrains Mono', monospace;
-      color: #34d399;
+      color: #a5b4fc;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
@@ -1812,8 +1866,17 @@
     }
 
     @keyframes pulseLive {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.4;
+        transform: scale(0.85);
+      }
     }
 
     .s2-intel-title {
@@ -1917,14 +1980,36 @@
       transform: none;
     }
 
-    .js .pre { opacity: 0 !important; }
-    .m-only { display: none; }
+    .js .pre {
+      opacity: 0 !important;
+    }
+
+    .m-only {
+      display: none;
+    }
 
     /* ── Mobile Responsive Rules (<= 820px) ── */
     @media (max-width: 820px) {
-      .frame .wm, .frame .script, .frame .badge, .sound-tag { display: none !important; }
-      .m-only { display: block; position: absolute; inset: 0; pointer-events: none; z-index: 5; }
-      .stage { background: #0b3b2a; }
+
+      .frame .wm,
+      .frame .script,
+      .frame .badge,
+      .sound-tag {
+        display: none !important;
+      }
+
+      .m-only {
+        display: block;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      .stage {
+        background: #0b3b2a;
+      }
+
       .stage::before {
         content: '';
         position: absolute;
@@ -1934,13 +2019,43 @@
         transition: opacity 1.6s ease;
         pointer-events: none;
       }
-      .stage.m-case::before { opacity: 1; }
-      .tag { font-size: 13px; height: 30px; padding: 0 12px; }
-      .t1 { left: 12px; top: 12px; }
-      .t2 { right: 12px; top: 12px; left: auto; }
-      .t3 { left: 12px; top: calc(12px + 44 * var(--n)); right: auto; }
-      .t4 { right: 12px; top: calc(12px + 44 * var(--n)); }
-      body.is-case .t3, body.is-case .t4 { visibility: hidden; }
+
+      .stage.m-case::before {
+        opacity: 1;
+      }
+
+      .tag {
+        font-size: 13px;
+        height: 30px;
+        padding: 0 12px;
+      }
+
+      .t1 {
+        left: 12px;
+        top: 12px;
+      }
+
+      .t2 {
+        right: 12px;
+        top: 12px;
+        left: auto;
+      }
+
+      .t3 {
+        left: 12px;
+        top: calc(12px + 44 * var(--n));
+        right: auto;
+      }
+
+      .t4 {
+        right: 12px;
+        top: calc(12px + 44 * var(--n));
+      }
+
+      body.is-case .t3,
+      body.is-case .t4 {
+        visibility: hidden;
+      }
 
       svg.m-wm {
         position: absolute;
@@ -1989,7 +2104,10 @@
         transform: scale(var(--mbs)) translate(calc(-288px + 13.5vw), 0);
       }
 
-      .hint { bottom: 18px; font-size: 11px; }
+      .hint {
+        bottom: 18px;
+        font-size: 11px;
+      }
 
       /* Mobile Scene 2 Overrides */
       .s2-header {
@@ -1998,31 +2116,38 @@
         right: 10px !important;
         gap: 6px !important;
       }
+
       .s2-back-btn {
         height: 32px !important;
         padding: 0 10px !important;
         font-size: 11px !important;
       }
+
       .s2-hud-stages {
         padding: 2px !important;
         gap: 2px !important;
       }
+
       .s2-stage-pill {
         height: 28px !important;
         padding: 0 8px !important;
         font-size: 10px !important;
       }
+
       .s2-stage-pill:not(.active) .s2-stage-name {
         display: none !important;
       }
+
       .s2-cta-link {
         display: none !important;
       }
+
       .s2-action-pill {
         height: 32px !important;
         padding: 0 8px !important;
         font-size: 10px !important;
       }
+
       .s2-intel-card {
         left: 10px !important;
         right: 10px !important;
@@ -2031,16 +2156,22 @@
         max-width: none !important;
         padding: 10px 14px !important;
       }
-      .s2-intel-desc, .s2-intel-tags {
+
+      .s2-intel-desc,
+      .s2-intel-tags {
         display: none !important;
       }
+
       .s2-intel-title {
         font-size: 13px !important;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+
+      *,
+      *::before,
+      *::after {
         animation: none !important;
         transition: none !important;
       }
@@ -2048,6 +2179,7 @@
   </style>
   <script>document.documentElement.classList.add('js');</script>
 </head>
+
 <body>
   <!-- ── Stage Container ── -->
   <div class="stage" id="stage">
@@ -2059,12 +2191,13 @@
       <svg class="wm pre" id="wm" viewBox="0 0 1440 380" preserveAspectRatio="none">
         <defs>
           <linearGradient id="wm-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
-            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9"/>
-            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.28"/>
+            <stop offset="0" stop-color="#ffffff" stop-opacity="1" />
+            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9" />
+            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.28" />
           </linearGradient>
         </defs>
-        <text x="14" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400" letter-spacing="-6px" fill="url(#wm-grad)">FAMS</text>
+        <text x="14" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400"
+          letter-spacing="-6px" fill="url(#wm-grad)">FAMS</text>
       </svg>
 
       <!-- 3. Man Cutout -->
@@ -2095,9 +2228,9 @@
       <!-- 7. Caseplate Photo -->
       <img class="caseplate" id="caseplate" alt="" crossorigin="anonymous">
 
-            <!-- 8. Laptop Display with Live Autonomous Internship OS -->
+      <!-- 8. Laptop Display with 3D Auto-Motion Multi-Role InternTrack OS -->
       <div class="screen" id="screen">
-        <div class="os-shell" id="os-shell">
+        <div class="os-shell light-theme" id="os-shell">
           <!-- OS Top App Bar -->
           <div class="os-topbar">
             <div class="os-topbar-left">
@@ -2107,365 +2240,571 @@
                 <span class="os-dot g"></span>
               </div>
               <div class="os-branding">
-                <span>🛡️ FAMS WORKSTATION</span>
-                <span class="os-version">v4.2</span>
+                <span>InternTrack OS</span>
+                <span class="os-version">v2.0</span>
               </div>
-              <!-- Module Switcher Tabs inside Laptop -->
+              <!-- 4-Role Switcher Tabs inside Laptop -->
               <div class="os-tabs">
-                <button class="os-tab active" id="tab0" data-idx="0">
-                  <span>🎓 Student Intern</span>
-                  <span class="os-tab-badge">TIER 1</span>
+                <button class="os-tab active" id="tab0" data-idx="0" type="button">
+                  <span>Student</span>
+                  <span class="os-tab-badge">T1</span>
                 </button>
-                <button class="os-tab" id="tab1" data-idx="1">
-                  <span>🏢 Host Mentor</span>
-                  <span class="os-tab-badge">TIER 2</span>
+                <button class="os-tab" id="tab1" data-idx="1" type="button">
+                  <span>Field Sup</span>
+                  <span class="os-tab-badge">T2</span>
                 </button>
-                <button class="os-tab" id="tab2" data-idx="2">
-                  <span>⚖️ Faculty Dean</span>
-                  <span class="os-tab-badge">TIER 4</span>
+                <button class="os-tab" id="tab2" data-idx="2" type="button">
+                  <span>Uni Sup</span>
+                  <span class="os-tab-badge">T3</span>
+                </button>
+                <button class="os-tab" id="tab3" data-idx="3" type="button">
+                  <span>Uni Admin</span>
+                  <span class="os-tab-badge">T4</span>
                 </button>
               </div>
             </div>
             <div class="os-topbar-right">
+              <button class="it-3d-cam-pill" id="os-theme-toggle" type="button" title="Toggle Dashboard Light/Dark Theme">
+                <span id="os-theme-icon">☀️</span>
+                <span id="os-theme-label">Light</span>
+              </button>
+              <button class="it-3d-cam-pill" id="btn-explode-3d" type="button" title="Explode 3D Z-Layers">
+                <span>🧊 3D Layers</span>
+              </button>
               <div class="os-telemetry-pill">
                 <span class="os-live-dot"></span>
                 <span id="os-clock">11:48:00 EAT</span>
-                <span>•</span>
-                <span style="color:#10b981;">1.2ms SYNC</span>
-              </div>
-              <div class="os-user-pill" id="os-user-pill">
-                <span>👤</span>
-                <span id="os-user-name">Alice Nakato (BIS III)</span>
               </div>
             </div>
           </div>
 
-          <!-- OS System Breadcrumb & Subbar -->
+          <!-- OS System Breadcrumb & RBAC Status Bar -->
           <div class="os-subbar">
             <div class="os-subbar-left" id="os-breadcrumb">
-              INSTITUTION: <b>MAKERERE UNIVERSITY (COCIS)</b> &bull; TERM: <b>RECESS 2026</b> &bull; HOST: <b>NILE ANALYTICS</b>
+              INSTITUTION: <b>UNIVERSITY OF NAIROBI</b> &bull; PLACEMENT: <b>TECHCORP KENYA LTD</b>
             </div>
             <div id="os-security-status">
-              SECURITY: <b style="color:#10b981;">CRYPTOGRAPHIC GEOFENCE ACTIVE</b>
+              RBAC PERMS: <b>logs:create &bull; attendance:record &bull; milestones:track</b>
             </div>
           </div>
 
-          <!-- Native InternTrack App Shell (Real Dashboard UI) -->
-          <div class="dashboard-app-shell">
-            <!-- Forest Green Sidebar -->
-            <aside class="dashboard-sidebar">
-              <!-- Brand Header -->
-              <div class="sb-brand">
-                <div class="sb-brand-logo">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-                  </svg>
-                </div>
-                <div>
-                  <div class="sb-brand-title">InternTrack</div>
-                  <div class="sb-tier-badge" id="sb-tier-badge">Tier 1 • Student</div>
-                </div>
-              </div>
+          <!-- 3D Auto-Motion Perspective Stage inside Laptop -->
+          <div class="it-3d-stage" id="it-3d-stage">
+            <canvas id="screen-3d-canvas"></canvas>
 
-              <!-- Navigation Menu -->
-              <nav class="sb-nav">
-                <div class="sb-cat-header">Overview</div>
-                <div class="sb-link" id="sb-link-dashboard">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
-                  <span>Dashboard</span>
-                </div>
-
-                <div class="sb-cat-header">Tracking & Logbook</div>
-                <div class="sb-link active" id="sb-link-logbook">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
-                  <span>Digital Logbook</span>
-                </div>
-                <div class="sb-link" id="sb-link-attendance">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="m9 16 2 2 4-4"/></svg>
-                  <span>Attendance & Clock</span>
-                </div>
-                <div class="sb-link" id="sb-link-milestones">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h13l4-3.5L18 6Z"/><path d="M12 13v8"/></svg>
-                  <span>Milestones</span>
-                </div>
-
-                <div class="sb-cat-header">Supervisory Controls</div>
-                <div class="sb-link" id="sb-link-review">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
-                  <span>Review Queue</span>
-                </div>
-                <div class="sb-link" id="sb-link-evaluations">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
-                  <span>Evaluations & Rubric</span>
-                </div>
-
-                <div class="sb-cat-header">Governance & Records</div>
-                <div class="sb-link" id="sb-link-reports">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M10 12h4M10 16h4"/></svg>
-                  <span>Reports & Dossier</span>
-                </div>
-              </nav>
-
-              <!-- Sidebar User Card -->
-              <div class="sb-user-card">
-                <div class="sb-user-avatar" id="sb-user-avatar">AN</div>
-                <div style="min-width:0; flex:1;">
-                  <div style="font-size:9px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="sb-user-name">Alice Nakato</div>
-                  <div style="font-size:7.5px; color:#94a3b8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="sb-user-role">BIS III Student</div>
-                </div>
-              </div>
-            </aside>
-
-            <!-- Main Viewport Canvas -->
-            <main class="dashboard-viewport">
-              <!-- Top Profile Strip -->
-              <div class="dash-profile-strip">
-                <div class="dash-profile-left">
-                  <div class="dash-avatar-lg" id="dash-avatar-main">AN</div>
-                  <div class="dash-profile-info">
-                    <h4 id="dash-profile-title">Alice Nakato <span style="font-size:8.5px; color:#38bdf8; font-weight:600;">23/U/0482/EVE</span></h4>
-                    <p id="dash-profile-sub">Host: Nile Analytics Institute &bull; Supervisor: Dr. K. Sempala</p>
+            <div class="dashboard-app-shell" id="dashboard-app-shell">
+              <!-- Linear-Style Monochromatic Zinc Sidebar -->
+              <aside class="dashboard-sidebar">
+                <!-- Brand Header -->
+                <div class="sb-brand">
+                  <div class="sb-brand-logo">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                      <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                    </svg>
+                  </div>
+                  <div style="min-width:0;">
+                    <div class="sb-brand-title">InternTrack</div>
+                    <div class="sb-tier-badge" id="sb-tier-badge">Tier 1 &bull; Student</div>
                   </div>
                 </div>
-                <div class="dash-profile-stats">
-                  <div class="os-user-pill" id="dash-badge-status" style="font-size:9px; padding:2.5px 8px;">
-                    <span class="os-live-dot" style="width:5px; height:5px;"></span>
-                    <span>GPS Geofence: Active (50m)</span>
+
+                <!-- Dynamic Navigation Menu (Updates Active & Locked Routes Per Role) -->
+                <nav class="sb-nav">
+                  <div class="sb-cat-header">Overview</div>
+                  <div class="sb-link" id="sb-link-dashboard">
+                    <span class="sb-link-left"><span class="sb-link-dot"></span><span>Dashboard</span></span>
+                  </div>
+
+                  <div class="sb-cat-header">Logbook &amp; Tracking</div>
+                  <div class="sb-link active" id="sb-link-logbook">
+                    <span class="sb-link-left"><span class="sb-link-dot"></span><span>Digital Logbook</span></span>
+                    <span class="sb-lock-tag" id="lock-logbook"></span>
+                  </div>
+                  <div class="sb-link" id="sb-link-attendance">
+                    <span class="sb-link-left"><span class="sb-link-dot"></span><span>Attendance</span></span>
+                    <span class="sb-lock-tag" id="lock-attendance"></span>
+                  </div>
+                  <div class="sb-link" id="sb-link-milestones">
+                    <span class="sb-link-left"><span class="sb-link-dot"></span><span>Milestones</span></span>
+                  </div>
+
+                  <div class="sb-cat-header">Supervisory Controls</div>
+                  <div class="sb-link" id="sb-link-review">
+                    <span class="sb-link-left"><span class="sb-link-dot"></span><span>Review Queue</span></span>
+                    <span class="sb-lock-tag" id="lock-review">T2+</span>
+                  </div>
+                  <div class="sb-link" id="sb-link-evaluations">
+                    <span class="sb-link-left"><span class="sb-link-dot"></span><span>Evaluations</span></span>
+                    <span class="sb-lock-tag" id="lock-evaluations">T3+</span>
+                  </div>
+
+                  <div class="sb-cat-header">Institutional &amp; RBAC</div>
+                  <div class="sb-link" id="sb-link-assignments">
+                    <span class="sb-link-left"><span class="sb-link-dot"></span><span>Supervisor Pairing</span></span>
+                    <span class="sb-lock-tag" id="lock-assignments">T4</span>
+                  </div>
+                  <div class="sb-link" id="sb-link-rbac">
+                    <span class="sb-link-left"><span class="sb-link-dot"></span><span>RBAC Matrix</span></span>
+                    <span class="sb-lock-tag" id="lock-rbac">T4</span>
+                  </div>
+                </nav>
+
+                <!-- Sidebar User Card -->
+                <div class="sb-user-card">
+                  <div class="sb-user-avatar" id="sb-user-avatar">AW</div>
+                  <div style="min-width:0; flex:1;">
+                    <div style="font-size:8.5px; font-weight:700; color:var(--it-ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
+                      id="sb-user-name">Alice Wanjiku</div>
+                    <div style="font-size:7px; color:var(--it-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
+                      id="sb-user-role">Student Intern</div>
                   </div>
                 </div>
-              </div>
+              </aside>
 
-              <!-- Content Views Container -->
-              <div style="position:relative; flex:1; min-height:0;">
-                <!-- ── VIEW 0: STUDENT INTERN WORKSPACE ── -->
-                <div class="wf-view active" id="wf0">
-                  <div class="wf-kpis">
-                    <div class="wf-kpi">
-                      <span class="wf-kpi-lbl">Current Shift Duration</span>
-                      <div class="wf-kpi-val" style="color:#10b981; font-family:'JetBrains Mono', monospace;">08:34:12</div>
-                      <span class="wf-kpi-sub">● Biometric Geofence Active</span>
-                    </div>
-                    <div class="wf-kpi">
-                      <span class="wf-kpi-lbl">Curriculum Contact Hours</span>
-                      <div class="wf-kpi-val">328 / 400 <span class="up">82.0%</span></div>
-                      <span class="wf-kpi-sub">Week 8 of 10 Required Weeks</span>
-                    </div>
-                    <div class="wf-kpi">
-                      <span class="wf-kpi-lbl">Weekly Supervisor Sign-Offs</span>
-                      <div class="wf-kpi-val" style="color:#38bdf8;">08 / 08 <span class="chip" style="background:rgba(56,189,248,0.2); color:#38bdf8;">SIGNED</span></div>
-                      <span class="wf-kpi-sub">Zero Unsigned Timecards</span>
+              <!-- Main Viewport Canvas -->
+              <main class="dashboard-viewport">
+                <!-- Linear-Style Breadcrumb & Persona Strip -->
+                <div class="dash-profile-strip">
+                  <div class="dash-profile-left">
+                    <span class="dash-crumb-cat" id="dash-crumb-cat">Logbook &amp; Tracking</span>
+                    <span style="color:var(--it-muted); font-size:9px;">/</span>
+                    <div class="dash-profile-info">
+                      <h4 id="dash-profile-title">Alice Wanjiku <span
+                          style="font-size:7.5px; color:var(--it-primary); font-family:'JetBrains Mono',monospace;">CS/2021/0042</span></h4>
+                      <p id="dash-profile-sub">TechCorp Kenya Ltd &bull; Field: James Otieno &bull; Faculty: Dr. Joyce Chelangat</p>
                     </div>
                   </div>
-
-                  <div class="wf-split">
-                    <!-- Left: Digital Daily Technical Logbook -->
-                    <div class="wf-card" style="flex: 1.35;">
-                      <div class="wf-card-head">
-                        <span>📝 STUDENT DAILY TECHNICAL LOGBOOK (DAY 38)</span>
-                        <span class="sub-badge draft" id="log-status-badge">DRAFT // PENDING REVIEW</span>
-                      </div>
-                      <div class="log-editor">
-                        <div class="log-input-row">
-                          <input class="log-input" style="flex:1;" value="Category: Distributed Systems & DB Optimization" readonly>
-                          <input class="log-input" style="width:75px; text-align:center;" value="8.0 Hrs" readonly>
-                        </div>
-                        <div style="font-size:8px; color:#94a3b8; font-weight:700;">DAILY ACTIVITY & ARCHITECTURAL IMPLEMENTATION:</div>
-                        <textarea class="log-textarea" id="log-text-entry" style="height:55px; min-height:55px;" placeholder="Simulating student work log entry..."></textarea>
-                        <div style="font-size:8px; color:#94a3b8; font-weight:700; margin-top:2px;">COMPETENCIES & CORE SKILLS:</div>
-                        <div class="skill-pills" id="student-skill-pills"></div>
-                        <button class="log-submit-btn" id="btn-submit-log" style="width:100%; margin-top:auto; padding:7px 10px; font-size:10px;">Submit Day 38 Log for Mentor Review</button>
-                      </div>
+                  <div class="dash-profile-stats">
+                    <div class="os-user-pill" id="dash-badge-status">
+                      <span class="os-live-dot"></span>
+                      <span id="os-user-name">Alice Wanjiku (Tier 1)</span>
                     </div>
+                  </div>
+                </div>
 
-                    <!-- Right: GPS Geofence Radar & Attendance -->
-                    <div class="wf-card" style="flex: 1;">
-                      <div class="wf-card-head">
-                        <span>📍 BIOMETRIC GEOFENCE & ATTENDANCE</span>
-                        <span style="font-size:8.5px; color:#10b981; font-weight:700;">RADIUS 150M</span>
+                <!-- Content Views Container -->
+                <div style="position:relative; flex:1; min-height:0; transform-style:preserve-3d;">
+
+                  <!-- ══ VIEW 0: STUDENT INTERN WORKSPACE (Alice Wanjiku — Tier 1) ══ -->
+                  <div class="wf-view active" id="wf0">
+                    <div class="it-hero-banner" id="stu-hero-banner">
+                      <div class="it-hero-left">
+                        <div class="it-hero-badges">
+                          <span class="it-pill-indigo">Active Placement &bull; Week 9 of 12</span>
+                          <span class="it-pill-glass">UoN BSc Computer Science</span>
+                        </div>
+                        <div class="it-hero-title">Good morning, Alice!</div>
+                        <div class="it-hero-sub">Software Engineering Intern &bull; TechCorp Kenya Ltd &bull; Dual-Supervised</div>
                       </div>
-                      <div class="radar-box" style="padding:4px 0;">
-                        <div class="radar-circle" style="width:105px; height:105px;">
-                          <div class="radar-ring r1" style="width:35px; height:35px;"></div>
-                          <div class="radar-ring r2" style="width:70px; height:70px;"></div>
-                          <div class="radar-sweep"></div>
-                          <div class="radar-blip" style="top:44%; left:52%;"></div>
-                        </div>
-                        <div style="font-family:'JetBrains Mono', monospace; font-size:8px; color:#cbd5e1; text-align:center; line-height:1.4;">
-                          Nile Analytics HQ &bull; Plot 14 Lumumba Ave<br>
-                          Lat: 0.3476° N &bull; Lon: 32.5825° E<br>
-                          <span id="geofence-status-text" style="color:#10b981; font-weight:700;">● Verified on Campus Perimeter (±1.8m)</span>
-                        </div>
-                        <button class="radar-btn" id="btn-verify-gps" style="width:100%; justify-content:center; padding:7px 10px; font-size:10px; margin-top:auto;">
-                          <span>📡 Verify Geofence Clock-In</span>
+                      <div style="display:flex; gap:6px; shrink:0;">
+                        <button class="it-btn-outline" id="stu-btn-clock" type="button"
+                          style="background:rgba(255,255,255,0.14); color:#fff; border-color:rgba(255,255,255,0.28);">
+                          <span id="stu-clock-label">Clock In (08:30 AM)</span>
                         </button>
                       </div>
                     </div>
-                  </div>
-                </div>
 
-                <!-- ── VIEW 1: WORKPLACE MENTOR VERIFICATION CONSOLE ── -->
-                <div class="wf-view" id="wf1">
-                  <div class="wf-kpis">
-                    <div class="wf-kpi">
-                      <span class="wf-kpi-lbl">Workplace Mentor</span>
-                      <div class="wf-kpi-val" style="font-size:14.5px; color:#f1f5f9;">Dr. K. Sempala</div>
-                      <span class="wf-kpi-sub">Lead Mentor &bull; Nile Analytics</span>
-                    </div>
-                    <div class="wf-kpi">
-                      <span class="wf-kpi-lbl">Pending Review Item</span>
-                      <div class="wf-kpi-val" style="color:#fbbf24;">1 Pending <span class="chip" style="background:rgba(245,158,11,0.2); color:#fbbf24;">AWAITING</span></div>
-                      <span class="wf-kpi-sub">Day 38 Attachment Evidence</span>
-                    </div>
-                    <div class="wf-kpi">
-                      <span class="wf-kpi-lbl">Cryptographic Security</span>
-                      <div class="wf-kpi-val" style="color:#10b981;">ECDSA <span class="chip" style="background:rgba(16,185,129,0.2); color:#10b981;">SECP256K1</span></div>
-                      <span class="wf-kpi-sub">Tamper-Proof Audit Chain</span>
-                    </div>
-                  </div>
-
-                  <div class="wf-split">
-                    <!-- Left: Supervisor Review Queue -->
-                    <div class="wf-card" style="flex: 1.35;">
-                      <div class="wf-card-head">
-                        <span>📑 SUPERVISOR REVIEW DASHBOARD</span>
-                        <span class="sub-badge" id="mentor-status-badge">AWAITING 1-TAP APPROVAL</span>
+                    <div class="wf-kpis">
+                      <div class="wf-kpi" id="stu-kpi-days">
+                        <span class="wf-kpi-lbl">Days Completed</span>
+                        <div class="wf-kpi-val"><span id="stu-days-val">42</span><span style="font-size:9px; color:var(--it-muted);">/ 60d</span></div>
+                        <span class="wf-kpi-sub" style="color:var(--it-success);" id="stu-days-sub">● 70% placement progress</span>
                       </div>
-                      <div class="mentor-submission-card" id="mentor-submission-card" style="padding:8px; gap:6px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                          <div>
-                            <div style="font-weight:700; color:#fff; font-size:11px;">Alice Nakato &bull; BIS Year 3</div>
-                            <div style="font-size:8px; color:#94a3b8;">Task: PostgreSQL Indexing & Redis Cluster (8.0 Hours)</div>
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Total Hours</span>
+                        <div class="wf-kpi-val" id="stu-hours-val">336.0</div>
+                        <span class="wf-kpi-sub">8.0 hrs/day verified</span>
+                      </div>
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Log Entries</span>
+                        <div class="wf-kpi-val"><span id="stu-logs-count">4</span> <span class="sub-badge queued" id="stu-queue-pill">1 Draft</span></div>
+                        <span class="wf-kpi-sub">Submitted logs locked until reviewed</span>
+                      </div>
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">RBAC Boundary</span>
+                        <div class="wf-kpi-val" style="font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--it-primary);">TIER 1</div>
+                        <span class="wf-kpi-sub">✓ create &bull; 🔒 cannot self-approve</span>
+                      </div>
+                    </div>
+
+                    <div class="wf-split">
+                      <!-- Left: Digital Logbook + AI Polish -->
+                      <div class="wf-card" id="stu-card-logbook" style="flex:1.35;">
+                        <div class="wf-card-head">
+                          <span>Digital Logbook &mdash; Today's Activity Entry</span>
+                          <div style="display:flex; align-items:center; gap:5px;">
+                            <button class="it-btn-outline" id="stu-btn-ai" type="button">✨ <span id="stu-ai-label">Polish with AI</span></button>
+                            <span class="sub-badge draft" id="log-status-badge">Draft</span>
                           </div>
-                          <span style="font-family:'JetBrains Mono',monospace; font-size:8px; color:#38bdf8; background:rgba(56,189,248,0.12); padding:1.5px 5px; border-radius:3px;">git #9a4f21d</span>
                         </div>
-                        <div style="font-family:'JetBrains Mono',monospace; font-size:8.5px; color:#a7f3d0; background:rgba(6,10,16,0.8); border:1px solid rgba(255,255,255,0.06); padding:6px 8px; border-radius:4px; line-height:1.4;">
-                          "Implemented PostgreSQL partition pruning, optimized index scans on 4.2M records, and integrated Redis cache cluster. Query p99 latency decreased from 140ms to 4.2ms."
+                        <div class="it-surface-box" style="font-size:8px; font-weight:700; display:flex; justify-content:space-between;">
+                          <span>Onboarding Flow UI &amp; REST API Schema Validation</span>
+                          <span style="color:var(--it-muted); font-family:'JetBrains Mono',monospace;">8.0 hrs</span>
                         </div>
-                        <div style="font-size:8px; color:#94a3b8; font-weight:700; margin-top:2px;">SUPERVISOR ENDORSEMENT & ASSESSMENT:</div>
-                        <textarea class="log-textarea" id="mentor-feedback-text" style="height:48px; min-height:48px; font-size:9.5px; color:#f8fafc;" placeholder="Simulating supervisor feedback..."></textarea>
+                        <textarea class="it-textarea" id="log-text-entry" style="flex:1; min-height:54px;" readonly
+                          placeholder="Drafting daily engineering log..."></textarea>
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                          <div class="skill-pills" id="student-skill-pills"></div>
+                          <button class="it-btn-primary" id="btn-submit-log" type="button" style="shrink:0;">
+                            Submit to Field Supervisor
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    <!-- Right: 1-Tap Cryptographic Verification Station -->
-                    <div class="wf-card" style="flex: 1;">
-                      <div class="wf-card-head">
-                        <span>✍️ 1-TAP VERIFICATION STATION</span>
-                        <span class="os-live-dot"></span>
-                      </div>
-                      <div class="mentor-sign-station" style="padding:4px 0;">
-                        <div style="font-size:8.5px; color:#94a3b8; text-align:center; line-height:1.3; padding:0 6px;">
-                          Workplace mentor ratifies verified hours with an immutable ECDSA cryptographic signature.
+                      <!-- Right: Shift & Phase 2 Milestone Checklist -->
+                      <div class="wf-card" id="stu-card-milestone" style="flex:1;">
+                        <div class="wf-card-head">
+                          <span>Shift &amp; Phase 2 Milestones</span>
+                          <span class="sub-badge queued" id="stu-ms-pct">2 / 3 (67%)</span>
                         </div>
-                        <button class="mentor-sign-btn" id="btn-mentor-sign" style="width:100%; justify-content:center; padding:8px 12px; font-size:10px;">
-                          <span>✍️ 1-Tap Cryptographic Sign-Off</span>
-                        </button>
-                        <div class="crypto-seal" id="crypto-seal" style="width:115px; height:115px; margin-top:auto;">
-                          <span class="crypto-seal-star">🛡️</span>
-                          <span class="crypto-seal-title">OFFICIALLY RATIFIED</span>
-                          <span class="crypto-seal-mentor" style="font-size:8.5px;">DR. K. SEMPALA</span>
-                          <span class="crypto-seal-nonce" style="font-size:7px;">NONCE: 0x9f4a...e12b</span>
-                          <span style="font-size:6.5px; color:#a7f3d0;">2026-11-12 &bull; MAK COCIS</span>
+                        <div class="it-surface-box" style="font-size:7.8px; display:flex; justify-content:space-between;">
+                          <span style="color:var(--it-muted);">Site Location:</span>
+                          <strong id="stu-shift-site">TechCorp Westlands HQ</strong>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:4px; font-size:7.8px; flex:1; justify-content:center;">
+                          <div class="it-surface-box" style="display:flex; align-items:center; gap:5px; opacity:0.75;">
+                            <span style="color:var(--it-success); font-weight:800;">✓</span>
+                            <span style="text-decoration:line-through; color:var(--it-muted);">Implement Radix dialog &amp; review queue tabs</span>
+                          </div>
+                          <div class="it-surface-box" style="display:flex; align-items:center; gap:5px; opacity:0.75;">
+                            <span style="color:var(--it-success); font-weight:800;">✓</span>
+                            <span style="text-decoration:line-through; color:var(--it-muted);">Build stats dashboard with Recharts</span>
+                          </div>
+                          <div class="it-surface-box" id="stu-ms-task3" style="display:flex; align-items:center; gap:5px; transition:all 0.3s ease;">
+                            <span id="stu-ms-check3" style="font-weight:800; color:var(--it-primary);">○</span>
+                            <span id="stu-ms-text3" style="font-weight:700;">Complete accessibility &amp; WCAG audit</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <!-- ── VIEW 2: FACULTY DEAN & SENATE EVALUATION ── -->
-                <div class="wf-view" id="wf2">
-                  <div class="wf-kpis">
-                    <div class="wf-kpi">
-                      <span class="wf-kpi-lbl">Workplace Mentor Assessment (40%)</span>
-                      <div class="wf-kpi-val" style="color:#34d399;" id="score-mentor">39.5 / 40.0</div>
-                      <span class="wf-kpi-sub">Workplace Discipline & Output</span>
+                  <!-- ══ VIEW 1: FIELD SUPERVISOR CONSOLE (James Otieno — Tier 2 Host Org) ══ -->
+                  <div class="wf-view" id="wf1">
+                    <div class="it-hero-banner" style="padding:6px 11px;">
+                      <div class="it-hero-left">
+                        <div class="it-hero-badges">
+                          <span class="it-pill-indigo">TechCorp Kenya Ltd &bull; Field Supervisor</span>
+                          <span class="it-pill-glass">Received University Login</span>
+                        </div>
+                        <div class="it-hero-title">Host Organization Review Queue</div>
+                        <div class="it-hero-sub">Strictly scoped to your assigned mentees: Alice Wanjiku &amp; Kevin Kiprono</div>
+                      </div>
+                      <span class="it-pill-glass" style="font-family:'JetBrains Mono',monospace;">logs:approve &bull; attendance:audit</span>
                     </div>
-                    <div class="wf-kpi">
-                      <span class="wf-kpi-lbl">University Academic Assessor (60%)</span>
-                      <div class="wf-kpi-val" style="color:#60a5fa;" id="score-uni">57.0 / 60.0</div>
-                      <span class="wf-kpi-sub">Field Visit, Defense & Logbook</span>
+
+                    <div class="wf-kpis">
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Pending Queue</span>
+                        <div class="wf-kpi-val" id="sup-pending-val" style="color:var(--it-primary);">2</div>
+                        <span class="wf-kpi-sub">Awaiting field mentor sign-off</span>
+                      </div>
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Approved Logs</span>
+                        <div class="wf-kpi-val" id="sup-approved-val" style="color:var(--it-success);">3</div>
+                        <span class="wf-kpi-sub">Verified for academic grading</span>
+                      </div>
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Revisions Sent</span>
+                        <div class="wf-kpi-val">1</div>
+                        <span class="wf-kpi-sub">Inline mentor feedback loop</span>
+                      </div>
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Assigned Mentees</span>
+                        <div class="wf-kpi-val">2</div>
+                        <span class="wf-kpi-sub">Student-bound host login</span>
+                      </div>
                     </div>
-                    <div class="wf-kpi" style="border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.06);">
-                      <span class="wf-kpi-lbl">Composite Institutional Grade</span>
-                      <div class="wf-kpi-val" style="color:#10b981;" id="score-total">96.5% <span class="chip" style="background:#10b981; color:#062b1b;">GRADE A</span></div>
-                      <span class="wf-kpi-sub">First Class Honours Distinction</span>
+
+                    <div class="wf-split">
+                      <!-- Left: Active Review Card -->
+                      <div class="wf-card" id="sup-card-review" style="flex:1.45;">
+                        <div class="wf-card-head">
+                          <span>Pending Mentee Log &mdash; Kevin Kiprono &amp; Alice Wanjiku</span>
+                          <span class="sub-badge" id="mentor-status-badge">Submitted</span>
+                        </div>
+                        <div class="it-surface-box" style="font-size:8px; line-height:1.4;">
+                          <div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:2px;">
+                            <span>Vulnerability assessment on customer portal API</span>
+                            <span style="color:var(--it-muted); font-family:'JetBrains Mono',monospace;">8.0 hrs</span>
+                          </div>
+                          <span style="color:var(--it-muted);">Conducted OWASP ZAP &amp; Postman API security audit. Identified 2 CORS misconfigurations &amp; drafted SQL index fixes.</span>
+                        </div>
+                        <div style="font-size:7.5px; font-weight:700; color:var(--it-muted);">MENTOR ENGINEERING GUIDANCE / SIGN-OFF NOTE:</div>
+                        <textarea class="it-textarea" id="mentor-feedback-text" style="flex:1; min-height:42px;" readonly
+                          placeholder="Typing host mentor review note..."></textarea>
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                          <div style="display:flex; gap:5px;">
+                            <button class="it-btn-success" id="btn-mentor-sign" type="button">✓ Sign Off &amp; Approve</button>
+                            <button class="it-btn-outline" type="button">↺ Request Revision</button>
+                          </div>
+                          <span style="font-size:7.5px; color:var(--it-muted); font-family:'JetBrains Mono',monospace;">James Otieno</span>
+                        </div>
+                      </div>
+
+                      <!-- Right: Scoped Mentees & RBAC Boundaries -->
+                      <div class="wf-card" id="sup-card-scope" style="flex:0.95;">
+                        <div class="wf-card-head">
+                          <span>Mentee Scope &amp; RBAC Lock</span>
+                          <span class="skill-pill">Tier 2</span>
+                        </div>
+                        <div class="it-surface-box" style="font-size:7.8px; display:flex; justify-content:space-between; align-items:center;">
+                          <div>
+                            <div style="font-weight:700;">Alice Wanjiku</div>
+                            <div style="font-size:7px; color:var(--it-muted);">CS/2021/0042 &bull; Software Eng.</div>
+                          </div>
+                          <span class="sub-badge verified">43 / 60d</span>
+                        </div>
+                        <div class="it-surface-box" style="font-size:7.8px; display:flex; justify-content:space-between; align-items:center;">
+                          <div>
+                            <div style="font-weight:700;">Kevin Kiprono</div>
+                            <div style="font-size:7px; color:var(--it-muted);">CS/2021/0104 &bull; Cybersecurity</div>
+                          </div>
+                          <span class="sub-badge">1 Pending</span>
+                        </div>
+                        <div class="it-surface-box" style="margin-top:auto; font-size:7.2px; font-family:'JetBrains Mono',monospace; line-height:1.5;">
+                          <div style="color:var(--it-success); font-weight:700;">✓ logs:approve (Assigned only)</div>
+                          <div style="color:var(--it-success); font-weight:700;">✓ attendance:audit (Host Org)</div>
+                          <div style="color:var(--it-muted);">🔒 assessments:grade (Uni Sup)</div>
+                          <div style="color:var(--it-muted);">🔒 rbac:manage (Uni Admin)</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div class="wf-split">
-                    <!-- Left: Institutional Scoring Rubric -->
-                    <div class="wf-card" style="flex: 1.35;">
-                      <div class="wf-card-head">
-                        <span>⚖️ DUAL-SUPERVISION SCORING RUBRIC</span>
-                        <span class="chip" style="background:rgba(56,189,248,0.18); color:#38bdf8; font-size:8px;">COCIS RATIFIED</span>
+                  <!-- ══ VIEW 2: UNIVERSITY ACADEMIC SUPERVISOR (Dr. Joyce Chelangat — Tier 3) ══ -->
+                  <div class="wf-view" id="wf2">
+                    <div class="it-hero-banner" style="padding:6px 11px;">
+                      <div class="it-hero-left">
+                        <div class="it-hero-badges">
+                          <span class="it-pill-indigo">University of Nairobi &bull; Faculty Assessor</span>
+                          <span class="it-pill-glass">Standardized 5-Point CUE Rubric</span>
+                        </div>
+                        <div class="it-hero-title">Performance Evaluations &amp; Grading</div>
+                        <div class="it-hero-sub">Dr. Joyce Chelangat &bull; Academic Rubric Assessment &amp; Milestone Certification</div>
                       </div>
-                      <div class="rubric-sliders" style="padding:4px 0; gap:7px;">
-                        <div class="rubric-row">
-                          <div class="rubric-row-head"><span>Workplace Professionalism & Discipline</span> <b id="rubric-val-1">10.0 / 10.0</b></div>
-                          <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-1" style="width:100%;"></div></div>
-                        </div>
-                        <div class="rubric-row">
-                          <div class="rubric-row-head"><span>Technical Problem Solving & Architecture</span> <b id="rubric-val-2">19.5 / 20.0</b></div>
-                          <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-2" style="width:97.5%;"></div></div>
-                        </div>
-                        <div class="rubric-row">
-                          <div class="rubric-row-head"><span>Digital Logbook Dossier & Documentation</span> <b id="rubric-val-3">20.0 / 20.0</b></div>
-                          <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-3" style="width:100%;"></div></div>
-                        </div>
-                        <div class="rubric-row">
-                          <div class="rubric-row-head"><span>Faculty Field Visit & Oral Defense</span> <b id="rubric-val-4">47.0 / 50.0</b></div>
-                          <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-4" style="width:94.0%;"></div></div>
-                        </div>
-                        <div style="font-size:8px; color:#34d399; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:4px; padding:4px 8px; text-align:center; font-family:'JetBrains Mono',monospace; margin-top:auto;">
-                          40% Mentor (39.5) + 60% Faculty (57.0) = 96.5% Grade A
-                        </div>
+                      <span class="it-pill-glass" style="font-family:'JetBrains Mono',monospace;">assessments:grade &bull; milestones:certify</span>
+                    </div>
+
+                    <div class="wf-kpis">
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Evaluations Recorded</span>
+                        <div class="wf-kpi-val" id="uni-eval-count">1</div>
+                        <span class="wf-kpi-sub">Mid-Term &amp; Final</span>
+                      </div>
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Avg Rubric Score</span>
+                        <div class="wf-kpi-val" style="color:var(--it-primary);">4.8 <span style="font-size:9px; color:var(--it-muted);">/ 5.0</span></div>
+                        <span class="wf-kpi-sub">Grade A Distinction</span>
+                      </div>
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Full-Time Offers</span>
+                        <div class="wf-kpi-val" id="uni-eval-offers" style="color:var(--it-success);">1</div>
+                        <span class="wf-kpi-sub">Employer recommendations</span>
+                      </div>
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Defense Ready</span>
+                        <div class="wf-kpi-val" id="uni-eval-ready">3 of 4</div>
+                        <span class="wf-kpi-sub">Accreditation clearance</span>
                       </div>
                     </div>
 
-                    <!-- Right: Senate Credentials & Transcript -->
-                    <div class="wf-card" style="flex: 1; align-items:center; text-align:center; padding:10px 12px;">
-                      <div style="font-size:24px; line-height:1;">🏛️</div>
-                      <div style="font-size:11px; font-weight:800; color:#fff; letter-spacing:0.02em; margin-top:2px;">MAKERERE UNIVERSITY</div>
-                      <div style="font-size:8px; color:#94a3b8;">Faculty Board of Examiners & Academic Registrar</div>
-                      <div style="background:#10b981; color:#062b1b; font-size:8px; font-weight:800; padding:1.5px 7px; border-radius:3px; margin-top:3px;">
-                        SENATE RATIFIED
+                    <div class="wf-split">
+                      <!-- Left: Official 5-Point Evaluation Rubric -->
+                      <div class="wf-card" id="uni-card-rubric" style="flex:1.38;">
+                        <div class="wf-card-head">
+                          <span>Official Rubric &mdash; Alice Wanjiku (Mid-Term / Final)</span>
+                          <span class="skill-pill">Score: 4.8 / 5.0 (Grade A)</span>
+                        </div>
+                        <div class="rubric-sliders">
+                          <div class="rubric-row">
+                            <div class="rubric-row-head"><span>Technical Competence &amp; Code Quality</span> <b>5.0 / 5.0</b></div>
+                            <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-1" style="width:100%;"></div></div>
+                          </div>
+                          <div class="rubric-row">
+                            <div class="rubric-row-head"><span>Punctuality &amp; Attendance Compliance</span> <b>5.0 / 5.0</b></div>
+                            <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-2" style="width:100%;"></div></div>
+                          </div>
+                          <div class="rubric-row">
+                            <div class="rubric-row-head"><span>Documentation &amp; Logbook Rigor</span> <b>4.5 / 5.0</b></div>
+                            <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-3" style="width:90%;"></div></div>
+                          </div>
+                          <div class="rubric-row">
+                            <div class="rubric-row-head"><span>Problem Solving &amp; System Architecture</span> <b>5.0 / 5.0</b></div>
+                            <div class="rubric-bar"><div class="rubric-bar-fill" id="rubric-fill-4" style="width:100%;"></div></div>
+                          </div>
+                        </div>
+                        <div style="display:flex; align-items:center; justify-content:space-between; padding-top:4px; border-top:1px solid var(--it-border);">
+                          <span style="font-size:7.5px; color:var(--it-success); font-weight:700;">Recommendation: Full Time Offer</span>
+                          <button class="it-btn-primary" id="btn-uni-certify" type="button">
+                            <span id="uni-certify-label">✓ Certify &amp; Record Grade A</span>
+                          </button>
+                        </div>
                       </div>
-                      <div style="font-family:'JetBrains Mono', monospace; font-size:7.5px; color:#38bdf8; margin-top:2px;">
-                        CREDENTIAL: MAK-2026-BIS-0482
+
+                      <!-- Right: Milestone Certification & Scope -->
+                      <div class="wf-card" id="uni-card-ms" style="flex:1;">
+                        <div class="wf-card-head">
+                          <span>Faculty Milestone Certification</span>
+                          <span class="skill-pill">Tier 3</span>
+                        </div>
+                        <div class="it-surface-box" style="font-size:7.8px;">
+                          <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong>Phase 1: Orientation</strong>
+                            <span class="sub-badge verified">Certified ✓</span>
+                          </div>
+                          <div style="font-size:7px; color:var(--it-muted); margin-top:1px;">Git workflow, Docker &amp; API setup</div>
+                        </div>
+                        <div class="it-surface-box" id="uni-ms-phase2" style="font-size:7.8px; transition:all 0.3s ease;">
+                          <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong>Phase 2: Core Modules</strong>
+                            <span class="sub-badge" id="uni-ms-badge2">Ready to Certify</span>
+                          </div>
+                          <div style="font-size:7px; color:var(--it-muted); margin-top:1px;">React 19, Zod &amp; Recharts analytics</div>
+                        </div>
+                        <div class="it-surface-box" style="margin-top:auto; font-size:7.2px; font-family:'JetBrains Mono',monospace; line-height:1.5;">
+                          <div style="color:var(--it-success); font-weight:700;">✓ assessments:grade</div>
+                          <div style="color:var(--it-success); font-weight:700;">✓ milestones:certify</div>
+                          <div style="color:var(--it-muted);">🔒 rbac:manage (Uni Admin only)</div>
+                        </div>
                       </div>
-                      <div style="font-size:8px; color:#cbd5e1; line-height:1.5; margin:6px 0; background:rgba(255,255,255,0.02); padding:5px 7px; border-radius:4px; width:100%; text-align:left;">
-                        ✓ 328/400 Contact Hours Verified via GPS<br>
-                        ✓ 8/8 Weekly Mentor Nonces Certified<br>
-                        ✓ Oral Defense Passed with Distinction
+                    </div>
+                  </div>
+
+                  <!-- ══ VIEW 3: UNIVERSITY ADMIN / DEAN CONSOLE (Dr. Peter Kamau — Tier 4) ══ -->
+                  <div class="wf-view" id="wf3">
+                    <!-- Unassigned Student Alert Banner -->
+                    <div class="it-alert-banner" id="admin-alert-banner">
+                      <div style="display:flex; align-items:center; gap:6px; min-width:0;">
+                        <span style="font-size:12px;">⚠️</span>
+                        <div style="min-width:0;">
+                          <div style="font-weight:800; font-size:8.2px;">Pending Faculty Assessor Allocation &amp; Risk Alert</div>
+                          <div id="admin-alert-desc" style="font-size:7.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            Flagged: <strong>Kevin Kiprono (CS/2021/0104)</strong> at TechCorp Kenya lacks a University Assessor.
+                          </div>
+                        </div>
                       </div>
-                      <button class="transcript-btn" id="btn-gen-transcript" style="width:100%; margin-top:auto; padding:7px 10px; font-size:10px;">
-                        <span>🏛️ Issue Official Senate Transcript</span>
+                      <button class="it-btn-primary" id="admin-btn-pair" type="button" style="shrink:0; padding:3.5px 8px;">
+                        <span id="admin-pair-label">Pair Mentors Now &rarr;</span>
                       </button>
                     </div>
+
+                    <div class="wf-kpis">
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Placed Cohort</span>
+                        <div class="wf-kpi-val">4</div>
+                        <span class="wf-kpi-sub">TechCorp, Safaricom, KCB</span>
+                      </div>
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Dual-Supervised</span>
+                        <div class="wf-kpi-val" id="admin-dual-rate" style="color:var(--it-warn-ink);">75%</div>
+                        <span class="wf-kpi-sub" id="admin-dual-sub">3 of 4 paired</span>
+                      </div>
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Supervisor Roster</span>
+                        <div class="wf-kpi-val">6</div>
+                        <span class="wf-kpi-sub">3 Host Org &bull; 3 Faculty</span>
+                      </div>
+                      <div class="wf-kpi">
+                        <span class="wf-kpi-lbl">Governance Tier</span>
+                        <div class="wf-kpi-val" style="color:var(--it-primary);">Tier 4</div>
+                        <span class="wf-kpi-sub">13 System Permissions</span>
+                      </div>
+                    </div>
+
+                    <div class="wf-split">
+                      <!-- Left: Dual-Supervisor Allocation Matrix -->
+                      <div class="wf-card" id="admin-card-pairing" style="flex:1.35;">
+                        <div class="wf-card-head">
+                          <span>Candidate Dual-Supervisor Allocation Matrix</span>
+                          <span class="skill-pill">supervisors:assign</span>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:4.5px; font-size:7.8px; flex:1;">
+                          <div class="it-surface-box" style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                              <strong>Alice Wanjiku</strong> <span style="font-family:'JetBrains Mono',monospace; color:var(--it-muted);">CS/2021/0042</span>
+                              <div style="font-size:7px; color:var(--it-muted);">🏢 James Otieno &bull; 🏛️ Dr. Peter Kamau</div>
+                            </div>
+                            <span class="sub-badge verified">Dual-Supervised</span>
+                          </div>
+                          <div class="it-surface-box" style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                              <strong>Brian Mwangi</strong> <span style="font-family:'JetBrains Mono',monospace; color:var(--it-muted);">CS/2021/0088</span>
+                              <div style="font-size:7px; color:var(--it-muted);">🏢 Grace Muthoni &bull; 🏛️ Dr. Joyce Chelangat</div>
+                            </div>
+                            <span class="sub-badge verified">Dual-Supervised</span>
+                          </div>
+                          <div class="it-surface-box" id="admin-row-kevin" style="display:flex; justify-content:space-between; align-items:center; border-color:var(--it-warn-border); background:var(--it-warn-bg); transition:all 0.35s ease;">
+                            <div>
+                              <strong>Kevin Kiprono</strong> <span style="font-family:'JetBrains Mono',monospace; color:var(--it-muted);">CS/2021/0104</span>
+                              <div style="font-size:7px;" id="admin-kevin-uni-sup">🏢 James Otieno &bull; <strong style="color:var(--it-danger-ink);">⚠️ Missing Faculty Sup</strong></div>
+                            </div>
+                            <span class="sub-badge" id="admin-kevin-status">Needs Pairing</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Right: RBAC Matrix & Accreditation Dossier PDF -->
+                      <div class="wf-card" id="admin-card-rbac" style="flex:1;">
+                        <div class="wf-card-head">
+                          <span>RBAC Governance &amp; Dossier</span>
+                          <span class="skill-pill">rbac:manage</span>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:4.5px; flex:1;">
+                          <div class="it-surface-box" style="display:flex; align-items:center; justify-content:space-between; font-size:7.6px;">
+                            <div>
+                              <strong>logs:override</strong>
+                              <div style="font-size:6.8px; color:var(--it-muted);">Arbitrate locked log entries</div>
+                            </div>
+                            <div class="it-switch on" id="rbac-sw-override"></div>
+                          </div>
+                          <div class="it-surface-box" style="display:flex; align-items:center; justify-content:space-between; font-size:7.6px;">
+                            <div>
+                              <strong>supervisors:assign</strong>
+                              <div style="font-size:6.8px; color:var(--it-muted);">Dispatch host logins</div>
+                            </div>
+                            <div class="it-switch on"></div>
+                          </div>
+                          <div class="it-surface-box" style="display:flex; align-items:center; justify-content:space-between; font-size:7.6px;">
+                            <div>
+                              <strong>accreditation:export</strong>
+                              <div style="font-size:6.8px; color:var(--it-muted);">Senate PDF dossier</div>
+                            </div>
+                            <div class="it-switch on" id="rbac-sw-export"></div>
+                          </div>
+                        </div>
+                        <button class="it-btn-primary" id="btn-gen-transcript" type="button" style="width:100%;">
+                          <span>📄 Export Accreditation Dossier (PDF)</span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
+
                 </div>
-              </div>
-            </main>
+              </main>
+            </div>
           </div>
 
-          <!-- In-Screen Modal: Official University Transcript -->
+          <!-- In-Screen Modal: Accredited Senate Graduation Dossier -->
           <div class="screen-modal" id="modal-transcript">
             <div class="screen-modal-dialog">
               <div class="modal-head">
-                <span>🏛️ OFFICIAL MAKERERE TRANSCRIPT</span>
-                <span style="font-size:9px; color:#38bdf8;">CERTIFIED</span>
+                <span>🏛️ UoN ACCREDITATION DOSSIER EXPORTED</span>
+                <span class="sub-badge verified">CERTIFIED PDF</span>
               </div>
               <div class="modal-body">
-                <b>MAKERERE UNIVERSITY — COCIS ACADEMIC REGISTRAR</b><br>
-                Candidate: <b>Alice Nakato</b> (Reg No: 23/U/0482/EVE)<br>
-                Program: <b>Bachelor of Information Systems & Tech</b><br>
-                Composite Grade: <b style="color:#10b981;">96.5% (Grade A - First Class Honours)</b><br>
-                Transcript Serial: <span style="font-family:'JetBrains Mono', monospace; color:#38bdf8;">MAK-COCIS-2026-0482</span><br><br>
-                ✓ All 328 contact hours verified with GPS biometric geofencing.<br>
-                ✓ 8/8 weekly supervisor cryptographic sign-offs committed to permanent institutional ledger.
+                <b>UNIVERSITY OF NAIROBI &mdash; FACULTY OF COMPUTING</b><br>
+                Candidate: <b>Alice Wanjiku</b> (Reg No: <b>CS/2021/0042</b>)<br>
+                Host Placement: <b>TechCorp Kenya Ltd</b> (43 / 60 Verified Days)<br>
+                Dual Supervisors: <b>James Otieno</b> (Host) &amp; <b>Dr. Joyce Chelangat</b> (Faculty)<br>
+                Composite Grade: <b style="color:var(--it-success);">4.8 / 5.0 (Grade A Distinction &mdash; Full Time Offer)</b><br><br>
+                ✓ 100% Cohort Dual-Supervision Verified (Kevin Kiprono paired)<br>
+                ✓ Signed with pre-provisioned enterprise &amp; academic audit hashes.
               </div>
               <div class="modal-actions">
-                <button class="modal-btn primary" id="modal-transcript-close">Close Credential View</button>
+                <button class="modal-btn primary" id="modal-transcript-close" type="button">Close Dossier Preview</button>
               </div>
             </div>
           </div>
@@ -2473,7 +2812,7 @@
           <!-- In-Screen Live Toast -->
           <div class="os-toast" id="os-toast">
             <span class="os-toast-icon" id="os-toast-icon">✓</span>
-            <span class="os-toast-text" id="os-toast-text">MOU Ratified Successfully</span>
+            <span class="os-toast-text" id="os-toast-text">Workflow synchronized</span>
           </div>
         </div>
 
@@ -2497,7 +2836,9 @@
 
     <!-- Scroll Hint -->
     <div class="hint pre" id="hint">
-      <div class="hint-line"><div class="hint-bead"></div></div>
+      <div class="hint-line">
+        <div class="hint-bead"></div>
+      </div>
       <span>scroll into the system</span>
     </div>
 
@@ -2506,12 +2847,13 @@
       <svg class="m-wm pre" id="m-wm" viewBox="0 0 1440 380" preserveAspectRatio="none">
         <defs>
           <linearGradient id="m-wm-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
-            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9"/>
-            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.3"/>
+            <stop offset="0" stop-color="#ffffff" stop-opacity="1" />
+            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9" />
+            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.3" />
           </linearGradient>
         </defs>
-        <text x="10" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400" letter-spacing="-6px" fill="url(#m-wm-grad)">FAMS</text>
+        <text x="10" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400"
+          letter-spacing="-6px" fill="url(#m-wm-grad)">FAMS</text>
       </svg>
       <div class="m-script pre" id="m-script">field-attachment</div>
       <div class="m-badge" id="m-badge"></div>
@@ -2524,40 +2866,45 @@
     <div class="s2-header" id="s2-header">
       <div class="s2-header-left">
         <button class="s2-back-btn" id="s2-back-btn" type="button">
-          <span class="s2-back-arrow">←</span>
+          <span class="s2-back-arrow">&larr;</span>
           <span>Overview</span>
         </button>
       </div>
 
-      <!-- Centered Segmented Workflow Stage Switcher -->
+      <!-- Centered Segmented 4-Role Workflow Stage Switcher -->
       <div class="s2-hud-stages" id="s2-hud-stages">
         <button class="s2-stage-pill active" id="s2-stage-0" data-idx="0" type="button">
           <span class="s2-stage-num">01</span>
-          <span class="s2-stage-name">Student Logbook</span>
+          <span class="s2-stage-name">Student Intern</span>
           <span class="s2-stage-prog" id="s2-prog-0"></span>
         </button>
         <button class="s2-stage-pill" id="s2-stage-1" data-idx="1" type="button">
           <span class="s2-stage-num">02</span>
-          <span class="s2-stage-name">Mentor Sign-Off</span>
+          <span class="s2-stage-name">Field Supervisor</span>
           <span class="s2-stage-prog" id="s2-prog-1"></span>
         </button>
         <button class="s2-stage-pill" id="s2-stage-2" data-idx="2" type="button">
           <span class="s2-stage-num">03</span>
-          <span class="s2-stage-name">Senate Rubric</span>
+          <span class="s2-stage-name">Uni Supervisor</span>
           <span class="s2-stage-prog" id="s2-prog-2"></span>
+        </button>
+        <button class="s2-stage-pill" id="s2-stage-3" data-idx="3" type="button">
+          <span class="s2-stage-num">04</span>
+          <span class="s2-stage-name">Uni Admin</span>
+          <span class="s2-stage-prog" id="s2-prog-3"></span>
         </button>
       </div>
 
       <!-- Header Controls -->
       <div class="s2-header-right">
-        <button class="s2-action-pill" id="s2-tour-toggle" type="button" title="Toggle Autopilot Tour (Space)">
+        <button class="s2-action-pill" id="s2-tour-toggle" type="button" title="Toggle 3D Autopilot Tour (Space)">
           <span id="s2-tour-icon">⏸</span>
           <span id="s2-tour-text">Autopilot</span>
         </button>
         <button class="s2-action-pill" id="s2-sound-btn" type="button" title="Toggle Sound SFX">
           <span id="s2-sound-icon">🔊</span>
         </button>
-        <a href="/auth" class="s2-cta-link" id="s2-cta-link" title="Launch FAMS Live Application">
+        <a href="/auth" class="s2-cta-link" id="s2-cta-link" title="Launch InternTrack Live Application">
           <span>Launch Workspace</span>
           <span class="s2-cta-arrow">↗</span>
         </a>
@@ -2568,18 +2915,19 @@
     <div class="s2-intel-card" id="s2-intel-card">
       <div class="s2-intel-badge">
         <span class="s2-live-indicator"></span>
-        <span id="s2-intel-stage-tag">STAGE 01 // ENTERPRISE MATCHING</span>
+        <span id="s2-intel-stage-tag">ROLE 01 // STUDENT INTERN (TIER 1)</span>
       </div>
-      <div class="s2-intel-title" id="s2-intel-title">Placements & Tripartite MOU Hub</div>
+      <div class="s2-intel-title" id="s2-intel-title">Daily Attendance, AI Logbook &amp; Milestones</div>
       <div class="s2-intel-desc" id="s2-intel-desc">
-        Automates matching across accredited industry hosts with cryptographic student-host-university agreements.
+        Alice Wanjiku records daily attendance, drafts engineering logs with AI polish, and completes milestone deliverables.
       </div>
       <div class="s2-intel-tags" id="s2-intel-tags">
-        <span class="s2-intel-tag" id="s2-tag-1">1,420 Placements</span>
-        <span class="s2-intel-tag" id="s2-tag-2">380 Accredited Hosts</span>
-        <span class="s2-intel-tag highlight" id="s2-tag-3">100% Ratified Nonces</span>
+        <span class="s2-intel-tag" id="s2-tag-1">logs:create</span>
+        <span class="s2-intel-tag" id="s2-tag-2">attendance:record</span>
+        <span class="s2-intel-tag highlight" id="s2-tag-3">Cannot Self-Approve</span>
       </div>
-    </div>  </div>
+    </div>
+  </div>
 
   <script>
     (function () {
@@ -2615,7 +2963,7 @@
           gain.connect(ctx.destination);
           osc.start();
           osc.stop(ctx.currentTime + dur);
-        } catch (_) {}
+        } catch (_) { }
       }
 
       function playClick() { playTone(1200, 'sine', 0.04, 0.08); }
@@ -2642,25 +2990,32 @@
 
       const WORKFLOW_DATA = [
         {
-          stageTag: 'STAGE 01 // STUDENT WORKSPACE',
-          title: 'GPS Geofenced Digital Daily Logbook',
-          desc: 'Undergraduates verify physical campus presence within 150m geofence, submit daily technical tasks, document competencies, and track contact hours.',
-          tags: ['Biometric GPS Lock', '328 / 400 Contact Hrs', 'Day 38 Submitted'],
-          user: 'Alice Nakato (BIS III Student)'
+          stageTag: 'ROLE 01 // STUDENT INTERN (TIER 1)',
+          title: 'Daily Attendance, AI Logbook & Milestones',
+          desc: 'Alice Wanjiku records daily attendance, drafts engineering logs with AI polish, and completes Phase 2 deliverables.',
+          tags: ['logs:create', 'attendance:record', 'Cannot Self-Approve'],
+          user: 'Alice Wanjiku (Tier 1)'
         },
         {
-          stageTag: 'STAGE 02 // WORKPLACE SUPERVISION',
-          title: 'Workplace Mentor 1-Tap Cryptographic Sign-Off',
-          desc: 'Workplace mentors inspect code artifacts, benchmark pull requests, and ratify daily logbooks with permanent ECDSA cryptographic nonces.',
-          tags: ['Dr. K. Sempala (Nile)', 'Git #9a4f21d Verified', 'ECDSA Secp256k1 Seal'],
-          user: 'Dr. K. Sempala (Lead Mentor)'
+          stageTag: 'ROLE 02 // FIELD SUPERVISOR (TIER 2 HOST)',
+          title: 'Host Org Mentor Review Queue & Sign-Off',
+          desc: 'James Otieno signs in with a university-dispatched host login scoped to TechCorp mentees and approves daily technical logs.',
+          tags: ['logs:approve', 'attendance:audit', 'Scoped to Assigned Interns'],
+          user: 'James Otieno (Tier 2)'
         },
         {
-          stageTag: 'STAGE 03 // ACADEMIC GOVERNANCE',
-          title: 'Dual Supervision Rubric & Senate Transcripts',
-          desc: 'Joint scoring matrix balances workplace mentor rating (40%) and university faculty assessment (60%) into certified Makerere credentials.',
-          tags: ['Composite Grade: 96.5%', 'First Class Honours', 'MAK-COCIS-2026-0482'],
-          user: 'Prof. M. Bwambale (Academic Assessor)'
+          stageTag: 'ROLE 03 // UNI SUPERVISOR (TIER 3 FACULTY)',
+          title: 'Academic Evaluations & Milestone Certification',
+          desc: 'Dr. Joyce Chelangat certifies Phase 2 milestones across partner companies and scores standardized 5-point rubrics.',
+          tags: ['assessments:grade', 'milestones:certify', 'Rubric 4.8 / 5.0 Grade A'],
+          user: 'Dr. Joyce Chelangat (Tier 3)'
+        },
+        {
+          stageTag: 'ROLE 04 // UNIVERSITY ADMIN (TIER 4 DEAN)',
+          title: 'Dual-Mentor Pairing, RBAC Matrix & Dossiers',
+          desc: 'Dr. Peter Kamau resolves unassigned alerts by pairing Kevin Kiprono with dual mentors, governs RBAC rules, and exports Senate PDFs.',
+          tags: ['supervisors:assign', 'rbac:manage', 'accreditation:export'],
+          user: 'Dr. Peter Kamau (Tier 4)'
         }
       ];
 
@@ -2679,7 +3034,6 @@
       const scriptEl = document.getElementById('script');
       const badgeEl = document.getElementById('badge');
       const badgeHitEl = document.getElementById('badge-hit');
-      const hintEl = document.getElementById('hint');
 
       const btnOverview = document.getElementById('btn-overview');
       const btnFeatures = document.getElementById('btn-features');
@@ -2693,7 +3047,6 @@
       const mBadgeEl = document.getElementById('m-badge');
 
       // Scene 2 Surrounding UI elements
-      const s2Header = document.getElementById('s2-header');
       const s2BackBtn = document.getElementById('s2-back-btn');
       const s2TourToggle = document.getElementById('s2-tour-toggle');
       const s2TourIcon = document.getElementById('s2-tour-icon');
@@ -2705,15 +3058,16 @@
       const s2StagePills = [
         document.getElementById('s2-stage-0'),
         document.getElementById('s2-stage-1'),
-        document.getElementById('s2-stage-2')
+        document.getElementById('s2-stage-2'),
+        document.getElementById('s2-stage-3')
       ];
       const s2ProgressBars = [
         document.getElementById('s2-prog-0'),
         document.getElementById('s2-prog-1'),
-        document.getElementById('s2-prog-2')
+        document.getElementById('s2-prog-2'),
+        document.getElementById('s2-prog-3')
       ];
 
-      const s2IntelCard = document.getElementById('s2-intel-card');
       const s2IntelStageTag = document.getElementById('s2-intel-stage-tag');
       const s2IntelTitle = document.getElementById('s2-intel-title');
       const s2IntelDesc = document.getElementById('s2-intel-desc');
@@ -2722,15 +3076,23 @@
       const s2Tag3 = document.getElementById('s2-tag-3');
 
       // In-Screen Elements
+      const osShell = document.getElementById('os-shell');
+      const appShell3D = document.getElementById('dashboard-app-shell');
+      const osThemeToggle = document.getElementById('os-theme-toggle');
+      const osThemeIcon = document.getElementById('os-theme-icon');
+      const osThemeLabel = document.getElementById('os-theme-label');
+      const btnExplode3d = document.getElementById('btn-explode-3d');
       const osTabs = [
         document.getElementById('tab0'),
         document.getElementById('tab1'),
-        document.getElementById('tab2')
+        document.getElementById('tab2'),
+        document.getElementById('tab3')
       ];
       const wfViews = [
         document.getElementById('wf0'),
         document.getElementById('wf1'),
-        document.getElementById('wf2')
+        document.getElementById('wf2'),
+        document.getElementById('wf3')
       ];
       const osClock = document.getElementById('os-clock');
       const osUserName = document.getElementById('os-user-name');
@@ -2738,28 +3100,14 @@
       const osToastIcon = document.getElementById('os-toast-icon');
       const osToastText = document.getElementById('os-toast-text');
 
-      // Virtual Cursor Elements
-      const simCursor = document.getElementById('sim-cursor');
-      const simCursorBadge = document.getElementById('sim-cursor-badge');
-      const simCursorRipple = document.getElementById('sim-cursor-ripple');
-
       // In-screen interactive widgets
-      const streamFeedWf0 = document.getElementById('stream-feed-wf0');
-      const hostItemNile = document.getElementById('host-item-nile');
-      const btnApplyNile = document.getElementById('btn-apply-nile');
-      const modalMou = document.getElementById('modal-mou');
-      const modalMouCancel = document.getElementById('modal-mou-cancel');
-      const modalMouConfirm = document.getElementById('modal-mou-confirm');
-
+      const stuClockBtn = document.getElementById('stu-btn-clock');
+      const stuAiBtn = document.getElementById('stu-btn-ai');
       const logTextEntry = document.getElementById('log-text-entry');
       const btnSubmitLog = document.getElementById('btn-submit-log');
-      const btnVerifyGps = document.getElementById('btn-verify-gps');
-      const geofenceStatusText = document.getElementById('geofence-status-text');
-
       const btnMentorSign = document.getElementById('btn-mentor-sign');
-      const cryptoSeal = document.getElementById('crypto-seal');
-      const mentorStatusBadge = document.getElementById('mentor-status-badge');
-
+      const btnUniCertify = document.getElementById('btn-uni-certify');
+      const adminBtnPair = document.getElementById('admin-btn-pair');
       const btnGenTranscript = document.getElementById('btn-gen-transcript');
       const modalTranscript = document.getElementById('modal-transcript');
       const modalTranscriptClose = document.getElementById('modal-transcript-close');
@@ -2775,8 +3123,176 @@
       let userManualOverride = false;
       let manualOverrideTimer = null;
       let simStepStartTime = 0;
-      const STEP_DURATION = 9200; // 9.2s per automated workflow demo
+      let exploded3D = false;
+      let laptopTheme = 'light';
+      const STEP_DURATION = 9400; // 9.4s per automated 3D workflow demo
       const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // ── Dual Light + Dark Theme Sync for Laptop Screen ──
+      function resolvePreferredLaptopTheme() {
+        try {
+          const saved = window.localStorage.getItem('interntrack-theme');
+          if (saved === 'dark' || saved === 'light') return saved;
+        } catch (_) {}
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      function applyLaptopTheme(themeMode) {
+        laptopTheme = themeMode === 'dark' ? 'dark' : 'light';
+        if (osShell) {
+          osShell.classList.toggle('dark-theme', laptopTheme === 'dark');
+          osShell.classList.toggle('light-theme', laptopTheme !== 'dark');
+        }
+        if (osThemeIcon) osThemeIcon.textContent = laptopTheme === 'dark' ? '🌙' : '☀️';
+        if (osThemeLabel) osThemeLabel.textContent = laptopTheme === 'dark' ? 'Dark' : 'Light';
+      }
+
+      applyLaptopTheme(resolvePreferredLaptopTheme());
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'interntrack-theme') applyLaptopTheme(resolvePreferredLaptopTheme());
+      });
+
+      if (osThemeToggle) {
+        osThemeToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          pauseAutopilotForManual();
+          playClick();
+          const next = laptopTheme === 'dark' ? 'light' : 'dark';
+          applyLaptopTheme(next);
+          showToast(next === 'dark' ? '🌙' : '☀️', `Switched Laptop Theme to ${next === 'dark' ? 'Dark' : 'Light'} Mode`);
+        });
+      }
+
+      // ── 3D Auto-Motion Camera Rig & WebGL-Style Spatial Canvas inside Screen ──
+      let cam3D = { rx: 3.5, ry: -5.5, rz: 0.2, s: 0.96 };
+      const canvas3D = document.getElementById('screen-3d-canvas');
+      const ctx3D = canvas3D ? canvas3D.getContext('2d') : null;
+      let packets3D = [];
+
+      function spawnPacket3D(fromIdx, toIdx) {
+        packets3D.push({ from: fromIdx, to: toIdx, t: 0 });
+      }
+
+      function clearPopZ() {
+        document.querySelectorAll('.pop-z').forEach((el) => el.classList.remove('pop-z'));
+      }
+
+      function setLaptopCam(rx, ry, rz, s, focusId) {
+        cam3D = { rx, ry, rz, s };
+        if (appShell3D && !RM) {
+          appShell3D.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg) scale(${s})`;
+        }
+        clearPopZ();
+        if (focusId) {
+          const el = document.getElementById(focusId);
+          if (el) el.classList.add('pop-z');
+        }
+      }
+
+      function sizeCanvas3D() {
+        if (!canvas3D) return;
+        canvas3D.width = 894;
+        canvas3D.height = 545;
+      }
+      sizeCanvas3D();
+
+      function proj3D(x, y, z, rotY, rotX) {
+        const cy = Math.cos(rotY), sy = Math.sin(rotY);
+        const x1 = x * cy - z * sy;
+        const z1 = z * cy + x * sy;
+        const cx = Math.cos(rotX), sx = Math.sin(rotX);
+        const y2 = y * cx - z1 * sx;
+        const z2 = z1 * cx + y * sx;
+        const fov = 560;
+        const sc = fov / Math.max(120, 680 + z2);
+        return { sx: 447 + x1 * sc, sy: 272 + y2 * sc, sc };
+      }
+
+      let animT = 0;
+      function drawScreen3DBackground() {
+        if (ctx3D && mode === 'case') {
+          animT += 0.014;
+          ctx3D.clearRect(0, 0, 894, 545);
+          const rotY = (cam3D.ry * Math.PI) / 180 * 0.55 + Math.sin(animT * 0.6) * 0.04;
+          const rotX = (cam3D.rx * Math.PI) / 180 * 0.45;
+
+          // Perspective Floor Grid
+          ctx3D.strokeStyle = laptopTheme === 'dark' ? 'rgba(99, 102, 241, 0.16)' : 'rgba(129, 140, 248, 0.15)';
+          ctx3D.lineWidth = 1;
+          const gy = 215;
+          for (let gx = -560; gx <= 560; gx += 80) {
+            const p1 = proj3D(gx, gy, -340, rotY, rotX);
+            const p2 = proj3D(gx, gy, 380, rotY, rotX);
+            ctx3D.beginPath(); ctx3D.moveTo(p1.sx, p1.sy); ctx3D.lineTo(p2.sx, p2.sy); ctx3D.stroke();
+          }
+          for (let gz = -340; gz <= 380; gz += 80) {
+            const p1 = proj3D(-560, gy, gz, rotY, rotX);
+            const p2 = proj3D(560, gy, gz, rotY, rotX);
+            ctx3D.beginPath(); ctx3D.moveTo(p1.sx, p1.sy); ctx3D.lineTo(p2.sx, p2.sy); ctx3D.stroke();
+          }
+
+          // 4 Orbital 3D Role Nodes
+          const nodes = [
+            { x: -410, y: -185, z: -40, color: '#6366f1', lbl: 'T1 STUDENT' },
+            { x: 410, y: -185, z: -40, color: '#10b981', lbl: 'T2 FIELD SUP' },
+            { x: 410, y: 185, z: -30, color: '#38bdf8', lbl: 'T3 UNI SUP' },
+            { x: -410, y: 185, z: -30, color: '#a855f7', lbl: 'T4 UNI ADMIN' }
+          ].map((n, i) => ({ ...n, idx: i, ...proj3D(n.x, n.y + Math.sin(animT * 2 + i) * 8, n.z, rotY, rotX) }));
+
+          for (let i = 0; i < 4; i++) {
+            const a = nodes[i], b = nodes[(i + 1) % 4];
+            ctx3D.beginPath();
+            ctx3D.moveTo(a.sx, a.sy);
+            ctx3D.quadraticCurveTo(447, 272 + (i % 2 === 0 ? -190 : 190), b.sx, b.sy);
+            ctx3D.strokeStyle = i === currentWorkflow ? 'rgba(99, 102, 241, 0.4)' : 'rgba(255, 255, 255, 0.06)';
+            ctx3D.lineWidth = i === currentWorkflow ? 1.8 : 1;
+            ctx3D.stroke();
+          }
+
+          packets3D = packets3D.filter((p) => p.t <= 1);
+          packets3D.forEach((p) => {
+            p.t += 0.025;
+            const a = nodes[p.from], b = nodes[p.to], t = p.t;
+            const px = (1 - t) * (1 - t) * a.sx + 2 * (1 - t) * t * 447 + t * t * b.sx;
+            const py = (1 - t) * (1 - t) * a.sy + 2 * (1 - t) * t * 200 + t * t * b.sy;
+            ctx3D.beginPath();
+            ctx3D.arc(px, py, 4.5, 0, Math.PI * 2);
+            ctx3D.fillStyle = '#34d399';
+            ctx3D.shadowColor = '#10b981';
+            ctx3D.shadowBlur = 12;
+            ctx3D.fill();
+            ctx3D.shadowBlur = 0;
+          });
+
+          nodes.forEach((n) => {
+            const act = n.idx === currentWorkflow;
+            const r = (act ? 8 : 5) * n.sc;
+            ctx3D.beginPath();
+            ctx3D.arc(n.sx, n.sy, r, 0, Math.PI * 2);
+            ctx3D.fillStyle = act ? n.color : 'rgba(255,255,255,0.18)';
+            ctx3D.fill();
+          });
+        }
+        requestAnimationFrame(drawScreen3DBackground);
+      }
+      requestAnimationFrame(drawScreen3DBackground);
+
+      if (btnExplode3d) {
+        btnExplode3d.addEventListener('click', (e) => {
+          e.stopPropagation();
+          pauseAutopilotForManual();
+          playClick();
+          exploded3D = !exploded3D;
+          btnExplode3d.classList.toggle('active', exploded3D);
+          if (appShell3D) appShell3D.classList.toggle('exploded', exploded3D);
+          if (exploded3D) {
+            setLaptopCam(8, -11, 0.8, 0.91, null);
+            showToast('🧊', '3D Z-Layers Exploded — Drag or Inspect Depth');
+          } else {
+            setLaptopCam(3.5, -5.5, 0.2, 0.96, null);
+          }
+        });
+      }
 
       // Assign image sources
       plateImg.src = ASSETS.plate;
@@ -2795,64 +3311,21 @@
       mBadgeEl.appendChild(mobileBadgeClone);
 
       /* ═══════════════════════════════════════════════════
-         CONTINUOUS BACKGROUND TELEMETRY & CLOCKS
+         CONTINUOUS BACKGROUND CLOCK
          ═══════════════════════════════════════════════════ */
       setInterval(() => {
         const d = new Date();
         const hrs = String(d.getHours()).padStart(2, '0');
         const mins = String(d.getMinutes()).padStart(2, '0');
         const secs = String(d.getSeconds()).padStart(2, '0');
-        const str = `${hrs}:${mins}:${secs} EAT`;
-        if (osClock) osClock.textContent = str;
+        if (osClock) osClock.textContent = `${hrs}:${mins}:${secs} EAT`;
       }, 1000);
-
-      let shiftSeconds = 8 * 3600 + 34 * 60 + 12;
-      const shiftClockVal = document.getElementById('shift-clock-val');
-      setInterval(() => {
-        shiftSeconds++;
-        const h = String(Math.floor(shiftSeconds / 3600)).padStart(2, '0');
-        const m = String(Math.floor((shiftSeconds % 3600) / 60)).padStart(2, '0');
-        const s = String(shiftSeconds % 60).padStart(2, '0');
-        if (shiftClockVal) shiftClockVal.textContent = `${h}:${m}:${s}`;
-      }, 1000);
-
-      // Workflow 0 Live Matching Stream
-      const STREAM_ITEMS = [
-        { name: 'Alice Nakato', host: 'Nile Analytics', role: 'AI & Data Eng' },
-        { name: 'David Ochieng', host: 'Ministry of ICT', role: 'Cloud Arch' },
-        { name: 'Sarah Namubiru', host: 'Stanbic Bank Lab', role: 'FinTech Sec' },
-        { name: 'Grace Atuhaire', host: 'Uganda Revenue Auth', role: 'DB Cluster' },
-        { name: 'Brian Kigozi', host: 'UN Pulse Lab', role: 'Applied ML' }
-      ];
-      let streamIdx = 0;
-      function renderStreamWf0() {
-        if (!streamFeedWf0) return;
-        const visible = [
-          STREAM_ITEMS[streamIdx % STREAM_ITEMS.length],
-          STREAM_ITEMS[(streamIdx + 1) % STREAM_ITEMS.length],
-          STREAM_ITEMS[(streamIdx + 2) % STREAM_ITEMS.length]
-        ];
-        streamFeedWf0.innerHTML = visible.map(item => `
-          <div class="host-item" style="padding:6px 8px; font-size:10px;">
-            <div>
-              <div style="font-weight:700; color:#fff;">${item.name}</div>
-              <div style="font-size:8.5px; color:#94a3b8;">${item.host} • ${item.role}</div>
-            </div>
-            <span style="font-size:8.5px; font-weight:700; color:#10b981; background:rgba(16,185,129,0.15); padding:2px 5px; border-radius:3px;">✓ Placed</span>
-          </div>
-        `).join('');
-      }
-      renderStreamWf0();
-      setInterval(() => {
-        streamIdx = (streamIdx + 1) % STREAM_ITEMS.length;
-        renderStreamWf0();
-      }, 3000);
 
       /* ═══════════════════════════════════════════════════
          TOAST NOTIFICATIONS (IN-SCREEN)
          ═══════════════════════════════════════════════════ */
       let toastTimer = null;
-      function showToast(icon, text, duration = 2800) {
+      function showToast(icon, text, duration = 2600) {
         if (!osToast) return;
         if (osToastIcon) osToastIcon.textContent = icon;
         if (osToastText) osToastText.textContent = text;
@@ -2863,59 +3336,7 @@
         }, duration);
       }
 
-      /* ═══════════════════════════════════════════════════
-         PRECISION VIRTUAL CURSOR / AUTONOMOUS ENGINE
-         ═══════════════════════════════════════════════════ */
-      function getElementScreenCoords(target, offsetX = 0.5, offsetY = 0.5) {
-        const el = typeof target === 'string' ? document.getElementById(target) : target;
-        if (!el || !screenEl) return null;
-        const sRect = screenEl.getBoundingClientRect();
-        const elRect = el.getBoundingClientRect();
-        const s = sRect.width / 894.4;
-        if (!s || s <= 0) return null;
-        const x = (elRect.left - sRect.left) / s + (elRect.width / s) * offsetX;
-        const y = (elRect.top - sRect.top) / s + (elRect.height / s) * offsetY;
-        return { x: Math.round(x), y: Math.round(y), el };
-      }
-
-      function setCursorPos(x, y, actionText, duration = 650) {
-        if (!simCursor) return;
-        simCursor.style.transition = `left ${duration}ms cubic-bezier(0.22, 1, 0.36, 1), top ${duration}ms cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s`;
-        simCursor.style.left = `${x}px`;
-        simCursor.style.top = `${y}px`;
-        if (simCursorBadge && actionText) {
-          simCursorBadge.textContent = actionText;
-        }
-      }
-
-      function moveCursorTo(target, actionText, duration = 650, offsetX = 0.5, offsetY = 0.5) {
-        const coords = getElementScreenCoords(target, offsetX, offsetY);
-        if (!coords) return;
-        setCursorPos(coords.x, coords.y, actionText, duration);
-      }
-
-      function clickTarget(target, actionText, callback, duration = 650, offsetX = 0.5, offsetY = 0.5) {
-        const coords = getElementScreenCoords(target, offsetX, offsetY);
-        if (!coords) {
-          if (callback) callback();
-          return;
-        }
-        setCursorPos(coords.x, coords.y, actionText, duration);
-        const tId = setTimeout(() => {
-          coords.el.classList.add('sim-active');
-          setTimeout(() => coords.el.classList.remove('sim-active'), 180);
-          if (simCursorRipple) {
-            simCursorRipple.classList.remove('pulse');
-            void simCursorRipple.offsetWidth;
-            simCursorRipple.classList.add('pulse');
-          }
-          playClick();
-          if (callback) callback();
-        }, duration + 60);
-        currentScriptTimeout.push(tId);
-      }
-
-      // Simulate student typing into textarea
+      // Simulate typing into textarea
       let typeTimer = null;
       function simulateTyping(text, targetEl, callback) {
         if (!targetEl) return;
@@ -2931,11 +3352,11 @@
             clearInterval(typeTimer);
             if (callback) callback();
           }
-        }, 28);
+        }, 22);
       }
 
       /* ═══════════════════════════════════════════════════
-         SIMULATION TIMELINE PER WORKFLOW
+         SIMULATION TIMELINE PER 4-ROLE WORKFLOW
          ═══════════════════════════════════════════════════ */
       let currentScriptTimeout = [];
       function clearWorkflowScript() {
@@ -2944,10 +3365,13 @@
         clearInterval(typeTimer);
       }
 
-      /* ── Update Native Dashboard Sidebar & Header For Role ── */
+      /* ── Update Native Dashboard Sidebar & Breadcrumb Header For Role ── */
       function updateSidebarForRole(idx) {
         const allSbLinks = document.querySelectorAll('.sb-link');
-        allSbLinks.forEach(link => link.classList.remove('active'));
+        allSbLinks.forEach(link => {
+          link.classList.remove('active');
+          link.classList.remove('locked');
+        });
 
         const sbTierBadge = document.getElementById('sb-tier-badge');
         const sbUserAvatar = document.getElementById('sb-user-avatar');
@@ -2955,50 +3379,64 @@
         const sbUserRole = document.getElementById('sb-user-role');
         const osBreadcrumb = document.getElementById('os-breadcrumb');
         const osSecurityStatus = document.getElementById('os-security-status');
-        const dashAvatarMain = document.getElementById('dash-avatar-main');
+        const dashCrumbCat = document.getElementById('dash-crumb-cat');
         const dashProfileTitle = document.getElementById('dash-profile-title');
         const dashProfileSub = document.getElementById('dash-profile-sub');
-        const dashBadgeStatus = document.getElementById('dash-badge-status');
+
+        const linkLog = document.getElementById('sb-link-logbook');
+        const linkAtt = document.getElementById('sb-link-attendance');
+        const linkRev = document.getElementById('sb-link-review');
+        const linkEval = document.getElementById('sb-link-evaluations');
+        const linkAssign = document.getElementById('sb-link-assignments');
+        const linkRbac = document.getElementById('sb-link-rbac');
 
         if (idx === 0) {
-          const activeLink = document.getElementById('sb-link-logbook');
-          if (activeLink) activeLink.classList.add('active');
+          if (linkLog) linkLog.classList.add('active');
+          [linkRev, linkEval, linkAssign, linkRbac].forEach(el => el && el.classList.add('locked'));
           if (sbTierBadge) sbTierBadge.textContent = 'Tier 1 • Student';
-          if (sbUserAvatar) sbUserAvatar.textContent = 'AN';
-          if (sbUserName) sbUserName.textContent = 'Alice Nakato';
-          if (sbUserRole) sbUserRole.textContent = 'BIS III Student';
-          if (osBreadcrumb) osBreadcrumb.innerHTML = 'INSTITUTION: <b>MAKERERE UNIVERSITY (COCIS)</b> &bull; TERM: <b>RECESS 2026</b> &bull; HOST: <b>NILE ANALYTICS</b>';
-          if (osSecurityStatus) osSecurityStatus.innerHTML = 'SECURITY: <b style="color:#10b981;">CRYPTOGRAPHIC GEOFENCE ACTIVE</b>';
-          if (dashAvatarMain) dashAvatarMain.textContent = 'AN';
-          if (dashProfileTitle) dashProfileTitle.innerHTML = 'Alice Nakato <span style="font-size:8.5px; color:#38bdf8; font-weight:600;">23/U/0482/EVE</span>';
-          if (dashProfileSub) dashProfileSub.textContent = 'Host: Nile Analytics Institute • Supervisor: Dr. K. Sempala';
-          if (dashBadgeStatus) dashBadgeStatus.innerHTML = '<span class="os-live-dot" style="width:5px; height:5px;"></span><span>GPS Geofence: Active (50m)</span>';
+          if (sbUserAvatar) sbUserAvatar.textContent = 'AW';
+          if (sbUserName) sbUserName.textContent = 'Alice Wanjiku';
+          if (sbUserRole) sbUserRole.textContent = 'Student Intern';
+          if (osBreadcrumb) osBreadcrumb.innerHTML = 'INSTITUTION: <b>UNIVERSITY OF NAIROBI</b> &bull; PLACEMENT: <b>TECHCORP KENYA LTD</b>';
+          if (osSecurityStatus) osSecurityStatus.innerHTML = 'RBAC PERMS: <b>logs:create &bull; attendance:record &bull; milestones:track</b>';
+          if (dashCrumbCat) dashCrumbCat.textContent = 'Logbook & Tracking';
+          if (dashProfileTitle) dashProfileTitle.innerHTML = 'Alice Wanjiku <span style="font-size:7.5px; color:var(--it-primary); font-family:\'JetBrains Mono\',monospace;">CS/2021/0042</span>';
+          if (dashProfileSub) dashProfileSub.textContent = 'TechCorp Kenya Ltd • Field: James Otieno • Faculty: Dr. Joyce Chelangat';
         } else if (idx === 1) {
-          const activeLink = document.getElementById('sb-link-review');
-          if (activeLink) activeLink.classList.add('active');
-          if (sbTierBadge) sbTierBadge.textContent = 'Tier 2 • Supervisor';
-          if (sbUserAvatar) sbUserAvatar.textContent = 'KS';
-          if (sbUserName) sbUserName.textContent = 'Dr. K. Sempala';
-          if (sbUserRole) sbUserRole.textContent = 'Lead Workplace Mentor';
-          if (osBreadcrumb) osBreadcrumb.innerHTML = 'ORGANIZATION: <b>NILE ANALYTICS INSTITUTE</b> &bull; CODE: <b>NLE-MAK-08</b> &bull; INTERN: <b>ALICE NAKATO</b>';
-          if (osSecurityStatus) osSecurityStatus.innerHTML = 'SECURITY: <b style="color:#10b981;">ECDSA SECP256K1 ACTIVE</b>';
-          if (dashAvatarMain) dashAvatarMain.textContent = 'KS';
-          if (dashProfileTitle) dashProfileTitle.innerHTML = 'Dr. K. Sempala <span style="font-size:8.5px; color:#34d399; font-weight:600;">Lead Mentor</span>';
-          if (dashProfileSub) dashProfileSub.textContent = 'Nile Analytics Institute • Data & Systems Engineering';
-          if (dashBadgeStatus) dashBadgeStatus.innerHTML = '<span class="os-live-dot" style="width:5px; height:5px;"></span><span>Review Queue: 1 Pending</span>';
+          if (linkRev) linkRev.classList.add('active');
+          [linkLog, linkAtt, linkEval, linkAssign, linkRbac].forEach(el => el && el.classList.add('locked'));
+          if (sbTierBadge) sbTierBadge.textContent = 'Tier 2 • Field Sup';
+          if (sbUserAvatar) sbUserAvatar.textContent = 'JO';
+          if (sbUserName) sbUserName.textContent = 'James Otieno';
+          if (sbUserRole) sbUserRole.textContent = 'Host Field Supervisor';
+          if (osBreadcrumb) osBreadcrumb.innerHTML = 'HOST ORG: <b>TECHCORP KENYA LTD</b> &bull; LOGIN: <b>STUDENT-BOUND</b> &bull; MENTEES: <b>ALICE &amp; KEVIN</b>';
+          if (osSecurityStatus) osSecurityStatus.innerHTML = 'RBAC PERMS: <b>logs:approve &bull; attendance:audit (Host Org)</b>';
+          if (dashCrumbCat) dashCrumbCat.textContent = 'Supervisory Controls';
+          if (dashProfileTitle) dashProfileTitle.innerHTML = 'James Otieno <span style="font-size:7.5px; color:var(--it-success); font-family:\'JetBrains Mono\',monospace;">Lead Architect</span>';
+          if (dashProfileSub) dashProfileSub.textContent = 'TechCorp Kenya Ltd • Assigned Mentees: Alice Wanjiku & Kevin Kiprono';
         } else if (idx === 2) {
-          const activeLink = document.getElementById('sb-link-evaluations');
-          if (activeLink) activeLink.classList.add('active');
-          if (sbTierBadge) sbTierBadge.textContent = 'Tier 4 • Assessor';
-          if (sbUserAvatar) sbUserAvatar.textContent = 'MB';
-          if (sbUserName) sbUserName.textContent = 'Prof. M. Bwambale';
-          if (sbUserRole) sbUserRole.textContent = 'Academic Assessor / Dean';
-          if (osBreadcrumb) osBreadcrumb.innerHTML = 'FACULTY: <b>COCIS BOARD OF EXAMINERS</b> &bull; PROGRAM: <b>BIST FIELD ATTACHMENT</b> &bull; YEAR: <b>2026</b>';
-          if (osSecurityStatus) osSecurityStatus.innerHTML = 'SECURITY: <b style="color:#10b981;">SENATE RATIFIED CREDENTIALS</b>';
-          if (dashAvatarMain) dashAvatarMain.textContent = 'MB';
-          if (dashProfileTitle) dashProfileTitle.innerHTML = 'Prof. M. Bwambale <span style="font-size:8.5px; color:#a78bfa; font-weight:600;">Academic Dean</span>';
-          if (dashProfileSub) dashProfileSub.textContent = 'Makerere University • College of Computing & IS';
-          if (dashBadgeStatus) dashBadgeStatus.innerHTML = '<span class="os-live-dot" style="width:5px; height:5px;"></span><span>Institutional Rubric: Ratified</span>';
+          if (linkEval) linkEval.classList.add('active');
+          [linkLog, linkAtt, linkAssign, linkRbac].forEach(el => el && el.classList.add('locked'));
+          if (sbTierBadge) sbTierBadge.textContent = 'Tier 3 • Uni Sup';
+          if (sbUserAvatar) sbUserAvatar.textContent = 'JC';
+          if (sbUserName) sbUserName.textContent = 'Dr. Joyce Chelangat';
+          if (sbUserRole) sbUserRole.textContent = 'Academic Assessor';
+          if (osBreadcrumb) osBreadcrumb.innerHTML = 'INSTITUTION: <b>UNIVERSITY OF NAIROBI</b> &bull; RUBRIC: <b>CUE STANDARD 5-PT</b>';
+          if (osSecurityStatus) osSecurityStatus.innerHTML = 'RBAC PERMS: <b>assessments:grade &bull; milestones:certify</b>';
+          if (dashCrumbCat) dashCrumbCat.textContent = 'Supervisory Controls';
+          if (dashProfileTitle) dashProfileTitle.innerHTML = 'Dr. Joyce Chelangat <span style="font-size:7.5px; color:var(--it-primary); font-family:\'JetBrains Mono\',monospace;">Senior Lecturer</span>';
+          if (dashProfileSub) dashProfileSub.textContent = 'University of Nairobi • Academic Assessment & Milestone Certification';
+        } else if (idx === 3) {
+          if (linkAssign) linkAssign.classList.add('active');
+          if (sbTierBadge) sbTierBadge.textContent = 'Tier 4 • Uni Admin';
+          if (sbUserAvatar) sbUserAvatar.textContent = 'PK';
+          if (sbUserName) sbUserName.textContent = 'Dr. Peter Kamau';
+          if (sbUserRole) sbUserRole.textContent = 'Faculty Dean & Admin';
+          if (osBreadcrumb) osBreadcrumb.innerHTML = 'INSTITUTION: <b>UNIVERSITY OF NAIROBI</b> &bull; GOVERNANCE: <b>FULL COHORT &amp; RBAC</b>';
+          if (osSecurityStatus) osSecurityStatus.innerHTML = 'RBAC PERMS: <b>supervisors:assign &bull; rbac:manage &bull; accreditation:export</b>';
+          if (dashCrumbCat) dashCrumbCat.textContent = 'Institutional & RBAC';
+          if (dashProfileTitle) dashProfileTitle.innerHTML = 'Dr. Peter Kamau <span style="font-size:7.5px; color:var(--it-primary); font-family:\'JetBrains Mono\',monospace;">Dean of Computing</span>';
+          if (dashProfileSub) dashProfileSub.textContent = 'University of Nairobi • Dual Pairing, Credentials & RBAC Governance';
         }
       }
 
@@ -3006,151 +3444,265 @@
         clearWorkflowScript();
         if (RM || userManualOverride || !tourPlaying) return;
 
-        // Reset modals & state
         if (modalTranscript) modalTranscript.classList.remove('open');
 
         if (idx === 0) {
-          // ── Workflow 0: Student Intern Workspace ──
-          if (logTextEntry) logTextEntry.value = '';
-          if (btnSubmitLog) {
-            btnSubmitLog.textContent = 'Submit Day 38 Log for Mentor Review';
-            btnSubmitLog.classList.remove('submitted');
-          }
+          // ── ROLE 0: Student Intern (Alice Wanjiku) ──
+          setLaptopCam(3.5, -5.5, 0.2, 0.96, null);
+
+          const stuDays = document.getElementById('stu-days-val');
+          const stuDaysSub = document.getElementById('stu-days-sub');
+          const stuHours = document.getElementById('stu-hours-val');
+          const stuLogsCount = document.getElementById('stu-logs-count');
+          const stuQueuePill = document.getElementById('stu-queue-pill');
+          const stuClockLabel = document.getElementById('stu-clock-label');
+          const stuAiLabel = document.getElementById('stu-ai-label');
           const logBadge = document.getElementById('log-status-badge');
+          const msPct = document.getElementById('stu-ms-pct');
+          const msCheck3 = document.getElementById('stu-ms-check3');
+          const pillsContainer = document.getElementById('student-skill-pills');
+
+          if (stuDays) stuDays.textContent = '42';
+          if (stuDaysSub) stuDaysSub.textContent = '● 70% placement progress';
+          if (stuHours) stuHours.textContent = '336.0';
+          if (stuLogsCount) stuLogsCount.textContent = '4';
+          if (stuQueuePill) stuQueuePill.textContent = '1 Draft';
+          if (stuClockLabel) stuClockLabel.textContent = 'Clock In (08:30 AM)';
+          if (stuAiLabel) stuAiLabel.textContent = 'Polish with AI';
+          if (logTextEntry) {
+            logTextEntry.value = '';
+            logTextEntry.classList.remove('polished');
+          }
           if (logBadge) {
-            logBadge.textContent = 'DRAFT // PENDING REVIEW';
+            logBadge.textContent = 'Draft';
             logBadge.className = 'sub-badge draft';
           }
-          if (btnVerifyGps) {
-            btnVerifyGps.classList.remove('locked');
-            btnVerifyGps.innerHTML = '<span>📡 Verify Geofence Clock-In</span>';
-          }
-          if (geofenceStatusText) {
-            geofenceStatusText.textContent = '● Verifying Campus Perimeter...';
-            geofenceStatusText.style.color = '#38bdf8';
-          }
-          const pillsContainer = document.getElementById('student-skill-pills');
+          if (btnSubmitLog) btnSubmitLog.textContent = 'Submit to Field Supervisor';
+          if (msPct) { msPct.textContent = '2 / 3 (67%)'; msPct.className = 'sub-badge'; }
+          if (msCheck3) msCheck3.textContent = '○';
           if (pillsContainer) pillsContainer.innerHTML = '';
 
-          // Step 1: GPS Lock
+          // Step 1: Clock-In & Milestone check-off + 3D Focus on KPI & Milestone Card
           currentScriptTimeout.push(setTimeout(() => {
+            setLaptopCam(5, -8, 0.35, 0.97, 'stu-card-milestone');
             playPing();
-            if (btnVerifyGps) {
-              btnVerifyGps.classList.add('sim-active');
-              setTimeout(() => btnVerifyGps.classList.remove('sim-active'), 180);
-              btnVerifyGps.classList.add('locked');
-              btnVerifyGps.innerHTML = '<span>✓ Geofence Locked (08:31 AM)</span>';
-            }
-            if (geofenceStatusText) {
-              geofenceStatusText.textContent = '● Verified on Campus Perimeter (±1.8m)';
-              geofenceStatusText.style.color = '#10b981';
-            }
-            showToast('📡', 'Biometric GPS Locked to Nile Campus Perimeter');
+            if (stuClockLabel) stuClockLabel.textContent = '✓ Clocked In (08:30 AM)';
+            if (stuDays) stuDays.textContent = '43';
+            if (stuDaysSub) stuDaysSub.textContent = '● 72% (+1 day today)';
+            if (stuHours) stuHours.textContent = '344.0';
+            if (msCheck3) msCheck3.textContent = '✓';
+            if (msPct) { msPct.textContent = '3 / 3 (100%)'; msPct.className = 'sub-badge verified'; }
+            showToast('🕒', 'Attendance Punched (08:30 AM) & Phase 2 Milestone Completed');
           }, 800));
 
-          // Step 2: Live Typing Log Entry
+          // Step 2: 3D Pan to Logbook & Simulate Typing + Skills
           currentScriptTimeout.push(setTimeout(() => {
-            const sampleReport = 'Implemented PostgreSQL partition pruning, optimized index scans on 4.2M records, and integrated Redis cache cluster. Query p99 latency decreased from 140ms to 4.2ms.';
-            simulateTyping(sampleReport, logTextEntry, () => {
-              // Step 3: Pop Skills
+            setLaptopCam(3, 5, -0.25, 0.98, 'stu-card-logbook');
+            const draft = 'Built onboarding UI wizard using React 19 components and added API form validation rules with Zod.';
+            simulateTyping(draft, logTextEntry, () => {
               if (pillsContainer) {
-                const skills = ['PostgreSQL 16', 'Redis Cache', 'DB Indexing', 'Distributed Systems'];
-                skills.forEach((skill, sIdx) => {
+                ['React 19', 'Tailwind CSS', 'Zod', 'Jest'].forEach((sk, i) => {
                   currentScriptTimeout.push(setTimeout(() => {
-                    const pill = document.createElement('span');
-                    pill.className = 'skill-pill';
-                    pill.textContent = skill;
-                    pillsContainer.appendChild(pill);
+                    const p = document.createElement('span');
+                    p.className = 'skill-pill';
+                    p.textContent = sk;
+                    pillsContainer.appendChild(p);
                     playKey();
-                  }, sIdx * 220));
+                  }, i * 160));
                 });
               }
             });
-          }, 1800));
+          }, 2100));
 
-          // Step 4: Submit Log
+          // Step 3: ✨ Polish with AI
+          currentScriptTimeout.push(setTimeout(() => {
+            if (stuAiBtn) {
+              stuAiBtn.classList.add('sim-active');
+              setTimeout(() => stuAiBtn.classList.remove('sim-active'), 200);
+            }
+            playPing();
+            if (stuAiLabel) stuAiLabel.textContent = 'AI Polished!';
+            if (logTextEntry) {
+              logTextEntry.classList.add('polished');
+              logTextEntry.value = 'Engineered multi-step onboarding wizard UI in React 19 with strict Zod schema validation and REST API integration, achieving 92% Jest test coverage.';
+            }
+            showToast('✨', 'Log entry refined with AI Technical Polish');
+          }, 5600));
+
+          // Step 4: 🚀 Submit to Field Supervisor + Send 3D Packet
           currentScriptTimeout.push(setTimeout(() => {
             if (btnSubmitLog) {
               btnSubmitLog.classList.add('sim-active');
-              setTimeout(() => btnSubmitLog.classList.remove('sim-active'), 180);
-              btnSubmitLog.textContent = '✓ Day 38 Log Submitted to Mentor';
-              btnSubmitLog.classList.add('submitted');
+              setTimeout(() => btnSubmitLog.classList.remove('sim-active'), 200);
+              btnSubmitLog.textContent = '✓ Submitted to James Otieno';
             }
             if (logBadge) {
-              logBadge.textContent = '✓ QUEUED FOR MENTOR SIGN-OFF';
+              logBadge.textContent = 'Submitted';
               logBadge.className = 'sub-badge queued';
             }
+            if (stuLogsCount) stuLogsCount.textContent = '5';
+            if (stuQueuePill) stuQueuePill.textContent = 'Queued';
+            spawnPacket3D(0, 1);
             playChime();
-            showToast('📝', 'Day 38 Technical Log Submitted to Dr. Sempala');
-          }, 6600));
+            showToast('🚀', 'Submitted to Field Supervisor James Otieno');
+          }, 7400));
 
         } else if (idx === 1) {
-          // ── Workflow 1: Workplace Mentor Console ──
+          // ── ROLE 1: Field Supervisor (James Otieno — Tier 2 Host Org) ──
+          setLaptopCam(3.5, 5.5, -0.2, 0.96, null);
+
           const mentorBadge = document.getElementById('mentor-status-badge');
           const mentorFeedback = document.getElementById('mentor-feedback-text');
+          const pendingVal = document.getElementById('sup-pending-val');
+          const approvedVal = document.getElementById('sup-approved-val');
+
           if (mentorFeedback) mentorFeedback.value = '';
-          if (cryptoSeal) cryptoSeal.classList.remove('stamped');
           if (mentorBadge) {
-            mentorBadge.textContent = 'AWAITING 1-TAP APPROVAL';
+            mentorBadge.textContent = 'Submitted';
             mentorBadge.className = 'sub-badge';
           }
+          if (pendingVal) pendingVal.textContent = '2';
+          if (approvedVal) approvedVal.textContent = '3';
+          if (btnMentorSign) btnMentorSign.textContent = '✓ Sign Off & Approve';
 
-          // Step 1: Live Type Mentor Feedback
+          // Step 1: Focus Review Card & Type Host Feedback
           currentScriptTimeout.push(setTimeout(() => {
-            const feedback = 'Verified database benchmark graphs and Git pull request #42. Execution meets industry standards. 8.0 hours approved.';
-            simulateTyping(feedback, mentorFeedback);
+            setLaptopCam(4.5, 7, -0.3, 0.98, 'sup-card-review');
+            const note = 'Verified CORS policy fixes and PostgreSQL index scans on TechCorp staging cluster. Approved 8.0 hours.';
+            simulateTyping(note, mentorFeedback);
           }, 900));
 
-          // Step 2: 1-Tap Cryptographic Sign-Off Stamp
+          // Step 2: Sign Off & Approve + Update Queue Counters + Packet to Uni Sup
           currentScriptTimeout.push(setTimeout(() => {
             if (btnMentorSign) {
               btnMentorSign.classList.add('sim-active');
-              setTimeout(() => btnMentorSign.classList.remove('sim-active'), 180);
+              setTimeout(() => btnMentorSign.classList.remove('sim-active'), 200);
+              btnMentorSign.textContent = '✓ Signed Off & Approved';
             }
-            playStamp();
-            if (cryptoSeal) cryptoSeal.classList.add('stamped');
             if (mentorBadge) {
-              mentorBadge.textContent = '✓ CRYPTOGRAPHICALLY CERTIFIED (0x9f4a...e12b)';
+              mentorBadge.textContent = '✓ Approved by Host Org';
               mentorBadge.className = 'sub-badge verified';
             }
-            showToast('🛡️', 'Mentor Attestation Ratified (ECDSA Nonce 0x9f4a)');
-          }, 4400));
+            if (pendingVal) pendingVal.textContent = '1';
+            if (approvedVal) approvedVal.textContent = '4';
+            spawnPacket3D(1, 2);
+            playStamp();
+            showToast('✓', 'Field Supervisor Sign-Off Recorded (logs:approve)');
+          }, 5600));
 
         } else if (idx === 2) {
-          // ── Workflow 2: Faculty Dean & University Senate Evaluation ──
-          const rubric1 = document.getElementById('rubric-fill-1');
-          const rubric2 = document.getElementById('rubric-fill-2');
-          const rubric3 = document.getElementById('rubric-fill-3');
-          const rubric4 = document.getElementById('rubric-fill-4');
-          if (rubric1) rubric1.style.width = '0%';
-          if (rubric2) rubric2.style.width = '0%';
-          if (rubric3) rubric3.style.width = '0%';
-          if (rubric4) rubric4.style.width = '0%';
+          // ── ROLE 2: University Supervisor (Dr. Joyce Chelangat — Tier 3 Faculty) ──
+          setLaptopCam(4, -5.5, 0.2, 0.96, null);
 
-          // Step 1: Smooth rubric bars fill
+          const r1 = document.getElementById('rubric-fill-1');
+          const r2 = document.getElementById('rubric-fill-2');
+          const r3 = document.getElementById('rubric-fill-3');
+          const r4 = document.getElementById('rubric-fill-4');
+          const evalCnt = document.getElementById('uni-eval-count');
+          const evalOffers = document.getElementById('uni-eval-offers');
+          const evalReady = document.getElementById('uni-eval-ready');
+          const certLbl = document.getElementById('uni-certify-label');
+          const msBadge2 = document.getElementById('uni-ms-badge2');
+
+          [r1, r2, r3, r4].forEach(el => el && (el.style.width = '20%'));
+          if (evalCnt) evalCnt.textContent = '1';
+          if (evalOffers) evalOffers.textContent = '1';
+          if (evalReady) evalReady.textContent = '3 of 4';
+          if (certLbl) certLbl.textContent = '✓ Certify & Record Grade A';
+          if (msBadge2) { msBadge2.textContent = 'Ready to Certify'; msBadge2.className = 'sub-badge'; }
+
+          // Step 1: 3D Focus Rubric & Animate 5-Point CUE Scores
           currentScriptTimeout.push(setTimeout(() => {
+            setLaptopCam(5, -7.5, 0.3, 0.98, 'uni-card-rubric');
             playPing();
-            if (rubric1) rubric1.style.width = '100%';
-            if (rubric2) rubric2.style.width = '97.5%';
-            if (rubric3) rubric3.style.width = '100%';
-            if (rubric4) rubric4.style.width = '94.0%';
-          }, 600));
+            if (r1) r1.style.width = '100%';
+            if (r2) r2.style.width = '100%';
+            if (r3) r3.style.width = '90%';
+            if (r4) r4.style.width = '100%';
+          }, 900));
 
-          // Step 2: Issue Official Senate Transcript Modal
+          // Step 2: Certify Milestone & Record Official Grade A -> Pan to Milestone Card
           currentScriptTimeout.push(setTimeout(() => {
+            setLaptopCam(4, 6.5, -0.25, 0.98, 'uni-card-ms');
+            if (btnUniCertify) {
+              btnUniCertify.classList.add('sim-active');
+              setTimeout(() => btnUniCertify.classList.remove('sim-active'), 200);
+            }
+            if (certLbl) certLbl.textContent = '✓ Grade A Certified';
+            if (evalCnt) evalCnt.textContent = '2';
+            if (evalOffers) evalOffers.textContent = '2';
+            if (evalReady) evalReady.textContent = '4 of 4';
+            if (msBadge2) { msBadge2.textContent = 'Certified by Faculty ✓'; msBadge2.className = 'sub-badge verified'; }
+            spawnPacket3D(2, 3);
+            playChime();
+            showToast('🏛️', 'Academic Rubric 4.8/5.0 Certified — 4 of 4 Defense Ready');
+          }, 5000));
+
+        } else if (idx === 3) {
+          // ── ROLE 3: University Admin / Dean (Dr. Peter Kamau — Tier 4) ──
+          setLaptopCam(3.5, 5, -0.2, 0.96, null);
+
+          const alertBanner = document.getElementById('admin-alert-banner');
+          const alertDesc = document.getElementById('admin-alert-desc');
+          const pairLbl = document.getElementById('admin-pair-label');
+          const dualRate = document.getElementById('admin-dual-rate');
+          const dualSub = document.getElementById('admin-dual-sub');
+          const rowKevin = document.getElementById('admin-row-kevin');
+          const kevinSup = document.getElementById('admin-kevin-uni-sup');
+          const kevinStatus = document.getElementById('admin-kevin-status');
+          const swOverride = document.getElementById('rbac-sw-override');
+
+          if (alertBanner) alertBanner.className = 'it-alert-banner';
+          if (alertDesc) alertDesc.innerHTML = 'Flagged: <strong>Kevin Kiprono (CS/2021/0104)</strong> at TechCorp Kenya lacks a University Assessor.';
+          if (pairLbl) pairLbl.textContent = 'Pair Mentors Now →';
+          if (dualRate) { dualRate.textContent = '75%'; dualRate.style.color = 'var(--it-warn-ink)'; }
+          if (dualSub) dualSub.textContent = '3 of 4 paired';
+          if (rowKevin) {
+            rowKevin.style.borderColor = 'var(--it-warn-border)';
+            rowKevin.style.background = 'var(--it-warn-bg)';
+          }
+          if (kevinSup) kevinSup.innerHTML = '🏢 James Otieno • <strong style="color:var(--it-danger-ink);">⚠️ Missing Faculty Sup</strong>';
+          if (kevinStatus) { kevinStatus.textContent = 'Needs Pairing'; kevinStatus.className = 'sub-badge'; }
+          if (swOverride) swOverride.classList.add('on');
+
+          // Step 1: Resolve Alert & Pair Kevin Kiprono (75% -> 100%)
+          currentScriptTimeout.push(setTimeout(() => {
+            setLaptopCam(4.5, 7, -0.25, 0.98, 'admin-card-pairing');
+            if (adminBtnPair) {
+              adminBtnPair.classList.add('sim-active');
+              setTimeout(() => adminBtnPair.classList.remove('sim-active'), 200);
+            }
+            if (alertBanner) alertBanner.className = 'it-alert-banner resolved';
+            if (alertDesc) alertDesc.innerHTML = 'Cohort <strong>100% Dual-Supervised</strong>: Pre-provisioned logins bound &amp; dispatched.';
+            if (pairLbl) pairLbl.textContent = '✓ All Paired (100%)';
+            if (dualRate) { dualRate.textContent = '100%'; dualRate.style.color = 'var(--it-success)'; }
+            if (dualSub) dualSub.textContent = '4 of 4 fully paired ✓';
+            if (rowKevin) {
+              rowKevin.style.borderColor = 'var(--it-success)';
+              rowKevin.style.background = 'var(--it-success-soft)';
+            }
+            if (kevinSup) kevinSup.innerHTML = '🏢 James Otieno • 🏛️ Dr. Joyce Chelangat (Paired)';
+            if (kevinStatus) { kevinStatus.textContent = 'Dual-Supervised'; kevinStatus.className = 'sub-badge verified'; }
+            playPing();
+            showToast('⚖️', 'Kevin Kiprono Paired with Dual Supervisors — Cohort 100%');
+          }, 1400));
+
+          // Step 2: Focus RBAC Card & Open Senate Accreditation Dossier PDF
+          currentScriptTimeout.push(setTimeout(() => {
+            setLaptopCam(4, -6.5, 0.25, 0.98, 'admin-card-rbac');
             if (btnGenTranscript) {
               btnGenTranscript.classList.add('sim-active');
-              setTimeout(() => btnGenTranscript.classList.remove('sim-active'), 180);
+              setTimeout(() => btnGenTranscript.classList.remove('sim-active'), 200);
             }
-            playChime();
             if (modalTranscript) modalTranscript.classList.add('open');
-            showToast('🏛️', 'Makerere Senate Transcript Generated');
-          }, 3600));
+            spawnPacket3D(3, 0);
+            playChime();
+            showToast('📄', 'UoN Accreditation Dossier Exported');
+          }, 5000));
 
-          // Step 3: Close modal before transition
           currentScriptTimeout.push(setTimeout(() => {
             if (modalTranscript) modalTranscript.classList.remove('open');
-          }, 7600));
+          }, 8400));
         }
       }
 
@@ -3173,16 +3725,19 @@
 
         // Update In-Screen Tabs & Views
         osTabs.forEach((tab, i) => {
+          if (!tab) return;
           if (i === idx) tab.classList.add('active');
           else tab.classList.remove('active');
         });
         wfViews.forEach((view, i) => {
+          if (!view) return;
           if (i === idx) view.classList.add('active');
           else view.classList.remove('active');
         });
 
         // Update Top HUD Stage Pills
         s2StagePills.forEach((pill, i) => {
+          if (!pill) return;
           if (i === idx) pill.classList.add('active');
           else pill.classList.remove('active');
         });
@@ -3201,7 +3756,7 @@
         // Update native dashboard sidebar and header
         updateSidebarForRole(idx);
 
-        // Run simulation script for this workflow
+        // Run 3D simulation script for this role
         runWorkflowScript(idx);
       }
 
@@ -3227,22 +3782,19 @@
       function pauseAutopilotForManual() {
         userManualOverride = true;
         clearWorkflowScript();
-        if (simCursor) simCursor.style.opacity = '0';
         if (s2TourText) s2TourText.textContent = 'Manual Mode';
         clearTimeout(manualOverrideTimer);
         manualOverrideTimer = setTimeout(() => {
           userManualOverride = false;
-          if (simCursor) simCursor.style.opacity = '1';
           if (s2TourText) s2TourText.textContent = tourPlaying ? 'Autopilot' : 'Resume';
           if (tourPlaying) {
             selectWorkflow(currentWorkflow, false);
           }
-        }, 4500);
+        }, 5500);
       }
 
       if (screenEl) {
         screenEl.addEventListener('pointerenter', pauseAutopilotForManual);
-        screenEl.addEventListener('pointermove', pauseAutopilotForManual);
         screenEl.addEventListener('click', pauseAutopilotForManual);
       }
 
@@ -3483,7 +4035,7 @@
       window.addEventListener('pointerup', (e) => {
         if (!dragging) return;
         dragging = false;
-        try { badgeHitEl.releasePointerCapture(e.pointerId); } catch (_) {}
+        try { badgeHitEl.releasePointerCapture(e.pointerId); } catch (_) { }
 
         const fling = Math.max(-25, Math.min(25, badgeRot + badgeVelocity * 12));
         const settle = badgeEl.animate(
@@ -3592,7 +4144,7 @@
             });
           });
 
-          transVideo.play().catch(() => {});
+          transVideo.play().catch(() => { });
           const duration = transVideo.duration || 5.04;
 
           function tickSpeed() {
@@ -3733,7 +4285,7 @@
             window.top.location.href = '/auth';
             return;
           }
-        } catch (_) {}
+        } catch (_) { }
         window.location.href = '/auth';
       });
 
@@ -3779,54 +4331,52 @@
               window.top.location.href = '/auth';
               return;
             }
-          } catch (_) {}
+          } catch (_) { }
           window.location.href = '/auth';
         });
       }
 
       // In-Screen Interactive Action Listeners (Manual Clicks)
-      if (btnApplyNile) {
-        btnApplyNile.addEventListener('click', () => {
+      if (stuClockBtn) {
+        stuClockBtn.addEventListener('click', () => {
           pauseAutopilotForManual();
-          if (modalMou) modalMou.classList.add('open');
-          playChime();
-        });
-      }
-      if (modalMouCancel) {
-        modalMouCancel.addEventListener('click', () => {
-          if (modalMou) modalMou.classList.remove('open');
-        });
-      }
-      if (modalMouConfirm) {
-        modalMouConfirm.addEventListener('click', () => {
-          if (modalMou) modalMou.classList.remove('open');
-          if (btnApplyNile) {
-            btnApplyNile.textContent = '✓ Tripartite Ratified';
-            btnApplyNile.classList.add('applied');
-          }
-          playChime();
-          showToast('📑', 'Tripartite MOU Ratified (Nonce: 0x7a3f...c91e)');
+          playPing();
+          const lbl = document.getElementById('stu-clock-label');
+          const days = document.getElementById('stu-days-val');
+          const hrs = document.getElementById('stu-hours-val');
+          if (lbl) lbl.textContent = '✓ Clocked In (08:30 AM)';
+          if (days) days.textContent = '43';
+          if (hrs) hrs.textContent = '344.0';
+          showToast('🕒', 'Attendance Recorded (08:30 AM) — 43/60 Days');
         });
       }
 
-      if (btnVerifyGps) {
-        btnVerifyGps.addEventListener('click', () => {
+      if (stuAiBtn) {
+        stuAiBtn.addEventListener('click', () => {
           pauseAutopilotForManual();
           playPing();
-          btnVerifyGps.classList.add('locked');
-          btnVerifyGps.innerHTML = '<span>✓ Geofence Locked (150m)</span>';
-          if (geofenceStatusText) geofenceStatusText.textContent = '● Verified on Campus Perimeter';
-          showToast('📡', 'Biometric GPS Locked to Nile Campus Perimeter');
+          const aiLbl = document.getElementById('stu-ai-label');
+          if (aiLbl) aiLbl.textContent = 'AI Polished!';
+          if (logTextEntry) {
+            logTextEntry.classList.add('polished');
+            logTextEntry.value = 'Engineered multi-step onboarding wizard UI in React 19 with strict Zod schema validation and REST API integration, achieving 92% Jest test coverage.';
+          }
+          showToast('✨', 'Entry polished with AI Assistant');
         });
       }
 
       if (btnSubmitLog) {
         btnSubmitLog.addEventListener('click', () => {
           pauseAutopilotForManual();
-          btnSubmitLog.textContent = '✓ Log Submitted to Mentor';
-          btnSubmitLog.classList.add('submitted');
+          btnSubmitLog.textContent = '✓ Submitted to James Otieno';
+          const logBadge = document.getElementById('log-status-badge');
+          if (logBadge) {
+            logBadge.textContent = 'Submitted';
+            logBadge.className = 'sub-badge queued';
+          }
+          spawnPacket3D(0, 1);
           playChime();
-          showToast('📝', 'Day 28 Technical Log Submitted to Dr. Sempala');
+          showToast('🚀', 'Daily Log Submitted to Host Field Supervisor');
         });
       }
 
@@ -3834,12 +4384,43 @@
         btnMentorSign.addEventListener('click', () => {
           pauseAutopilotForManual();
           playStamp();
-          if (cryptoSeal) cryptoSeal.classList.add('stamped');
-          if (mentorStatusBadge) {
-            mentorStatusBadge.textContent = '✓ CRYPTOGRAPHICALLY CERTIFIED';
-            mentorStatusBadge.classList.add('verified');
+          btnMentorSign.textContent = '✓ Signed Off & Approved';
+          const mentorBadge = document.getElementById('mentor-status-badge');
+          if (mentorBadge) {
+            mentorBadge.textContent = '✓ Approved by Host Org';
+            mentorBadge.className = 'sub-badge verified';
           }
-          showToast('🛡️', 'Mentor Attestation Ratified (ECDSA Nonce 0x9f4a)');
+          spawnPacket3D(1, 2);
+          showToast('✓', 'Field Supervisor Sign-Off Recorded');
+        });
+      }
+
+      if (btnUniCertify) {
+        btnUniCertify.addEventListener('click', () => {
+          pauseAutopilotForManual();
+          playChime();
+          const lbl = document.getElementById('uni-certify-label');
+          const ms2 = document.getElementById('uni-ms-badge2');
+          const rdy = document.getElementById('uni-eval-ready');
+          if (lbl) lbl.textContent = '✓ Grade A Certified';
+          if (rdy) rdy.textContent = '4 of 4';
+          if (ms2) { ms2.textContent = 'Certified by Faculty ✓'; ms2.className = 'sub-badge verified'; }
+          spawnPacket3D(2, 3);
+          showToast('🏛️', 'Academic Rubric 4.8/5.0 Certified (Grade A)');
+        });
+      }
+
+      if (adminBtnPair) {
+        adminBtnPair.addEventListener('click', () => {
+          pauseAutopilotForManual();
+          playPing();
+          const b = document.getElementById('admin-alert-banner');
+          const rate = document.getElementById('admin-dual-rate');
+          const ks = document.getElementById('admin-kevin-status');
+          if (b) b.className = 'it-alert-banner resolved';
+          if (rate) { rate.textContent = '100%'; rate.style.color = 'var(--it-success)'; }
+          if (ks) { ks.textContent = 'Dual-Supervised'; ks.className = 'sub-badge verified'; }
+          showToast('⚖️', 'Dual Mentors Paired for Kevin Kiprono — 100%');
         });
       }
 
@@ -3848,7 +4429,7 @@
           pauseAutopilotForManual();
           playChime();
           if (modalTranscript) modalTranscript.classList.add('open');
-          showToast('🏛️', 'Makerere Senate Transcript Generated');
+          showToast('📄', 'UoN Accreditation Dossier Exported');
         });
       }
       if (modalTranscriptClose) {
@@ -3928,4 +4509,5 @@
     })();
   </script>
 </body>
+
 </html>
