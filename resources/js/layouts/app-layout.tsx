@@ -86,7 +86,7 @@ const NAV: NavItem[] = [
     to: "/milestones",
     label: "Milestones Roadmap",
     icon: Milestone,
-    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+    roles: ["student", "supervisor", "org_admin"],
     category: "tracking",
   },
 
@@ -95,21 +95,21 @@ const NAV: NavItem[] = [
     to: "/review",
     label: "Review Queue",
     icon: ClipboardList,
-    roles: ["supervisor", "org_admin", "uni_admin", "system_admin"],
+    roles: ["supervisor", "org_admin"],
     category: "supervision",
   },
   {
     to: "/students",
     label: "Assigned Interns",
     icon: Users,
-    roles: ["supervisor", "org_admin", "uni_admin", "system_admin"],
+    roles: ["supervisor", "org_admin"],
     category: "supervision",
   },
   {
     to: "/evaluations",
     label: "Performance Evaluations",
     icon: Award,
-    roles: ["supervisor", "uni_admin", "system_admin"],
+    roles: ["supervisor", "org_admin"],
     category: "supervision",
   },
 
@@ -148,7 +148,7 @@ const NAV: NavItem[] = [
     to: "/reports",
     label: "Reports & Dossier",
     icon: FileBarChart,
-    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+    roles: ["student", "supervisor", "org_admin"],
     category: "core",
   },
 
@@ -230,6 +230,16 @@ export function AppShell({
 
   // Filter items matching the active persona's roles
   const allowedItems = NAV.filter((i) => i.roles.some((r) => activeRoles.includes(r)));
+  const isRouteAllowed = allowedItems.some(
+    (item) => pathname === item.to || pathname.startsWith(item.to + "/"),
+  );
+
+  useEffect(() => {
+    if (!isRouteAllowed) {
+      navigate({ to: "/dashboard" });
+    }
+  }, [isRouteAllowed, navigate]);
+
   const currentNavItem =
     NAV.find((item) => pathname === item.to || pathname.startsWith(item.to + "/")) ?? NAV[0]!;
 
@@ -454,7 +464,11 @@ export function AppShell({
                       <div className="min-w-0 pr-2">
                         <p className="truncate font-medium text-foreground">{user.full_name}</p>
                         <p className="truncate text-[10px] text-muted-foreground">
-                          {ROLE_LABELS[user.role]}
+                          {user.id === "supervisor-1"
+                            ? "Host Supervisor"
+                            : user.id === "supervisor-2"
+                              ? "University Supervisor"
+                              : ROLE_LABELS[user.role]}
                         </p>
                       </div>
                       {isCurrent && <Check className="size-4 text-primary shrink-0" />}

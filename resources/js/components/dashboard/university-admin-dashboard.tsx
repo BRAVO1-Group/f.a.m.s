@@ -398,9 +398,6 @@ export function UniversityAdminDashboard({
           >
             Assign Mentors
           </Button>
-          <Button asChild size="sm" variant="outline" className="rounded-xl font-semibold text-xs h-9">
-            <Link to="/reports">Dossier (PDF)</Link>
-          </Button>
         </div>
       </div>
 

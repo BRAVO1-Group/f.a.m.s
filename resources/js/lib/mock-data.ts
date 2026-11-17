@@ -300,6 +300,17 @@ export const DEMO_USERS: MockUser[] = [
     student_number: "",
   },
   {
+    id: "supervisor-2",
+    email: "jchelangat@university.ac.ke",
+    full_name: "Dr. Joyce Chelangat",
+    role: "supervisor",
+    roles: ["supervisor"],
+    phone: "+254 711 889 900",
+    institution: "University of Nairobi",
+    course: "",
+    student_number: "",
+  },
+  {
     id: "org-admin-1",
     email: "admin@techcorp.co.ke",
     full_name: "Fatuma Said",

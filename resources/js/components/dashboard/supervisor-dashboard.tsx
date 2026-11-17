@@ -142,6 +142,44 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
       avatarFallback: "AW",
     },
     {
+      id: "student-2",
+      name: "Brian Mwangi",
+      regNo: "CS/2021/0067",
+      role: "Cloud Infrastructure Intern",
+      department: "Infrastructure & Cloud",
+      company: "Safaricom PLC",
+      institution: "University of Nairobi",
+      degree: "BSc. Computer Science",
+      email: "brian@university.ac.ke",
+      phone: "+254 722 556 778",
+      academicSupervisor: "Dr. Joyce Chelangat (jchelangat@university.ac.ke)",
+      daysLogged: 36,
+      requiredDays: 60,
+      attendanceRate: "96.0%",
+      currentPhase: "Phase 2: Cloud Deployment & Monitoring",
+      status: "Active • On Track",
+      avatarFallback: "BM",
+    },
+    {
+      id: "student-3",
+      name: "Faith Njeri",
+      regNo: "CS/2021/0089",
+      role: "Data Analytics Intern",
+      department: "Business Intelligence",
+      company: "Kenya Commercial Bank",
+      institution: "University of Nairobi",
+      degree: "BSc. Information Systems",
+      email: "faith@university.ac.ke",
+      phone: "+254 733 112 233",
+      academicSupervisor: "Dr. Peter Kamau (dean@university.ac.ke)",
+      daysLogged: 40,
+      requiredDays: 60,
+      attendanceRate: "98.0%",
+      currentPhase: "Phase 2: BI Dashboards & ETL",
+      status: "Active • On Track",
+      avatarFallback: "FN",
+    },
+    {
       id: "student-4",
       name: "Kevin Kiprono",
       regNo: "CS/2021/0104",
@@ -254,7 +292,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
         <KpiCard
           label="Assigned Interns"
           value={assignedStudentsDetails.length}
-          meta="Alice Wanjiku & Kevin Kiprono"
+          meta={assignedStudentsDetails.map((s) => s.name).join(" · ") || "No interns assigned"}
         />
         <KpiCard
           label="Pending Approval"
@@ -264,7 +302,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
         <KpiCard
           label="Approved Deliverables"
           value={approvedActivities.length}
-          meta="Signed off by host mentor"
+          meta={isOrgSupervisor ? "Signed off by host supervisor" : "Verified by university supervisor"}
         />
         <KpiCard
           label="Revisions Requested"
@@ -281,8 +319,9 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               My Assigned Student Interns
             </h2>
             <p className="text-xs text-muted-foreground">
-              Comprehensive candidate profiles, placement tracks at TechCorp Kenya Ltd, and
-              attachment meters
+              {isOrgSupervisor
+                ? `Candidate profiles and placement tracks at ${currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"}`
+                : "Candidate profiles and academic supervision tracks across host organizations"}
             </p>
           </div>
           <Button asChild size="sm" variant="outline" className="text-xs font-semibold">
