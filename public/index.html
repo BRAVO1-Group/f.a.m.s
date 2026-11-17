@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>FAMS — Field Attachment Management System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Inter+Tight:wght@100..900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Inter+Tight:wght@100..900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (window.tailwind) {
+      window.tailwind.config = {
+        corePlugins: {
+          preflight: false
+        }
+      };
+    }
+  </script>
   <style>
     /* ── Colour Tokens & Variables ── */
     :root {
+      --green-950: #051910;
       --green-900: #0b2f20;
       --green-800: #11402c;
       --green-700: #1a5a40;
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.4);
       --mint: #cfeee0;
       --ink: #0d0f0e;
       --n: 1px;
       --mbs: 1;
-      --th: 120px;
       --glide: 0s;
     }
 
@@ -26,30 +41,68 @@
       inherits: true;
       initial-value: 0px;
     }
+
     @property --mt {
       syntax: '<length>';
       inherits: true;
       initial-value: 0px;
     }
+
     @property --mb {
       syntax: '<length>';
       inherits: true;
       initial-value: 0px;
     }
+
     @property --ms {
       syntax: '<length>';
       inherits: true;
       initial-value: 0px;
     }
 
-    /* ── Global Reset ── */
-    *, *::before, *::after {
+    /* ── Scoped Resets (Scene 1 preserved, Scene 2 Tailwind utilities intact) ── */
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
+    }
+
+    html,
+    body {
       margin: 0;
       padding: 0;
     }
 
-    html, body {
+    .stage *,
+    .stage *::before,
+    .stage *::after {
+      margin: 0;
+      padding: 0;
+    }
+
+    :where(#s2-3d-engine) *,
+    :where(#s2-3d-engine) *::before,
+    :where(#s2-3d-engine) *::after {
+      border-width: 0;
+      border-style: solid;
+      border-color: #e4e4e7;
+    }
+
+    :where(#s2-3d-engine) button {
+      background-color: transparent;
+      background-image: none;
+      cursor: pointer;
+      font: inherit;
+      color: inherit;
+      padding: 0;
+    }
+
+    :where(#s2-3d-engine) :is(h1, h2, h3, h4, p) {
+      margin: 0;
+    }
+
+    html,
+    body {
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -127,7 +180,9 @@
       --ob: 0px;
     }
 
-    .plate, .trans, .caseplate {
+    .plate,
+    .trans,
+    .caseplate {
       mask-image:
         linear-gradient(180deg,
           transparent calc(var(--o, 0px) + var(--m0)),
@@ -153,13 +208,35 @@
         --ms var(--glide) cubic-bezier(.65, 0, .35, 1);
     }
 
-    /* Edge Fade State Classes */
-    .d-fade { --m0: 0px; --mt: 0px; --mb: 0px; --ms: 0px; }
-    .d-fade.m-case { --m0: 0px; --mt: 110px; --mb: 60px; --ms: 170px; }
-    .m-fade { --m0: 0px; --mt: 190px; --mb: 0px; --ms: 140px; }
-    .m-fade.m-case { --m0: 48px; --mt: 40px; --mb: 70px; --ms: 140px; }
+    .d-fade {
+      --m0: 0px;
+      --mt: 0px;
+      --mb: 0px;
+      --ms: 0px;
+    }
 
-    /* ── Wordmark "FAMS" (Desktop) ── */
+    .d-fade.m-case {
+      --m0: 0px;
+      --mt: 110px;
+      --mb: 60px;
+      --ms: 170px;
+    }
+
+    .m-fade {
+      --m0: 0px;
+      --mt: 190px;
+      --mb: 0px;
+      --ms: 140px;
+    }
+
+    .m-fade.m-case {
+      --m0: 48px;
+      --mt: 40px;
+      --mb: 70px;
+      --ms: 140px;
+    }
+
+    /* ── Scene 1: Wordmark "FAMS" ── */
     svg.wm {
       position: absolute;
       left: 0;
@@ -171,7 +248,7 @@
       pointer-events: none;
     }
 
-    /* ── Man Cutout ── */
+    /* ── Scene 1: Man Cutout ── */
     img.cut {
       position: absolute;
       left: 0;
@@ -182,7 +259,7 @@
       z-index: 4;
     }
 
-    /* ── Handwriting Script ── */
+    /* ── Scene 1: Handwriting Script ── */
     .script {
       position: absolute;
       top: 148px;
@@ -200,7 +277,7 @@
       white-space: nowrap;
     }
 
-    /* ── Lanyard Badge (Desktop Frame) ── */
+    /* ── Scene 1: Lanyard Badge ── */
     .badge {
       position: absolute;
       left: 986px;
@@ -284,14 +361,6 @@
       color: #141615;
     }
 
-    .card .row span {
-      font-weight: 700;
-    }
-
-    .card .row b {
-      font-weight: 600;
-    }
-
     .badge .hit {
       position: absolute;
       left: 160px;
@@ -302,38 +371,22 @@
       cursor: grab;
     }
 
-    /* ── Laptop Screen ── */
+    /* ═══════════════════════════════════════════════════
+       SCENE 2: FLASH TARGET & FULL 3D AUTO-MOTION ENGINE
+       ═══════════════════════════════════════════════════ */
     .screen {
       position: absolute;
       left: 272.8px;
       top: 102.7px;
       width: 894.4px;
       height: 604.7px;
-      border-radius: 3px;
-      background: #000;
+      border-radius: 5px;
+      background: #09090b;
       overflow: hidden;
       opacity: 0;
       z-index: 8;
       pointer-events: none;
-    }
-
-    .screen video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background: #000;
-      opacity: 0;
-    }
-
-    .screen::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(115deg, rgba(255, 255, 255, .07) 0%, rgba(255, 255, 255, 0) 38%);
-      z-index: 1;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 30px rgba(0, 0, 0, 0.8);
     }
 
     .screen .flash {
@@ -342,21 +395,300 @@
       background: #fff;
       opacity: 0;
       pointer-events: none;
-      z-index: 2;
+      z-index: 25;
     }
 
-    .screen-hit {
+    /* Full-Viewport Scene 2 Container (#s2-3d-engine) */
+    #s2-3d-engine {
+      --it-sidebar: #f4f4f5;
+      --it-sidebar-border: #e4e4e7;
+      --it-sidebar-ink: #3f3f46;
+      --it-sidebar-active: #ffffff;
+      --it-sidebar-active-ink: #09090b;
+      --it-bg: #fafafa;
+      --it-card: #ffffff;
+      --it-surface-muted: #f4f4f5;
+      --it-border: #e4e4e7;
+      --it-ink: #18181b;
+      --it-muted: #71717a;
+      --it-primary: #4f46e5;
+      --it-emerald: #10b981;
+      --it-amber: #f59e0b;
+      --it-indigo: #4f46e5;
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #09090b;
+      color: #f4f4f5;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.96);
+      transition: opacity 0.48s cubic-bezier(0.22, 1, 0.36, 1), transform 0.56s cubic-bezier(0.22, 1, 0.36, 1);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body.is-case #s2-3d-engine {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+
+    #app-screen-shell.dark-theme {
+      --it-sidebar: #09090b;
+      --it-sidebar-border: rgba(255, 255, 255, 0.08);
+      --it-sidebar-ink: #d4d4d8;
+      --it-sidebar-active: #1e1e24;
+      --it-sidebar-active-ink: #ffffff;
+      --it-bg: #111114;
+      --it-card: #18181b;
+      --it-surface-muted: #27272a;
+      --it-border: rgba(255, 255, 255, 0.1);
+      --it-ink: #fafafa;
+      --it-muted: #a1a1aa;
+      --it-primary: #6366f1;
+    }
+
+    /* 3D Perspective Stage & Camera Rig */
+    .stage-viewport {
+      perspective: 1650px;
+      perspective-origin: 50% 48%;
+      transform-style: preserve-3d;
+    }
+
+    .camera-rig {
+      transform-style: preserve-3d;
+      transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+
+    .camera-rig.dragging {
+      transition: none !important;
+    }
+
+    /* 3D Laptop / Workstation Chassis */
+    .laptop-3d-body {
+      transform-style: preserve-3d;
+      position: relative;
+      border-radius: 18px;
+      background: #141418;
+      padding: 10px;
+      box-shadow:
+        0 40px 90px -20px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(129, 140, 248, 0.28),
+        0 0 60px -10px rgba(99, 102, 241, 0.24);
+    }
+
+    .laptop-3d-body::before {
+      content: "";
       position: absolute;
-      left: 272.8px;
-      top: 102.7px;
-      width: 894.4px;
-      height: 604.7px;
-      cursor: pointer;
-      display: none;
-      z-index: 9;
+      inset: 0;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #09090b, #1e1b4b);
+      transform: translateZ(-16px);
+      box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9);
+      pointer-events: none;
     }
 
-    /* ── Viewport-Pinned Fixed UI ── */
+    /* Multi-Depth Z-Layers inside the 3D Screen */
+    .z-layer-base {
+      transform: translateZ(0px);
+      transform-style: preserve-3d;
+      transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .z-layer-mid {
+      transform: translateZ(22px);
+      transform-style: preserve-3d;
+      transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.75s ease;
+    }
+
+    .z-layer-pop {
+      transform: translateZ(48px);
+      transform-style: preserve-3d;
+      transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.75s ease;
+      box-shadow: 0 22px 44px -12px rgba(24, 24, 27, 0.22), 0 0 0 1px rgba(79, 70, 229, 0.2);
+    }
+
+    .z-layer-modal {
+      transform: translateZ(82px);
+      transform-style: preserve-3d;
+      transition: transform 0.65s cubic-bezier(0.18, 1.15, 0.32, 1), opacity 0.4s ease;
+      box-shadow: 0 34px 70px -12px rgba(9, 9, 11, 0.48), 0 0 0 2px rgba(99, 102, 241, 0.35);
+    }
+
+    .z-layer-hud {
+      transform: translateZ(105px);
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+    }
+
+    /* Exploded 3D Layer Inspection Mode */
+    .exploded .z-layer-mid {
+      transform: translateZ(52px) !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35) !important;
+    }
+
+    .exploded .z-layer-pop {
+      transform: translateZ(105px) !important;
+      box-shadow: 0 35px 70px -12px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    .exploded .z-layer-modal {
+      transform: translateZ(155px) !important;
+    }
+
+    .exploded .z-layer-hud {
+      transform: translateZ(195px) !important;
+    }
+
+    /* Active focused card elevation */
+    .card-3d-focus {
+      transform: translateZ(66px) scale(1.025) !important;
+      box-shadow:
+        0 28px 60px -12px rgba(79, 70, 229, 0.35),
+        0 0 0 2px #6366f1,
+        0 0 28px rgba(99, 102, 241, 0.25) !important;
+      z-index: 30;
+    }
+
+    /* Linear / Indigo InternTrack Gradients */
+    .it-hero-gradient {
+      background: linear-gradient(135deg, #18181b 0%, #312e81 58%, #4f46e5 100%);
+    }
+
+    .it-accent-gradient {
+      background: linear-gradient(120deg, #4f46e5 0%, #10b981 100%);
+    }
+
+    /* Dynamic Light/Dark Overrides inside #app-screen-shell */
+    #app-screen-shell .themed-card {
+      background: var(--it-card) !important;
+      border-color: var(--it-border) !important;
+      color: var(--it-ink) !important;
+    }
+
+    #app-screen-shell .themed-muted {
+      background: var(--it-surface-muted) !important;
+      border-color: var(--it-border) !important;
+      color: var(--it-ink) !important;
+    }
+
+    #app-screen-shell.dark-theme [class~="bg-white"]:not(.it-hero-btn) {
+      background-color: var(--it-card) !important;
+      border-color: var(--it-border) !important;
+      color: var(--it-ink) !important;
+    }
+
+    #app-screen-shell.dark-theme [class~="bg-zinc-50"],
+    #app-screen-shell.dark-theme [class~="bg-zinc-100"] {
+      background-color: var(--it-surface-muted) !important;
+      border-color: var(--it-border) !important;
+      color: var(--it-ink) !important;
+    }
+
+    #app-screen-shell.dark-theme [class~="text-zinc-900"],
+    #app-screen-shell.dark-theme [class~="text-zinc-800"] {
+      color: #fafafa !important;
+    }
+
+    #app-screen-shell.dark-theme [class~="text-zinc-500"],
+    #app-screen-shell.dark-theme [class~="text-zinc-600"] {
+      color: #a1a1aa !important;
+    }
+
+    #app-screen-shell.dark-theme [class~="text-indigo-700"]:not(.it-hero-btn),
+    #app-screen-shell.dark-theme [class~="text-indigo-600"]:not(.it-hero-btn) {
+      color: #818cf8 !important;
+    }
+
+    #app-screen-shell.dark-theme [class~="border-zinc-200"],
+    #app-screen-shell.dark-theme [class~="divide-zinc-200"] {
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    #app-screen-shell.dark-theme [class*="bg-amber-50"],
+    #app-screen-shell.dark-theme [class*="bg-emerald-50"],
+    #app-screen-shell.dark-theme [class*="bg-indigo-50"],
+    #app-screen-shell.dark-theme [class*="bg-rose-50"],
+    #app-screen-shell.dark-theme [class*="bg-emerald-100"],
+    #app-screen-shell.dark-theme [class*="bg-amber-100"],
+    #app-screen-shell.dark-theme [class*="bg-indigo-100"] {
+      background-color: rgba(39, 39, 42, 0.85) !important;
+      border-color: rgba(255, 255, 255, 0.14) !important;
+      color: #e4e4e7 !important;
+    }
+
+    #app-screen-shell.dark-theme [class*="text-emerald-7"],
+    #app-screen-shell.dark-theme [class*="text-emerald-8"] {
+      color: #34d399 !important;
+    }
+
+    #app-screen-shell.dark-theme [class*="text-amber-7"],
+    #app-screen-shell.dark-theme [class*="text-amber-8"],
+    #app-screen-shell.dark-theme [class*="text-amber-9"] {
+      color: #fcd34d !important;
+    }
+
+    #app-screen-shell.dark-theme [class*="text-indigo-8"],
+    #app-screen-shell.dark-theme [class*="text-indigo-9"] {
+      color: #a5b4fc !important;
+    }
+
+    #app-screen-shell.dark-theme [class*="text-rose-8"],
+    #app-screen-shell.dark-theme [class*="text-rose-9"] {
+      color: #fda4af !important;
+    }
+
+    /* Simulated 3D Spatial Pointer */
+    #sim-pointer {
+      transform: translateZ(115px);
+      transition: left 0.68s cubic-bezier(0.22, 1, 0.36, 1), top 0.68s cubic-bezier(0.22, 1, 0.36, 1), transform 0.2s ease;
+      pointer-events: none;
+    }
+
+    #sim-pointer.clicking {
+      transform: translateZ(95px) scale(0.88);
+    }
+
+    @keyframes pulseRing {
+      0% {
+        transform: scale(0.3);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(2.4);
+        opacity: 0;
+      }
+    }
+
+    .click-ripple {
+      animation: pulseRing 0.55s ease-out forwards;
+    }
+
+    #s2-3d-engine ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+
+    #s2-3d-engine ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    #s2-3d-engine ::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.28);
+      border-radius: 999px;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       VIEWPORT-PINNED FIXED UI (SCENE 1 OVERVIEW)
+       ═══════════════════════════════════════════════════ */
     .ui {
       position: fixed;
       inset: 0;
@@ -364,7 +696,7 @@
       pointer-events: none;
     }
 
-    /* Nav Tags */
+    /* Scene 1 Nav Tags */
     .tag {
       position: absolute;
       display: inline-flex;
@@ -384,7 +716,7 @@
       pointer-events: auto;
       cursor: pointer;
       box-shadow: 0 calc(3 * var(--n)) 0 rgba(0, 0, 0, .18), 0 calc(6 * var(--n)) calc(14 * var(--n)) rgba(0, 0, 0, .18);
-      transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s cubic-bezier(.2, .8, .2, 1);
+      transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s cubic-bezier(.2, .8, .2, 1), opacity .3s;
     }
 
     .tag:hover {
@@ -397,28 +729,50 @@
       box-shadow: 0 calc(1 * var(--n)) 0 rgba(0, 0, 0, .18);
     }
 
-    .t1 { left: calc(30 * var(--n)); top: calc(7 * var(--n)); }
-    .t2 { left: calc(233 * var(--n)); top: calc(7 * var(--n)); }
-    .t3 { right: calc(244 * var(--n)); top: calc(7 * var(--n)); }
-    .t4 { right: calc(32 * var(--n)); top: calc(7 * var(--n)); }
+    .t1 {
+      left: calc(30 * var(--n));
+      top: calc(7 * var(--n));
+    }
 
-    /* Centre Logo */
-    .nav-logo {
+    .t2 {
+      left: calc(233 * var(--n));
+      top: calc(7 * var(--n));
+    }
+
+    .t3 {
+      right: calc(244 * var(--n));
+      top: calc(7 * var(--n));
+    }
+
+    .t4 {
+      right: calc(32 * var(--n));
+      top: calc(7 * var(--n));
+    }
+
+    /* Sound Control Tag */
+    .sound-tag {
       position: absolute;
-      left: 50%;
-      top: calc(14 * var(--n));
-      transform: translateX(-50%);
-      font-family: 'Inter Tight', sans-serif;
-      font-weight: 600;
-      font-size: calc(19 * var(--n));
-      letter-spacing: .14em;
+      right: calc(470 * var(--n));
+      top: calc(7 * var(--n));
+      height: calc(37 * var(--n));
+      padding: 0 calc(12 * var(--n));
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 4px;
       color: #fff;
-      background: none;
-      border: none;
+      font-size: calc(13 * var(--n));
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       cursor: pointer;
-      opacity: 0;
       pointer-events: auto;
-      transition: opacity .4s ease;
+      transition: all 0.2s ease;
+    }
+
+    .sound-tag:hover {
+      background: rgba(255, 255, 255, 0.25);
     }
 
     /* Scroll Hint */
@@ -460,193 +814,25 @@
     }
 
     @keyframes drip {
-      0% { top: -40%; }
-      100% { top: 100%; }
-    }
+      0% {
+        top: -40%;
+      }
 
-    /* ── Case UI (Desktop) ── */
-    /* Punched Paper Ticket */
-    .ticket {
-      position: absolute;
-      right: calc(32 * var(--n));
-      top: calc(98 * var(--n));
-      width: calc(348 * var(--n));
-      height: calc(182 * var(--n));
-      background: #ffffff;
-      border-radius: calc(3 * var(--n));
-      box-shadow: 0 calc(18 * var(--n)) calc(40 * var(--n)) rgba(0, 0, 0, .28);
-      padding: calc(26 * var(--n)) calc(34 * var(--n)) 0 calc(44 * var(--n));
-      transform-origin: 50% 0;
-      opacity: 0;
-      pointer-events: auto;
-      color: var(--ink);
-    }
-
-    .hole {
-      position: absolute;
-      width: calc(21 * var(--n));
-      height: calc(21 * var(--n));
-      background-color: var(--green-800);
-      border-radius: 50%;
-      box-shadow: inset 0 calc(2 * var(--n)) calc(3 * var(--n)) rgba(0, 0, 0, .35);
-    }
-
-    .hl-tl { top: calc(12 * var(--n)); left: calc(12 * var(--n)); }
-    .hl-tr { top: calc(12 * var(--n)); right: calc(12 * var(--n)); }
-    .hl-bl { bottom: calc(12 * var(--n)); left: calc(12 * var(--n)); }
-    .hl-br { bottom: calc(12 * var(--n)); right: calc(12 * var(--n)); }
-
-    .ticket-title {
-      font-family: 'Anton', sans-serif;
-      font-size: calc(50 * var(--n));
-      line-height: 1;
-      letter-spacing: -0.01em;
-      white-space: nowrap;
-      text-transform: uppercase;
-      color: var(--ink);
-    }
-
-    .ticket-rows {
-      margin-top: calc(8 * var(--n));
-      text-align: right;
-    }
-
-    .t-row {
-      font-weight: 700;
-      font-size: calc(12 * var(--n));
-      letter-spacing: 0.02em;
-      padding: calc(4 * var(--n)) 0 calc(3 * var(--n));
-      border-bottom: 1.5px dotted #2a2a2a;
-      color: var(--ink);
-    }
-
-    /* Case Description */
-    .desc {
-      position: absolute;
-      left: calc(28 * var(--n));
-      top: calc(326 * var(--n));
-      width: calc(172 * var(--n));
-      color: #fff;
-      pointer-events: none;
-    }
-
-    .desc-k {
-      font-weight: 700;
-      font-size: calc(17 * var(--n));
-      letter-spacing: -0.02em;
-      color: #fff;
-      opacity: 0;
-    }
-
-    .desc-p {
-      margin-top: calc(14 * var(--n));
-      font-size: calc(15 * var(--n));
-      line-height: 1.36;
-      font-weight: 500;
-      color: rgba(255, 255, 255, .92);
-      opacity: 0;
-    }
-
-    .desc-num {
-      margin-top: calc(22 * var(--n));
-      font-size: calc(12 * var(--n));
-      letter-spacing: 0.16em;
-      font-weight: 700;
-      color: rgba(255, 255, 255, .7);
-      opacity: 0;
-    }
-
-    /* Prev / Next Case Buttons */
-    .nav-case {
-      position: absolute;
-      bottom: calc(150 * var(--n));
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: calc(9 * var(--n));
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #fff;
-      opacity: 0;
-      pointer-events: auto;
-      transition: opacity .3s;
-    }
-
-    .nav-case.prev { left: calc(95 * var(--n)); }
-    .nav-case.next { right: calc(95 * var(--n)); }
-
-    .nav-case .c {
-      width: calc(50 * var(--n));
-      height: calc(50 * var(--n));
-      border-radius: 50%;
-      border: 1.6px solid rgba(255, 255, 255, .9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform .2s ease, background-color .2s ease;
-    }
-
-    .nav-case .c svg {
-      width: calc(24 * var(--n));
-      height: calc(24 * var(--n));
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .nav-case.next .c {
-      background: #ffffff;
-      border-color: #ffffff;
-      color: var(--green-800);
-    }
-
-    .nav-case.next:hover .c {
-      background-color: var(--mint);
-      border-color: var(--mint);
-    }
-
-    .nav-case:hover .c {
-      transform: scale(1.08);
-    }
-
-    .nav-case.dim {
-      opacity: 0.45 !important;
-      cursor: default;
-    }
-
-    .nav-case .lbl {
-      font-family: 'Inter Tight', sans-serif;
-      font-weight: 600;
-      font-size: calc(15 * var(--n));
-      line-height: 1.05;
-      text-align: center;
-      color: #fff;
-      white-space: nowrap;
+      100% {
+        top: 100%;
+      }
     }
 
     /* ── State Visibility Toggles ── */
-    body.is-case .nav-logo {
-      opacity: 1;
-    }
-
+    body.is-case .tag,
+    body.is-case .sound-tag,
     body.is-case .hint,
     body.busy .hint {
       visibility: hidden;
       opacity: 0;
+      pointer-events: none;
     }
 
-    body.is-case .nav-case {
-      opacity: 1;
-    }
-
-    body.is-case .screen-hit {
-      display: block;
-    }
-
-    /* Initial pre-entrance hiding */
     .js .pre {
       opacity: 0 !important;
     }
@@ -657,9 +843,11 @@
 
     /* ── Mobile Responsive Rules (<= 820px) ── */
     @media (max-width: 820px) {
+
       .frame .wm,
       .frame .script,
-      .frame .badge {
+      .frame .badge,
+      .sound-tag {
         display: none !important;
       }
 
@@ -671,7 +859,6 @@
         z-index: 5;
       }
 
-      /* Mobile Stage */
       .stage {
         background: #0b3b2a;
       }
@@ -690,24 +877,39 @@
         opacity: 1;
       }
 
-      /* Mobile Nav Tags */
       .tag {
         font-size: 13px;
         height: 30px;
         padding: 0 12px;
       }
 
-      .t1 { left: 12px; top: 12px; }
-      .t2 { right: 12px; top: 12px; left: auto; }
-      .t3 { left: 12px; top: calc(12px + 44 * var(--n)); right: auto; }
-      .t4 { right: 12px; top: calc(12px + 44 * var(--n)); }
+      .t1 {
+        left: 12px;
+        top: 12px;
+      }
+
+      .t2 {
+        right: 12px;
+        top: 12px;
+        left: auto;
+      }
+
+      .t3 {
+        left: 12px;
+        top: calc(12px + 44 * var(--n));
+        right: auto;
+      }
+
+      .t4 {
+        right: 12px;
+        top: calc(12px + 44 * var(--n));
+      }
 
       body.is-case .t3,
       body.is-case .t4 {
         visibility: hidden;
       }
 
-      /* Mobile Wordmark */
       svg.m-wm {
         position: absolute;
         left: 3vw;
@@ -719,7 +921,6 @@
         z-index: 1;
       }
 
-      /* Mobile Script */
       .m-script {
         position: absolute;
         right: 6vw;
@@ -734,7 +935,6 @@
         white-space: nowrap;
       }
 
-      /* Mobile Badge */
       .m-badge {
         position: absolute;
         right: 2vw;
@@ -757,83 +957,21 @@
         transform: scale(var(--mbs)) translate(calc(-288px + 13.5vw), 0);
       }
 
-      /* Mobile Hint */
       .hint {
         bottom: 18px;
         font-size: 11px;
       }
 
-      /* Mobile Case Mode */
-      body.is-case .nav-logo {
-        display: none !important;
-      }
-
-      .ticket {
-        left: 50% !important;
-        right: auto !important;
-        transform: translateX(-50%) !important;
-        top: 62px !important;
-        width: min(86vw, 360px) !important;
-        height: auto !important;
-        padding: 22px 26px 16px 36px !important;
-      }
-
-      .ticket-title {
-        font-size: 38px !important;
-      }
-
-      .t-row {
-        font-size: 11px !important;
-      }
-
-      .hole {
-        width: 15px !important;
-        height: 15px !important;
-      }
-
-      .desc {
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        top: calc(62px + var(--th) + 18px) !important;
-        width: min(86vw, 360px) !important;
-        text-align: center;
-      }
-
-      .desc-k { font-size: 15px !important; }
-      .desc-p { font-size: 13.5px !important; }
-      .desc-num { display: none !important; }
-
-      .nav-case {
-        bottom: calc(env(safe-area-inset-bottom, 0px) + 2.2vh) !important;
-        flex-direction: row !important;
-        gap: 8px !important;
-      }
-
-      .nav-case.prev { left: 6vw !important; }
-      .nav-case.next { right: 6vw !important; }
-
-      .nav-case .c {
-        width: 42px !important;
-        height: 42px !important;
-      }
-
-      .nav-case .c svg {
-        width: 20px !important;
-        height: 20px !important;
-      }
-
-      .nav-case .lbl {
-        font-size: 12.5px !important;
-      }
-
-      .nav-case br {
-        display: none !important;
+      #s2-3d-engine {
+        overflow-y: auto;
       }
     }
 
-    /* ── Reduced Motion ── */
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+
+      *,
+      *::before,
+      *::after {
         animation: none !important;
         transition: none !important;
       }
@@ -841,6 +979,7 @@
   </style>
   <script>document.documentElement.classList.add('js');</script>
 </head>
+
 <body>
   <!-- ── Stage Container ── -->
   <div class="stage" id="stage">
@@ -852,12 +991,13 @@
       <svg class="wm pre" id="wm" viewBox="0 0 1440 380" preserveAspectRatio="none">
         <defs>
           <linearGradient id="wm-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
-            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9"/>
-            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.28"/>
+            <stop offset="0" stop-color="#ffffff" stop-opacity="1" />
+            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9" />
+            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.28" />
           </linearGradient>
         </defs>
-        <text x="14" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400" letter-spacing="-6px" fill="url(#wm-grad)">FAMS</text>
+        <text x="14" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400"
+          letter-spacing="-6px" fill="url(#wm-grad)">FAMS</text>
       </svg>
 
       <!-- 3. Man Cutout -->
@@ -883,38 +1023,31 @@
       <div class="script pre" id="script">field-attachment</div>
 
       <!-- 6. Camera Push Video -->
-      <video class="trans" id="trans" playsinline muted preload="auto"></video>
+      <video class="trans" id="trans" playsinline muted preload="auto" crossorigin="anonymous"></video>
 
       <!-- 7. Caseplate Photo -->
       <img class="caseplate" id="caseplate" alt="" crossorigin="anonymous">
 
-      <!-- 8. Laptop Display -->
+      <!-- 8. Laptop Screen Flash Target (Crossfades into Scene 2 #s2-3d-engine) -->
       <div class="screen" id="screen">
-        <video class="case-vid" id="cv0" playsinline muted loop crossorigin="anonymous"></video>
-        <video class="case-vid" id="cv1" playsinline muted loop crossorigin="anonymous"></video>
-        <video class="case-vid" id="cv2" playsinline muted loop crossorigin="anonymous"></video>
         <div class="flash" id="flash"></div>
       </div>
-
-      <!-- 9. Laptop Display Hit Target -->
-      <div class="screen-hit" id="screen-hit" title="Next case"></div>
     </div>
   </div>
 
   <!-- ── Viewport-Pinned Fixed UI ── -->
   <div class="ui">
-    <!-- Nav Tags -->
+    <!-- Scene 1 Nav Tags -->
     <button class="tag t1 pre" id="btn-overview" type="button">overview</button>
     <button class="tag t2 pre" id="btn-features" type="button">features</button>
     <a class="tag t3 pre" id="btn-contacts" href="#contacts">contacts</a>
-    <a class="tag t4 pre" id="btn-demo" href="#demo">request a demo</a>
-
-    <!-- Centre Nav Logo -->
-    <button class="nav-logo" id="btn-logo" type="button" aria-label="Back to overview">FAMS</button>
+    <a class="tag t4 pre" id="btn-demo" href="/auth">request a demo</a>
 
     <!-- Scroll Hint -->
     <div class="hint pre" id="hint">
-      <div class="hint-line"><div class="hint-bead"></div></div>
+      <div class="hint-line">
+        <div class="hint-bead"></div>
+      </div>
       <span>scroll into the system</span>
     </div>
 
@@ -923,51 +1056,762 @@
       <svg class="m-wm pre" id="m-wm" viewBox="0 0 1440 380" preserveAspectRatio="none">
         <defs>
           <linearGradient id="m-wm-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
-            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9"/>
-            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.3"/>
+            <stop offset="0" stop-color="#ffffff" stop-opacity="1" />
+            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9" />
+            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.3" />
           </linearGradient>
         </defs>
-        <text x="10" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400" letter-spacing="-6px" fill="url(#m-wm-grad)">FAMS</text>
+        <text x="10" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400"
+          letter-spacing="-6px" fill="url(#m-wm-grad)">FAMS</text>
       </svg>
       <div class="m-script pre" id="m-script">field-attachment</div>
       <div class="m-badge" id="m-badge"></div>
     </div>
 
-    <!-- Case UI: Ticket -->
-    <div class="ticket" id="ticket">
-      <div class="hole hl-tl"></div>
-      <div class="hole hl-tr"></div>
-      <div class="hole hl-bl"></div>
-      <div class="hole hl-br"></div>
-      <h2 class="ticket-title" id="t-title">PLACEMENT HUB</h2>
-      <div class="ticket-rows" id="t-rows">
-        <div class="t-row">STUDENT PORTAL</div>
-        <div class="t-row">PLACEMENTS</div>
-        <div class="t-row">2026</div>
-      </div>
-    </div>
+  </div>
 
-    <!-- Case UI: Description -->
-    <div class="desc" id="desc">
-      <div class="desc-k" id="d-k">// placement hub</div>
-      <p class="desc-p" id="d-p">— students browse host organisations, apply for attachment and track every request through to approval.</p>
-      <div class="desc-num" id="d-num">01 / 03</div>
-    </div>
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       SCENE 2: INTERNTRACK 3D AUTO-MOTION ENGINE (EXACT hero-laptop-views)
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <div id="s2-3d-engine" aria-hidden="true">
+    <!-- 1. 3D SPATIAL NETWORK & ORBITAL DATA CANVAS -->
+    <canvas id="webgl-stage" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
 
-    <!-- Case UI: Prev/Next Buttons -->
-    <button class="nav-case prev" id="btn-prev" type="button" aria-label="Previous case">
-      <div class="c">
-        <svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    <!-- 2. CENTER 3D PERSPECTIVE STAGE (THE AUTHENTIC INTERNTRACK APP) -->
+    <main class="relative z-20 flex-1 flex items-center justify-center px-4 py-2 stage-viewport" id="stage-viewport">
+      
+      <!-- 3D Camera Rig (Animated automatically + draggable in 3D) -->
+      <div id="camera-rig" class="camera-rig w-full max-w-[1180px]" style="transform: rotateX(7deg) rotateY(-9deg) rotateZ(0.4deg) scale(0.96);">
+        
+        <!-- Floating 3D Role Exclusive Capability Callout (Z: +105px) -->
+        <div id="floating-role-hud" class="z-layer-hud absolute -top-4 right-6 z-50 bg-zinc-950/95 border-2 border-indigo-400/60 text-white px-4 py-2.5 rounded-2xl shadow-2xl backdrop-blur-xl flex items-center gap-3 max-w-md pointer-events-none">
+          <div id="hud-role-badge" class="size-9 rounded-xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-base font-bold shrink-0">
+            🎓
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span id="hud-perm-code" class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-indigo-500/25 text-indigo-300 border border-indigo-400/30">logs:create • attendance:record</span>
+              <span class="text-[10px] font-mono text-emerald-400 font-semibold">● EXCLUSIVE ACTION</span>
+            </div>
+            <p id="hud-action-title" class="text-xs font-bold text-white truncate mt-0.5">Student Punching Shift Clock-In &amp; AI Logbook Polish</p>
+          </div>
+        </div>
+
+        <!-- 3D Workstation Bezel -->
+        <div class="laptop-3d-body">
+          
+          <!-- Browser / Workstation Window Bar -->
+          <div class="bg-zinc-950 px-4 py-2 rounded-t-xl border-b border-white/10 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2">
+              <span class="size-2.5 rounded-full bg-rose-500"></span>
+              <span class="size-2.5 rounded-full bg-amber-500"></span>
+              <span class="size-2.5 rounded-full bg-emerald-500"></span>
+              <div class="ml-3 flex items-center gap-1.5 bg-zinc-900 border border-white/10 px-3 py-0.5 rounded-md text-[11px] font-mono text-indigo-300/90">
+                <span>🔒</span>
+                <span id="browser-url">https://interntrack.uonbi.ac.ke/dashboard</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 text-[11px] font-mono">
+              <span class="text-indigo-300/80">RBAC SESSION: <strong id="window-rbac-tier" class="text-white">TIER 1 (STUDENT)</strong></span>
+              <span class="text-zinc-600">|</span>
+              <span class="text-emerald-400/90">DRAG STAGE TO ORBIT 3D</span>
+            </div>
+          </div>
+
+          <!-- REDESIGNED INTERNTRACK APP SHELL (MONOCHROMATIC ZINC + INDIGO) -->
+          <div id="app-screen-shell" class="grid grid-cols-12 min-h-[590px] max-h-[590px] rounded-b-xl overflow-visible relative" style="background: var(--it-bg); color: var(--it-ink); transform-style: preserve-3d; transition: background 0.25s ease, color 0.25s ease;">
+            
+            <!-- Simulated 3D Spatial Pointer / Cursor -->
+            <div id="sim-pointer" class="absolute z-50 left-[480px] top-[260px] flex items-start">
+              <div class="relative">
+                <svg class="size-6 drop-shadow-[0_6px_12px_rgba(0,0,0,0.45)]" viewBox="0 0 24 24" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+                  <path d="M4 4l7.07 17 2.51-7.39L21 11.07z"/>
+                </svg>
+                <div id="pointer-ripple" class="absolute -top-2 -left-2 size-9 rounded-full border-2 border-indigo-500 opacity-0"></div>
+              </div>
+              <div id="pointer-label" class="ml-1 mt-3 px-2.5 py-1 rounded-lg bg-zinc-950 text-white text-[10px] font-mono font-bold shadow-xl border border-indigo-400/50 whitespace-nowrap">
+                Clicking + Add Today's Log
+              </div>
+            </div>
+
+            <!-- LEFT: MONOCHROMATIC ZINC SIDEBAR -->
+            <aside class="col-span-3 lg:col-span-2 flex flex-col justify-between rounded-bl-xl z-layer-base select-none transition-colors duration-200" style="background: var(--it-sidebar); color: var(--it-sidebar-ink); border-right: 1px solid var(--it-sidebar-border);">
+              <div>
+                <!-- Brand Header -->
+                <div class="flex items-center gap-2.5 px-4 py-3.5" style="border-bottom: 1px solid var(--it-sidebar-border);">
+                  <div class="size-8 rounded-lg it-accent-gradient flex items-center justify-center text-white font-bold shadow-sm shrink-0">
+                    <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="font-bold text-sm leading-none tracking-tight" style="color: var(--it-sidebar-active-ink);">InternTrack</p>
+                    <div class="mt-1 flex items-center gap-1">
+                      <span id="sb-tier-pill" class="text-[9px] font-semibold px-1.5 py-0 rounded" style="border: 1px solid var(--it-sidebar-border); color: var(--it-muted);">Tier 1</span>
+                      <span id="sb-role-short" class="text-[9px] font-mono uppercase tracking-wider" style="color: var(--it-muted);">STUDENT</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dynamic Categorized Sidebar Nav -->
+                <div id="sidebar-nav-container" class="px-2.5 py-3 space-y-3 text-xs"></div>
+              </div>
+
+              <!-- Sidebar Bottom User Profile Card -->
+              <div class="p-3 rounded-bl-xl" style="border-top: 1px solid var(--it-sidebar-border); background: rgba(79,70,229,0.04);">
+                <div class="flex items-center gap-2.5">
+                  <div id="sb-avatar" class="size-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0" style="background: rgba(79,70,229,0.14); color: var(--it-primary); border: 1px solid rgba(79,70,229,0.28);">
+                    AW
+                  </div>
+                  <div class="min-w-0">
+                    <p id="sb-user-name" class="text-xs font-semibold truncate" style="color: var(--it-sidebar-active-ink);">Alice Wanjiku</p>
+                    <p id="sb-user-role" class="text-[10px] truncate" style="color: var(--it-muted);">Student</p>
+                  </div>
+                </div>
+                <div class="mt-2 pt-2 flex items-center gap-1.5 text-[10px]" style="border-top: 1px solid var(--it-sidebar-border); color: var(--it-muted);">
+                  <span>↪</span>
+                  <span>Sign out</span>
+                </div>
+              </div>
+            </aside>
+
+            <!-- RIGHT: MONOCHROMATIC ZINC WORKSPACE -->
+            <section class="col-span-9 lg:col-span-10 flex flex-col justify-between p-4 sm:p-5 overflow-visible relative" style="transform-style: preserve-3d;">
+              
+              <!-- Top Bar with Role Persona Switcher Pill -->
+              <div class="flex items-center justify-between pb-3 mb-1 border-b border-zinc-200 z-layer-base">
+                <div class="flex items-center gap-2">
+                  <span class="text-[11px] font-semibold text-zinc-500">Active Institutional Persona:</span>
+                  <span id="top-scope-badge" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                    🎓 University of Nairobi • BSc. Computer Science
+                  </span>
+                </div>
+
+                <!-- Top-Right Persona Pill -->
+                <div class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1 shadow-sm">
+                  <span id="top-avatar" class="size-6 rounded-full bg-indigo-600/15 text-indigo-700 font-bold text-[10px] flex items-center justify-center">AW</span>
+                  <span id="top-user-name" class="text-xs font-semibold text-zinc-900">Alice Wanjiku</span>
+                  <span id="top-role-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-indigo-700">Student</span>
+                  <span class="text-[10px] text-zinc-500">▾</span>
+                </div>
+              </div>
+
+              <!-- ROLE 0: STUDENT INTERN VIEW (Alice Wanjiku — Tier 1) -->
+              <div id="role-view-0" class="flex-1 flex flex-col justify-between space-y-3.5" style="transform-style: preserve-3d;">
+                <div class="z-layer-mid it-hero-gradient rounded-2xl p-4 sm:p-5 text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-semibold backdrop-blur">
+                        ✨ Active Placement • Week 9 of 12
+                      </span>
+                      <span class="text-[11px] text-white/75">Target Defense: Sept 30, 2026</span>
+                    </div>
+                    <h2 class="mt-1.5 text-xl sm:text-2xl font-extrabold tracking-tight">Good morning, Alice!</h2>
+                    <p class="text-xs text-white/90 font-medium mt-0.5">
+                      Software Engineering Intern • TechCorp Kenya Ltd • Supervised by James Otieno (Host) &amp; Dr. Peter Kamau (Faculty)
+                    </p>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-2 shrink-0">
+                    <button id="stu-btn-add-log" onclick="triggerStudentLogFlow()" type="button" class="it-hero-btn px-3.5 py-2 rounded-xl bg-white text-indigo-700 font-bold text-xs shadow-sm hover:bg-zinc-100 transition flex items-center gap-1.5">
+                      <span>＋</span>
+                      <span>Add Today's Log</span>
+                    </button>
+                    <button id="stu-btn-clock" onclick="triggerStudentClock()" type="button" class="px-3.5 py-2 rounded-xl border border-white/30 bg-white/10 text-white font-semibold text-xs hover:bg-white/20 transition flex items-center gap-1.5">
+                      <span>🕒</span>
+                      <span id="stu-clock-btn-label">Clock In (08:30 AM)</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 4 Student KPI Cards -->
+                <div class="grid grid-cols-4 gap-3 z-layer-mid">
+                  <div id="stu-card-days" class="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-sm transition-all">
+                    <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+                      <span>Days Completed</span>
+                      <span class="size-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">📅</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-1.5">
+                      <span id="stu-days-val" class="text-2xl font-extrabold text-zinc-900">42</span>
+                      <span class="text-xs text-zinc-500">/ 60 days</span>
+                    </div>
+                    <div class="mt-2 w-full bg-zinc-100 h-1.5 rounded-full overflow-hidden">
+                      <div id="stu-days-bar" class="bg-indigo-600 h-full transition-all duration-700" style="width: 70%"></div>
+                    </div>
+                  </div>
+
+                  <div class="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-sm">
+                    <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+                      <span>Total Logged Hours</span>
+                      <span class="size-6 rounded-lg bg-amber-500/15 text-amber-700 flex items-center justify-center">⏱️</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-1.5">
+                      <span id="stu-hours-val" class="text-2xl font-extrabold text-zinc-900">336.0</span>
+                      <span class="text-xs text-zinc-500">hours</span>
+                    </div>
+                    <p class="mt-2 text-[11px] text-emerald-600 font-medium">● 8.0 hrs/day pace</p>
+                  </div>
+
+                  <div class="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-sm">
+                    <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+                      <span>Logbook Status</span>
+                      <span class="size-6 rounded-lg bg-emerald-500/15 text-emerald-700 flex items-center justify-center">📋</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-1.5">
+                      <span id="stu-logs-count" class="text-2xl font-extrabold text-zinc-900">4</span>
+                      <span class="text-xs text-zinc-500">entries</span>
+                    </div>
+                    <span id="stu-queue-pill" class="inline-block mt-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700">
+                      1 draft ready to submit
+                    </span>
+                  </div>
+
+                  <div class="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-sm">
+                    <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+                      <span>RBAC Clearance</span>
+                      <span class="size-6 rounded-lg bg-indigo-500/15 text-indigo-700 flex items-center justify-center">🛡️</span>
+                    </div>
+                    <div class="mt-1.5 space-y-1 text-[10px] font-mono">
+                      <div class="text-emerald-600 font-bold">✓ logs:create</div>
+                      <div class="text-emerald-600 font-bold">✓ attendance:record</div>
+                      <div class="text-rose-500">🔒 logs:approve (Mentor)</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bottom Split -->
+                <div class="grid grid-cols-12 gap-3.5 flex-1" style="transform-style: preserve-3d;">
+                  <div id="stu-card-logbook" class="col-span-7 bg-white border border-zinc-200 rounded-2xl p-4 z-layer-pop flex flex-col justify-between">
+                    <div class="flex items-center justify-between border-b border-zinc-200 pb-2.5">
+                      <div>
+                        <div class="flex items-center gap-2">
+                          <span class="text-xs font-extrabold text-zinc-900">Digital Logbook — Today's Entry</span>
+                          <span id="stu-log-status-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-400 bg-amber-50 text-amber-800">
+                            Draft
+                          </span>
+                        </div>
+                        <p class="text-[11px] text-zinc-500">2026-09-24 · 08:30–17:00 · TechCorp Product Engineering</p>
+                      </div>
+                      <button id="stu-btn-ai" onclick="triggerStudentAiPolish()" type="button" class="px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-[11px] font-bold flex items-center gap-1 hover:bg-indigo-100 transition">
+                        <span>✨</span>
+                        <span id="stu-ai-label">Polish with AI</span>
+                      </button>
+                    </div>
+
+                    <div class="my-2.5 space-y-2">
+                      <div class="text-xs font-bold text-zinc-900 bg-zinc-50 px-3 py-1.5 rounded-lg border border-zinc-200">
+                        Title: <span class="font-semibold">Onboarding Flow UI &amp; REST API Validation</span>
+                      </div>
+                      <div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 min-h-[74px] text-xs text-zinc-900 leading-relaxed font-normal">
+                        <span id="stu-log-desc">Working on the onboarding wizard UI components for new user registration using React 19 and Zod schema validation.</span>
+                        <span id="stu-cursor" class="inline-block w-1.5 h-3.5 bg-indigo-600 align-middle ml-0.5 animate-pulse"></span>
+                      </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                      <div id="stu-skill-tags" class="flex flex-wrap gap-1">
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md border border-zinc-200 bg-white text-zinc-900">React 19</span>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md border border-zinc-200 bg-white text-zinc-900">Tailwind CSS</span>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-zinc-100 text-indigo-700">UI/UX design</span>
+                      </div>
+                      <button id="stu-btn-submit" onclick="triggerStudentSubmit()" type="button" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
+                        <span>🚀</span>
+                        <span id="stu-submit-label">Submit to Field Supervisor</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div id="stu-card-milestone" class="col-span-5 bg-white border border-zinc-200 rounded-2xl p-4 z-layer-mid flex flex-col justify-between">
+                    <div>
+                      <div class="flex items-center justify-between border-b border-zinc-200 pb-2">
+                        <span class="text-xs font-extrabold text-zinc-900">Today's Shift &amp; Milestone</span>
+                        <span id="stu-shift-pill" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 flex items-center gap-1">
+                          <span class="size-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                          Checked In 08:30 AM
+                        </span>
+                      </div>
+
+                      <div class="mt-2.5 p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-[11px] space-y-1">
+                        <div class="flex justify-between">
+                          <span class="text-zinc-500">Workplace Location:</span>
+                          <span class="font-bold text-zinc-900">TechCorp Westlands (On-Site)</span>
+                        </div>
+                        <div class="flex justify-between">
+                          <span class="text-zinc-500">Phase 2 Deliverables:</span>
+                          <span id="stu-ms-pct" class="font-bold text-indigo-600">2 of 3 tasks (67%)</span>
+                        </div>
+                      </div>
+
+                      <div class="mt-2.5 space-y-1.5 text-[11px]">
+                        <div class="flex items-center gap-2 p-1.5 rounded-lg bg-emerald-50/70 border border-emerald-200 text-zinc-900">
+                          <span class="size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold">✓</span>
+                          <span class="line-through text-zinc-500">Implement Radix dialog and tabs in review queue</span>
+                        </div>
+                        <div class="flex items-center gap-2 p-1.5 rounded-lg bg-emerald-50/70 border border-emerald-200 text-zinc-900">
+                          <span class="size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold">✓</span>
+                          <span class="line-through text-zinc-500">Build responsive stats dashboard with Recharts</span>
+                        </div>
+                        <div id="stu-ms-task3" class="flex items-center gap-2 p-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-900 transition-all">
+                          <span id="stu-ms-check3" class="size-4 rounded-full border border-zinc-400 flex items-center justify-center text-[9px] font-bold"></span>
+                          <span id="stu-ms-text3" class="font-semibold">Complete accessibility &amp; screen-reader audit</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ROLE 1: FIELD SUPERVISOR VIEW (James Otieno — Host Org Tier 2) -->
+              <div id="role-view-1" class="hidden flex-1 flex flex-col justify-between space-y-3.5" style="transform-style: preserve-3d;">
+                <div class="z-layer-mid rounded-xl border border-indigo-200 bg-indigo-50/70 p-3.5 flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="size-9 rounded-xl bg-indigo-600/15 text-indigo-700 flex items-center justify-center text-base font-bold shrink-0">🏢</div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="font-extrabold text-xs text-zinc-900">Host Organization Review Queue</span>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-200 text-indigo-700 bg-white">🏢 TechCorp Kenya Ltd</span>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-500">Received Enterprise Logins</span>
+                      </div>
+                      <p class="text-[11px] text-zinc-500 mt-0.5">
+                        Scoped strictly to your assigned student mentees: <strong>Alice Wanjiku</strong> and <strong>Kevin Kiprono</strong>. Sign off daily logs or request revisions.
+                      </p>
+                    </div>
+                  </div>
+                  <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 shrink-0">
+                    🛡️ Direct Sign-off Authority
+                  </span>
+                </div>
+
+                <div class="flex items-center justify-between gap-3 z-layer-mid">
+                  <div class="inline-flex items-center gap-1 bg-zinc-100 p-1 rounded-xl border border-zinc-200">
+                    <span class="px-3 py-1 rounded-lg bg-white text-xs font-bold text-zinc-900 shadow-sm flex items-center gap-1.5">
+                      Pending <span id="sup-pending-badge" class="px-1.5 py-0 rounded-full bg-indigo-600 text-white text-[10px]">2</span>
+                    </span>
+                    <span class="px-3 py-1 rounded-lg text-xs font-semibold text-zinc-500 flex items-center gap-1.5">
+                      Approved <span id="sup-approved-badge" class="px-1.5 py-0 rounded-full bg-white text-zinc-900 text-[10px]">3</span>
+                    </span>
+                    <span class="px-3 py-1 rounded-lg text-xs font-semibold text-zinc-500 flex items-center gap-1.5">
+                      Revisions Requested <span class="px-1.5 py-0 rounded-full bg-amber-500/20 text-amber-800 text-[10px]">1</span>
+                    </span>
+                  </div>
+
+                  <div class="flex items-center gap-2 text-xs">
+                    <span class="text-zinc-500 font-medium">Assigned Mentees:</span>
+                    <span class="px-3 py-1 rounded-lg bg-white border border-zinc-200 font-semibold text-zinc-900">All Assigned Mentees (Alice &amp; Kevin) ▾</span>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-3.5 flex-1" style="transform-style: preserve-3d;">
+                  <div id="sup-card-review" class="col-span-8 bg-white border border-zinc-200 rounded-2xl p-4 z-layer-pop flex flex-col justify-between">
+                    <div>
+                      <div class="flex items-start justify-between gap-2 border-b border-zinc-200 pb-2.5">
+                        <div>
+                          <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-extrabold text-zinc-900">Vulnerability assessment on customer portal API</h3>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-200 text-indigo-700 bg-indigo-50">Kevin Kiprono</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/30 text-emerald-700 bg-emerald-50">+ Alice Wanjiku</span>
+                          </div>
+                          <p class="text-[11px] text-zinc-500 mt-0.5">Logged Date: 2026-09-24 • Hours: 08:30 - 17:00 (8.0 hrs)</p>
+                        </div>
+                        <span id="sup-sub-status" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-300">
+                          Submitted
+                        </span>
+                      </div>
+
+                      <p class="text-xs text-zinc-900 mt-2.5 leading-relaxed">
+                        Conducted automated and manual vulnerability assessment using OWASP ZAP and Postman. Identified 2 CORS misconfigurations and drafted remediation notes alongside PostgreSQL analytics schema indexing.
+                      </p>
+
+                      <div class="flex flex-wrap gap-1.5 mt-2">
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-zinc-100 text-zinc-900">OWASP ZAP</span>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-zinc-100 text-zinc-900">Postman</span>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-zinc-100 text-zinc-900">Burp Suite</span>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-zinc-100 text-zinc-900">PostgreSQL</span>
+                      </div>
+
+                      <div class="mt-3 space-y-1">
+                        <label class="text-[11px] font-bold text-zinc-900 flex items-center gap-1">
+                          <span>💬</span> Mentor Guidance / Engineering Sign-Off Note
+                        </label>
+                        <div class="bg-zinc-50 border border-zinc-200 rounded-xl p-2.5 text-xs text-zinc-900 min-h-[48px]">
+                          <span id="sup-feedback-text">Verified CORS remediation and PostgreSQL index benchmarks on staging. Great analytical rigor!</span>
+                          <span class="inline-block w-1.5 h-3.5 bg-indigo-600 align-middle ml-0.5 animate-pulse"></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-3 border-t border-zinc-200">
+                      <div class="flex items-center gap-2">
+                        <button id="sup-btn-approve" onclick="triggerSupervisorApprove()" type="button" class="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
+                          <span>✓</span>
+                          <span id="sup-approve-label">Sign Off &amp; Approve</span>
+                        </button>
+                        <button type="button" class="px-3 py-1.5 rounded-xl border border-amber-400 bg-amber-50 text-amber-900 font-semibold text-xs hover:bg-amber-100 transition flex items-center gap-1">
+                          <span>↺</span>
+                          <span>Request Revision</span>
+                        </button>
+                      </div>
+                      <span class="text-[10px] font-mono text-zinc-500">Reviewer: James Otieno (TechCorp)</span>
+                    </div>
+                  </div>
+
+                  <div class="col-span-4 bg-white border border-zinc-200 rounded-2xl p-4 z-layer-mid flex flex-col justify-between">
+                    <div class="space-y-2.5">
+                      <div class="text-xs font-extrabold text-zinc-900 border-b border-zinc-200 pb-2">
+                        Assigned TechCorp Mentees (2)
+                      </div>
+                      <div class="p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 space-y-1">
+                        <div class="flex items-center justify-between">
+                          <span class="text-xs font-bold text-zinc-900">Alice Wanjiku</span>
+                          <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">42/60d</span>
+                        </div>
+                        <p class="text-[10px] text-zinc-500">CS/2021/0042 • Software Eng. Intern</p>
+                      </div>
+                      <div class="p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 space-y-1">
+                        <div class="flex items-center justify-between">
+                          <span class="text-xs font-bold text-zinc-900">Kevin Kiprono</span>
+                          <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">18/60d</span>
+                        </div>
+                        <p class="text-[10px] text-zinc-500">CS/2021/0104 • Cybersecurity Intern</p>
+                      </div>
+                    </div>
+
+                    <div class="p-2.5 rounded-xl bg-amber-50/70 border border-amber-200 text-[10px] font-mono space-y-1">
+                      <div class="font-bold text-amber-900">TIER 2 HOST ORG PERMISSIONS:</div>
+                      <div class="text-emerald-600 font-bold">✓ logs:approve (Sign off logs)</div>
+                      <div class="text-emerald-600 font-bold">✓ attendance:audit (Verify hours)</div>
+                      <div class="text-rose-500">🔒 supervisors:assign (Uni Admin only)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ROLE 2: UNIVERSITY ACADEMIC SUPERVISOR (Dr. Joyce Chelangat — Tier 3) -->
+              <div id="role-view-2" class="hidden flex-1 flex flex-col justify-between space-y-3.5" style="transform-style: preserve-3d;">
+                <div class="z-layer-mid it-hero-gradient rounded-2xl p-4 sm:p-5 text-white shadow-lg flex items-center justify-between gap-4">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="px-2.5 py-0.5 rounded-full bg-white/15 border border-white/25 text-[11px] font-semibold">
+                        🏛️ Academic &amp; Field Rubrics
+                      </span>
+                      <span class="text-[11px] text-white/75">University of Nairobi • Dept. of Software Engineering</span>
+                    </div>
+                    <h2 class="mt-1.5 text-xl font-extrabold tracking-tight">Performance Evaluations &amp; Grading</h2>
+                    <p class="text-xs text-white/85 mt-0.5">
+                      Conduct verified mid-term reviews, certify milestone phases, and record final academic exit assessments.
+                    </p>
+                  </div>
+                  <button id="uni-btn-eval" onclick="triggerUniEvaluation()" type="button" class="it-hero-btn px-3.5 py-2 rounded-xl bg-white text-indigo-700 font-bold text-xs shadow-sm hover:bg-zinc-100 transition shrink-0">
+                    🏅 Conduct New Evaluation
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-4 gap-3 z-layer-mid">
+                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
+                    <div class="text-[10px] font-bold uppercase text-zinc-500">Total Evaluations</div>
+                    <div id="uni-eval-count" class="text-2xl font-extrabold text-zinc-900 mt-1">1</div>
+                    <div class="text-[10px] text-zinc-500 mt-0.5">Signed assessments on file</div>
+                  </div>
+                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
+                    <div class="text-[10px] font-bold uppercase text-zinc-500">Average Overall Score</div>
+                    <div id="uni-eval-avg" class="text-2xl font-extrabold text-indigo-600 mt-1">4.8 / 5.0</div>
+                    <div class="text-[10px] text-emerald-600 font-semibold mt-0.5">Distinction-tier performance</div>
+                  </div>
+                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
+                    <div class="text-[10px] font-bold uppercase text-zinc-500">Job Offer Endorsements</div>
+                    <div id="uni-eval-offers" class="text-2xl font-extrabold text-zinc-900 mt-1">1</div>
+                    <div class="text-[10px] text-zinc-500 mt-0.5">Full-time conversion recommended</div>
+                  </div>
+                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
+                    <div class="text-[10px] font-bold uppercase text-zinc-500">Defense Ready</div>
+                    <div id="uni-eval-ready" class="text-2xl font-extrabold text-indigo-600 mt-1">3 of 4</div>
+                    <div class="text-[10px] text-zinc-500 mt-0.5">Graduation clearance unlocked</div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-3.5 flex-1" style="transform-style: preserve-3d;">
+                  <div id="uni-card-rubric" class="col-span-7 bg-white border border-zinc-200 rounded-2xl p-4 z-layer-pop flex flex-col justify-between">
+                    <div class="flex items-center justify-between border-b border-zinc-200 pb-2">
+                      <div>
+                        <span class="text-xs font-extrabold text-zinc-900">Academic Assessor Rubric — Final Assessment</span>
+                        <p class="text-[11px] text-zinc-500">Candidate: <strong>Alice Wanjiku (CS/2021/0042)</strong> • TechCorp Kenya Ltd</p>
+                      </div>
+                      <span id="uni-grade-pill" class="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 text-xs font-extrabold">
+                        A (Distinction) • 4.8/5.0
+                      </span>
+                    </div>
+
+                    <div class="space-y-2.5 my-2">
+                      <div>
+                        <div class="flex justify-between text-[11px] font-semibold text-zinc-900 mb-1">
+                          <span>1. Technical Engineering &amp; Architecture</span>
+                          <span class="font-mono font-bold text-indigo-600">5.0 / 5.0</span>
+                        </div>
+                        <div class="w-full h-2 rounded-full bg-zinc-100 overflow-hidden">
+                          <div id="uni-bar-1" class="h-full bg-indigo-600 transition-all duration-700" style="width: 100%"></div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div class="flex justify-between text-[11px] font-semibold text-zinc-900 mb-1">
+                          <span>2. Workplace Punctuality &amp; Attendance Audit</span>
+                          <span class="font-mono font-bold text-indigo-600">5.0 / 5.0</span>
+                        </div>
+                        <div class="w-full h-2 rounded-full bg-zinc-100 overflow-hidden">
+                          <div id="uni-bar-2" class="h-full bg-indigo-600 transition-all duration-700" style="width: 100%"></div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div class="flex justify-between text-[11px] font-semibold text-zinc-900 mb-1">
+                          <span>3. Technical Documentation &amp; Logbook Rigor</span>
+                          <span class="font-mono font-bold text-emerald-600">4.5 / 5.0</span>
+                        </div>
+                        <div class="w-full h-2 rounded-full bg-zinc-100 overflow-hidden">
+                          <div id="uni-bar-3" class="h-full bg-emerald-500 transition-all duration-700" style="width: 90%"></div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div class="flex justify-between text-[11px] font-semibold text-zinc-900 mb-1">
+                          <span>4. Oral Defense &amp; Problem Solving</span>
+                          <span class="font-mono font-bold text-indigo-600">5.0 / 5.0</span>
+                        </div>
+                        <div class="w-full h-2 rounded-full bg-zinc-100 overflow-hidden">
+                          <div id="uni-bar-4" class="h-full bg-indigo-600 transition-all duration-700" style="width: 100%"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2 border-t border-zinc-200">
+                      <span class="text-[11px] font-semibold text-zinc-500">Recommendation: <strong class="text-emerald-600">Full Time Offer</strong></span>
+                      <button id="uni-btn-save-eval" onclick="triggerUniEvaluation()" type="button" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-sm hover:bg-indigo-700 transition">
+                        <span id="uni-save-eval-label">✓ Certify &amp; Record Grade</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="col-span-5 bg-white border border-zinc-200 rounded-2xl p-4 z-layer-mid flex flex-col justify-between">
+                    <div class="space-y-2">
+                      <div class="text-xs font-extrabold text-zinc-900 border-b border-zinc-200 pb-2">
+                        Faculty Milestone Certification
+                      </div>
+                      <div class="p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs space-y-1">
+                        <div class="flex items-center justify-between">
+                          <span class="font-bold text-zinc-900">Phase 1: Orientation</span>
+                          <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Certified ✓</span>
+                        </div>
+                        <p class="text-[10px] text-zinc-500">Weeks 1–2 • Git, Docker, Architecture</p>
+                      </div>
+                      <div id="uni-ms-phase2" class="p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs space-y-1 transition-all">
+                        <div class="flex items-center justify-between">
+                          <span class="font-bold text-zinc-900">Phase 2: Core Modules</span>
+                          <span id="uni-ms-badge2" class="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800">Ready to Certify</span>
+                        </div>
+                        <p class="text-[10px] text-zinc-500">Weeks 3–6 • React 19, Tailwind v4, Radix UI</p>
+                      </div>
+                    </div>
+
+                    <div class="p-2.5 rounded-xl bg-indigo-50/80 border border-indigo-200 text-[10px] font-mono space-y-1">
+                      <div class="font-bold text-indigo-950">FACULTY ASSESSOR PERMISSIONS:</div>
+                      <div class="text-emerald-600 font-bold">✓ assessments:grade (Midterm/Final)</div>
+                      <div class="text-emerald-600 font-bold">✓ milestones:certify (Phase Sign-off)</div>
+                      <div class="text-rose-500">🔒 rbac:manage (Uni Admin / Dean only)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ROLE 3: UNIVERSITY ADMIN / DEAN (Dr. Peter Kamau — Tier 4) -->
+              <div id="role-view-3" class="hidden flex-1 flex flex-col justify-between space-y-3" style="transform-style: preserve-3d;">
+                <div id="admin-alert-banner" class="z-layer-mid rounded-xl border border-rose-300 bg-rose-50/95 px-4 py-2.5 flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-2.5">
+                    <span class="text-base">⚠️</span>
+                    <div>
+                      <div class="text-xs font-extrabold text-rose-950">Pending Faculty Assessor Allocation &amp; Attendance Risk Alert</div>
+                      <p id="admin-alert-desc" class="text-[11px] text-rose-800">
+                        1 candidate flagged: <strong>Kevin Kiprono (CS/2021/0104)</strong> at TechCorp Kenya Ltd is missing an assigned University Academic Supervisor.
+                      </p>
+                    </div>
+                  </div>
+                  <button id="admin-btn-pair-now" onclick="triggerAdminPairSupervisor()" type="button" class="px-3 py-1.5 rounded-lg bg-rose-700 hover:bg-rose-800 text-white text-xs font-bold shrink-0 shadow-sm transition">
+                    Pair Kevin Kiprono Now →
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-4 gap-3 z-layer-mid">
+                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
+                    <div class="text-[10px] font-bold uppercase text-zinc-500">Placed Cohort</div>
+                    <div class="text-2xl font-extrabold text-zinc-900 mt-1">4</div>
+                    <div class="text-[10px] text-zinc-500">TechCorp, Safaricom, KCB</div>
+                  </div>
+                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
+                    <div class="text-[10px] font-bold uppercase text-zinc-500">Dual-Supervised Rate</div>
+                    <div id="admin-dual-rate" class="text-2xl font-extrabold text-amber-600 mt-1">75%</div>
+                    <div id="admin-dual-sub" class="text-[10px] text-amber-700 font-semibold">3 of 4 fully paired</div>
+                  </div>
+                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
+                    <div class="text-[10px] font-bold uppercase text-zinc-500">Supervisor Roster</div>
+                    <div id="admin-sup-count" class="text-2xl font-extrabold text-zinc-900 mt-1">6</div>
+                    <div class="text-[10px] text-zinc-500">3 Host Org • 3 Faculty</div>
+                  </div>
+                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
+                    <div class="text-[10px] font-bold uppercase text-zinc-500">RBAC Governance</div>
+                    <div class="text-2xl font-extrabold text-indigo-600 mt-1">Tier 4</div>
+                    <div class="text-[10px] text-emerald-600 font-semibold">13 System Permissions</div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-3.5 flex-1" style="transform-style: preserve-3d;">
+                  <div id="admin-card-pairing" class="col-span-7 bg-white border border-zinc-200 rounded-2xl p-3.5 z-layer-pop flex flex-col justify-between">
+                    <div>
+                      <div class="flex items-center justify-between border-b border-zinc-200 pb-2">
+                        <div>
+                          <h3 class="text-xs font-extrabold text-zinc-900">Candidate Dual-Supervisor Allocation Matrix</h3>
+                          <p class="text-[10px] text-zinc-500">Pairs Host Org Field Supervisor + University Assessor &amp; dispatches student-bound login</p>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700">Dual Mentorship</span>
+                      </div>
+
+                      <div class="mt-2 divide-y divide-zinc-200 text-[11px]">
+                        <div class="py-1.5 flex items-center justify-between">
+                          <div>
+                            <div class="font-bold text-zinc-900">Alice Wanjiku <span class="font-mono text-[10px] text-zinc-500">CS/2021/0042</span></div>
+                            <div class="text-[10px] text-zinc-500">TechCorp Kenya Ltd</div>
+                          </div>
+                          <div class="text-[10px]">
+                            <div>🏢 James Otieno <span class="text-emerald-600 font-mono">[🔒 Bound]</span></div>
+                            <div>🏛️ Dr. Peter Kamau</div>
+                          </div>
+                          <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">Dual-Supervised</span>
+                        </div>
+
+                        <div class="py-1.5 flex items-center justify-between">
+                          <div>
+                            <div class="font-bold text-zinc-900">Brian Mwangi <span class="font-mono text-[10px] text-zinc-500">CS/2021/0088</span></div>
+                            <div class="text-[10px] text-zinc-500">Safaricom PLC</div>
+                          </div>
+                          <div class="text-[10px]">
+                            <div>🏢 Grace Muthoni <span class="text-emerald-600 font-mono">[🔒 Bound]</span></div>
+                            <div>🏛️ Dr. Joyce Chelangat</div>
+                          </div>
+                          <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">Dual-Supervised</span>
+                        </div>
+
+                        <div id="admin-row-kevin" class="py-2 px-2 rounded-xl bg-amber-50/70 border border-amber-300 flex items-center justify-between transition-all">
+                          <div>
+                            <div class="font-bold text-zinc-900">Kevin Kiprono <span class="font-mono text-[10px] text-zinc-500">CS/2021/0104</span></div>
+                            <div class="text-[10px] text-zinc-500">TechCorp Kenya Ltd (Cybersecurity)</div>
+                          </div>
+                          <div class="text-[10px]">
+                            <div>🏢 James Otieno <span class="text-emerald-600 font-mono">[🔒 Bound]</span></div>
+                            <div id="admin-kevin-uni-sup" class="text-rose-500 font-bold">⚠️ Missing Academic Assessor</div>
+                          </div>
+                          <span id="admin-kevin-status" class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-bold text-[10px]">Needs Allocation</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2 border-t border-zinc-200">
+                      <span class="text-[10px] font-mono text-zinc-500">🔑 Pre-provisioned logins dispatched automatically</span>
+                      <button id="admin-btn-assign" onclick="triggerAdminPairSupervisor()" type="button" class="px-3 py-1 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-sm hover:bg-indigo-700 transition">
+                        <span id="admin-assign-label">+ Pair Mentors &amp; Dispatch Login</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div id="admin-card-rbac" class="col-span-5 bg-white border border-zinc-200 rounded-2xl p-3.5 z-layer-mid flex flex-col justify-between">
+                    <div>
+                      <div class="flex items-center justify-between border-b border-zinc-200 pb-2">
+                        <span class="text-xs font-extrabold text-zinc-900">RBAC Control Matrix (`rbac:manage`)</span>
+                        <span class="text-[10px] font-mono font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">DEAN ONLY</span>
+                      </div>
+
+                      <div class="mt-2 space-y-1.5 text-[11px]">
+                        <div class="flex items-center justify-between p-1.5 rounded-lg bg-zinc-50 border border-zinc-200">
+                          <div>
+                            <div class="font-bold text-zinc-900">Administrative Log Override</div>
+                            <div class="text-[9px] font-mono text-zinc-500">logs:override • Arbitrate locked entries</div>
+                          </div>
+                          <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-bold">ENABLED</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-1.5 rounded-lg bg-zinc-50 border border-zinc-200">
+                          <div>
+                            <div class="font-bold text-zinc-900">Assign Dual Supervisors</div>
+                            <div class="text-[9px] font-mono text-zinc-500">supervisors:assign • Pair Host + Faculty</div>
+                          </div>
+                          <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-bold">ENABLED</span>
+                        </div>
+
+                        <div id="admin-rbac-row-export" class="flex items-center justify-between p-1.5 rounded-lg bg-zinc-50 border border-zinc-200 transition-all">
+                          <div>
+                            <div class="font-bold text-zinc-900">Accreditation Dossier Export</div>
+                            <div class="text-[9px] font-mono text-zinc-500">accreditation:export • Senate PDF</div>
+                          </div>
+                          <span id="admin-export-pill" class="px-2 py-0.5 rounded-full bg-indigo-600 text-white text-[9px] font-bold">READY</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button id="admin-btn-export" onclick="triggerAdminExportDossier()" type="button" class="w-full py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-1.5">
+                      <span>📄</span>
+                      <span id="admin-export-label">Export Certified Graduation Dossier (PDF)</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </section>
+          </div>
+        </div>
       </div>
-      <span class="lbl">previous <br>case</span>
-    </button>
-    <button class="nav-case next" id="btn-next" type="button" aria-label="Next case">
-      <div class="c">
-        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </main>
+
+    <!-- 4. BOTTOM ROLE-EXCLUSIVE PERMISSIONS & WORKFLOW HANDOFF MATRIX -->
+    <footer class="relative z-30 w-full max-w-[1360px] mx-auto pb-3 px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 bg-zinc-900/90 border border-indigo-500/25 p-2.5 rounded-2xl backdrop-blur-xl shadow-xl text-xs">
+        <div onclick="selectRole(0, true)" id="footer-card-0" class="cursor-pointer p-2.5 rounded-xl border border-indigo-400/50 bg-indigo-500/10 transition flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white flex items-center gap-1.5">🎓 1. Student Intern</span>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300">Tier 1</span>
+          </div>
+          <p class="text-[11px] text-zinc-300 mt-1">Only role that punches daily attendance, drafts logbooks with AI Polish &amp; checks milestone tasks.</p>
+        </div>
+
+        <div onclick="selectRole(1, true)" id="footer-card-1" class="cursor-pointer p-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white flex items-center gap-1.5">🏢 2. Field Supervisor</span>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Tier 2 Host</span>
+          </div>
+          <p class="text-[11px] text-zinc-400 mt-1">Pre-provisioned login bound to assigned company interns. Signs off daily technical logs or requests revisions.</p>
+        </div>
+
+        <div onclick="selectRole(2, true)" id="footer-card-2" class="cursor-pointer p-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white flex items-center gap-1.5">🏛️ 3. Uni Supervisor</span>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300">Tier 3 Faculty</span>
+          </div>
+          <p class="text-[11px] text-zinc-400 mt-1">Certifies academic milestone phases across companies &amp; grades official Mid-Term/Final rubrics.</p>
+        </div>
+
+        <div onclick="selectRole(3, true)" id="footer-card-3" class="cursor-pointer p-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-white flex items-center gap-1.5">⚖️ 4. Uni Admin (Dean)</span>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300">Tier 4 Dean</span>
+          </div>
+          <p class="text-[11px] text-zinc-400 mt-1">Creates supervisor accounts, pairs dual mentors (`supervisors:assign`), governs RBAC &amp; exports dossiers.</p>
+        </div>
       </div>
-      <span class="lbl">next <br>case</span>
-    </button>
+    </footer>
+
+    <!-- Floating Sign In CTA (zero layout height) -->
+    <a
+      href="/auth"
+      class="fixed top-3 right-4 z-50 inline-flex items-center gap-1.5 rounded-full bg-indigo-600/95 hover:bg-indigo-500 px-4 py-2 text-xs font-extrabold text-white border border-indigo-400/40 shadow-xl backdrop-blur-xl transition-all hover:scale-105"
+      style="text-decoration: none;"
+      aria-label="Sign In to InternTrack Workspace"
+    >
+      <span>Sign In</span>
+      <span>&rarr;</span>
+    </a>
   </div>
 
   <script>
@@ -986,32 +1830,8 @@
         trans: CF + 'hf_20261111_001144_2b054228-95af-41d5-922d-b02979fe485b.mp4',
       };
 
-      const R2 = 'https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/aaaf/';
-      const CASES = [
-        {
-          video: R2 + 'vell-lookbook.mp4',
-          title: 'PLACEMENT HUB',
-          rows: ['STUDENT PORTAL', 'PLACEMENTS', '2026'],
-          key: '// placement hub',
-          text: '— students browse host organisations, apply for attachment and track every request through to approval.',
-        },
-        {
-          video: R2 + 'vasari-vhs-hero.mp4',
-          title: 'DIGITAL LOGBOOK',
-          rows: ['INTERNS', 'WEEKLY LOGS', '2026'],
-          key: '// digital logbook',
-          text: '— interns record daily activities and supervisors sign off in one tap, no more paper logbooks.',
-        },
-        {
-          video: R2 + 'living-portrait-hero.mp4',
-          title: 'SUPERVISION',
-          rows: ['SUPERVISORS', 'ASSESSMENT', '2026'],
-          key: '// supervision',
-          text: '— academic and field supervisors schedule visits, score interns and generate final reports automatically.',
-        },
-      ];
-
-      /* ── 2. DOM Elements ── */
+      /* ── 3. DOM Elements (Scene 1 + Scene 2 3D Engine) ── */
+      const s2Engine = document.getElementById('s2-3d-engine');
       const frameEl = document.getElementById('frame');
       const stageEl = document.getElementById('stage');
       const plateImg = document.getElementById('plate');
@@ -1020,83 +1840,869 @@
       const badgeImg = document.getElementById('badge-img');
       const transVideo = document.getElementById('trans');
       const screenEl = document.getElementById('screen');
-      const screenHitEl = document.getElementById('screen-hit');
       const flashEl = document.getElementById('flash');
-      const caseVids = [document.getElementById('cv0'), document.getElementById('cv1'), document.getElementById('cv2')];
 
       const wmSvg = document.getElementById('wm');
       const scriptEl = document.getElementById('script');
       const badgeEl = document.getElementById('badge');
       const badgeHitEl = document.getElementById('badge-hit');
-      const hintEl = document.getElementById('hint');
 
       const btnOverview = document.getElementById('btn-overview');
       const btnFeatures = document.getElementById('btn-features');
       const btnContacts = document.getElementById('btn-contacts');
       const btnDemo = document.getElementById('btn-demo');
-      const btnLogo = document.getElementById('btn-logo');
-      const btnPrev = document.getElementById('btn-prev');
-      const btnNext = document.getElementById('btn-next');
 
-      const ticketEl = document.getElementById('ticket');
-      const tTitleEl = document.getElementById('t-title');
-      const tRowsEl = document.getElementById('t-rows');
-      const descEl = document.getElementById('desc');
-      const dKEl = document.getElementById('d-k');
-      const dPEl = document.getElementById('d-p');
-      const dNumEl = document.getElementById('d-num');
-
-      const mOnlyEl = document.getElementById('m-only');
       const mWmSvg = document.getElementById('m-wm');
       const mScriptEl = document.getElementById('m-script');
       const mBadgeEl = document.getElementById('m-badge');
 
-      /* ── 3. State ── */
+      /* ── 4. Scene State ── */
       let mode = 'hero';
-      let currentCase = 0;
       let busy = false;
       let transReady = false;
       let badgeSway = null;
       let entered = false;
       const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Assign image sources
+      // Assign Scene 1 media sources
       plateImg.src = ASSETS.plate;
       casePlateImg.src = ASSETS.casePlate;
       cutImg.src = ASSETS.cut;
       badgeImg.src = ASSETS.badge;
-      caseVids[0].src = CASES[0].video;
+
+      transVideo.src = ASSETS.trans;
+      transVideo.addEventListener('loadeddata', () => { transReady = true; });
+      transVideo.addEventListener('canplaythrough', () => { transReady = true; });
 
       // Clone mobile badge
       const mobileBadgeClone = badgeEl.cloneNode(true);
       mobileBadgeClone.id = 'badge-mobile-clone';
       mBadgeEl.appendChild(mobileBadgeClone);
 
-      // Preload transition video with Blob fetch for seamless seek
-      fetch(ASSETS.trans)
-        .then((r) => r.blob())
-        .then((b) => {
-          transVideo.src = URL.createObjectURL(b);
-        })
-        .catch(() => {
-          transVideo.src = ASSETS.trans;
+      /* ═══════════════════════════════════════════════════════════════════════
+         SCENE 2: EXACT hero-laptop-views.html 3D AUTO-MOTION ENGINE
+         ═══════════════════════════════════════════════════════════════════════ */
+      const ROLES = [
+        {
+          idx: 0,
+          key: 'student',
+          tier: 'Tier 1',
+          short: 'STUDENT',
+          windowTier: 'TIER 1 (STUDENT INTERN)',
+          url: 'https://interntrack.uonbi.ac.ke/logbook',
+          name: 'Alice Wanjiku',
+          roleLabel: 'Student',
+          initials: 'AW',
+          scopeBadge: '🎓 University of Nairobi • BSc. Computer Science (CS/2021/0042)',
+          hudIcon: '🎓',
+          hudPerm: 'logs:create • attendance:record • milestones:track',
+          hudTitle: 'Student Punching Shift Clock-In & Submitting AI-Polished Logbook',
+          baseCamera: { rx: 7, ry: -9, rz: 0.4, scale: 0.96, tx: 0, ty: 0 },
+          navGroups: [
+            { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
+            { cat: 'LOGBOOK & TRACKING', items: [{ label: 'Digital Logbook', active: true }, { label: 'Attendance & Clock', active: false }, { label: 'Milestones Roadmap', active: false }] },
+            { cat: 'ACCOUNT', items: [{ label: 'My Profile', active: false }] }
+          ]
+        },
+        {
+          idx: 1,
+          key: 'field_supervisor',
+          tier: 'Tier 2',
+          short: 'HOST',
+          windowTier: 'TIER 2 (HOST ORG FIELD SUPERVISOR)',
+          url: 'https://interntrack.uonbi.ac.ke/review',
+          name: 'James Otieno',
+          roleLabel: 'Host Org Field Supervisor',
+          initials: 'JO',
+          scopeBadge: '🏢 TechCorp Kenya Ltd • Pre-Provisioned Login Bound to Alice & Kevin',
+          hudIcon: '🏢',
+          hudPerm: 'logs:approve • attendance:audit (Scoped to Assigned Mentees)',
+          hudTitle: 'Field Supervisor Reviewing Daily Engineering Log & Signing Off',
+          baseCamera: { rx: 6, ry: 8, rz: -0.4, scale: 0.96, tx: 0, ty: 0 },
+          navGroups: [
+            { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
+            { cat: 'LOGBOOK & TRACKING', items: [{ label: 'Milestones Roadmap', active: false }] },
+            { cat: 'SUPERVISORY CONTROLS', items: [{ label: 'Review Queue', active: true }, { label: 'Assigned Interns', active: false }, { label: 'Performance Evaluations', active: false }] },
+            { cat: 'ACCOUNT', items: [{ label: 'My Profile', active: false }] }
+          ]
+        },
+        {
+          idx: 2,
+          key: 'uni_supervisor',
+          tier: 'Tier 3',
+          short: 'FACULTY',
+          windowTier: 'TIER 3 (UNIVERSITY ACADEMIC SUPERVISOR)',
+          url: 'https://interntrack.uonbi.ac.ke/evaluations',
+          name: 'Dr. Joyce Chelangat',
+          roleLabel: 'University Academic Assessor',
+          initials: 'JC',
+          scopeBadge: '🏛️ University of Nairobi • Dept. of Software Engineering Assessor',
+          hudIcon: '🏛️',
+          hudPerm: 'assessments:grade • milestones:certify',
+          hudTitle: 'University Assessor Grading 5-Point Rubric & Certifying Phase 2',
+          baseCamera: { rx: 8, ry: -7, rz: 0.3, scale: 0.96, tx: 0, ty: 0 },
+          navGroups: [
+            { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
+            { cat: 'LOGBOOK & TRACKING', items: [{ label: 'Milestones Roadmap', active: false }] },
+            { cat: 'SUPERVISORY CONTROLS', items: [{ label: 'Review Queue', active: false }, { label: 'Assigned Interns', active: false }, { label: 'Performance Evaluations', active: true }] },
+            { cat: 'ACCOUNT', items: [{ label: 'My Profile', active: false }] }
+          ]
+        },
+        {
+          idx: 3,
+          key: 'uni_admin',
+          tier: 'Tier 4',
+          short: 'UNIVERSITY',
+          windowTier: 'TIER 4 (UNIVERSITY ADMIN & DEAN)',
+          url: 'https://interntrack.uonbi.ac.ke/assignments',
+          name: 'Dr. Peter Kamau',
+          roleLabel: 'University Admin',
+          initials: 'DP',
+          scopeBadge: '⚖️ Dean of Computing • Institutional Pairing, Credentials & RBAC Matrix',
+          hudIcon: '⚖️',
+          hudPerm: 'supervisors:create • supervisors:assign • rbac:manage • accreditation:export',
+          hudTitle: 'University Admin Pairing Dual Supervisors & Governing RBAC Matrix',
+          baseCamera: { rx: 6.5, ry: 6.5, rz: -0.3, scale: 0.96, tx: 0, ty: 0 },
+          navGroups: [
+            { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
+            { cat: 'SUPERVISORY CONTROLS', items: [{ label: 'Review Queue', active: false }, { label: 'Assigned Interns', active: false }, { label: 'Performance Evaluations', active: false }] },
+            { cat: 'INSTITUTIONAL & RBAC', items: [{ label: 'Supervisor Accounts', active: false }, { label: 'Supervisor Pairing', active: true }, { label: 'RBAC Control Matrix', active: false }, { label: 'Placement Accreditation', active: false }] }
+          ]
+        }
+      ];
+
+      let activeRole = 0;
+      let autoMotion = true;
+      let exploded = false;
+      let stepStartTime = Date.now();
+      const ROLE_DURATION = 9500;
+      let scriptTimers = [];
+
+      const rigEl = document.getElementById('camera-rig');
+      let camState = { rx: 7, ry: -9, rz: 0.4, scale: 0.96, tx: 0, ty: 0 };
+
+      function setCameraTransform(rx, ry, rz, scale = 0.96, tx = 0, ty = 0) {
+        camState = { rx, ry, rz, scale, tx, ty };
+        if (!rigEl) return;
+        const vhFit = Math.min(1, Math.max(0.64, (window.innerHeight - 115) / 660));
+        const vwFit = Math.min(1, Math.max(0.6, (window.innerWidth - 48) / 1180));
+        const finalScale = +(scale * Math.min(vhFit, vwFit)).toFixed(3);
+        rigEl.style.transform = `translate3d(${tx}px, ${ty}px, 0px) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg) scale(${finalScale})`;
+      }
+
+      function movePointer(leftPx, topPx, labelText, click = false) {
+        const ptr = document.getElementById('sim-pointer');
+        const lbl = document.getElementById('pointer-label');
+        const rip = document.getElementById('pointer-ripple');
+        if (!ptr) return;
+        ptr.style.left = leftPx + 'px';
+        ptr.style.top = topPx + 'px';
+        if (lbl && labelText) lbl.textContent = labelText;
+
+        if (click) {
+          const t = setTimeout(() => {
+            ptr.classList.add('clicking');
+            if (rip) {
+              rip.classList.remove('click-ripple');
+              void rip.offsetWidth;
+              rip.classList.add('click-ripple');
+            }
+            setTimeout(() => ptr.classList.remove('clicking'), 220);
+          }, 620);
+          scriptTimers.push(t);
+        }
+      }
+
+      function clearFocusCards() {
+        document.querySelectorAll('.card-3d-focus').forEach((el) => el.classList.remove('card-3d-focus'));
+      }
+
+      function focusCard3D(cardId, camOverride) {
+        clearFocusCards();
+        const el = document.getElementById(cardId);
+        if (el) el.classList.add('card-3d-focus');
+        if (camOverride) {
+          setCameraTransform(camOverride.rx, camOverride.ry, camOverride.rz || 0, camOverride.scale || 0.98, camOverride.tx || 0, camOverride.ty || 0);
+        }
+      }
+
+      function renderSidebarNav(roleObj) {
+        const container = document.getElementById('sidebar-nav-container');
+        if (!container) return;
+        container.innerHTML = roleObj.navGroups.map((group) => `
+          <div class="space-y-1">
+            <p class="px-2.5 text-[9px] font-bold uppercase tracking-wider" style="color: var(--it-muted); opacity: 0.75;">${group.cat}</p>
+            ${group.items.map((item) => `
+              <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium" style="${
+                item.active
+                  ? 'background: var(--it-sidebar-active); color: var(--it-sidebar-active-ink); font-weight: 700; box-shadow: inset 2.5px 0 0 var(--it-primary);'
+                  : 'color: var(--it-sidebar-ink); opacity: 0.78;'
+              }">
+                <span class="size-1.5 rounded-full" style="background: ${item.active ? 'var(--it-primary)' : 'var(--it-muted)'};"></span>
+                <span class="truncate">${item.label}</span>
+              </div>
+            `).join('')}
+          </div>
+        `).join('');
+      }
+
+      function clearRoleTimers() {
+        scriptTimers.forEach((t) => clearTimeout(t));
+        scriptTimers = [];
+      }
+
+      function triggerStudentClock() {
+        const btnLbl = document.getElementById('stu-clock-btn-label');
+        const daysVal = document.getElementById('stu-days-val');
+        const daysBar = document.getElementById('stu-days-bar');
+        const hoursVal = document.getElementById('stu-hours-val');
+        const msCheck3 = document.getElementById('stu-ms-check3');
+        const msTask3 = document.getElementById('stu-ms-task3');
+        const msPct = document.getElementById('stu-ms-pct');
+
+        if (btnLbl) btnLbl.textContent = '✓ Clocked In (08:30 AM)';
+        if (daysVal) daysVal.textContent = '43';
+        if (daysBar) daysBar.style.width = '72%';
+        if (hoursVal) hoursVal.textContent = '344.0';
+        if (msCheck3) {
+          msCheck3.className = 'size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold';
+          msCheck3.textContent = '✓';
+        }
+        if (msTask3) msTask3.className = 'flex items-center gap-2 p-1.5 rounded-lg bg-emerald-50/80 border border-emerald-300 text-zinc-900 transition-all';
+        if (msPct) msPct.textContent = '3 of 3 tasks (100%)';
+        spawnPacket3D(0, 1);
+      }
+
+      function triggerStudentAiPolish() {
+        const desc = document.getElementById('stu-log-desc');
+        const aiLbl = document.getElementById('stu-ai-label');
+        const tags = document.getElementById('stu-skill-tags');
+        if (aiLbl) aiLbl.textContent = '✨ AI Polished!';
+        if (desc) {
+          desc.textContent = 'Engineered responsive onboarding wizard UI in React 19 with strict Zod validation and REST API integration. Achieved 92% Jest unit test coverage across country phone formats.';
+        }
+        if (tags && tags.children.length < 5) {
+          const extra = document.createElement('span');
+          extra.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 border border-emerald-400/40';
+          extra.textContent = '+ Zod & Jest (92%)';
+          tags.appendChild(extra);
+        }
+      }
+
+      function triggerStudentSubmit() {
+        const badge = document.getElementById('stu-log-status-badge');
+        const subLbl = document.getElementById('stu-submit-label');
+        const qPill = document.getElementById('stu-queue-pill');
+        const count = document.getElementById('stu-logs-count');
+        if (badge) {
+          badge.textContent = 'Submitted to James Otieno';
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500 bg-emerald-50 text-emerald-700';
+        }
+        if (subLbl) subLbl.textContent = '✓ Sent to Host Supervisor';
+        if (qPill) qPill.textContent = '2 in supervisor review queue';
+        if (count) count.textContent = '5';
+        spawnPacket3D(0, 1);
+      }
+
+      function triggerStudentLogFlow() {
+        triggerStudentAiPolish();
+        setTimeout(triggerStudentSubmit, 600);
+      }
+
+      function triggerSupervisorApprove() {
+        const status = document.getElementById('sup-sub-status');
+        const pending = document.getElementById('sup-pending-badge');
+        const approved = document.getElementById('sup-approved-badge');
+        const btnLbl = document.getElementById('sup-approve-label');
+        if (status) {
+          status.textContent = '✓ Approved by Host Org';
+          status.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-400';
+        }
+        if (pending) pending.textContent = '1';
+        if (approved) approved.textContent = '4';
+        if (btnLbl) btnLbl.textContent = '✓ Signed Off & Logged';
+        spawnPacket3D(1, 2);
+      }
+
+      function triggerUniEvaluation() {
+        const count = document.getElementById('uni-eval-count');
+        const offers = document.getElementById('uni-eval-offers');
+        const ready = document.getElementById('uni-eval-ready');
+        const btnLbl = document.getElementById('uni-save-eval-label');
+        const msBadge = document.getElementById('uni-ms-badge2');
+        if (count) count.textContent = '2';
+        if (offers) offers.textContent = '2';
+        if (ready) ready.textContent = '4 of 4';
+        if (btnLbl) btnLbl.textContent = '✓ Grade A Recorded on Transcript';
+        if (msBadge) {
+          msBadge.textContent = 'Certified by Faculty ✓';
+          msBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800';
+        }
+        spawnPacket3D(2, 3);
+      }
+
+      function triggerAdminPairSupervisor() {
+        const rate = document.getElementById('admin-dual-rate');
+        const sub = document.getElementById('admin-dual-sub');
+        const kevinRow = document.getElementById('admin-row-kevin');
+        const kevinSup = document.getElementById('admin-kevin-uni-sup');
+        const kevinStatus = document.getElementById('admin-kevin-status');
+        const alertBanner = document.getElementById('admin-alert-banner');
+        const alertDesc = document.getElementById('admin-alert-desc');
+        const assignLbl = document.getElementById('admin-assign-label');
+
+        if (rate) {
+          rate.textContent = '100%';
+          rate.className = 'text-2xl font-extrabold text-emerald-600 mt-1';
+        }
+        if (sub) {
+          sub.textContent = '4 of 4 fully paired ✓';
+          sub.className = 'text-[10px] text-emerald-700 font-semibold';
+        }
+        if (kevinRow) {
+          kevinRow.className = 'py-2 px-2 rounded-xl bg-emerald-50/80 border border-emerald-400 flex items-center justify-between transition-all';
+        }
+        if (kevinSup) {
+          kevinSup.textContent = '🏛️ Dr. Joyce Chelangat (Paired)';
+          kevinSup.className = 'text-emerald-700 font-bold';
+        }
+        if (kevinStatus) {
+          kevinStatus.textContent = 'Dual-Supervised';
+          kevinStatus.className = 'px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]';
+        }
+        if (alertBanner) {
+          alertBanner.className = 'z-layer-mid rounded-xl border border-emerald-300 bg-emerald-50/95 px-4 py-2.5 flex items-center justify-between gap-3';
+        }
+        if (alertDesc) {
+          alertDesc.innerHTML = 'All 4 placement candidates are now <strong>100% Dual-Supervised</strong> with pre-provisioned university credentials bound.';
+          alertDesc.className = 'text-[11px] text-emerald-800';
+        }
+        if (assignLbl) assignLbl.textContent = '✓ Paired & Credentials Dispatched';
+        spawnPacket3D(3, 0);
+      }
+
+      function triggerAdminExportDossier() {
+        const lbl = document.getElementById('admin-export-label');
+        const pill = document.getElementById('admin-export-pill');
+        if (lbl) lbl.textContent = '✓ Graduation Board Dossier Exported (PDF)';
+        if (pill) pill.textContent = 'EXPORTED ✓';
+        spawnPacket3D(3, 0);
+      }
+
+      function runRoleChoreography(idx) {
+        clearRoleTimers();
+        clearFocusCards();
+        const role = ROLES[idx];
+
+        setCameraTransform(role.baseCamera.rx, role.baseCamera.ry, role.baseCamera.rz, role.baseCamera.scale);
+
+        if (idx === 0) {
+          const elClockLbl = document.getElementById('stu-clock-btn-label');
+          const elDays = document.getElementById('stu-days-val');
+          const elBar = document.getElementById('stu-days-bar');
+          const elHours = document.getElementById('stu-hours-val');
+          const elAiLbl = document.getElementById('stu-ai-label');
+          const elDesc = document.getElementById('stu-log-desc');
+          const elBadge = document.getElementById('stu-log-status-badge');
+          const elSubLbl = document.getElementById('stu-submit-label');
+          const elCheck3 = document.getElementById('stu-ms-check3');
+          const elTask3 = document.getElementById('stu-ms-task3');
+          const elMsPct = document.getElementById('stu-ms-pct');
+
+          if (elClockLbl) elClockLbl.textContent = 'Clock In (08:30 AM)';
+          if (elDays) elDays.textContent = '42';
+          if (elBar) elBar.style.width = '70%';
+          if (elHours) elHours.textContent = '336.0';
+          if (elAiLbl) elAiLbl.textContent = 'Polish with AI';
+          if (elDesc) elDesc.textContent = 'Working on the onboarding wizard UI components for new user registration using React 19 and Zod schema validation.';
+          if (elBadge) {
+            elBadge.textContent = 'Draft';
+            elBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-400 bg-amber-50 text-amber-800';
+          }
+          if (elSubLbl) elSubLbl.textContent = 'Submit to Field Supervisor';
+          if (elCheck3) {
+            elCheck3.className = 'size-4 rounded-full border border-zinc-400 flex items-center justify-center text-[9px] font-bold';
+            elCheck3.textContent = '';
+          }
+          if (elTask3) elTask3.className = 'flex items-center gap-2 p-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-900 transition-all';
+          if (elMsPct) elMsPct.textContent = '2 of 3 tasks (67%)';
+
+          if (!RM && autoMotion && mode === 'case') {
+            scriptTimers.push(setTimeout(() => {
+              focusCard3D('stu-card-milestone', { rx: 9, ry: -12, rz: 0.6, scale: 0.99, tx: -12, ty: -6 });
+              movePointer(930, 120, 'Punching Daily Attendance (attendance:record)', true);
+              scriptTimers.push(setTimeout(triggerStudentClock, 650));
+            }, 900));
+
+            scriptTimers.push(setTimeout(() => {
+              focusCard3D('stu-card-logbook', { rx: 6, ry: -5, rz: 0.2, scale: 1.0, tx: 14, ty: -10 });
+              movePointer(580, 355, 'Polishing Log with AI Assistant', true);
+              scriptTimers.push(setTimeout(triggerStudentAiPolish, 650));
+            }, 3600));
+
+            scriptTimers.push(setTimeout(() => {
+              movePointer(570, 520, 'Submitting Logbook (logs:create)', true);
+              scriptTimers.push(setTimeout(triggerStudentSubmit, 650));
+            }, 6400));
+          }
+
+        } else if (idx === 1) {
+          const sSt = document.getElementById('sup-sub-status');
+          const sPend = document.getElementById('sup-pending-badge');
+          const sApp = document.getElementById('sup-approved-badge');
+          const sLbl = document.getElementById('sup-approve-label');
+          if (sSt) {
+            sSt.textContent = 'Submitted';
+            sSt.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-300';
+          }
+          if (sPend) sPend.textContent = '2';
+          if (sApp) sApp.textContent = '3';
+          if (sLbl) sLbl.textContent = 'Sign Off & Approve';
+
+          if (!RM && autoMotion && mode === 'case') {
+            scriptTimers.push(setTimeout(() => {
+              focusCard3D('sup-card-review', { rx: 7.5, ry: 10, rz: -0.5, scale: 0.99, tx: 10, ty: -8 });
+              movePointer(440, 445, 'Writing Host Org Engineering Feedback', false);
+            }, 1000));
+
+            scriptTimers.push(setTimeout(() => {
+              movePointer(315, 520, 'Approving Mentee Deliverable (logs:approve)', true);
+              scriptTimers.push(setTimeout(triggerSupervisorApprove, 650));
+            }, 4600));
+          }
+
+        } else if (idx === 2) {
+          const uCnt = document.getElementById('uni-eval-count');
+          const uOff = document.getElementById('uni-eval-offers');
+          const uRdy = document.getElementById('uni-eval-ready');
+          const uLbl = document.getElementById('uni-save-eval-label');
+          const uMs2 = document.getElementById('uni-ms-badge2');
+          const b1 = document.getElementById('uni-bar-1');
+          const b2 = document.getElementById('uni-bar-2');
+          const b3 = document.getElementById('uni-bar-3');
+          const b4 = document.getElementById('uni-bar-4');
+          if (uCnt) uCnt.textContent = '1';
+          if (uOff) uOff.textContent = '1';
+          if (uRdy) uRdy.textContent = '3 of 4';
+          if (uLbl) uLbl.textContent = '✓ Certify & Record Grade';
+          if (uMs2) {
+            uMs2.textContent = 'Ready to Certify';
+            uMs2.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800';
+          }
+          if (b1) b1.style.width = '30%';
+          if (b2) b2.style.width = '30%';
+          if (b3) b3.style.width = '30%';
+          if (b4) b4.style.width = '30%';
+
+          if (!RM && autoMotion && mode === 'case') {
+            scriptTimers.push(setTimeout(() => {
+              focusCard3D('uni-card-rubric', { rx: 8.5, ry: -9, rz: 0.4, scale: 0.99, tx: 12, ty: -8 });
+              movePointer(480, 390, 'Scoring Standardized 5-Point Rubric', false);
+              if (b1) b1.style.width = '100%';
+              if (b2) b2.style.width = '100%';
+              if (b3) b3.style.width = '90%';
+              if (b4) b4.style.width = '100%';
+            }, 900));
+
+            scriptTimers.push(setTimeout(() => {
+              movePointer(585, 520, 'Recording Official Grade A (assessments:grade)', true);
+              scriptTimers.push(setTimeout(triggerUniEvaluation, 650));
+            }, 4800));
+          }
+
+        } else if (idx === 3) {
+          const aRate = document.getElementById('admin-dual-rate');
+          const aSub = document.getElementById('admin-dual-sub');
+          const aRow = document.getElementById('admin-row-kevin');
+          const aSup = document.getElementById('admin-kevin-uni-sup');
+          const aSt = document.getElementById('admin-kevin-status');
+          const aAss = document.getElementById('admin-assign-label');
+          const aExp = document.getElementById('admin-export-label');
+          const aBan = document.getElementById('admin-alert-banner');
+          const aDesc = document.getElementById('admin-alert-desc');
+
+          if (aRate) {
+            aRate.textContent = '75%';
+            aRate.className = 'text-2xl font-extrabold text-amber-600 mt-1';
+          }
+          if (aSub) {
+            aSub.textContent = '3 of 4 fully paired';
+            aSub.className = 'text-[10px] text-amber-700 font-semibold';
+          }
+          if (aRow) aRow.className = 'py-2 px-2 rounded-xl bg-amber-50/70 border border-amber-300 flex items-center justify-between transition-all';
+          if (aSup) {
+            aSup.textContent = '⚠️ Missing Academic Assessor';
+            aSup.className = 'text-rose-500 font-bold';
+          }
+          if (aSt) {
+            aSt.textContent = 'Needs Allocation';
+            aSt.className = 'px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-bold text-[10px]';
+          }
+          if (aBan) aBan.className = 'z-layer-mid rounded-xl border border-rose-300 bg-rose-50/95 px-4 py-2.5 flex items-center justify-between gap-3';
+          if (aDesc) {
+            aDesc.innerHTML = '1 candidate flagged: <strong>Kevin Kiprono (CS/2021/0104)</strong> at TechCorp Kenya Ltd is missing an assigned University Academic Supervisor.';
+            aDesc.className = 'text-[11px] text-rose-800';
+          }
+          if (aAss) aAss.textContent = '+ Pair Mentors & Dispatch Login';
+          if (aExp) aExp.textContent = 'Export Certified Graduation Dossier (PDF)';
+
+          if (!RM && autoMotion && mode === 'case') {
+            scriptTimers.push(setTimeout(() => {
+              focusCard3D('admin-card-pairing', { rx: 7.5, ry: 9, rz: -0.4, scale: 0.99, tx: 12, ty: -8 });
+              movePointer(555, 520, 'Pairing Dual Mentors & Binding Login (supervisors:assign)', true);
+              scriptTimers.push(setTimeout(triggerAdminPairSupervisor, 650));
+            }, 1400));
+
+            scriptTimers.push(setTimeout(() => {
+              focusCard3D('admin-card-rbac', { rx: 7, ry: -8, rz: 0.3, scale: 0.99, tx: -14, ty: -8 });
+              movePointer(915, 520, 'Exporting Dean Accreditation Dossier (accreditation:export)', true);
+              scriptTimers.push(setTimeout(triggerAdminExportDossier, 650));
+            }, 5400));
+          }
+        }
+      }
+
+      function selectRole(idx, manual = false) {
+        activeRole = idx;
+        stepStartTime = Date.now();
+        const role = ROLES[idx];
+
+        for (let i = 0; i < 4; i++) {
+          const btn = document.getElementById(`role-btn-${i}`);
+          const view = document.getElementById(`role-view-${i}`);
+          const prog = document.getElementById(`role-prog-${i}`);
+          const foot = document.getElementById(`footer-card-${i}`);
+
+          if (i === idx) {
+            if (btn) btn.className = 'role-pill relative overflow-hidden px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-indigo-500/20 text-white border border-indigo-400/50 shadow-sm';
+            if (view) view.classList.remove('hidden');
+            if (foot) foot.className = 'cursor-pointer p-2.5 rounded-xl border border-indigo-400/60 bg-indigo-500/15 transition flex flex-col justify-between';
+          } else {
+            if (btn) btn.className = 'role-pill relative overflow-hidden px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-zinc-400 hover:text-white border border-transparent';
+            if (view) view.classList.add('hidden');
+            if (prog) prog.style.width = i < idx ? '100%' : '0%';
+            if (foot) foot.className = 'cursor-pointer p-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition flex flex-col justify-between';
+          }
+        }
+
+        const elUrl = document.getElementById('browser-url');
+        const elTierWin = document.getElementById('window-rbac-tier');
+        const elSbTier = document.getElementById('sb-tier-pill');
+        const elSbShort = document.getElementById('sb-role-short');
+        const elSbAv = document.getElementById('sb-avatar');
+        const elSbName = document.getElementById('sb-user-name');
+        const elSbRole = document.getElementById('sb-user-role');
+        const elTopScope = document.getElementById('top-scope-badge');
+        const elTopAv = document.getElementById('top-avatar');
+        const elTopName = document.getElementById('top-user-name');
+        const elTopRole = document.getElementById('top-role-badge');
+        const elHudBadge = document.getElementById('hud-role-badge');
+        const elHudPerm = document.getElementById('hud-perm-code');
+        const elHudTitle = document.getElementById('hud-action-title');
+
+        if (elUrl) elUrl.textContent = role.url;
+        if (elTierWin) elTierWin.textContent = role.windowTier;
+        if (elSbTier) elSbTier.textContent = role.tier;
+        if (elSbShort) elSbShort.textContent = role.short;
+        if (elSbAv) elSbAv.textContent = role.initials;
+        if (elSbName) elSbName.textContent = role.name;
+        if (elSbRole) elSbRole.textContent = role.roleLabel;
+
+        if (elTopScope) elTopScope.textContent = role.scopeBadge;
+        if (elTopAv) elTopAv.textContent = role.initials;
+        if (elTopName) elTopName.textContent = role.name;
+        if (elTopRole) elTopRole.textContent = role.roleLabel;
+
+        if (elHudBadge) elHudBadge.textContent = role.hudIcon;
+        if (elHudPerm) elHudPerm.textContent = role.hudPerm;
+        if (elHudTitle) elHudTitle.textContent = role.hudTitle;
+
+        renderSidebarNav(role);
+        runRoleChoreography(idx);
+      }
+
+      function toggleAutoMotion() {
+        autoMotion = !autoMotion;
+        const ic = document.getElementById('automotion-icon');
+        const tx = document.getElementById('automotion-text');
+        if (ic) ic.textContent = autoMotion ? '⏸' : '▶';
+        if (tx) tx.textContent = autoMotion ? '3D Auto-Motion' : 'Paused';
+        if (autoMotion) {
+          stepStartTime = Date.now();
+          runRoleChoreography(activeRole);
+        } else {
+          clearRoleTimers();
+        }
+      }
+
+      function toggleExplodeLayers() {
+        exploded = !exploded;
+        if (rigEl) rigEl.classList.toggle('exploded', exploded);
+        const btn = document.getElementById('btn-explode');
+        if (btn) {
+          if (exploded) {
+            btn.className = 'px-2.5 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-zinc-950 transition flex items-center gap-1 shadow-sm';
+            setCameraTransform(14, -18, 1.5, 0.9);
+          } else {
+            btn.className = 'px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-indigo-200 border border-white/10 transition flex items-center gap-1';
+            const r = ROLES[activeRole].baseCamera;
+            setCameraTransform(r.rx, r.ry, r.rz, r.scale);
+          }
+        }
+      }
+
+      function resetCameraAngle() {
+        exploded = false;
+        if (rigEl) rigEl.classList.remove('exploded');
+        const btn = document.getElementById('btn-explode');
+        if (btn) btn.className = 'px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-indigo-200 border border-white/10 transition flex items-center gap-1';
+        clearFocusCards();
+        const r = ROLES[activeRole].baseCamera;
+        setCameraTransform(r.rx, r.ry, r.rz, r.scale);
+      }
+
+      // Interactive Mouse / Pointer 3D Orbit Dragging
+      let isDragging = false;
+      let startX = 0, startY = 0;
+      let dragRx = 7, dragRy = -9;
+
+      const stageViewport = document.getElementById('stage-viewport');
+      if (stageViewport && rigEl) {
+        stageViewport.addEventListener('pointerdown', (e) => {
+          if (e.target.closest('button, a')) return;
+          isDragging = true;
+          rigEl.classList.add('dragging');
+          startX = e.clientX;
+          startY = e.clientY;
+          dragRx = camState.rx;
+          dragRy = camState.ry;
         });
 
-      transVideo.addEventListener('loadeddata', () => {
-        transReady = true;
+        window.addEventListener('pointermove', (e) => {
+          if (!isDragging) return;
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          const newRy = Math.max(-28, Math.min(28, dragRy + dx * 0.08));
+          const newRx = Math.max(-14, Math.min(24, dragRx - dy * 0.08));
+          setCameraTransform(newRx, newRy, camState.rz, camState.scale, camState.tx, camState.ty);
+        });
+
+        window.addEventListener('pointerup', () => {
+          if (!isDragging) return;
+          isDragging = false;
+          rigEl.classList.remove('dragging');
+        });
+      }
+
+      function tickLoop() {
+        const now = Date.now();
+        if (mode === 'case' && autoMotion && !isDragging && !RM) {
+          const elapsed = now - stepStartTime;
+          const pct = Math.min(100, (elapsed / ROLE_DURATION) * 100);
+          const progEl = document.getElementById(`role-prog-${activeRole}`);
+          if (progEl) progEl.style.width = `${pct}%`;
+
+          if (elapsed >= ROLE_DURATION) {
+            selectRole((activeRole + 1) % ROLES.length, false);
+          }
+        }
+        requestAnimationFrame(tickLoop);
+      }
+
+      // 3D Spatial Canvas Renderer (3D Perspective Grid + 4 Role Nodes + Packets)
+      const canvas = document.getElementById('webgl-stage');
+      const ctx = canvas ? canvas.getContext('2d') : null;
+      let packets = [];
+
+      function spawnPacket3D(fromIdx, toIdx) {
+        packets.push({ from: fromIdx, to: toIdx, t: 0 });
+      }
+
+      function resizeCanvas() {
+        if (!canvas || !ctx) return;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resizeCanvas();
+
+      function project3D(x, y, z, W, H, rotY, rotX) {
+        const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+        const x1 = x * cosY - z * sinY;
+        const z1 = z * cosY + x * sinY;
+
+        const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+        const y2 = y * cosX - z1 * sinX;
+        const z2 = z1 * cosX + y * sinX;
+
+        const fov = 700;
+        const dist = 850;
+        const scale = fov / Math.max(100, dist + z2);
+        return {
+          sx: W / 2 + x1 * scale,
+          sy: H / 2 + y2 * scale,
+          scale
+        };
+      }
+
+      let time3D = 0;
+      function render3DCanvas() {
+        if (ctx && mode === 'case') {
+          time3D += 0.012;
+          const W = window.innerWidth;
+          const H = window.innerHeight;
+          ctx.clearRect(0, 0, W, H);
+
+          const rotY = (camState.ry * Math.PI) / 180 * 0.45 + Math.sin(time3D * 0.5) * 0.05;
+          const rotX = (camState.rx * Math.PI) / 180 * 0.35;
+
+          ctx.strokeStyle = 'rgba(99, 102, 241, 0.12)';
+          ctx.lineWidth = 1;
+          const gridY = 340;
+          for (let gx = -900; gx <= 900; gx += 120) {
+            const p1 = project3D(gx, gridY, -500, W, H, rotY, rotX);
+            const p2 = project3D(gx, gridY, 700, W, H, rotY, rotX);
+            ctx.beginPath();
+            ctx.moveTo(p1.sx, p1.sy);
+            ctx.lineTo(p2.sx, p2.sy);
+            ctx.stroke();
+          }
+          for (let gz = -500; gz <= 700; gz += 120) {
+            const p1 = project3D(-900, gridY, gz, W, H, rotY, rotX);
+            const p2 = project3D(900, gridY, gz, W, H, rotY, rotX);
+            ctx.beginPath();
+            ctx.moveTo(p1.sx, p1.sy);
+            ctx.lineTo(p2.sx, p2.sy);
+            ctx.stroke();
+          }
+
+          const nodeCoords = [
+            { x: -640, y: -160, z: -80, color: '#6366f1', label: 'T1 STUDENT' },
+            { x: 640, y: -160, z: -80, color: '#10b981', label: 'T2 FIELD SUP' },
+            { x: 640, y: 170, z: -60, color: '#38bdf8', label: 'T3 UNI SUP' },
+            { x: -640, y: 170, z: -60, color: '#a855f7', label: 'T4 UNI ADMIN' }
+          ];
+
+          const projectedNodes = nodeCoords.map((n, i) => {
+            const floatY = n.y + Math.sin(time3D * 2 + i * 1.5) * 14;
+            return { ...n, ...project3D(n.x, floatY, n.z, W, H, rotY, rotX), idx: i };
+          });
+
+          for (let i = 0; i < 4; i++) {
+            const a = projectedNodes[i];
+            const b = projectedNodes[(i + 1) % 4];
+            ctx.beginPath();
+            ctx.moveTo(a.sx, a.sy);
+            ctx.quadraticCurveTo(W / 2, H / 2 + (i % 2 === 0 ? -240 : 240), b.sx, b.sy);
+            ctx.strokeStyle = i === activeRole ? 'rgba(99, 102, 241, 0.38)' : 'rgba(255, 255, 255, 0.06)';
+            ctx.lineWidth = i === activeRole ? 2 : 1;
+            ctx.stroke();
+          }
+
+          packets = packets.filter((pkt) => pkt.t <= 1);
+          packets.forEach((pkt) => {
+            pkt.t += 0.022;
+            const a = projectedNodes[pkt.from];
+            const b = projectedNodes[pkt.to];
+            const cx = W / 2;
+            const cy = H / 2 - 180;
+            const t = pkt.t;
+            const px = (1 - t) * (1 - t) * a.sx + 2 * (1 - t) * t * cx + t * t * b.sx;
+            const py = (1 - t) * (1 - t) * a.sy + 2 * (1 - t) * t * cy + t * t * b.sy;
+
+            ctx.beginPath();
+            ctx.arc(px, py, 5, 0, Math.PI * 2);
+            ctx.fillStyle = '#34d399';
+            ctx.shadowColor = '#10b981';
+            ctx.shadowBlur = 14;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          });
+
+          projectedNodes.forEach((n) => {
+            const isAct = n.idx === activeRole;
+            const r = (isAct ? 14 : 9) * n.scale;
+            ctx.beginPath();
+            ctx.arc(n.sx, n.sy, r, 0, Math.PI * 2);
+            ctx.fillStyle = isAct ? n.color : 'rgba(255,255,255,0.18)';
+            if (isAct) {
+              ctx.shadowColor = n.color;
+              ctx.shadowBlur = 20;
+            }
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.font = '700 10px monospace';
+            ctx.fillStyle = isAct ? '#ffffff' : 'rgba(255,255,255,0.4)';
+            ctx.textAlign = 'center';
+            ctx.fillText(n.label, n.sx, n.sy + r + 14);
+          });
+        }
+        requestAnimationFrame(render3DCanvas);
+      }
+
+      // Dual Light + Dark Theme Toggle synced with Dashboard localStorage
+      let currentThemeMode = 'light';
+      function resolvePreferredTheme() {
+        try {
+          const saved = window.localStorage.getItem('interntrack-theme');
+          if (saved === 'dark' || saved === 'light') return saved;
+        } catch (_) {}
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      function applyArtifactTheme(themeMode, persist = false) {
+        currentThemeMode = themeMode === 'dark' ? 'dark' : 'light';
+        const shell = document.getElementById('app-screen-shell');
+        const icon = document.getElementById('theme-mode-icon');
+        const text = document.getElementById('theme-mode-text');
+        if (shell) shell.classList.toggle('dark-theme', currentThemeMode === 'dark');
+        if (icon) icon.textContent = currentThemeMode === 'dark' ? '🌙' : '☀️';
+        if (text) text.textContent = currentThemeMode === 'dark' ? 'Dark' : 'Light';
+        if (persist) {
+          try {
+            window.localStorage.setItem('interntrack-theme', currentThemeMode);
+          } catch (_) {}
+        }
+      }
+
+      function toggleThemeMode() {
+        applyArtifactTheme(currentThemeMode === 'dark' ? 'light' : 'dark', true);
+      }
+
+      applyArtifactTheme(resolvePreferredTheme(), false);
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'interntrack-theme') applyArtifactTheme(resolvePreferredTheme(), false);
       });
 
-      /* ── 4. Frame Fitting & Layout (pose) ── */
+      // Expose inline handlers cleanly to global scope
+      window.selectRole = selectRole;
+      window.toggleAutoMotion = toggleAutoMotion;
+      window.toggleExplodeLayers = toggleExplodeLayers;
+      window.resetCameraAngle = resetCameraAngle;
+      window.toggleThemeMode = toggleThemeMode;
+      window.triggerStudentLogFlow = triggerStudentLogFlow;
+      window.triggerStudentClock = triggerStudentClock;
+      window.triggerStudentAiPolish = triggerStudentAiPolish;
+      window.triggerStudentSubmit = triggerStudentSubmit;
+      window.triggerSupervisorApprove = triggerSupervisorApprove;
+      window.triggerUniEvaluation = triggerUniEvaluation;
+      window.triggerAdminPairSupervisor = triggerAdminPairSupervisor;
+      window.triggerAdminExportDossier = triggerAdminExportDossier;
+
+      requestAnimationFrame(tickLoop);
+      requestAnimationFrame(render3DCanvas);
+
+      /* ── Frame Fitting & Layout (pose) ── */
       function pose(m) {
         const W = window.innerWidth;
         const H = window.innerHeight;
         const isMobile = W <= 820;
 
-        // Set unit variable
         const n = isMobile ? W / 430 : Math.min(W / 1440, H / 900);
         document.documentElement.style.setProperty('--n', `${n}px`);
 
-        // Fade classes
         frameEl.classList.remove('d-fade', 'm-fade');
         frameEl.classList.add(isMobile ? 'm-fade' : 'd-fade');
 
@@ -1111,8 +2717,8 @@
             y = 0;
             fitHero(s, x, y, W, H);
           } else {
-            const top = 66 * u;
-            const fit = (H - top - 28 * u) / (762 - 79);
+            const top = 56 * u;
+            const fit = (H - top - 32 * u) / (762 - 79);
             if (fit >= cover) {
               s = cover;
               y = Math.min(0, Math.max(H - 810 * s, top - 79 * s));
@@ -1123,26 +2729,19 @@
             x = (W - 1440 * s) / 2;
           }
         } else {
-          // Mobile fitting
           if (m === 'hero') {
             s = Math.min(W / 650, (0.62 * H) / 810);
             x = W / 2 - 805 * s;
             y = H - 790 * s;
           } else {
             const navH = 0.022 * H + 42 + 22;
-            const ticketH = ticketEl ? ticketEl.offsetHeight : 120;
-            const descH = descEl ? descEl.offsetHeight : 60;
-            const uiBottom = 62 + ticketH + 18 + Math.max(60, descH) + 14;
-            s = Math.min((W - 28) / 905, Math.max(0.2, (H - navH - uiBottom) / (762 - 95)));
+            s = Math.min((W - 24) / 905, Math.max(0.2, (H - navH - 140) / (762 - 95)));
             x = W / 2 - 720 * s;
-            y = H - navH - 762 * s;
+            y = H - navH - 755 * s;
           }
 
           const mbadgeW = 0.27 * W;
           document.documentElement.style.setProperty('--mbs', (mbadgeW / 582).toString());
-          if (ticketEl) {
-            document.documentElement.style.setProperty('--th', `${ticketEl.offsetHeight}px`);
-          }
         }
 
         return { s, x, y };
@@ -1153,18 +2752,15 @@
         const vr = Math.min(1440, (W - x) / s);
         const pad = 18 / s;
 
-        // Wordmark positioning
         wmSvg.style.left = `${vl + 0.6 * pad}px`;
         wmSvg.style.width = `${vr - vl - 1.2 * pad}px`;
 
-        // Badge positioning
         const bLeft = Math.min(986, vr - pad - 417);
         const vb = Math.min(810, (H - y) / s);
         const bTop = Math.min(-165, vb - 56 / s - 935);
         badgeEl.style.left = `${bLeft}px`;
         badgeEl.style.top = `${bTop}px`;
 
-        // Script positioning
         scriptEl.style.left = `${vl + pad + 70}px`;
       }
 
@@ -1180,12 +2776,15 @@
         }
       }
 
-      // Initial placement
       place('hero');
 
       window.addEventListener('resize', () => {
         frameEl.classList.remove('glide');
         place(mode);
+        resizeCanvas();
+        if (mode === 'case') {
+          setCameraTransform(camState.rx, camState.ry, camState.rz, camState.scale, camState.tx, camState.ty);
+        }
       });
 
       /* ── 5. Entrance Sequence ── */
@@ -1193,16 +2792,16 @@
         if (entered) return;
         entered = true;
 
-        // Remove initial hiding class
         document.querySelectorAll('.pre').forEach((el) => el.classList.remove('pre'));
 
         if (RM) {
-          fillCase(0);
+          selectRole(0, false);
           return;
         }
 
         const tags = [btnOverview, btnFeatures, btnContacts, btnDemo];
         tags.forEach((tag, i) => {
+          if (!tag) return;
           tag.animate(
             [
               { opacity: 0, transform: 'translateY(-40px) rotate(-4deg)' },
@@ -1217,7 +2816,6 @@
           );
         });
 
-        // Wordmark entrance
         [wmSvg, mWmSvg].forEach((wm) => {
           if (!wm) return;
           wm.animate(
@@ -1226,15 +2824,14 @@
               { opacity: 1, transform: 'translateY(0)', clipPath: 'inset(0)' },
             ],
             {
-              duration: 1100,
-              delay: 260,
-              easing: 'cubic-bezier(.2, .8, .2, 1)',
+              duration: 900,
+              delay: 200,
+              easing: 'cubic-bezier(.16, 1, .3, 1)',
               fill: 'both',
             }
           );
         });
 
-        // Script entrance
         [scriptEl, mScriptEl].forEach((sc) => {
           if (!sc) return;
           sc.animate(
@@ -1244,82 +2841,104 @@
             ],
             {
               duration: 900,
-              delay: 1050,
-              easing: 'cubic-bezier(.5, 0, .3, 1)',
+              delay: 450,
+              easing: 'cubic-bezier(.2, .8, .2, 1)',
               fill: 'both',
             }
           );
         });
 
-        // Badge entrance
-        const bAnim = badgeEl.animate(
+        const bIn = badgeEl.animate(
           [
-            { opacity: 0, transform: 'translateY(-120%) rotate(8deg)', offset: 0 },
-            { opacity: 1, transform: 'translateY(0) rotate(-3deg)', offset: 0.6 },
-            { transform: 'translateY(0) rotate(1.6deg)', offset: 0.8 },
-            { opacity: 1, transform: 'translateY(0) rotate(0)', offset: 1 },
+            { opacity: 0, transform: 'translateY(-110%) rotate(6deg)', offset: 0 },
+            { opacity: 1, transform: 'translateY(0) rotate(-2deg)', offset: 0.7 },
+            { opacity: 1, transform: 'rotate(0)', offset: 1 },
           ],
           {
-            duration: 1500,
-            delay: 700,
+            duration: 1200,
+            delay: 400,
             easing: 'cubic-bezier(.2, .8, .2, 1)',
             fill: 'both',
           }
         );
 
-        // Hint entrance
-        hintEl.animate(
-          [{ opacity: 0 }, { opacity: 0.85 }],
-          {
-            duration: 600,
-            delay: 1800,
-            easing: 'cubic-bezier(.2, .8, .2, 1)',
-            fill: 'both',
-          }
-        );
-
-        bAnim.finished.then(() => {
+        bIn.finished.then(() => {
           startBadgeSway();
         });
-
-        fillCase(0);
       }
 
       function startBadgeSway() {
-        if (mode === 'hero' && !RM) {
-          badgeSway = badgeEl.animate(
-            [{ transform: 'rotate(-1.1deg)' }, { transform: 'rotate(1.1deg)' }],
-            {
-              duration: 3200,
-              iterations: Infinity,
-              direction: 'alternate',
-              easing: 'ease-in-out',
-            }
-          );
-        }
+        if (badgeSway) badgeSway.cancel();
+        badgeSway = badgeEl.animate(
+          [
+            { transform: 'rotate(-0.8deg)' },
+            { transform: 'rotate(0.8deg)' },
+            { transform: 'rotate(-0.8deg)' },
+          ],
+          {
+            duration: 5400,
+            iterations: Infinity,
+            easing: 'ease-in-out',
+          }
+        );
       }
 
-      // Badge Hover Swing
-      badgeHitEl.addEventListener('pointerenter', () => {
-        if (mode === 'hero' && !RM) {
-          badgeEl.animate(
-            [
-              { transform: 'rotate(0)' },
-              { transform: 'rotate(-6deg)' },
-              { transform: 'rotate(4deg)' },
-              { transform: 'rotate(-2deg)' },
-              { transform: 'rotate(0)' },
-            ],
-            {
-              duration: 1400,
-              easing: 'ease-out',
-              composite: 'add',
-            }
-          );
-        }
+      /* ── Drag & Flick on Lanyard Badge ── */
+      let dragging = false;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let badgeRot = 0;
+      let badgeVelocity = 0;
+      let lastDragX = 0;
+      let lastDragTime = 0;
+
+      badgeHitEl.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        badgeHitEl.setPointerCapture(e.pointerId);
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        lastDragX = e.clientX;
+        lastDragTime = Date.now();
+        if (badgeSway) badgeSway.pause();
       });
 
-      // Wait for font and hero plate
+      window.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - dragStartX;
+        const now = Date.now();
+        const dt = Math.max(1, now - lastDragTime);
+        badgeVelocity = (e.clientX - lastDragX) / dt;
+        lastDragX = e.clientX;
+        lastDragTime = now;
+
+        badgeRot = Math.max(-18, Math.min(18, dx * 0.08));
+        badgeEl.style.transform = `rotate(${badgeRot}deg)`;
+      });
+
+      window.addEventListener('pointerup', (e) => {
+        if (!dragging) return;
+        dragging = false;
+        try { badgeHitEl.releasePointerCapture(e.pointerId); } catch (_) { }
+
+        const fling = Math.max(-25, Math.min(25, badgeRot + badgeVelocity * 12));
+        const settle = badgeEl.animate(
+          [
+            { transform: `rotate(${badgeRot}deg)` },
+            { transform: `rotate(${fling}deg)`, offset: 0.25 },
+            { transform: 'rotate(0deg)' },
+          ],
+          {
+            duration: 900,
+            easing: 'cubic-bezier(.17, .89, .32, 1.25)',
+          }
+        );
+
+        settle.finished.then(() => {
+          badgeEl.style.transform = '';
+          startBadgeSway();
+        });
+      });
+
       const fontReady = document.fonts ? document.fonts.ready : Promise.resolve();
       const plateReady = new Promise((resolve) => {
         if (plateImg.complete && plateImg.naturalHeight > 0) resolve();
@@ -1331,119 +2950,22 @@
 
       Promise.race([
         Promise.all([fontReady, plateReady]),
-        new Promise((r) => setTimeout(r, 2500)),
+        new Promise((r) => setTimeout(r, 2200)),
       ]).then(() => {
         requestAnimationFrame(runEntrance);
       });
-      setTimeout(runEntrance, 4000); // failsafe
+      setTimeout(runEntrance, 3500);
 
-      /* ── 6. Case Population ── */
-      function fillCase(i) {
-        const c = CASES[i];
-        tTitleEl.textContent = c.title;
-        tRowsEl.innerHTML = c.rows.map((r) => `<div class="t-row">${r}</div>`).join('');
-        dKEl.textContent = c.key;
-        dPEl.textContent = c.text;
-        dNumEl.textContent = `0${i + 1} / 03`;
-
-        if (i === 0) btnPrev.classList.add('dim');
-        else btnPrev.classList.remove('dim');
-      }
-
-      function playOnly(n) {
-        caseVids.forEach((v, i) => {
-          if (i === n) {
-            if (!v.src && CASES[n].video) v.src = CASES[n].video;
-            v.style.opacity = '1';
-            v.currentTime = 0;
-            v.play().catch(() => {});
-          } else {
-            v.style.opacity = '0';
-            v.pause();
-          }
-        });
-      }
-
-      function caseIn(n, first) {
-        fillCase(n);
-
-        // Ticket animation
-        ticketEl.animate(
-          [
-            { opacity: 0, transform: 'translateY(-60px) rotate(-6deg)', offset: 0 },
-            { transform: 'translateY(6px) rotate(1.2deg)', offset: 0.7 },
-            { opacity: 1, transform: 'none', offset: 1 },
-          ],
-          {
-            duration: 800,
-            delay: first ? 150 : 0,
-            easing: 'cubic-bezier(.2, .8, .2, 1)',
-            fill: 'both',
-          }
-        );
-
-        // Description children
-        const descChildren = [dKEl, dPEl, dNumEl];
-        descChildren.forEach((child, k) => {
-          child.animate(
-            [
-              { opacity: 0, transform: 'translateY(14px)' },
-              { opacity: 1, transform: 'none' },
-            ],
-            {
-              duration: 600,
-              delay: (first ? 250 : 80) + k * 70,
-              easing: 'cubic-bezier(.2, .8, .2, 1)',
-              fill: 'both',
-            }
-          );
-        });
-      }
-
-      function caseOut() {
-        ticketEl.animate(
-          [
-            { opacity: 1, transform: 'none' },
-            { opacity: 0, transform: 'translateY(-40px) rotate(4deg)' },
-          ],
-          {
-            duration: 380,
-            easing: 'cubic-bezier(.5, 0, .75, 0)',
-            fill: 'forwards',
-          }
-        );
-
-        const descChildren = [dKEl, dPEl, dNumEl];
-        descChildren.forEach((child, k) => {
-          child.animate(
-            [
-              { opacity: 1, transform: 'none' },
-              { opacity: 0, transform: 'translateY(-10px)' },
-            ],
-            {
-              duration: 300,
-              delay: k * 40,
-              easing: 'cubic-bezier(.5, 0, .75, 0)',
-              fill: 'forwards',
-            }
-          );
-        });
-      }
-
-      /* ── 7. Hero -> Laptop Dive (toCase) ── */
+      /* ── 6. Hero -> Laptop Dive (toCase) ── */
       function toCase() {
         if (busy || mode === 'case') return;
         busy = true;
         document.body.classList.add('busy');
 
-        // heroOut
         [wmSvg, mWmSvg].forEach((wm) => {
           if (!wm) return;
           wm.animate(
-            [
-              { opacity: 1, transform: 'translateY(0)' },
-              { opacity: 0, transform: 'translateY(-40px)' },
-            ],
+            [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-40px)' }],
             { duration: 380, easing: 'cubic-bezier(.5, 0, .75, 0)', fill: 'forwards' }
           );
         });
@@ -1459,10 +2981,7 @@
 
         if (badgeSway) badgeSway.cancel();
         badgeEl.animate(
-          [
-            { opacity: 1, transform: 'translateY(0) rotate(0)' },
-            { opacity: 0, transform: 'translateY(-110%) rotate(-6deg)' },
-          ],
+          [{ opacity: 1, transform: 'translateY(0) rotate(0)' }, { opacity: 0, transform: 'translateY(-110%) rotate(-6deg)' }],
           { duration: 380, easing: 'cubic-bezier(.5, 0, .75, 0)', fill: 'forwards' }
         );
 
@@ -1492,8 +3011,7 @@
             });
           });
 
-          // Play video with eased speed curve
-          transVideo.play().catch(() => {});
+          transVideo.play().catch(() => { });
           const duration = transVideo.duration || 5.04;
 
           function tickSpeed() {
@@ -1515,39 +3033,24 @@
         }, 330);
       }
 
-      /* ── 8. Arrive in Case Mode ── */
+      /* ── 7. Arrive in Case Mode (Activate Full #s2-3d-engine) ── */
       function arriveCase() {
         mode = 'case';
         document.body.classList.add('is-case');
+        if (s2Engine) s2Engine.setAttribute('aria-hidden', 'false');
 
         plateImg.style.visibility = 'hidden';
         cutImg.style.opacity = '0';
         screenEl.style.opacity = '1';
 
-        // Flash on screen
         flashEl.animate(
-          [
-            { opacity: 0 },
-            { opacity: 0.55 },
-            { opacity: 0 },
-          ],
+          [{ opacity: 0 }, { opacity: 0.55 }, { opacity: 0 }],
           { duration: 600, easing: 'ease-out' }
         );
 
-        // First video reveal
-        caseVids[0].animate(
-          [
-            { opacity: 0, transform: 'scale(1.06)' },
-            { opacity: 1, transform: 'scale(1)' },
-          ],
-          { duration: 700, fill: 'both' }
-        );
-
-        playOnly(0);
-        caseIn(0, true);
-
-        // Preload video 2
-        if (!caseVids[1].src) caseVids[1].src = CASES[1].video;
+        resizeCanvas();
+        selectRole(0, false);
+        try { window.parent.postMessage({ type: 'fams-scene', mode: 'case' }, '*'); } catch (_) { }
 
         setTimeout(() => {
           busy = false;
@@ -1556,78 +3059,19 @@
         }, 700);
       }
 
-      /* ── 9. Switching Cases (swapTo) ── */
-      function swapTo(n) {
-        if (busy) return;
-        busy = true;
-
-        const oldIdx = currentCase;
-        currentCase = n;
-
-        // 1. In parallel: caseOut and old video fade
-        caseOut();
-        caseVids[oldIdx].animate(
-          [{ opacity: 1 }, { opacity: 0 }],
-          { duration: 350, fill: 'forwards' }
-        );
-
-        setTimeout(() => {
-          caseVids[oldIdx].pause();
-
-          // 2. Flash
-          flashEl.animate(
-            [{ opacity: 0 }, { opacity: 0.35 }, { opacity: 0 }],
-            { duration: 420 }
-          );
-
-          // 3. New video entrance
-          caseVids[n].animate(
-            [
-              { opacity: 0, transform: 'scale(1.04)' },
-              { opacity: 1, transform: 'scale(1)' },
-            ],
-            { duration: 500, fill: 'both' }
-          );
-
-          playOnly(n);
-          caseIn(n, false);
-
-          // Preload next video
-          const nextIdx = (n + 1) % CASES.length;
-          if (!caseVids[nextIdx].src) caseVids[nextIdx].src = CASES[nextIdx].video;
-
-          setTimeout(() => {
-            busy = false;
-          }, 520);
-        }, 350);
-      }
-
-      function nextCase() {
-        if (busy) return;
-        const next = (currentCase + 1) % CASES.length;
-        swapTo(next);
-      }
-
-      function prevCase() {
-        if (busy) return;
-        if (currentCase === 0) {
-          toHero();
-        } else {
-          swapTo(currentCase - 1);
-        }
-      }
-
-      /* ── 10. Back to Hero (toHero) ── */
+      /* ── 8. Back to Hero (toHero) ── */
       function toHero() {
         if (busy || mode === 'hero') return;
         busy = true;
+        clearRoleTimers();
+        clearFocusCards();
         document.body.classList.add('busy');
 
-        caseOut();
-        caseVids.forEach((v) => v.pause());
+        if (s2Engine) s2Engine.setAttribute('aria-hidden', 'true');
         screenEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' });
-
         document.body.classList.remove('is-case');
+        try { window.parent.postMessage({ type: 'fams-scene', mode: 'hero' }, '*'); } catch (_) { }
+
         frameEl.style.setProperty('--glide', '.9s');
         frameEl.classList.add('glide');
         place('hero');
@@ -1636,30 +3080,20 @@
         cutImg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, delay: 150, fill: 'forwards' });
 
         casePlateImg.animate(
-          [
-            { opacity: 1, filter: 'blur(0)' },
-            { opacity: 0, filter: 'blur(12px)' },
-          ],
+          [{ opacity: 1, filter: 'blur(0)' }, { opacity: 0, filter: 'blur(12px)' }],
           { duration: 800, easing: 'cubic-bezier(.65, 0, .35, 1)', fill: 'forwards' }
         );
 
         plateImg.animate(
-          [
-            { transform: 'scale(1.12)', filter: 'blur(8px)' },
-            { transform: 'scale(1)', filter: 'blur(0)' },
-          ],
+          [{ transform: 'scale(1.12)', filter: 'blur(8px)' }, { transform: 'scale(1)', filter: 'blur(0)' }],
           { duration: 900, easing: 'cubic-bezier(.2, .8, .2, 1)', fill: 'forwards' }
         );
 
         setTimeout(() => {
-          // heroIn
           [wmSvg, mWmSvg].forEach((wm) => {
             if (!wm) return;
             wm.animate(
-              [
-                { opacity: 0, transform: 'translateY(40px)' },
-                { opacity: 1, transform: 'translateY(0)' },
-              ],
+              [{ opacity: 0, transform: 'translateY(40px)' }, { opacity: 1, transform: 'translateY(0)' }],
               { duration: 700, fill: 'forwards' }
             );
           });
@@ -1667,10 +3101,7 @@
           [scriptEl, mScriptEl].forEach((sc) => {
             if (!sc) return;
             sc.animate(
-              [
-                { opacity: 0, clipPath: 'inset(0 100% 0 0)' },
-                { opacity: 1, clipPath: 'inset(0)' },
-              ],
+              [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0)' }],
               { duration: 700, delay: 250, fill: 'forwards' }
             );
           });
@@ -1689,7 +3120,7 @@
           });
 
           mode = 'hero';
-          currentCase = 0;
+          activeRole = 0;
           screenEl.style.opacity = '0';
 
           setTimeout(() => {
@@ -1700,93 +3131,23 @@
         }, 250);
       }
 
-      /* ── 11. Event Listeners ── */
-      // Wheel navigation
-      let lastWheelTime = 0;
-      window.addEventListener(
-        'wheel',
-        (e) => {
-          e.preventDefault();
-          const now = Date.now();
-          if (now - lastWheelTime < 900) return;
-          if (Math.abs(e.deltaY) < 18) return;
+      /* ── 9. Stepper Actions ── */
+      function nextWorkflow() {
+        if (busy) return;
+        const next = (activeRole + 1) % ROLES.length;
+        selectRole(next, true);
+      }
 
-          lastWheelTime = now;
-          if (mode === 'hero') {
-            if (e.deltaY > 0) toCase();
-          } else {
-            if (e.deltaY > 0) {
-              nextCase();
-            } else {
-              prevCase();
-            }
-          }
-        },
-        { passive: false }
-      );
+      function prevWorkflow() {
+        if (busy) return;
+        const prev = (activeRole - 1 + ROLES.length) % ROLES.length;
+        selectRole(prev, true);
+      }
 
-      // Touch navigation
-      let touchStartY = 0;
-      let touchStartX = 0;
-      window.addEventListener(
-        'touchstart',
-        (e) => {
-          if (e.touches && e.touches.length) {
-            touchStartY = e.touches[0].clientY;
-            touchStartX = e.touches[0].clientX;
-          }
-        },
-        { passive: true }
-      );
-
-      window.addEventListener(
-        'touchend',
-        (e) => {
-          if (e.changedTouches && e.changedTouches.length) {
-            const dy = e.changedTouches[0].clientY - touchStartY;
-            const dx = e.changedTouches[0].clientX - touchStartX;
-
-            if (mode === 'hero') {
-              if (dy <= -40) toCase();
-            } else {
-              if (dy <= -40 || dx <= -40) {
-                nextCase();
-              } else if (dy >= 40 || dx >= 40) {
-                prevCase();
-              }
-            }
-          }
-        },
-        { passive: true }
-      );
-
-      // Keyboard navigation
-      window.addEventListener('keydown', (e) => {
-        if (mode === 'hero') {
-          if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
-            e.preventDefault();
-            toCase();
-          }
-        } else {
-          if (['ArrowDown', 'PageDown', ' ', 'ArrowRight'].includes(e.key)) {
-            e.preventDefault();
-            nextCase();
-          } else if (['ArrowUp', 'PageUp', 'ArrowLeft'].includes(e.key)) {
-            e.preventDefault();
-            prevCase();
-          }
-        }
-      });
-
-      // UI Clicks
+      /* ── 10. Event Listeners ── */
+      // Scene 1 Triggers
       btnOverview.addEventListener('click', toHero);
       btnFeatures.addEventListener('click', toCase);
-      btnLogo.addEventListener('click', toHero);
-      btnPrev.addEventListener('click', prevCase);
-      btnNext.addEventListener('click', nextCase);
-      screenHitEl.addEventListener('click', nextCase);
-
-      // Prevent dummy link jumps
       btnContacts.addEventListener('click', (e) => e.preventDefault());
       btnDemo.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1795,10 +3156,83 @@
             window.top.location.href = '/auth';
             return;
           }
-        } catch (_) {}
+        } catch (_) { }
         window.location.href = '/auth';
       });
+
+      // Wheel Navigation
+      let lastWheelTime = 0;
+      window.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const now = Date.now();
+        if (now - lastWheelTime < 800) return;
+        if (Math.abs(e.deltaY) < 18) return;
+
+        lastWheelTime = now;
+        if (mode === 'hero') {
+          if (e.deltaY > 0) toCase();
+        } else {
+          if (e.deltaY > 0) nextWorkflow();
+          else prevWorkflow();
+        }
+      }, { passive: false });
+
+      // Touch Gestures (avoid colliding with 3D Orbit drag inside #stage-viewport)
+      let touchStartY = 0;
+      let touchStartX = 0;
+      let touchInsideStage = false;
+      window.addEventListener('touchstart', (e) => {
+        touchInsideStage = !!(e.target && e.target.closest && e.target.closest('#stage-viewport'));
+        if (e.touches && e.touches.length) {
+          touchStartY = e.touches[0].clientY;
+          touchStartX = e.touches[0].clientX;
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', (e) => {
+        if (touchInsideStage && mode === 'case') return;
+        if (e.changedTouches && e.changedTouches.length) {
+          const dy = e.changedTouches[0].clientY - touchStartY;
+          const dx = e.changedTouches[0].clientX - touchStartX;
+
+          if (mode === 'hero') {
+            if (dy <= -40) toCase();
+          } else {
+            if (dy <= -55 || dx <= -55) nextWorkflow();
+            else if (dy >= 55 || dx >= 55) prevWorkflow();
+          }
+        }
+      }, { passive: true });
+
+      // Keyboard Controls
+      window.addEventListener('keydown', (e) => {
+        if (mode === 'hero') {
+          if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+            e.preventDefault();
+            toCase();
+          }
+        } else {
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            toHero();
+          } else if (e.key === ' ') {
+            e.preventDefault();
+            toggleAutoMotion();
+          } else if (['ArrowRight', 'ArrowDown', 'PageDown'].includes(e.key)) {
+            e.preventDefault();
+            nextWorkflow();
+          } else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {
+            e.preventDefault();
+            prevWorkflow();
+          }
+        }
+      });
+      // Deep link to laptop mode
+      if (window.location.hash === '#case' || window.location.search.includes('case')) {
+        setTimeout(toCase, 600);
+      }
     })();
   </script>
 </body>
+
 </html>

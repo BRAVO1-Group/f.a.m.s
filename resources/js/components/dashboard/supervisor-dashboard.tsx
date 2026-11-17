@@ -1,49 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@inertiajs/react";
 import {
-  Activity,
-  AlertTriangle,
-  Award,
-  BookOpen,
-  Briefcase,
-  Building2,
-  CalendarCheck,
-  Check,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
-  ExternalLink,
-  FileBarChart,
-  FileCheck,
-  Filter,
-  GraduationCap,
-  Info,
-  Key,
-  Laptop,
-  Layers,
-  Lock,
-  Mail,
-  MapPin,
-  MessageSquareCheck,
-  Milestone,
-  Phone,
-  Plus,
-  RefreshCw,
-  RotateCcw,
-  Search,
-  Settings2,
-  Shield,
-  ShieldAlert,
-  ShieldCheck,
-  Sliders,
-  Sparkles,
-  TrendingUp,
-  UserCheck,
-  UserPlus,
-  Users,
-  FileText,
-} from "lucide-react";
-import {
   Bar,
   BarChart,
   CartesianGrid,
@@ -55,6 +12,7 @@ import {
   AreaChart,
 } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -184,6 +142,44 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
       avatarFallback: "AW",
     },
     {
+      id: "student-2",
+      name: "Brian Mwangi",
+      regNo: "CS/2021/0067",
+      role: "Cloud Infrastructure Intern",
+      department: "Infrastructure & Cloud",
+      company: "Safaricom PLC",
+      institution: "University of Nairobi",
+      degree: "BSc. Computer Science",
+      email: "brian@university.ac.ke",
+      phone: "+254 722 556 778",
+      academicSupervisor: "Dr. Joyce Chelangat (jchelangat@university.ac.ke)",
+      daysLogged: 36,
+      requiredDays: 60,
+      attendanceRate: "96.0%",
+      currentPhase: "Phase 2: Cloud Deployment & Monitoring",
+      status: "Active • On Track",
+      avatarFallback: "BM",
+    },
+    {
+      id: "student-3",
+      name: "Faith Njeri",
+      regNo: "CS/2021/0089",
+      role: "Data Analytics Intern",
+      department: "Business Intelligence",
+      company: "Kenya Commercial Bank",
+      institution: "University of Nairobi",
+      degree: "BSc. Information Systems",
+      email: "faith@university.ac.ke",
+      phone: "+254 733 112 233",
+      academicSupervisor: "Dr. Peter Kamau (dean@university.ac.ke)",
+      daysLogged: 40,
+      requiredDays: 60,
+      attendanceRate: "98.0%",
+      currentPhase: "Phase 2: BI Dashboards & ETL",
+      status: "Active • On Track",
+      avatarFallback: "FN",
+    },
+    {
       id: "student-4",
       name: "Kevin Kiprono",
       regNo: "CS/2021/0104",
@@ -267,176 +263,65 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
   };
 
   return (
-    <div className="space-y-6 antialiased">
-      {/* ── Corporate Received Logins Security Notice ── */}
-      <div className="rounded-xl border border-primary/25 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-start gap-3">
-          <div className="rounded-lg bg-primary/10 p-2 text-primary shrink-0">
-            <Lock className="size-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-semibold text-sm text-foreground">
-                Corporate Host Organization Account
-              </span>
-              <Badge
-                variant="outline"
-                className="text-[11px] font-medium border-primary/30 text-primary"
-              >
-                🏢 Received Enterprise Logins Only
-              </Badge>
-              <Badge variant="secondary" className="text-[11px] font-medium">
-                Tier 2 • Host Org Supervisor
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-              Authenticated as <strong>{name}</strong> via pre-provisioned credentials issued by{" "}
-              <strong>{currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"}</strong>.
-              Supervisors cannot self-register; candidate access is scoped strictly to your assigned
-              interns.
-            </p>
-          </div>
-        </div>
-        <div className="text-right shrink-0">
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
-            <ShieldCheck className="size-3.5" /> Direct Approval Authority
-          </span>
-        </div>
-      </div>
-
+    <div className="dashboard-page space-y-6 antialiased">
       {/* ── Supervisor Header ── */}
-      <div className="rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="outline"
-                className="border-white/30 bg-white/10 text-white text-xs font-semibold"
-              >
-                🏢 Host Organization Field Mentor
-              </Badge>
-              <span className="text-xs text-primary-foreground/75">
-                {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"} •{" "}
-                {currentSupervisor?.faculty_department ?? "Product Engineering"}
-              </span>
-            </div>
-            <h1 className="mt-2 font-display text-2xl font-bold sm:text-3xl tracking-tight">
-              {greeting}, {name}
-            </h1>
-            <p className="mt-1 text-sm text-primary-foreground/80">
-              Supervising {assignedStudentsDetails.length} assigned interns. Review engineering
-              logs, verify task deliverables, and sign off submissions.
-            </p>
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+        <div>
+          <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            {greeting}, {name}
+          </h1>
+          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+            {currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"} ·{" "}
+            {currentSupervisor?.faculty_department ?? "Product Engineering"} · Supervising{" "}
+            {assignedStudentsDetails.length} interns
+          </p>
+        </div>
 
-          <div className="flex flex-wrap gap-2">
-            <Button
-              asChild
-              className="rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-xs shadow-sm"
-            >
-              <Link href="/review">
-                <FileCheck className="mr-1.5 size-4" />
-                Review Queue ({pendingActivities.length})
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="rounded-xl border-white/30 bg-white/10 text-white hover:bg-white/20 font-semibold text-xs"
-            >
-              <Link href="/students">
-                <Users className="mr-1.5 size-4" />
-                Assigned Interns ({assignedStudentsDetails.length})
-              </Link>
-            </Button>
-          </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild size="sm" className="rounded-xl text-xs font-semibold h-9">
+            <Link href="/review">Review Queue ({pendingActivities.length})</Link>
+          </Button>
+          <Button asChild size="sm" variant="outline" className="rounded-xl text-xs font-semibold h-9">
+            <Link href="/students">Assigned Interns ({assignedStudentsDetails.length})</Link>
+          </Button>
         </div>
       </div>
 
       {/* ── Supervisor KPI Cards (Scoped to Assigned Students) ── */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Assigned Interns
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Users className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {assignedStudentsDetails.length}
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">Alice Wanjiku & Kevin Kiprono</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Pending Approval
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-warning/15 text-warning-foreground">
-                <Clock className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {pendingActivities.length}
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">Submissions awaiting your sign-off</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Approved Deliverables
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-success/10 text-success">
-                <CheckCircle2 className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {approvedActivities.length}
-            </p>
-            <p className="mt-2 text-xs text-success flex items-center gap-1 font-medium">
-              <TrendingUp className="size-3" /> Signed off by Host Org Mentor
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Revisions Requested
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                <RotateCcw className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {correctionActivities.length}
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">Logs flagged for mentee correction</p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiCard
+          label="Assigned Interns"
+          value={assignedStudentsDetails.length}
+          meta={assignedStudentsDetails.map((s) => s.name).join(" · ") || "No interns assigned"}
+        />
+        <KpiCard
+          label="Pending Approval"
+          value={pendingActivities.length}
+          meta="Awaiting sign-off"
+        />
+        <KpiCard
+          label="Approved Deliverables"
+          value={approvedActivities.length}
+          meta={isOrgSupervisor ? "Signed off by host supervisor" : "Verified by university supervisor"}
+        />
+        <KpiCard
+          label="Revisions Requested"
+          value={correctionActivities.length}
+          meta="Flagged for correction"
+        />
       </div>
 
       {/* ── Assigned Student Details (Candidate Profile & Placement Cards) ── */}
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h2 className="text-lg font-semibold tracking-tight text-foreground flex items-center gap-2">
-              <Users className="size-5 text-primary" />
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">
               My Assigned Student Interns
             </h2>
             <p className="text-xs text-muted-foreground">
-              Comprehensive candidate profiles, placement tracks at TechCorp Kenya Ltd, and
-              attachment meters
+              {isOrgSupervisor
+                ? `Candidate profiles and placement tracks at ${currentSupervisor?.organization_name ?? "TechCorp Kenya Ltd"}`
+                : "Candidate profiles and academic supervision tracks across host organizations"}
             </p>
           </div>
           <Button asChild size="sm" variant="outline" className="text-xs font-semibold">
@@ -514,16 +399,10 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                   </div>
 
                   {/* Contacts & Direct Filter Action */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-1 border-t border-border/60">
-                    <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <Mail className="size-3 text-muted-foreground" />
-                        {student.email}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Phone className="size-3 text-muted-foreground" />
-                        {student.phone}
-                      </span>
+                  <div className="flex flex-col items-start justify-between gap-2 border-t border-border/60 pt-1 xl:flex-row xl:items-center">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+                      <span>{student.email}</span>
+                      <span>{student.phone}</span>
                     </div>
                     <Button
                       size="sm"
@@ -549,8 +428,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
         <CardHeader className="space-y-4 pb-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <CardTitle className="text-base font-semibold flex items-center gap-2">
-                <FileCheck className="size-5 text-primary" />
+              <CardTitle className="text-base font-semibold">
                 Submissions Made by Assigned Interns
               </CardTitle>
               <CardDescription>
@@ -559,10 +437,10 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               </CardDescription>
             </div>
             {/* Mentee filter selector */}
-            <div className="flex items-center gap-2">
+            <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
               <span className="text-xs font-medium text-muted-foreground">Filter Mentee:</span>
               <Select value={selectedStudentFilter} onValueChange={setSelectedStudentFilter}>
-                <SelectTrigger className="w-[220px] text-xs h-9">
+                <SelectTrigger className="h-9 w-full text-xs sm:w-[220px]">
                   <SelectValue placeholder="All Mentees" />
                 </SelectTrigger>
                 <SelectContent>
@@ -599,7 +477,7 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                 {correctionActivities.length > 0 && (
                   <Badge
                     variant="secondary"
-                    className="px-1.5 py-0 text-[10px] bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold"
+                    className="px-1.5 py-0 text-[10px] bg-warning/10 text-warning font-bold"
                   >
                     {correctionActivities.length}
                   </Badge>
@@ -615,7 +493,6 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
         <CardContent className="space-y-3">
           {displayedActivities.length === 0 ? (
             <div className="py-12 text-center text-sm text-muted-foreground border border-dashed rounded-xl border-border/80">
-              <CheckCircle2 className="mx-auto size-9 text-muted-foreground/60 mb-2" />
               <p className="font-semibold text-foreground">No submissions in this view</p>
               <p className="text-xs mt-1">
                 {activeTab === "submitted"
@@ -671,10 +548,10 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                         }
                         className={`text-xs capitalize ${
                           act.status === "approved"
-                            ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
+                            ? "bg-success/10 text-success border-success/30"
                             : act.status === "needs_correction"
-                              ? "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30"
-                              : "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/30"
+                              ? "bg-warning/10 text-warning border-warning/30"
+                              : "bg-info/10 text-info-foreground border-info/30"
                         }`}
                       >
                         {act.status.replace("_", " ")}
@@ -719,14 +596,14 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                     <div
                       className={`rounded-lg p-2.5 text-xs border ${
                         act.status === "approved"
-                          ? "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900 text-emerald-900 dark:text-emerald-200"
-                          : "bg-amber-50/60 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900 text-amber-900 dark:text-amber-200"
+                          ? "bg-success/10 border-success/30 text-success"
+                          : "bg-warning/10 border-warning/30 text-warning"
                       }`}
                     >
                       <span className="font-semibold block mb-0.5">
                         {act.status === "approved"
-                          ? "✓ Host Org Mentor Feedback:"
-                          : "⚠ Revision Feedback to Intern:"}
+                          ? "Host Org Mentor Feedback:"
+                          : "Revision Feedback to Intern:"}
                       </span>
                       <p className="leading-relaxed">{act.supervisor_feedback}</p>
                       {act.reviewed_at && (
@@ -748,7 +625,6 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                       }}
                       className="h-8 rounded-lg text-xs font-semibold"
                     >
-                      <MessageSquareCheck className="mr-1.5 size-3.5" />
                       {act.status === "submitted" ? "Review & Feedback" : "Update Feedback"}
                     </Button>
 
@@ -758,7 +634,6 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
                         onClick={() => handleQuickApprove(act)}
                         className="h-8 rounded-lg bg-primary text-primary-foreground text-xs font-semibold shadow-xs"
                       >
-                        <Check className="mr-1 size-3.5" />
                         Quick Approve
                       </Button>
                     )}
@@ -849,9 +724,8 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               type="button"
               variant="outline"
               onClick={() => handleReviewAction("needs_correction")}
-              className="text-xs font-semibold border-amber-500/40 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40"
+              className="text-xs font-semibold border-warning/40 text-warning hover:bg-warning/10"
             >
-              <RotateCcw className="mr-1.5 size-3.5" />
               Request Revisions
             </Button>
             <Button
@@ -859,7 +733,6 @@ export function SupervisorDashboard({ userId, name }: { userId: string; name: st
               onClick={() => handleReviewAction("approved")}
               className="text-xs font-semibold bg-primary text-primary-foreground"
             >
-              <Check className="mr-1.5 size-3.5" />
               Sign Off & Approve
             </Button>
           </DialogFooter>

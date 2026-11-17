@@ -119,7 +119,7 @@ ${items || "<p>No activities recorded.</p>"}
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-semibold">Reports</h1>
+        <h1 className="font-display text-2xl font-semibold text-foreground">Reports</h1>
         <p className="text-sm text-muted-foreground">
           Build your internship report from recorded activities and export it.
         </p>
@@ -151,9 +151,9 @@ ${items || "<p>No activities recorded.</p>"}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Stat label="Activities" value={rows.length} />
-        <Stat label="Approved" value={approved} />
-        <Stat label="Skills developed" value={skills.length} />
+        <Stat label="Activities" value={rows.length} tone="success" />
+        <Stat label="Approved" value={approved} tone="info" />
+        <Stat label="Skills developed" value={skills.length} tone="success" />
       </div>
 
       <Card className="shadow-card">
@@ -198,11 +198,18 @@ ${items || "<p>No activities recorded.</p>"}
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+function Stat({ label, value, tone }: { label: string; value: number; tone: "success" | "info" }) {
+  const toneClasses =
+    tone === "success"
+      ? "bg-success border-success text-success-foreground"
+      : "bg-info border-info text-info-foreground";
+  const descriptionClass =
+    tone === "success" ? "text-success-foreground/80" : "text-info-foreground/80";
+
   return (
-    <Card className="shadow-card">
+    <Card className={`shadow-card ${toneClasses}`}>
       <CardHeader className="pb-2">
-        <CardDescription>{label}</CardDescription>
+        <CardDescription className={descriptionClass}>{label}</CardDescription>
         <CardTitle className="text-3xl">{value}</CardTitle>
       </CardHeader>
     </Card>

@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Award, CheckCircle2, FileCheck, Star, Users } from "lucide-react";
+import { Award, CheckCircle2, FileCheck } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -134,68 +135,28 @@ export default function EvaluationsPage() {
       </div>
 
       {/* ── Metrics ── */}
-      <div className="grid gap-4 sm:grid-cols-4">
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Total Evaluations
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <FileCheck className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">{evalList.length}</p>
-            <p className="mt-2 text-xs text-muted-foreground">Signed assessments on file</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Average Overall Score
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-success/10 text-success">
-                <Star className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">4.8 / 5.0</p>
-            <p className="mt-2 text-xs text-success font-medium">Distinction-tier performance</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Job Offer Endorsements
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600">
-                <Award className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {evalList.filter((e) => e.recommendation === "full_time_offer").length}
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">Full-time conversion recommended</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Defense Ready
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600">
-                <Users className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">3 of 4</p>
-            <p className="mt-2 text-xs text-muted-foreground">Graduation clearance unlocked</p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-3 sm:grid-cols-4">
+        <KpiCard
+          label="Total Evaluations"
+          value={evalList.length}
+          meta="Signed assessments"
+        />
+        <KpiCard
+          label="Average Score"
+          value="4.8"
+          unit="/ 5.0"
+          meta="Distinction tier"
+        />
+        <KpiCard
+          label="Job Endorsements"
+          value={evalList.filter((e) => e.recommendation === "full_time_offer").length}
+          meta="Full-time recommended"
+        />
+        <KpiCard
+          label="Defense Ready"
+          value="3 of 4"
+          meta="Clearance unlocked"
+        />
       </div>
 
       {/* ── Evaluations Table ── */}

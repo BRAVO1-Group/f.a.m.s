@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from "react";
-import { Link, router } from "@inertiajs/react";
+import { useEffect, useState, type ReactNode } from "react";
+import { Link, router, usePage } from "@inertiajs/react";
 import {
   Award,
   BookOpen,
@@ -13,7 +13,10 @@ import {
   LogOut,
   Menu,
   Milestone,
+  Monitor,
+  Moon,
   Shield,
+  Sun,
   User as UserIcon,
   UserCheck,
   UserPlus,
@@ -24,7 +27,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,9 +35,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import { cn } from "@/lib/utils";
 import { ROLE_LABELS, ROLE_TIERS, type AppRole } from "@/lib/auth";
+import { useTheme, type ThemeMode } from "@/lib/theme";
 
 type NavCategory = "core" | "tracking" | "supervision" | "governance" | "account";
 
@@ -73,28 +75,28 @@ const NAV: NavItem[] = [
     to: "/milestones",
     label: "Milestones Roadmap",
     icon: Milestone,
-    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+    roles: ["student", "supervisor", "org_admin"],
     category: "tracking",
   },
   {
     to: "/review",
     label: "Review Queue",
     icon: ClipboardList,
-    roles: ["supervisor", "org_admin", "uni_admin", "system_admin"],
+    roles: ["supervisor", "org_admin"],
     category: "supervision",
   },
   {
     to: "/students",
     label: "Assigned Interns",
     icon: Users,
-    roles: ["supervisor", "org_admin", "uni_admin", "system_admin"],
+    roles: ["supervisor", "org_admin"],
     category: "supervision",
   },
   {
     to: "/evaluations",
     label: "Performance Evaluations",
     icon: Award,
-    roles: ["supervisor", "uni_admin", "system_admin"],
+    roles: ["supervisor", "org_admin"],
     category: "supervision",
   },
   {
@@ -129,7 +131,7 @@ const NAV: NavItem[] = [
     to: "/reports",
     label: "Reports & Dossier",
     icon: FileBarChart,
-    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+    roles: ["student", "supervisor", "org_admin"],
     category: "core",
   },
   {
@@ -149,25 +151,32 @@ const CATEGORY_LABELS: Record<NavCategory, string> = {
   account: "Account",
 };
 
-type AppShellProps = {
+const THEME_OPTIONS: { mode: ThemeMode; label: string; icon: typeof Sun }[] = [
+  { mode: "light", label: "Light", icon: Sun },
+  { mode: "dark", label: "Dark", icon: Moon },
+  { mode: "system", label: "Auto", icon: Monitor },
+];
+
+export function AppShell({
+  children,
+  role,
+  roles,
+  name,
+  email,
+}: {
   children: ReactNode;
   role: AppRole;
   roles?: AppRole[];
   name: string;
   email: string;
-};
-
-export function AppShell({ children, role, roles, name, email }: AppShellProps) {
+}) {
   const [open, setOpen] = useState(false);
+  const { url } = usePage();
+  const pathname = url.split("?")[0] || "/dashboard";
+  const { theme, setTheme } = useTheme();
 
-  const pathname = window.location.pathname;
-
-  const activeRole = role;
-  const activeRoles = roles && roles.length > 0 ? roles : [activeRole];
-
-  const activeName = name || "User";
-  const activeEmail = email || "";
-
+  const activeRole: AppRole = role;
+  const activeRoles: AppRole[] = roles && roles.length > 0 ? roles : [activeRole];
   const tier = ROLE_TIERS[activeRole];
 
   const signOut = () => {
@@ -177,6 +186,24 @@ export function AppShell({ children, role, roles, name, email }: AppShellProps) 
   const allowedItems = NAV.filter((item) =>
     item.roles.some((allowedRole) => activeRoles.includes(allowedRole)),
   );
+
+  const isRouteAllowed = allowedItems.some(
+    (item) => pathname === item.to || pathname.startsWith(item.to + "/"),
+  );
+
+  useEffect(() => {
+    if (!isRouteAllowed) {
+      router.visit("/dashboard");
+    }
+  }, [isRouteAllowed]);
+
+  const currentNavItem =
+    NAV.find((item) => pathname === item.to || pathname.startsWith(item.to + "/")) ?? NAV[0]!;
+
+  const currentThemeIdx = THEME_OPTIONS.findIndex((o) => o.mode === theme);
+  const activeThemeOption = THEME_OPTIONS[currentThemeIdx === -1 ? 0 : currentThemeIdx]!;
+  const ActiveThemeIcon = activeThemeOption.icon;
+  const nextThemeOption = THEME_OPTIONS[(currentThemeIdx + 1) % THEME_OPTIONS.length]!;
 
   const categories: NavCategory[] = ["core", "tracking", "supervision", "governance", "account"];
 
@@ -189,7 +216,7 @@ export function AppShell({ children, role, roles, name, email }: AppShellProps) 
     .filter((group) => group.items.length > 0);
 
   const initials =
-    (activeName || activeEmail)
+    (name || email)
       .split(" ")
       .map((part) => part[0])
       .filter(Boolean)
@@ -282,7 +309,7 @@ export function AppShell({ children, role, roles, name, email }: AppShellProps) 
             </Avatar>
 
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-semibold">{activeName}</p>
+              <p className="truncate text-xs font-semibold">{name}</p>
 
               <p className="truncate text-[10px] text-sidebar-foreground/60">
                 {ROLE_LABELS[activeRole]}
@@ -293,16 +320,16 @@ export function AppShell({ children, role, roles, name, email }: AppShellProps) 
           <Button
             variant="ghost"
             size="sm"
-            className="w-full justify-start gap-2 text-xs text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground h-8"
             onClick={signOut}
+            className="w-full justify-start text-xs text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
           >
-            <LogOut className="size-3.5" />
+            <LogOut className="mr-2 size-3.5" />
             Sign out
           </Button>
         </div>
       </aside>
 
-      {/* Mobile Backdrop */}
+      {/* Mobile Overlay */}
       {open && (
         <div
           className="fixed inset-0 z-40 bg-foreground/40 backdrop-blur-xs lg:hidden"
@@ -312,46 +339,56 @@ export function AppShell({ children, role, roles, name, email }: AppShellProps) 
 
       {/* Main Content Area */}
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card/80 px-4 py-3 backdrop-blur lg:px-8">
-          <div className="flex items-center gap-3">
+        <header className="dashboard-header sticky top-0 z-30 flex h-12 items-center justify-between gap-4 border-b border-border/60 bg-background/80 px-4 backdrop-blur-md lg:px-8">
+          <div className="flex items-center gap-2.5 min-w-0">
             <button
-              className="lg:hidden text-muted-foreground hover:text-foreground"
+              type="button"
+              className="inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground lg:hidden"
               onClick={() => setOpen(true)}
               aria-label="Open navigation"
             >
-              <Menu className="size-5" />
+              <Menu className="size-4" />
             </button>
+
+            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs min-w-0">
+              <span className="hidden sm:inline text-muted-foreground">
+                {CATEGORY_LABELS[currentNavItem.category]}
+              </span>
+              <span className="hidden sm:inline text-muted-foreground/40">/</span>
+              <span className="font-medium text-foreground truncate">{currentNavItem.label}</span>
+            </nav>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              type="button"
+              onClick={() => setTheme(nextThemeOption.mode)}
+              title={`Theme: ${activeThemeOption.label} (click for ${nextThemeOption.label})`}
+              aria-label={`Theme: ${activeThemeOption.label}`}
+              className="inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground cursor-pointer"
+            >
+              <ActiveThemeIcon className="size-4" />
+            </button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex items-center gap-2 rounded-xl border border-border bg-background px-3 py-1.5 text-xs font-medium shadow-2xs transition-colors hover:bg-muted focus:outline-hidden"
+                  className="flex items-center gap-2 rounded-lg px-2 py-1 text-xs transition-colors hover:bg-muted focus:outline-hidden cursor-pointer"
                 >
                   <Avatar className="size-6">
                     <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-bold">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
-
-                  <span className="font-semibold text-foreground">{activeName}</span>
-
-                  <Badge
-                    variant="outline"
-                    className="text-[10px] py-0 px-1.5 text-muted-foreground font-normal hidden sm:inline-flex"
-                  >
-                    {ROLE_LABELS[activeRole]}
-                  </Badge>
-
-                  <ChevronDown className="size-3 text-muted-foreground" />
+                  <span className="hidden md:inline font-medium text-foreground">{name}</span>
+                  <ChevronDown className="size-3.5 text-muted-foreground" />
                 </button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground">
-                  Account
+                  {ROLE_LABELS[activeRole]}
                 </DropdownMenuLabel>
 
                 <DropdownMenuSeparator />

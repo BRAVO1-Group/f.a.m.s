@@ -1,49 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@inertiajs/react";
 import {
-  Activity,
-  AlertTriangle,
-  Award,
-  BookOpen,
-  Briefcase,
-  Building2,
-  CalendarCheck,
-  Check,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
-  ExternalLink,
-  FileBarChart,
-  FileCheck,
-  Filter,
-  GraduationCap,
-  Info,
-  Key,
-  Laptop,
-  Layers,
-  Lock,
-  Mail,
-  MapPin,
-  MessageSquareCheck,
-  Milestone,
-  Phone,
-  Plus,
-  RefreshCw,
-  RotateCcw,
-  Search,
-  Settings2,
-  Shield,
-  ShieldAlert,
-  ShieldCheck,
-  Sliders,
-  Sparkles,
-  TrendingUp,
-  UserCheck,
-  UserPlus,
-  Users,
-  FileText,
-} from "lucide-react";
-import {
   Bar,
   BarChart,
   CartesianGrid,
@@ -55,6 +12,7 @@ import {
   AreaChart,
 } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -237,289 +195,109 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
     : "TechCorp Kenya Ltd";
 
   return (
-    <div className="space-y-6 antialiased">
-      {/* ── Welcome Header Banner ── */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
-        <div className="pointer-events-none absolute -right-20 -top-20 size-72 rounded-full bg-white/10 blur-2xl" />
-        <div className="pointer-events-none absolute right-40 -bottom-20 size-60 rounded-full bg-primary-foreground/10 blur-2xl" />
+    <div className="dashboard-page space-y-6 antialiased">
+      {/* ── Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+        <div>
+          <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            {greeting}, {name.split(" ")[0]}
+          </h1>
+          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+            {myInternship?.position || "Software Engineering Intern"} · {orgName} · Week 9 of 12
+          </p>
+        </div>
 
-        <div className="relative z-10 flex flex-col justify-between gap-6 md:flex-row md:items-center">
-          <div className="max-w-2xl">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">
-                <Sparkles className="size-3.5 text-emerald-300" />
-                Active Placement • Week 9 of 12
-              </span>
-              <span className="text-xs text-primary-foreground/70 hidden sm:inline">
-                Target Defense: Sept 30, 2026
-              </span>
-            </div>
-
-            <h1 className="mt-3 font-display text-2xl font-bold sm:text-4xl tracking-tight">
-              {greeting}, {name.split(" ")[0]}!
-            </h1>
-
-            <p className="mt-2 text-sm sm:text-base text-primary-foreground/90 font-medium">
-              {myInternship?.position || "Software Engineering Intern"} • {orgName}
-            </p>
-
-            <p className="mt-1 text-xs sm:text-sm text-primary-foreground/70">
-              Department of Product Engineering • Supervised by James Otieno
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <Button
-              asChild
-              size="default"
-              className="rounded-xl bg-white text-primary hover:bg-white/90 shadow-sm font-semibold"
-            >
-              <Link href="/logbook">
-                <Plus className="mr-1.5 size-4" />
-                Add Today's Log
-              </Link>
-            </Button>
-            <Button
-              size="default"
-              variant="outline"
-              onClick={handleClockToggle}
-              className="rounded-xl border-white/30 bg-white/10 text-white hover:bg-white/20 backdrop-blur font-semibold"
-            >
-              <Clock className="mr-1.5 size-4" />
-              {isCheckedIn ? "Clock Out" : "Clock In"}
-            </Button>
-            <Button
-              asChild
-              size="default"
-              variant="outline"
-              className="rounded-xl border-white/30 bg-transparent text-white hover:bg-white/10 font-semibold"
-            >
-              <Link href="/reports">
-                <FileBarChart className="mr-1.5 size-4" />
-                Export PDF
-              </Link>
-            </Button>
-          </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild size="sm" className="rounded-xl text-xs font-semibold h-9">
+            <Link href="/logbook">Add Log</Link>
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleClockToggle}
+            className="rounded-xl text-xs font-semibold h-9"
+          >
+            {isCheckedIn ? "Clock Out" : "Clock In"}
+          </Button>
+          <Button asChild size="sm" variant="outline" className="rounded-xl text-xs font-semibold h-9">
+            <Link href="/reports">Export PDF</Link>
+          </Button>
         </div>
       </div>
 
-      {/* ── Assigned Dual Supervisors (RBAC Presentation) ── */}
+      {/* ── Assigned Dual Supervisors ── */}
       <div className="grid gap-3 sm:grid-cols-2">
-        <Card className="border-border/80 shadow-xs bg-card/60 backdrop-blur">
-          <CardContent className="p-4 sm:p-4.5">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                  <Building2 className="size-5" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                      Host Industry Mentor
-                    </span>
-                    <Badge
-                      variant="outline"
-                      className="border-amber-300 text-amber-700 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-300 text-[10px]"
-                    >
-                      Host Org
-                    </Badge>
-                  </div>
-                  <p className="font-semibold text-sm text-foreground mt-0.5">
-                    {orgSupervisor?.full_name ?? "James Otieno"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {orgSupervisor?.title ?? "Senior Lead Architect"} •{" "}
-                    {orgSupervisor?.organization_name ?? orgName}
-                  </p>
-                </div>
-              </div>
+        <Card className="border-border/60 shadow-none">
+          <CardContent className="p-4 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground">Host Industry Mentor</p>
+              <p className="font-semibold text-sm text-foreground mt-0.5 truncate">
+                {orgSupervisor?.full_name ?? "James Otieno"}
+              </p>
+              <p className="text-xs text-muted-foreground truncate">
+                {orgSupervisor?.organization_name ?? orgName}
+              </p>
             </div>
-            <div className="mt-2.5 flex flex-wrap items-center gap-3 pt-2.5 border-t border-border/60 text-[11px] text-muted-foreground">
-              <span className="flex items-center gap-1 font-mono">
-                <Mail className="size-3 text-primary" />
-                {orgSupervisor?.email ?? "james.otieno@techcorp.co.ke"}
-              </span>
-              <span className="flex items-center gap-1 font-mono">
-                <Phone className="size-3 text-primary" />
-                {orgSupervisor?.phone ?? "+254 722 001 122"}
-              </span>
-            </div>
+            <span className="text-xs font-mono text-muted-foreground shrink-0 hidden sm:inline">
+              {orgSupervisor?.email ?? "james.otieno@techcorp.co.ke"}
+            </span>
           </CardContent>
         </Card>
 
-        <Card className="border-border/80 shadow-xs bg-card/60 backdrop-blur">
-          <CardContent className="p-4 sm:p-4.5">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
-                  <GraduationCap className="size-5" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                      Academic Faculty Assessor
-                    </span>
-                    <Badge
-                      variant="outline"
-                      className="border-indigo-300 text-indigo-700 bg-indigo-50 dark:bg-indigo-950/40 dark:text-indigo-300 text-[10px]"
-                    >
-                      University
-                    </Badge>
-                  </div>
-                  <p className="font-semibold text-sm text-foreground mt-0.5">
-                    {academicSupervisor?.full_name ?? "Dr. Peter Kamau"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {academicSupervisor?.title ?? "Dean of Computing"} •{" "}
-                    {academicSupervisor?.faculty_department ?? "School of Computing & Informatics"}
-                  </p>
-                </div>
-              </div>
+        <Card className="border-border/60 shadow-none">
+          <CardContent className="p-4 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground">Academic Faculty Assessor</p>
+              <p className="font-semibold text-sm text-foreground mt-0.5 truncate">
+                {academicSupervisor?.full_name ?? "Dr. Peter Kamau"}
+              </p>
+              <p className="text-xs text-muted-foreground truncate">
+                {academicSupervisor?.faculty_department ?? "School of Computing & Informatics"}
+              </p>
             </div>
-            <div className="mt-2.5 flex flex-wrap items-center gap-3 pt-2.5 border-t border-border/60 text-[11px] text-muted-foreground">
-              <span className="flex items-center gap-1 font-mono">
-                <Mail className="size-3 text-primary" />
-                {academicSupervisor?.email ?? "dean@university.ac.ke"}
-              </span>
-              <span className="flex items-center gap-1 font-mono">
-                <Phone className="size-3 text-primary" />
-                {academicSupervisor?.phone ?? "+254 701 234 567"}
-              </span>
-            </div>
+            <span className="text-xs font-mono text-muted-foreground shrink-0 hidden sm:inline">
+              {academicSupervisor?.email ?? "dean@university.ac.ke"}
+            </span>
           </CardContent>
         </Card>
       </div>
 
       {/* ── Executive KPI Cards (4 Cards) ── */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="shadow-card border-border/80 transition-all hover:border-primary/40 hover:shadow-elevated">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Days Completed
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <CalendarCheck className="size-4.5" />
-              </span>
-            </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="font-display text-3xl font-bold tracking-tight">{presentDays}</span>
-              <span className="text-sm font-medium text-muted-foreground">
-                / {requiredDays} days
-              </span>
-            </div>
-            <div className="mt-3">
-              <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                <span>Progress to clearance</span>
-                <span className="font-semibold text-foreground">{completionRate}%</span>
-              </div>
-              <Progress value={completionRate} className="h-2" />
-            </div>
-            <p className="mt-3 text-[11px] text-success flex items-center gap-1 font-medium">
-              <TrendingUp className="size-3" />
-              On track for graduation verification
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiCard
+          label="Attendance"
+          value={presentDays}
+          unit={`/ ${requiredDays} days`}
+          meta={`${completionRate}% complete`}
+        >
+          <Progress value={completionRate} className="h-1" />
+        </KpiCard>
 
-        <Card className="shadow-card border-border/80 transition-all hover:border-primary/40 hover:shadow-elevated">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Total Logged Hours
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-accent/20 text-accent-foreground">
-                <Clock className="size-4.5" />
-              </span>
-            </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="font-display text-3xl font-bold tracking-tight">
-                {estimatedHours}.0
-              </span>
-              <span className="text-sm font-medium text-muted-foreground">hours</span>
-            </div>
-            <p className="mt-4 text-xs text-muted-foreground">
-              Average <span className="font-semibold text-foreground">8.0 hrs</span> per recorded
-              day
-            </p>
-            <div className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-              <span className="size-1.5 rounded-full bg-emerald-500" />
-              40 hrs logged this week
-            </div>
-          </CardContent>
-        </Card>
+        <KpiCard
+          label="Logged Hours"
+          value={`${estimatedHours}.0`}
+          unit="hrs"
+          meta="40 hrs this week"
+        />
 
-        <Card className="shadow-card border-border/80 transition-all hover:border-primary/40 hover:shadow-elevated">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Approved Activities
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-success/10 text-success">
-                <FileCheck className="size-4.5" />
-              </span>
-            </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="font-display text-3xl font-bold tracking-tight">
-                {approvedCount}
-              </span>
-              <span className="text-sm font-medium text-muted-foreground">
-                of {acts.length} logged
-              </span>
-            </div>
-            <div className="mt-4 flex items-center gap-2">
-              <Badge
-                variant="outline"
-                className="border-success/30 bg-success/10 text-success text-xs font-medium"
-              >
-                {submittedCount} in review queue
-              </Badge>
-            </div>
-            <p className="mt-3 text-[11px] text-muted-foreground">
-              0 revision requests from supervisor
-            </p>
-          </CardContent>
-        </Card>
+        <KpiCard
+          label="Approved Activities"
+          value={approvedCount}
+          unit={`of ${acts.length}`}
+          meta={`${submittedCount} in review`}
+        />
 
-        <Card className="shadow-card border-border/80 transition-all hover:border-primary/40 hover:shadow-elevated">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Verified Skills
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-info/10 text-info">
-                <Award className="size-4.5" />
-              </span>
-            </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="font-display text-3xl font-bold tracking-tight">
-                {uniqueSkills.length}
-              </span>
-              <span className="text-sm font-medium text-muted-foreground">competencies</span>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-1">
-              {uniqueSkills.slice(0, 3).map((s) => (
-                <span
-                  key={s}
-                  className="rounded-md border border-border bg-secondary/50 px-1.5 py-0.5 text-[10px] font-medium text-secondary-foreground"
-                >
-                  {s}
-                </span>
-              ))}
-              {uniqueSkills.length > 3 && (
-                <span className="text-[10px] text-muted-foreground font-medium self-center">
-                  +{uniqueSkills.length - 3} more
-                </span>
-              )}
-            </div>
-            <p className="mt-3 text-[11px] text-muted-foreground">Portfolio export ready</p>
-          </CardContent>
-        </Card>
+        <KpiCard
+          label="Verified Skills"
+          value={uniqueSkills.length}
+          unit="competencies"
+          meta={uniqueSkills.slice(0, 3).join(" · ")}
+        />
       </div>
 
       {/* ── Today's Attendance & Shift Status ── */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        <Card className="shadow-card border-border/80 lg:col-span-1">
+      <div className="grid gap-4 xl:grid-cols-3">
+        <Card className="shadow-card border-border/80 xl:col-span-1">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-semibold">Today's Shift Status</CardTitle>
@@ -529,7 +307,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                 }`}
               >
                 <span
-                  className={`size-2 rounded-full ${isCheckedIn ? "bg-emerald-500 animate-pulse" : "bg-muted-foreground"}`}
+                  className={`size-2 rounded-full ${isCheckedIn ? "bg-success animate-pulse" : "bg-muted-foreground"}`}
                 />
                 {isCheckedIn ? "Checked In" : "Off Duty"}
               </span>
@@ -547,10 +325,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                 <span className="font-semibold">17:00 PM</span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground flex items-center gap-1">
-                  <MapPin className="size-3 text-muted-foreground" />
-                  Location mode:
-                </span>
+                <span className="text-muted-foreground flex items-center">Location mode:</span>
                 <span className="font-medium text-foreground">TechCorp Westlands (On-Site)</span>
               </div>
             </div>
@@ -561,7 +336,6 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                 variant={isCheckedIn ? "outline" : "default"}
                 className="w-full text-xs font-semibold rounded-xl"
               >
-                <Clock className="mr-1.5 size-3.5" />
                 {isCheckedIn ? "Record Clock-Out" : "Record Clock-In"}
               </Button>
               <Button
@@ -576,10 +350,10 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
         </Card>
 
         {/* Active Milestone Progress Card */}
-        <Card className="shadow-card border-border/80 lg:col-span-2">
-          <CardHeader className="pb-3 flex flex-row items-center justify-between space-y-0">
+        <Card className="shadow-card border-border/80 xl:col-span-2">
+          <CardHeader className="flex flex-col items-start justify-between gap-2 space-y-0 pb-3 sm:flex-row sm:items-center">
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Badge
                   variant="outline"
                   className="border-primary/25 bg-primary/5 text-primary text-xs"
@@ -598,9 +372,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               variant="ghost"
               className="text-xs text-primary font-semibold"
             >
-              <Link href="/milestones">
-                View Roadmap <ChevronRight className="ml-1 size-3.5" />
-              </Link>
+              <Link href="/milestones">View Roadmap</Link>
             </Button>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -622,17 +394,8 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               {activeMilestone.tasks.map((task) => (
                 <div
                   key={task.id}
-                  className="flex items-center gap-2.5 rounded-lg border border-border bg-card/60 px-3 py-2 text-xs"
+                  className="flex items-center rounded-lg border border-border bg-card/60 px-3 py-2 text-xs"
                 >
-                  <span
-                    className={`flex size-4.5 shrink-0 items-center justify-center rounded-md ${
-                      task.completed
-                        ? "bg-primary text-primary-foreground"
-                        : "border border-border text-transparent"
-                    }`}
-                  >
-                    <Check className="size-3" strokeWidth={3} />
-                  </span>
                   <span
                     className={
                       task.completed
@@ -695,7 +458,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                     <Bar
                       dataKey="entries"
                       name="Entries"
-                      fill="var(--color-primary)"
+                      fill="var(--primary)"
                       radius={[6, 6, 0, 0]}
                     />
                   </BarChart>
@@ -723,8 +486,8 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                       type="monotone"
                       dataKey="hours"
                       name="Logged Hours"
-                      stroke="var(--color-chart-2)"
-                      fill="var(--color-chart-2)"
+                      stroke="var(--primary)"
+                      fill="var(--primary)"
                       fillOpacity={0.25}
                     />
                   </AreaChart>
@@ -747,10 +510,12 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                   JO
                 </AvatarFallback>
               </Avatar>
-              <div>
+              <div className="min-w-0">
                 <h4 className="font-semibold text-sm">James Otieno</h4>
                 <p className="text-xs text-muted-foreground">Senior Staff Engineer</p>
-                <p className="text-[11px] text-primary mt-0.5">james.otieno@techcorp.co.ke</p>
+                <p className="mt-0.5 break-all text-[11px] text-primary">
+                  james.otieno@techcorp.co.ke
+                </p>
               </div>
             </div>
 
@@ -784,7 +549,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
             <CardDescription>Daily tasks submitted for mentor verification</CardDescription>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <div className="flex rounded-lg border border-border p-0.5 text-xs">
               <button
                 type="button"
@@ -839,10 +604,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
               className="rounded-xl border border-border bg-card p-4 transition hover:border-primary/30 hover:shadow-xs space-y-2.5"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="flex size-7 items-center justify-center rounded-lg bg-secondary text-secondary-foreground">
-                    <BookOpen className="size-3.5" />
-                  </span>
+                <div className="flex items-center">
                   <h4 className="font-semibold text-sm text-foreground">{act.title}</h4>
                 </div>
                 <div className="flex items-center gap-2">
@@ -855,13 +617,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                         : ""
                     }`}
                   >
-                    {act.status === "approved" ? (
-                      <>
-                        <CheckCircle2 className="mr-1 size-3" /> Approved
-                      </>
-                    ) : (
-                      "Pending Review"
-                    )}
+                    {act.status === "approved" ? "Approved" : "Pending Review"}
                   </Badge>
                 </div>
               </div>
@@ -883,8 +639,7 @@ export function StudentDashboard({ userId, name }: { userId: string; name: strin
                 </div>
 
                 {act.supervisor_feedback && (
-                  <span className="text-[11px] text-primary flex items-center gap-1 font-medium italic">
-                    <MessageSquareCheck className="size-3" />
+                  <span className="text-[11px] text-primary flex items-center font-medium italic">
                     Feedback from James Otieno attached
                   </span>
                 )}

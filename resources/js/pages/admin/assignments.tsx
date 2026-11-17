@@ -344,8 +344,8 @@ export default function AssignmentsPage() {
               <TableRow>
                 <TableHead>Candidate</TableHead>
                 <TableHead>Host Organization</TableHead>
-                <TableHead>🏢 Field Supervisor & University-Issued Login</TableHead>
-                <TableHead>🏛️ University Assessor</TableHead>
+                <TableHead>Field Supervisor & University-Issued Login</TableHead>
+                <TableHead>University Assessor</TableHead>
                 <TableHead>Supervision Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -487,7 +487,7 @@ export default function AssignmentsPage() {
                   variant="outline"
                   className="text-[9px] border-amber-300 text-amber-700 bg-amber-50"
                 >
-                  🏢 University Login Issued
+                  University Login Issued
                 </Badge>
               </div>
               <Select value={orgSupervisorId} onValueChange={setOrgSupervisorId}>
@@ -517,7 +517,7 @@ export default function AssignmentsPage() {
                   variant="outline"
                   className="text-[9px] border-indigo-300 text-indigo-700 bg-indigo-50"
                 >
-                  🏛️ University
+                  University
                 </Badge>
               </div>
               <Select value={academicSupervisorId} onValueChange={setAcademicSupervisorId}>

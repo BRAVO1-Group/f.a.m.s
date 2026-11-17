@@ -44,7 +44,7 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "@php artisan dev"
+            "bash -c 'trap \"kill 0\" EXIT; php artisan serve & npm run dev & wait'"
         ],
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",
