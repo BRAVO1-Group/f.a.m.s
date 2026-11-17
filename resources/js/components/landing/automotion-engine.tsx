@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import { FAMS_ROLES, type FamsCameraPose } from "./fams-roles";
@@ -15,23 +14,20 @@ interface AutomotionEngineProps {
   active: boolean;
   activeRole: number;
   onSelectRole: (idx: number, manual?: boolean) => void;
-  onBackToOverview: () => void;
 }
 
 export function AutomotionEngine({
   active,
   activeRole,
   onSelectRole,
-  onBackToOverview,
 }: AutomotionEngineProps) {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
   const [autoMotion, setAutoMotion] = useState(true);
   const [exploded, setExploded] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [focusedCard, setFocusedCard] = useState<string | null>(null);
-  const [progressPct, setProgressPct] = useState(0);
 
   // Pointer choreography state
   const [pointer, setPointer] = useState({ left: 480, top: 260, label: "Clicking + Add Today's Log", clicking: false, rippleKey: 0 });
@@ -60,7 +56,7 @@ export function AutomotionEngine({
     camStateRef.current = pose;
     const rig = rigRef.current;
     if (!rig || typeof window === "undefined") return;
-    const vhFit = Math.min(1, Math.max(0.64, (window.innerHeight - 175) / 660));
+    const vhFit = Math.min(1, Math.max(0.64, (window.innerHeight - 115) / 660));
     const vwFit = Math.min(1, Math.max(0.6, (window.innerWidth - 48) / 1180));
     const finalScale = +(pose.scale * Math.min(vhFit, vwFit)).toFixed(3);
     rig.style.transform = `translate3d(${pose.tx}px, ${pose.ty}px, 0px) rotateX(${pose.rx}deg) rotateY(${pose.ry}deg) rotateZ(${pose.rz}deg) scale(${finalScale})`;
@@ -78,7 +74,6 @@ export function AutomotionEngine({
   useEffect(() => {
     const role = FAMS_ROLES[activeRole] ?? FAMS_ROLES[0]!;
     stepStartRef.current = Date.now();
-    setProgressPct(0);
     setFocusedCard(null);
     applyCameraTransform(role.baseCamera);
 
@@ -225,8 +220,6 @@ export function AutomotionEngine({
 
     const tick = () => {
       const elapsed = Date.now() - stepStartRef.current;
-      const pct = Math.min(100, (elapsed / ROLE_DURATION) * 100);
-      setProgressPct(pct);
       if (elapsed >= ROLE_DURATION) {
         onSelectRole((activeRole + 1) % FAMS_ROLES.length, false);
         return;
@@ -285,144 +278,6 @@ export function AutomotionEngine({
         camStateRef={camStateRef}
         packetsRef={packetsRef}
       />
-
-      {/* Top Executive HUD */}
-      <header className="relative z-30 w-full max-w-[1360px] mx-auto pt-3 px-4 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={onBackToOverview}
-            className="px-3 py-2 rounded-2xl bg-zinc-900/90 hover:bg-zinc-800 border border-indigo-500/30 text-white text-xs font-bold backdrop-blur-xl shadow-lg flex items-center gap-1.5 transition"
-          >
-            <span>&larr;</span>
-            <span>Overview</span>
-          </button>
-
-          <div className="flex items-center gap-2.5 bg-zinc-900/90 border border-indigo-500/25 px-3 py-1.5 rounded-2xl backdrop-blur-xl shadow-lg">
-            <div className="size-7 rounded-xl it-accent-gradient flex items-center justify-center text-white font-black shadow-md shrink-0">
-              <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" />
-                <path d="M22 10v6" />
-                <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
-              </svg>
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-extrabold tracking-tight text-white">InternTrack 3D Auto-Motion Engine</span>
-                <span className="hidden sm:inline-flex text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 items-center gap-1">
-                  <span className="size-1.5 rounded-full bg-emerald-400 animate-ping" />
-                  ZINC + INDIGO DUAL THEME
-                </span>
-              </div>
-              <p className="hidden xl:block text-[11px] text-zinc-400">
-                Simulating real role-exclusive permissions, workflows &amp; handoffs across the 3D workspace
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* 4-Role Selector Pills */}
-        <div className="flex flex-wrap items-center gap-1 bg-zinc-900/90 border border-indigo-500/25 p-1.5 rounded-2xl backdrop-blur-xl shadow-lg">
-          {FAMS_ROLES.map((r, i) => {
-            const isAct = i === activeRole;
-            const barWidth = isAct ? `${progressPct}%` : i < activeRole ? "100%" : "0%";
-            return (
-              <button
-                key={r.key}
-                type="button"
-                onClick={() => onSelectRole(i, true)}
-                className={cn(
-                  "relative overflow-hidden px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border",
-                  isAct
-                    ? "bg-indigo-500/20 text-white border-indigo-400/50 shadow-sm"
-                    : "text-zinc-400 hover:text-white border-transparent",
-                )}
-              >
-                <span
-                  className={cn(
-                    "size-5 rounded-lg border flex items-center justify-center text-[10px] font-mono",
-                    r.pillBadgeBg,
-                    r.pillBadgeBorder,
-                    r.pillBadgeText,
-                  )}
-                >
-                  {r.tier.replace("Tier ", "T")}
-                </span>
-                <div className="text-left">
-                  <div className="leading-none">{r.pillTitle}</div>
-                  <div className={cn("text-[9px] font-normal mt-0.5", isAct ? "text-indigo-300/80" : "text-zinc-400")}>
-                    {r.pillSub}
-                  </div>
-                </div>
-                <div
-                  className={cn("absolute bottom-0 left-0 h-0.5 transition-all duration-150", r.pillBarColor)}
-                  style={{ width: barWidth }}
-                />
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Controls & Workspace CTA */}
-        <div className="flex items-center gap-1.5 bg-zinc-900/90 border border-indigo-500/25 p-1.5 rounded-2xl backdrop-blur-xl shadow-lg">
-          <button
-            type="button"
-            onClick={() => setTheme(isDark ? "light" : "dark")}
-            className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/15 text-zinc-100 border border-white/15 transition flex items-center gap-1.5"
-          >
-            <span>{isDark ? "🌙" : "☀️"}</span>
-            <span>{isDark ? "Dark" : "Light"}</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setAutoMotion((prev) => !prev)}
-            className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-500 text-white hover:bg-indigo-400 transition flex items-center gap-1.5 shadow-sm"
-          >
-            <span>{autoMotion ? "⏸" : "▶"}</span>
-            <span className="hidden sm:inline">{autoMotion ? "3D Auto-Motion" : "Paused"}</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setExploded((prev) => {
-                const next = !prev;
-                if (next) applyCameraTransform({ rx: 14, ry: -18, rz: 1.5, scale: 0.9, tx: 0, ty: 0 });
-                else applyCameraTransform(role.baseCamera);
-                return next;
-              });
-            }}
-            className={cn(
-              "px-2.5 py-1.5 rounded-xl text-xs transition flex items-center gap-1",
-              exploded
-                ? "font-bold bg-amber-400 text-zinc-950 shadow-sm"
-                : "font-semibold bg-white/5 hover:bg-white/10 text-indigo-200 border border-white/10",
-            )}
-            title="Separate UI layers in 3D Z-space"
-          >
-            <span>🧊</span>
-            <span className="hidden lg:inline">3D Z-Layers</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setExploded(false);
-              setFocusedCard(null);
-              applyCameraTransform(role.baseCamera);
-            }}
-            className="px-2 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 transition"
-            title="Reset 3D Camera"
-          >
-            🎯
-          </button>
-          <Link
-            to="/auth"
-            className="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-400/40 shadow-sm transition flex items-center gap-1"
-          >
-            <span>Launch Workspace</span>
-            <span>↗</span>
-          </Link>
-        </div>
-      </header>
 
       {/* Center 3D Perspective Stage */}
       <main

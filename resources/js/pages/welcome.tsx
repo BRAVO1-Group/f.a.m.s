@@ -86,7 +86,6 @@ export default function LandingPage() {
         active={mode === "case"}
         activeRole={activeRole}
         onSelectRole={handleSelectRole}
-        onBackToOverview={() => posterHandlesRef.current?.toHero()}
       />
 
       {mode === "hero" && (
