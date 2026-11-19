@@ -1,17 +1,35 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { toast } from "sonner";
 import {
   ArrowRight,
+  BookOpen,
   Check,
+  AlertCircle,
+  Award,
+  CheckCircle2,
+  ChevronRight,
+  Clock,
+  FileCheck,
+  FileText,
   GraduationCap,
   Layers,
   Menu,
+  MessageSquareCheck,
+  RotateCcw,
   ShieldCheck,
   Sparkles,
+  TrendingUp,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { HeroPreview } from "@/components/landing/hero-preview";
 import { TrustBar } from "@/components/landing/trust-bar";
 import { BentoGrid } from "@/components/landing/bento-grid";
@@ -24,6 +42,27 @@ import { LandingFooter } from "@/components/landing/landing-footer";
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activePreview, setActivePreview] = useState<"student" | "supervisor" | "university">("student");
+  const [activeRoleTab, setActiveRoleTab] = useState<"students" | "supervisors" | "universities">("students");
+  const [simActiveEntry, setSimActiveEntry] = useState<1 | 2>(1);
+  const [simClockedIn, setSimClockedIn] = useState(false);
+  const [simVerifiedDays, setSimVerifiedDays] = useState(42);
+  const [simStatusEntry1, setSimStatusEntry1] = useState<"pending" | "approved" | "needs_correction">("pending");
+  const [simStatusEntry2, setSimStatusEntry2] = useState<"pending" | "approved" | "needs_correction">("pending");
+  const [simFeedbackEntry1, setSimFeedbackEntry1] = useState("Strong implementation. Add test coverage for the edge cases.");
+  const [simFeedbackEntry2, setSimFeedbackEntry2] = useState("Good ERD and migration plan. Please explain the indexing strategy.");
+  const [simMarkApproved, setSimMarkApproved] = useState(false);
+
+  const handleResetSimulation = () => {
+    setSimActiveEntry(1);
+    setSimClockedIn(false);
+    setSimVerifiedDays(42);
+    setSimStatusEntry1("pending");
+    setSimStatusEntry2("pending");
+    setSimFeedbackEntry1("Strong implementation. Add test coverage for the edge cases.");
+    setSimFeedbackEntry2("Good ERD and migration plan. Please explain the indexing strategy.");
+    setSimMarkApproved(false);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
@@ -866,6 +905,9 @@ export default function LandingPage() {
         {/* ── Compliance, Governance & Accreditation ── */}
         <ComplianceSecurity />
 
+        <section className="py-12 sm:py-16">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <div className="grid gap-5 md:grid-cols-3">
               {/* Feature 4 */}
               <div className="rounded-2xl border border-border bg-card p-6 shadow-card transition-all hover:border-primary/40 hover:shadow-elevated">
                 <div className="flex size-12 items-center justify-center rounded-xl bg-success/10 text-success">
