@@ -40,6 +40,7 @@ class DemoUsersSeeder extends Seeder
                 'roles' => ['uni_admin', 'system_admin'],
                 'password' => 'InternTrack@2026!',
             ],
+            
         ];
 
         foreach ($users as $userData) {

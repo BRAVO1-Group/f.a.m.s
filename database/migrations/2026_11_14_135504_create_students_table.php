@@ -12,10 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('students', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
+              $table->id();
+
+            $table->foreignId('user_id')
+                ->unique()
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignId('program_id')
+                ->constrained()
+                ->restrictOnDelete();
+
+            $table->string('student_number')->unique();
             $table->string('phone')->nullable();
+            $table->unsignedTinyInteger('year_of_study');
+            $table->string('status')->default('active');
+
             $table->timestamps();
         });
     }
