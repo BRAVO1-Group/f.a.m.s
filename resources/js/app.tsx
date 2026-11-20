@@ -76,7 +76,13 @@ createInertiaApp({
               roles,
             }}
           >
-            <AppShell role={primaryRole} roles={roles} name={user.name} email={user.email}>
+            <AppShell
+              userId={String(user.id)}
+              role={primaryRole}
+              roles={roles}
+              name={user.name}
+              email={user.email}
+            >
               <Page {...(pageProps as any)} />
             </AppShell>
           </AppUserProvider>

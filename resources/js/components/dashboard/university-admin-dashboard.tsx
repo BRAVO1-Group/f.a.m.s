@@ -401,32 +401,6 @@ export function UniversityAdminDashboard({
         </div>
       </div>
 
-      {/* ── At-Risk Alert Banner ── */}
-      <Alert
-        variant="destructive"
-        className="border-destructive/30 bg-destructive/10 text-destructive-foreground rounded-xl"
-      >
-        <ShieldAlert className="size-4" />
-        <AlertTitle className="font-semibold text-sm">
-          Cohort Attendance Risk & Supervisor Allocation Alert
-        </AlertTitle>
-        <AlertDescription className="text-xs text-muted-foreground mt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <span>
-            1 student flagged: <strong className="text-foreground">Kevin Kiprono</strong> has logged
-            only 18 of 60 required days and is currently missing an assigned University Academic
-            Supervisor.
-          </span>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => handleOpenAssignModal("student-4")}
-            className="h-7 text-xs border-destructive/30 text-destructive-foreground shrink-0"
-          >
-            Assign Academic Assessor Now
-          </Button>
-        </AlertDescription>
-      </Alert>
-
       {/* ── Institutional Metrics KPI Cards ── */}
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard

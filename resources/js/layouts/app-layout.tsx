@@ -38,6 +38,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ROLE_LABELS, ROLE_TIERS, type AppRole } from "@/lib/auth";
 import { useTheme, type ThemeMode } from "@/lib/theme";
+import { NotificationCenter } from "@/components/notifications/notification-center";
 
 type NavCategory = "core" | "tracking" | "supervision" | "governance" | "account";
 
@@ -159,12 +160,14 @@ const THEME_OPTIONS: { mode: ThemeMode; label: string; icon: typeof Sun }[] = [
 
 export function AppShell({
   children,
+  userId,
   role,
   roles,
   name,
   email,
 }: {
   children: ReactNode;
+  userId?: string | undefined;
   role: AppRole;
   roles?: AppRole[];
   name: string;
@@ -360,6 +363,8 @@ export function AppShell({
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
+            <NotificationCenter role={activeRole} userId={userId} />
+
             <button
               type="button"
               onClick={() => setTheme(nextThemeOption.mode)}

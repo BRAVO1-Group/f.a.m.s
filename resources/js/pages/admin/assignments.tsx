@@ -223,33 +223,6 @@ export default function AssignmentsPage() {
         </Button>
       </div>
 
-      {/* ── Allocation Alert if Any Missing ── */}
-      {missingAcademicCount > 0 && (
-        <Alert
-          variant="destructive"
-          className="border-destructive/30 bg-destructive/10 text-destructive-foreground rounded-xl"
-        >
-          <ShieldAlert className="size-4" />
-          <AlertTitle className="font-semibold text-sm">
-            Pending Faculty Assessor Allocation
-          </AlertTitle>
-          <AlertDescription className="text-xs text-muted-foreground mt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <span>
-              {missingAcademicCount} candidate(s) require an assigned University Academic Supervisor
-              before institutional defense clearance can be scheduled.
-            </span>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => openAssignModal("student-4")}
-              className="h-7 text-xs border-destructive/30 text-destructive-foreground shrink-0"
-            >
-              Pair Kevin Kiprono Now
-            </Button>
-          </AlertDescription>
-        </Alert>
-      )}
-
       {/* ── Summary Metrics ── */}
       <div className="grid gap-4 sm:grid-cols-4">
         <Card className="shadow-card border-border/80">
