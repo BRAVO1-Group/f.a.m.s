@@ -696,83 +696,106 @@
       pointer-events: none;
     }
 
-    /* Scene 1 Nav Tags */
-    .tag {
+    /* Scene 1 Minimalist Floating Top Nav */
+    .s1-nav {
       position: absolute;
+      top: 20px;
+      left: 24px;
+      right: 24px;
+      max-width: 1360px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+      transition: opacity .3s ease, transform .3s ease;
+    }
+
+    .s1-nav-group {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      height: calc(37 * var(--n));
-      padding: 0 calc(18 * var(--n));
+      gap: 4px;
+      padding: 5px;
+      border-radius: 9999px;
+      background: rgba(6, 24, 16, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+      pointer-events: auto;
+    }
+
+    .s1-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 12px 0 10px;
       font-family: 'Inter Tight', sans-serif;
-      font-weight: 650;
-      font-size: calc(16.5 * var(--n));
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      background: #ffffff;
-      border: none;
-      text-decoration: none;
-      white-space: nowrap;
-      pointer-events: auto;
-      cursor: pointer;
-      box-shadow: 0 calc(3 * var(--n)) 0 rgba(0, 0, 0, .18), 0 calc(6 * var(--n)) calc(14 * var(--n)) rgba(0, 0, 0, .18);
-      transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s cubic-bezier(.2, .8, .2, 1), opacity .3s;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: #ffffff;
+      border-right: 1px solid rgba(255, 255, 255, 0.14);
+      margin-right: 2px;
     }
 
-    .tag:hover {
-      transform: translateY(calc(-2 * var(--n))) rotate(-1.5deg);
-      box-shadow: 0 calc(5 * var(--n)) 0 rgba(0, 0, 0, .22), 0 calc(10 * var(--n)) calc(18 * var(--n)) rgba(0, 0, 0, .2);
+    .s1-brand-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 9999px;
+      background: #34d399;
+      box-shadow: 0 0 10px rgba(52, 211, 153, 0.75);
     }
 
-    .tag:active {
-      transform: translateY(calc(1 * var(--n)));
-      box-shadow: 0 calc(1 * var(--n)) 0 rgba(0, 0, 0, .18);
-    }
-
-    .t1 {
-      left: calc(30 * var(--n));
-      top: calc(7 * var(--n));
-    }
-
-    .t2 {
-      left: calc(233 * var(--n));
-      top: calc(7 * var(--n));
-    }
-
-    .t3 {
-      right: calc(244 * var(--n));
-      top: calc(7 * var(--n));
-    }
-
-    .t4 {
-      right: calc(32 * var(--n));
-      top: calc(7 * var(--n));
-    }
-
-    /* Sound Control Tag */
-    .sound-tag {
-      position: absolute;
-      right: calc(470 * var(--n));
-      top: calc(7 * var(--n));
-      height: calc(37 * var(--n));
-      padding: 0 calc(12 * var(--n));
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      border-radius: 4px;
-      color: #fff;
-      font-size: calc(13 * var(--n));
-      font-weight: 600;
+    .s1-link {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 9999px;
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.78);
+      background: transparent;
+      border: none;
       cursor: pointer;
-      pointer-events: auto;
-      transition: all 0.2s ease;
+      text-decoration: none;
+      transition: background .2s ease, color .2s ease;
     }
 
-    .sound-tag:hover {
-      background: rgba(255, 255, 255, 0.25);
+    .s1-link:hover,
+    .s1-link.is-active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .s1-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 40px;
+      padding: 0 18px;
+      border-radius: 9999px;
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #062116;
+      background: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      pointer-events: auto;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .s1-cta:hover {
+      background: #ecfdf5;
+      transform: translateY(-1px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
     }
 
     /* Scroll Hint */
@@ -780,42 +803,53 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      bottom: calc(22 * var(--n));
+      bottom: 24px;
       font-family: 'Inter Tight', sans-serif;
-      font-size: calc(12 * var(--n));
-      letter-spacing: .18em;
+      font-size: 11px;
+      letter-spacing: .16em;
       text-transform: uppercase;
       font-weight: 600;
-      color: #fff;
-      opacity: 0.85;
-      display: flex;
-      flex-direction: column;
+      color: rgba(255, 255, 255, 0.9);
+      display: inline-flex;
       align-items: center;
-      gap: calc(10 * var(--n));
-      pointer-events: none;
-      transition: opacity .3s;
+      gap: 10px;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      background: rgba(6, 24, 16, 0.48);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      pointer-events: auto;
+      cursor: pointer;
+      transition: opacity .3s ease, background .2s ease, transform .2s ease;
+    }
+
+    .hint:hover {
+      background: rgba(6, 24, 16, 0.72);
+      transform: translateX(-50%) translateY(-1px);
     }
 
     .hint-line {
-      width: calc(1.5 * var(--n));
-      height: calc(22 * var(--n));
-      background: rgba(255, 255, 255, .35);
+      width: 1.5px;
+      height: 14px;
+      background: rgba(255, 255, 255, .3);
       position: relative;
       overflow: hidden;
+      border-radius: 9999px;
     }
 
     .hint-bead {
       width: 100%;
-      height: 40%;
-      background: #fff;
+      height: 45%;
+      background: #34d399;
       position: absolute;
-      top: -40%;
+      top: -45%;
       animation: drip 1.6s cubic-bezier(.6, 0, .4, 1) infinite;
     }
 
     @keyframes drip {
       0% {
-        top: -40%;
+        top: -45%;
       }
 
       100% {
@@ -824,8 +858,7 @@
     }
 
     /* ── State Visibility Toggles ── */
-    body.is-case .tag,
-    body.is-case .sound-tag,
+    body.is-case .s1-nav,
     body.is-case .hint,
     body.busy .hint {
       visibility: hidden;
@@ -877,37 +910,27 @@
         opacity: 1;
       }
 
-      .tag {
-        font-size: 13px;
-        height: 30px;
-        padding: 0 12px;
-      }
-
-      .t1 {
-        left: 12px;
+      .s1-nav {
         top: 12px;
-      }
-
-      .t2 {
-        right: 12px;
-        top: 12px;
-        left: auto;
-      }
-
-      .t3 {
         left: 12px;
-        top: calc(12px + 44 * var(--n));
-        right: auto;
-      }
-
-      .t4 {
         right: 12px;
-        top: calc(12px + 44 * var(--n));
       }
 
-      body.is-case .t3,
-      body.is-case .t4 {
-        visibility: hidden;
+      .s1-brand {
+        padding: 0 8px;
+        font-size: 12px;
+      }
+
+      .s1-link {
+        height: 28px;
+        padding: 0 10px;
+        font-size: 12px;
+      }
+
+      .s1-cta {
+        height: 34px;
+        padding: 0 14px;
+        font-size: 12px;
       }
 
       svg.m-wm {
@@ -1037,19 +1060,30 @@
 
   <!-- ── Viewport-Pinned Fixed UI ── -->
   <div class="ui">
-    <!-- Scene 1 Nav Tags -->
-    <button class="tag t1 pre" id="btn-overview" type="button">overview</button>
-    <button class="tag t2 pre" id="btn-features" type="button">features</button>
-    <a class="tag t3 pre" id="btn-contacts" href="#contacts">contacts</a>
-    <a class="tag t4 pre" id="btn-demo" href="/auth">request a demo</a>
+    <!-- Scene 1 Minimalist Floating Nav -->
+    <header class="s1-nav pre" id="s1-nav">
+      <nav class="s1-nav-group" aria-label="Primary">
+        <span class="s1-brand">
+          <span class="s1-brand-dot"></span>
+          FAMS
+        </span>
+        <button class="s1-link is-active" id="btn-overview" type="button">Overview</button>
+        <button class="s1-link" id="btn-features" type="button">Interactive Tour</button>
+      </nav>
+
+      <a class="s1-cta" id="btn-demo" href="/auth" target="_top">
+        <span>Sign In</span>
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </header>
 
     <!-- Scroll Hint -->
-    <div class="hint pre" id="hint">
-      <div class="hint-line">
-        <div class="hint-bead"></div>
-      </div>
-      <span>scroll into the system</span>
-    </div>
+    <button class="hint pre" id="hint" type="button" aria-label="Scroll into the system">
+      <span class="hint-line">
+        <span class="hint-bead"></span>
+      </span>
+      <span>Scroll to explore</span>
+    </button>
 
     <!-- Mobile-Only Copies Layer -->
     <div class="m-only" id="m-only">
@@ -1074,27 +1108,89 @@
        SCENE 2: INTERNTRACK 3D AUTO-MOTION ENGINE (EXACT hero-laptop-views)
        ═══════════════════════════════════════════════════════════════════════ -->
   <div id="s2-3d-engine" aria-hidden="true">
-    <!-- 1. 3D SPATIAL NETWORK & ORBITAL DATA CANVAS -->
+    <!-- 1. SUBTLE 3D ARCHITECTURAL GRID CANVAS -->
     <canvas id="webgl-stage" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
 
-    <!-- 2. CENTER 3D PERSPECTIVE STAGE (THE AUTHENTIC INTERNTRACK APP) -->
+    <!-- 2. MINIMALIST TOP CONTROL BAR -->
+    <header class="relative z-30 w-full max-w-[1360px] mx-auto pt-4 px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3">
+      <!-- Left: Back to Scene 1 -->
+      <div class="flex items-center gap-2.5">
+        <button
+          type="button"
+          onclick="toHero()"
+          class="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-zinc-300 hover:text-white transition backdrop-blur-md"
+        >
+          <span aria-hidden="true">&larr;</span>
+          <span>Overview</span>
+        </button>
+      </div>
+
+      <!-- Center: Clean 4-Role Segmented Switcher -->
+      <nav aria-label="Role perspectives" class="inline-flex items-center gap-1 p-1 rounded-full bg-zinc-900/90 border border-white/10 backdrop-blur-xl shadow-lg">
+        <button id="role-btn-0" type="button" onclick="selectRole(0, true)" class="role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 bg-white text-zinc-950 shadow-sm">
+          <span>Student</span>
+          <span id="role-prog-0" class="absolute bottom-0 left-0 h-[2px] bg-indigo-500 transition-all duration-100" style="width: 0%"></span>
+        </button>
+        <button id="role-btn-1" type="button" onclick="selectRole(1, true)" class="role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-zinc-400 hover:text-white">
+          <span>Field Mentor</span>
+          <span id="role-prog-1" class="absolute bottom-0 left-0 h-[2px] bg-emerald-400 transition-all duration-100" style="width: 0%"></span>
+        </button>
+        <button id="role-btn-2" type="button" onclick="selectRole(2, true)" class="role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-zinc-400 hover:text-white">
+          <span>Faculty</span>
+          <span id="role-prog-2" class="absolute bottom-0 left-0 h-[2px] bg-sky-400 transition-all duration-100" style="width: 0%"></span>
+        </button>
+        <button id="role-btn-3" type="button" onclick="selectRole(3, true)" class="role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-zinc-400 hover:text-white">
+          <span>Uni Admin</span>
+          <span id="role-prog-3" class="absolute bottom-0 left-0 h-[2px] bg-purple-400 transition-all duration-100" style="width: 0%"></span>
+        </button>
+      </nav>
+
+      <!-- Right: Subtle Controls + Sign In -->
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          onclick="toggleAutoMotion()"
+          class="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium text-zinc-300 hover:text-white transition backdrop-blur-md"
+          title="Toggle auto-play tour"
+        >
+          <span id="automotion-icon">⏸</span>
+          <span id="automotion-text" class="hidden sm:inline">Auto-play</span>
+        </button>
+
+        <button
+          type="button"
+          onclick="toggleThemeMode()"
+          class="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium text-zinc-300 hover:text-white transition backdrop-blur-md"
+          title="Toggle workspace preview theme"
+        >
+          <span id="theme-mode-icon">☀</span>
+          <span id="theme-mode-text" class="hidden md:inline">Light</span>
+        </button>
+
+        <a
+          href="/auth"
+          target="_top"
+          class="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-white hover:bg-zinc-100 text-xs font-bold text-zinc-950 shadow-lg transition"
+          style="text-decoration: none;"
+          aria-label="Sign In to InternTrack Workspace"
+        >
+          <span>Sign In</span>
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- 3. CENTER 3D PERSPECTIVE STAGE (THE AUTHENTIC INTERNTRACK APP) -->
     <main class="relative z-20 flex-1 flex items-center justify-center px-4 py-2 stage-viewport" id="stage-viewport">
       
       <!-- 3D Camera Rig (Animated automatically + draggable in 3D) -->
-      <div id="camera-rig" class="camera-rig w-full max-w-[1180px]" style="transform: rotateX(7deg) rotateY(-9deg) rotateZ(0.4deg) scale(0.96);">
+      <div id="camera-rig" class="camera-rig w-full max-w-[1160px]" style="transform: rotateX(7deg) rotateY(-9deg) rotateZ(0.4deg) scale(0.96);">
         
-        <!-- Floating 3D Role Exclusive Capability Callout (Z: +105px) -->
-        <div id="floating-role-hud" class="z-layer-hud absolute -top-4 right-6 z-50 bg-zinc-950/95 border-2 border-indigo-400/60 text-white px-4 py-2.5 rounded-2xl shadow-2xl backdrop-blur-xl flex items-center gap-3 max-w-md pointer-events-none">
-          <div id="hud-role-badge" class="size-9 rounded-xl bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-base font-bold shrink-0">
-            🎓
-          </div>
-          <div class="min-w-0">
-            <div class="flex items-center gap-2">
-              <span id="hud-perm-code" class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-indigo-500/25 text-indigo-300 border border-indigo-400/30">logs:create • attendance:record</span>
-              <span class="text-[10px] font-mono text-emerald-400 font-semibold">● EXCLUSIVE ACTION</span>
-            </div>
-            <p id="hud-action-title" class="text-xs font-bold text-white truncate mt-0.5">Student Punching Shift Clock-In &amp; AI Logbook Polish</p>
-          </div>
+        <!-- Minimal Floating Status Pill (Z: +105px) -->
+        <div id="floating-role-hud" class="z-layer-hud absolute -top-3.5 right-6 z-50 bg-zinc-950/90 border border-white/15 text-white px-3.5 py-1.5 rounded-full shadow-2xl backdrop-blur-xl flex items-center gap-2.5 max-w-md pointer-events-none">
+          <span class="size-2 rounded-full bg-emerald-400 shrink-0"></span>
+          <p id="hud-action-title" class="text-[11px] font-semibold text-zinc-100 truncate">Student logging daily shift &amp; activity</p>
+          <span id="hud-perm-code" class="hidden sm:inline text-[10px] font-mono text-zinc-400 border-l border-white/15 pl-2.5 truncate">logs:create</span>
         </div>
 
         <!-- 3D Workstation Bezel -->
@@ -1103,18 +1199,16 @@
           <!-- Browser / Workstation Window Bar -->
           <div class="bg-zinc-950 px-4 py-2 rounded-t-xl border-b border-white/10 flex items-center justify-between text-xs">
             <div class="flex items-center gap-2">
-              <span class="size-2.5 rounded-full bg-rose-500"></span>
-              <span class="size-2.5 rounded-full bg-amber-500"></span>
-              <span class="size-2.5 rounded-full bg-emerald-500"></span>
-              <div class="ml-3 flex items-center gap-1.5 bg-zinc-900 border border-white/10 px-3 py-0.5 rounded-md text-[11px] font-mono text-indigo-300/90">
-                <span>🔒</span>
+              <span class="size-2.5 rounded-full bg-zinc-700"></span>
+              <span class="size-2.5 rounded-full bg-zinc-700"></span>
+              <span class="size-2.5 rounded-full bg-zinc-700"></span>
+              <div class="ml-3 flex items-center gap-1.5 bg-zinc-900/90 border border-white/8 px-2.5 py-0.5 rounded-md text-[11px] font-mono text-zinc-400">
+                <svg class="size-3 text-emerald-400/80 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 <span id="browser-url">https://interntrack.uonbi.ac.ke/dashboard</span>
               </div>
             </div>
             <div class="flex items-center gap-3 text-[11px] font-mono">
-              <span class="text-indigo-300/80">RBAC SESSION: <strong id="window-rbac-tier" class="text-white">TIER 1 (STUDENT)</strong></span>
-              <span class="text-zinc-600">|</span>
-              <span class="text-emerald-400/90">DRAG STAGE TO ORBIT 3D</span>
+              <span id="window-rbac-tier" class="text-zinc-400 font-medium">TIER 1 · STUDENT</span>
             </div>
           </div>
 
@@ -1176,21 +1270,16 @@
             <!-- RIGHT: MONOCHROMATIC ZINC WORKSPACE -->
             <section class="col-span-9 lg:col-span-10 flex flex-col justify-between p-4 sm:p-5 overflow-visible relative" style="transform-style: preserve-3d;">
               
-              <!-- Top Bar with Role Persona Switcher Pill -->
+              <!-- Clean Workspace Top Bar -->
               <div class="flex items-center justify-between pb-3 mb-1 border-b border-zinc-200 z-layer-base">
-                <div class="flex items-center gap-2">
-                  <span class="text-[11px] font-semibold text-zinc-500">Active Institutional Persona:</span>
-                  <span id="top-scope-badge" class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
-                    🎓 University of Nairobi • BSc. Computer Science
-                  </span>
-                </div>
+                <span id="top-scope-badge" class="text-[11px] font-medium text-zinc-600 truncate">
+                  University of Nairobi · BSc. Computer Science
+                </span>
 
-                <!-- Top-Right Persona Pill -->
-                <div class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1 shadow-sm">
-                  <span id="top-avatar" class="size-6 rounded-full bg-indigo-600/15 text-indigo-700 font-bold text-[10px] flex items-center justify-center">AW</span>
+                <div class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-2.5 py-1 shadow-2xs shrink-0">
+                  <span id="top-avatar" class="size-5 rounded-full bg-indigo-600/15 text-indigo-700 font-bold text-[10px] flex items-center justify-center">AW</span>
                   <span id="top-user-name" class="text-xs font-semibold text-zinc-900">Alice Wanjiku</span>
-                  <span id="top-role-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-indigo-700">Student</span>
-                  <span class="text-[10px] text-zinc-500">▾</span>
+                  <span id="top-role-badge" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600">Student</span>
                 </div>
               </div>
 
@@ -1765,53 +1854,13 @@
       </div>
     </main>
 
-    <!-- 4. BOTTOM ROLE-EXCLUSIVE PERMISSIONS & WORKFLOW HANDOFF MATRIX -->
-    <footer class="relative z-30 w-full max-w-[1360px] mx-auto pb-3 px-4">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 bg-zinc-900/90 border border-indigo-500/25 p-2.5 rounded-2xl backdrop-blur-xl shadow-xl text-xs">
-        <div onclick="selectRole(0, true)" id="footer-card-0" class="cursor-pointer p-2.5 rounded-xl border border-indigo-400/50 bg-indigo-500/10 transition flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white flex items-center gap-1.5">🎓 1. Student Intern</span>
-            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300">Tier 1</span>
-          </div>
-          <p class="text-[11px] text-zinc-300 mt-1">Only role that punches daily attendance, drafts logbooks with AI Polish &amp; checks milestone tasks.</p>
-        </div>
-
-        <div onclick="selectRole(1, true)" id="footer-card-1" class="cursor-pointer p-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white flex items-center gap-1.5">🏢 2. Field Supervisor</span>
-            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Tier 2 Host</span>
-          </div>
-          <p class="text-[11px] text-zinc-400 mt-1">Pre-provisioned login bound to assigned company interns. Signs off daily technical logs or requests revisions.</p>
-        </div>
-
-        <div onclick="selectRole(2, true)" id="footer-card-2" class="cursor-pointer p-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white flex items-center gap-1.5">🏛️ 3. Uni Supervisor</span>
-            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300">Tier 3 Faculty</span>
-          </div>
-          <p class="text-[11px] text-zinc-400 mt-1">Certifies academic milestone phases across companies &amp; grades official Mid-Term/Final rubrics.</p>
-        </div>
-
-        <div onclick="selectRole(3, true)" id="footer-card-3" class="cursor-pointer p-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition flex flex-col justify-between">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-white flex items-center gap-1.5">⚖️ 4. Uni Admin (Dean)</span>
-            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300">Tier 4 Dean</span>
-          </div>
-          <p class="text-[11px] text-zinc-400 mt-1">Creates supervisor accounts, pairs dual mentors (`supervisors:assign`), governs RBAC &amp; exports dossiers.</p>
-        </div>
-      </div>
+    <!-- 4. MINIMAL CONTEXTUAL CAPTION BAR -->
+    <footer class="relative z-30 w-full max-w-[1160px] mx-auto pb-4 px-4 sm:px-6 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400">
+      <p id="s2-role-summary" class="truncate text-zinc-300">
+        <span class="font-semibold text-white">Student Intern</span> — Daily shift check-in, structured logbook drafting, and milestone tracking.
+      </p>
+      <span class="text-[11px] text-zinc-500 shrink-0">Drag stage to orbit · Scroll to switch roles</span>
     </footer>
-
-    <!-- Floating Sign In CTA (zero layout height) -->
-    <a
-      href="/auth"
-      class="fixed top-3 right-4 z-50 inline-flex items-center gap-1.5 rounded-full bg-indigo-600/95 hover:bg-indigo-500 px-4 py-2 text-xs font-extrabold text-white border border-indigo-400/40 shadow-xl backdrop-blur-xl transition-all hover:scale-105"
-      style="text-decoration: none;"
-      aria-label="Sign In to InternTrack Workspace"
-    >
-      <span>Sign In</span>
-      <span>&rarr;</span>
-    </a>
   </div>
 
   <script>
@@ -1888,15 +1937,16 @@
           key: 'student',
           tier: 'Tier 1',
           short: 'STUDENT',
-          windowTier: 'TIER 1 (STUDENT INTERN)',
+          windowTier: 'TIER 1 · STUDENT',
           url: 'https://interntrack.uonbi.ac.ke/logbook',
           name: 'Alice Wanjiku',
           roleLabel: 'Student',
           initials: 'AW',
-          scopeBadge: '🎓 University of Nairobi • BSc. Computer Science (CS/2021/0042)',
-          hudIcon: '🎓',
-          hudPerm: 'logs:create • attendance:record • milestones:track',
-          hudTitle: 'Student Punching Shift Clock-In & Submitting AI-Polished Logbook',
+          scopeBadge: 'University of Nairobi · BSc. Computer Science (CS/2021/0042)',
+          hudIcon: '',
+          hudPerm: 'logs:create · attendance:record',
+          hudTitle: 'Daily shift check-in & logbook submission',
+          summary: 'Daily shift check-in, structured logbook drafting, and milestone tracking.',
           baseCamera: { rx: 7, ry: -9, rz: 0.4, scale: 0.96, tx: 0, ty: 0 },
           navGroups: [
             { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
@@ -1909,15 +1959,16 @@
           key: 'field_supervisor',
           tier: 'Tier 2',
           short: 'HOST',
-          windowTier: 'TIER 2 (HOST ORG FIELD SUPERVISOR)',
+          windowTier: 'TIER 2 · FIELD MENTOR',
           url: 'https://interntrack.uonbi.ac.ke/review',
           name: 'James Otieno',
           roleLabel: 'Host Org Field Supervisor',
           initials: 'JO',
-          scopeBadge: '🏢 TechCorp Kenya Ltd • Pre-Provisioned Login Bound to Alice & Kevin',
-          hudIcon: '🏢',
-          hudPerm: 'logs:approve • attendance:audit (Scoped to Assigned Mentees)',
-          hudTitle: 'Field Supervisor Reviewing Daily Engineering Log & Signing Off',
+          scopeBadge: 'TechCorp Kenya Ltd · Bound to assigned mentees',
+          hudIcon: '',
+          hudPerm: 'logs:approve · attendance:audit',
+          hudTitle: 'Reviewing daily logbook & mentor sign-off',
+          summary: 'Scoped to assigned company interns for daily log verification and revision feedback.',
           baseCamera: { rx: 6, ry: 8, rz: -0.4, scale: 0.96, tx: 0, ty: 0 },
           navGroups: [
             { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
@@ -1931,15 +1982,16 @@
           key: 'uni_supervisor',
           tier: 'Tier 3',
           short: 'FACULTY',
-          windowTier: 'TIER 3 (UNIVERSITY ACADEMIC SUPERVISOR)',
+          windowTier: 'TIER 3 · FACULTY ASSESSOR',
           url: 'https://interntrack.uonbi.ac.ke/evaluations',
           name: 'Dr. Joyce Chelangat',
           roleLabel: 'University Academic Assessor',
           initials: 'JC',
-          scopeBadge: '🏛️ University of Nairobi • Dept. of Software Engineering Assessor',
-          hudIcon: '🏛️',
-          hudPerm: 'assessments:grade • milestones:certify',
-          hudTitle: 'University Assessor Grading 5-Point Rubric & Certifying Phase 2',
+          scopeBadge: 'University of Nairobi · Software Engineering Assessor',
+          hudIcon: '',
+          hudPerm: 'assessments:grade · milestones:certify',
+          hudTitle: 'Grading 5-point rubric & certifying milestones',
+          summary: 'Certifies academic milestone phases and records official evaluation rubrics.',
           baseCamera: { rx: 8, ry: -7, rz: 0.3, scale: 0.96, tx: 0, ty: 0 },
           navGroups: [
             { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
@@ -1953,15 +2005,16 @@
           key: 'uni_admin',
           tier: 'Tier 4',
           short: 'UNIVERSITY',
-          windowTier: 'TIER 4 (UNIVERSITY ADMIN & DEAN)',
+          windowTier: 'TIER 4 · UNIVERSITY ADMIN',
           url: 'https://interntrack.uonbi.ac.ke/assignments',
           name: 'Dr. Peter Kamau',
           roleLabel: 'University Admin',
           initials: 'DP',
-          scopeBadge: '⚖️ Dean of Computing • Institutional Pairing, Credentials & RBAC Matrix',
-          hudIcon: '⚖️',
-          hudPerm: 'supervisors:create • supervisors:assign • rbac:manage • accreditation:export',
-          hudTitle: 'University Admin Pairing Dual Supervisors & Governing RBAC Matrix',
+          scopeBadge: 'Dean of Computing · Pairing, Credentials & RBAC',
+          hudIcon: '',
+          hudPerm: 'supervisors:assign · rbac:manage',
+          hudTitle: 'Pairing dual supervisors & governing RBAC',
+          summary: 'Provisions supervisor accounts, pairs dual mentors, governs RBAC, and exports dossiers.',
           baseCamera: { rx: 6.5, ry: 6.5, rz: -0.3, scale: 0.96, tx: 0, ty: 0 },
           navGroups: [
             { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
@@ -2374,11 +2427,11 @@
           const foot = document.getElementById(`footer-card-${i}`);
 
           if (i === idx) {
-            if (btn) btn.className = 'role-pill relative overflow-hidden px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-indigo-500/20 text-white border border-indigo-400/50 shadow-sm';
+            if (btn) btn.className = 'role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 bg-white text-zinc-950 shadow-sm';
             if (view) view.classList.remove('hidden');
             if (foot) foot.className = 'cursor-pointer p-2.5 rounded-xl border border-indigo-400/60 bg-indigo-500/15 transition flex flex-col justify-between';
           } else {
-            if (btn) btn.className = 'role-pill relative overflow-hidden px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 text-zinc-400 hover:text-white border border-transparent';
+            if (btn) btn.className = 'role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-zinc-400 hover:text-white';
             if (view) view.classList.add('hidden');
             if (prog) prog.style.width = i < idx ? '100%' : '0%';
             if (foot) foot.className = 'cursor-pointer p-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition flex flex-col justify-between';
@@ -2417,6 +2470,11 @@
         if (elHudPerm) elHudPerm.textContent = role.hudPerm;
         if (elHudTitle) elHudTitle.textContent = role.hudTitle;
 
+        const elSummary = document.getElementById('s2-role-summary');
+        if (elSummary && role.summary) {
+          elSummary.innerHTML = `<span class="font-semibold text-white">${role.roleLabel}</span> — ${role.summary}`;
+        }
+
         renderSidebarNav(role);
         runRoleChoreography(idx);
       }
@@ -2426,7 +2484,7 @@
         const ic = document.getElementById('automotion-icon');
         const tx = document.getElementById('automotion-text');
         if (ic) ic.textContent = autoMotion ? '⏸' : '▶';
-        if (tx) tx.textContent = autoMotion ? '3D Auto-Motion' : 'Paused';
+        if (tx) tx.textContent = autoMotion ? 'Auto-play' : 'Paused';
         if (autoMotion) {
           stepStartTime = Date.now();
           runRoleChoreography(activeRole);
@@ -2557,10 +2615,10 @@
           const rotY = (camState.ry * Math.PI) / 180 * 0.45 + Math.sin(time3D * 0.5) * 0.05;
           const rotX = (camState.rx * Math.PI) / 180 * 0.35;
 
-          ctx.strokeStyle = 'rgba(99, 102, 241, 0.12)';
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.045)';
           ctx.lineWidth = 1;
           const gridY = 340;
-          for (let gx = -900; gx <= 900; gx += 120) {
+          for (let gx = -900; gx <= 900; gx += 150) {
             const p1 = project3D(gx, gridY, -500, W, H, rotY, rotX);
             const p2 = project3D(gx, gridY, 700, W, H, rotY, rotX);
             ctx.beginPath();
@@ -2568,7 +2626,7 @@
             ctx.lineTo(p2.sx, p2.sy);
             ctx.stroke();
           }
-          for (let gz = -500; gz <= 700; gz += 120) {
+          for (let gz = -500; gz <= 700; gz += 150) {
             const p1 = project3D(-900, gridY, gz, W, H, rotY, rotX);
             const p2 = project3D(900, gridY, gz, W, H, rotY, rotX);
             ctx.beginPath();
@@ -2577,66 +2635,9 @@
             ctx.stroke();
           }
 
-          const nodeCoords = [
-            { x: -640, y: -160, z: -80, color: '#6366f1', label: 'T1 STUDENT' },
-            { x: 640, y: -160, z: -80, color: '#10b981', label: 'T2 FIELD SUP' },
-            { x: 640, y: 170, z: -60, color: '#38bdf8', label: 'T3 UNI SUP' },
-            { x: -640, y: 170, z: -60, color: '#a855f7', label: 'T4 UNI ADMIN' }
-          ];
-
-          const projectedNodes = nodeCoords.map((n, i) => {
-            const floatY = n.y + Math.sin(time3D * 2 + i * 1.5) * 14;
-            return { ...n, ...project3D(n.x, floatY, n.z, W, H, rotY, rotX), idx: i };
-          });
-
-          for (let i = 0; i < 4; i++) {
-            const a = projectedNodes[i];
-            const b = projectedNodes[(i + 1) % 4];
-            ctx.beginPath();
-            ctx.moveTo(a.sx, a.sy);
-            ctx.quadraticCurveTo(W / 2, H / 2 + (i % 2 === 0 ? -240 : 240), b.sx, b.sy);
-            ctx.strokeStyle = i === activeRole ? 'rgba(99, 102, 241, 0.38)' : 'rgba(255, 255, 255, 0.06)';
-            ctx.lineWidth = i === activeRole ? 2 : 1;
-            ctx.stroke();
-          }
-
           packets = packets.filter((pkt) => pkt.t <= 1);
           packets.forEach((pkt) => {
             pkt.t += 0.022;
-            const a = projectedNodes[pkt.from];
-            const b = projectedNodes[pkt.to];
-            const cx = W / 2;
-            const cy = H / 2 - 180;
-            const t = pkt.t;
-            const px = (1 - t) * (1 - t) * a.sx + 2 * (1 - t) * t * cx + t * t * b.sx;
-            const py = (1 - t) * (1 - t) * a.sy + 2 * (1 - t) * t * cy + t * t * b.sy;
-
-            ctx.beginPath();
-            ctx.arc(px, py, 5, 0, Math.PI * 2);
-            ctx.fillStyle = '#34d399';
-            ctx.shadowColor = '#10b981';
-            ctx.shadowBlur = 14;
-            ctx.fill();
-            ctx.shadowBlur = 0;
-          });
-
-          projectedNodes.forEach((n) => {
-            const isAct = n.idx === activeRole;
-            const r = (isAct ? 14 : 9) * n.scale;
-            ctx.beginPath();
-            ctx.arc(n.sx, n.sy, r, 0, Math.PI * 2);
-            ctx.fillStyle = isAct ? n.color : 'rgba(255,255,255,0.18)';
-            if (isAct) {
-              ctx.shadowColor = n.color;
-              ctx.shadowBlur = 20;
-            }
-            ctx.fill();
-            ctx.shadowBlur = 0;
-
-            ctx.font = '700 10px monospace';
-            ctx.fillStyle = isAct ? '#ffffff' : 'rgba(255,255,255,0.4)';
-            ctx.textAlign = 'center';
-            ctx.fillText(n.label, n.sx, n.sy + r + 14);
           });
         }
         requestAnimationFrame(render3DCanvas);
@@ -2799,22 +2800,21 @@
           return;
         }
 
-        const tags = [btnOverview, btnFeatures, btnContacts, btnDemo];
-        tags.forEach((tag, i) => {
-          if (!tag) return;
-          tag.animate(
+        const s1Nav = document.getElementById('s1-nav');
+        if (s1Nav) {
+          s1Nav.animate(
             [
-              { opacity: 0, transform: 'translateY(-40px) rotate(-4deg)' },
+              { opacity: 0, transform: 'translateY(-14px)' },
               { opacity: 1, transform: 'none' },
             ],
             {
-              duration: 700,
-              delay: 120 + i * 80,
-              easing: 'cubic-bezier(.3, 1.5, .5, 1)',
+              duration: 600,
+              delay: 120,
+              easing: 'cubic-bezier(.16, 1, .3, 1)',
               fill: 'both',
             }
           );
-        });
+        }
 
         [wmSvg, mWmSvg].forEach((wm) => {
           if (!wm) return;
@@ -3145,11 +3145,16 @@
       }
 
       /* ── 10. Event Listeners ── */
+      window.toHero = toHero;
+      window.toCase = toCase;
+
       // Scene 1 Triggers
-      btnOverview.addEventListener('click', toHero);
-      btnFeatures.addEventListener('click', toCase);
-      btnContacts.addEventListener('click', (e) => e.preventDefault());
-      btnDemo.addEventListener('click', (e) => {
+      if (btnOverview) btnOverview.addEventListener('click', toHero);
+      if (btnFeatures) btnFeatures.addEventListener('click', toCase);
+      if (btnContacts) btnContacts.addEventListener('click', (e) => e.preventDefault());
+      const hintBtn = document.getElementById('hint');
+      if (hintBtn) hintBtn.addEventListener('click', toCase);
+      if (btnDemo) btnDemo.addEventListener('click', (e) => {
         e.preventDefault();
         try {
           if (window.top && window.top !== window) {

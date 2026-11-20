@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-Cx0BB4qO.js";var t=e();function n(){return(0,t.jsx)(`div`,{className:`relative h-screen w-screen overflow-hidden bg-[#0b2f20]`,children:(0,t.jsx)(`iframe`,{src:`/index.html`,className:`block h-full w-full select-none border-0`,title:`FAMS — Field Attachment Management System`,loading:`eager`})})}export{n as default};
