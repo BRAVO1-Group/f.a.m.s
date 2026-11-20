@@ -20,4 +20,8 @@ class University extends Model
     public function departments(){
         return $this->hasMany(Department::class);
     }
+    public function admins()
+   {
+    return $this->hasMany(User::class);
+    }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -11,19 +10,21 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable([
+    'name',
+    'email',
+    'password',
+    'university_id',
+    'email_verified_at',
+])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -32,16 +33,24 @@ class User extends Authenticatable
         ];
     }
 
-    public function roles():BelongsToMany{
-        return $this-> belongsToMany(Role::class)
-        -> withTimeStamps();
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class)
+            ->withTimestamps();
     }
+
     public function student(): HasOne
     {
         return $this->hasOne(Student::class);
     }
+
     public function supervisor(): HasOne
     {
         return $this->hasOne(Supervisor::class);
+    }
+
+    public function university(): BelongsTo
+    {
+        return $this->belongsTo(University::class);
     }
 }
