@@ -42,19 +42,20 @@ class DemoUsersSeeder extends Seeder
             ],
         ];
 
-        // foreach ($users as $userData) {
-        //     $user = User::updateOrCreate(
-        //         ['email' => $userData['email']],
-        //         [
-        //             'name' => $userData['name'],
-        //             'password' => 'InternTrack@2026!',
-        //         ]
-        //     );
+        foreach ($users as $userData) {
+            $user = User::updateOrCreate(
+                ['email' => $userData['email']],
+                [
+                    'name' => $userData['name'],
+                    'password' => $userData['password'],
+                    'email_verified_at' => now(),
+                ]
+            );
 
-        //     $roleIds = Role::whereIn('slug', $userData['roles'])
-        //         ->pluck('id');
+            $roleIds = Role::whereIn('slug', $userData['roles'])
+                ->pluck('id');
 
-        //     $user->roles()->sync($roleIds);
-        // }
+            $user->roles()->sync($roleIds);
+        }
     }
 }

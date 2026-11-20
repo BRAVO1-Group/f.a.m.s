@@ -19,17 +19,22 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolePermissionSeeder::class,
             AcademicDataSeeder::class,
+            OrganizationSeeder::class,
             DemoUsersSeeder::class,
-            logbookSeeder::class,
-            organizationalSeeder::class,
-            placementSeeder::class,
-            supervisorSeeder::class,
-            studentSeeder::class,
-            ]);
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            UniversityAdminSeeder::class,
+            StudentSeeder::class,
+            SupervisorSeeder::class,
+            PlacementSeeder::class,
+            LogbookSeeder::class,
         ]);
+
+        User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => 'InternTrack@2026!',
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
