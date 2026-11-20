@@ -454,16 +454,14 @@
       --it-primary: #6366f1;
     }
 
-    /* 3D Perspective Stage & Camera Rig */
+    /* Subtle Perspective Stage & Camera Rig */
     .stage-viewport {
-      perspective: 1650px;
-      perspective-origin: 50% 48%;
-      transform-style: preserve-3d;
+      perspective: 2200px;
+      perspective-origin: 50% 50%;
     }
 
     .camera-rig {
-      transform-style: preserve-3d;
-      transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
       will-change: transform;
     }
 
@@ -471,95 +469,63 @@
       transition: none !important;
     }
 
-    /* 3D Laptop / Workstation Chassis */
+    /* Crisp Browser Window Chassis */
     .laptop-3d-body {
-      transform-style: preserve-3d;
       position: relative;
-      border-radius: 18px;
+      border-radius: 16px;
       background: #141418;
-      padding: 10px;
+      padding: 6px;
       box-shadow:
-        0 40px 90px -20px rgba(0, 0, 0, 0.85),
-        0 0 0 1px rgba(129, 140, 248, 0.28),
-        0 0 60px -10px rgba(99, 102, 241, 0.24);
+        0 32px 80px -20px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
     }
 
-    .laptop-3d-body::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #09090b, #1e1b4b);
-      transform: translateZ(-16px);
-      box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9);
+    /* Clean Flat Layers (no jarring Z-detachment) */
+    .z-layer-base,
+    .z-layer-mid,
+    .z-layer-pop,
+    .z-layer-modal,
+    .z-layer-hud {
+      transition: box-shadow 0.45s ease, border-color 0.45s ease, opacity 0.35s ease;
+    }
+
+    /* Subtle spotlight focus ring for active walkthrough target */
+    .card-3d-focus {
+      box-shadow:
+        0 0 0 1.5px rgba(79, 70, 229, 0.5),
+        0 14px 32px -12px rgba(15, 23, 42, 0.16) !important;
+      border-color: rgba(79, 70, 229, 0.45) !important;
+    }
+
+    @keyframes viewFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .view-enter {
+      animation: viewFadeIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* In-app Toast Notification */
+    #inapp-toast {
+      transition: opacity 0.28s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #inapp-toast.toast-hidden {
+      opacity: 0;
+      transform: translateY(10px) scale(0.97);
       pointer-events: none;
     }
 
-    /* Multi-Depth Z-Layers inside the 3D Screen */
-    .z-layer-base {
-      transform: translateZ(0px);
-      transform-style: preserve-3d;
-      transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .z-layer-mid {
-      transform: translateZ(22px);
-      transform-style: preserve-3d;
-      transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.75s ease;
-    }
-
-    .z-layer-pop {
-      transform: translateZ(48px);
-      transform-style: preserve-3d;
-      transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.75s ease;
-      box-shadow: 0 22px 44px -12px rgba(24, 24, 27, 0.22), 0 0 0 1px rgba(79, 70, 229, 0.2);
-    }
-
-    .z-layer-modal {
-      transform: translateZ(82px);
-      transform-style: preserve-3d;
-      transition: transform 0.65s cubic-bezier(0.18, 1.15, 0.32, 1), opacity 0.4s ease;
-      box-shadow: 0 34px 70px -12px rgba(9, 9, 11, 0.48), 0 0 0 2px rgba(99, 102, 241, 0.35);
-    }
-
-    .z-layer-hud {
-      transform: translateZ(105px);
-      transform-style: preserve-3d;
-      transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
-    }
-
-    /* Exploded 3D Layer Inspection Mode */
-    .exploded .z-layer-mid {
-      transform: translateZ(52px) !important;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35) !important;
-    }
-
-    .exploded .z-layer-pop {
-      transform: translateZ(105px) !important;
-      box-shadow: 0 35px 70px -12px rgba(0, 0, 0, 0.45) !important;
-    }
-
-    .exploded .z-layer-modal {
-      transform: translateZ(155px) !important;
-    }
-
-    .exploded .z-layer-hud {
-      transform: translateZ(195px) !important;
-    }
-
-    /* Active focused card elevation */
-    .card-3d-focus {
-      transform: translateZ(66px) scale(1.025) !important;
-      box-shadow:
-        0 28px 60px -12px rgba(79, 70, 229, 0.35),
-        0 0 0 2px #6366f1,
-        0 0 28px rgba(99, 102, 241, 0.25) !important;
-      z-index: 30;
-    }
-
-    /* Linear / Indigo InternTrack Gradients */
-    .it-hero-gradient {
-      background: linear-gradient(135deg, #18181b 0%, #312e81 58%, #4f46e5 100%);
+    #inapp-toast.toast-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
 
     .it-accent-gradient {
@@ -645,15 +611,14 @@
       color: #fda4af !important;
     }
 
-    /* Simulated 3D Spatial Pointer */
+    /* Simulated Walkthrough Pointer (exact 1:1 DOM alignment) */
     #sim-pointer {
-      transform: translateZ(115px);
-      transition: left 0.68s cubic-bezier(0.22, 1, 0.36, 1), top 0.68s cubic-bezier(0.22, 1, 0.36, 1), transform 0.2s ease;
+      transition: left 0.62s cubic-bezier(0.22, 1, 0.36, 1), top 0.62s cubic-bezier(0.22, 1, 0.36, 1), transform 0.16s ease, opacity 0.25s ease;
       pointer-events: none;
     }
 
     #sim-pointer.clicking {
-      transform: translateZ(95px) scale(0.88);
+      transform: scale(0.86);
     }
 
     @keyframes pulseRing {
@@ -1183,683 +1148,601 @@
     <!-- 3. CENTER 3D PERSPECTIVE STAGE (THE AUTHENTIC INTERNTRACK APP) -->
     <main class="relative z-20 flex-1 flex items-center justify-center px-4 py-2 stage-viewport" id="stage-viewport">
       
-      <!-- 3D Camera Rig (Animated automatically + draggable in 3D) -->
-      <div id="camera-rig" class="camera-rig w-full max-w-[1160px]" style="transform: rotateX(7deg) rotateY(-9deg) rotateZ(0.4deg) scale(0.96);">
+      <!-- Crisp Browser Frame (subtle perspective, draggable) -->
+      <div id="camera-rig" class="camera-rig w-full max-w-[1160px]" style="transform: rotateX(1.5deg) rotateY(-1.5deg) scale(0.99);">
         
-        <!-- Minimal Floating Status Pill (Z: +105px) -->
-        <div id="floating-role-hud" class="z-layer-hud absolute -top-3.5 right-6 z-50 bg-zinc-950/90 border border-white/15 text-white px-3.5 py-1.5 rounded-full shadow-2xl backdrop-blur-xl flex items-center gap-2.5 max-w-md pointer-events-none">
-          <span class="size-2 rounded-full bg-emerald-400 shrink-0"></span>
-          <p id="hud-action-title" class="text-[11px] font-semibold text-zinc-100 truncate">Student logging daily shift &amp; activity</p>
-          <span id="hud-perm-code" class="hidden sm:inline text-[10px] font-mono text-zinc-400 border-l border-white/15 pl-2.5 truncate">logs:create</span>
-        </div>
-
-        <!-- 3D Workstation Bezel -->
+        <!-- Browser Workstation Window -->
         <div class="laptop-3d-body">
           
-          <!-- Browser / Workstation Window Bar -->
-          <div class="bg-zinc-950 px-4 py-2 rounded-t-xl border-b border-white/10 flex items-center justify-between text-xs">
+          <!-- Browser Chrome Bar -->
+          <div class="bg-zinc-950 px-4 py-2 rounded-t-[11px] border-b border-white/10 flex items-center justify-between text-xs">
             <div class="flex items-center gap-2">
               <span class="size-2.5 rounded-full bg-zinc-700"></span>
               <span class="size-2.5 rounded-full bg-zinc-700"></span>
               <span class="size-2.5 rounded-full bg-zinc-700"></span>
               <div class="ml-3 flex items-center gap-1.5 bg-zinc-900/90 border border-white/8 px-2.5 py-0.5 rounded-md text-[11px] font-mono text-zinc-400">
                 <svg class="size-3 text-emerald-400/80 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                <span id="browser-url">https://interntrack.uonbi.ac.ke/dashboard</span>
+                <span id="browser-url">interntrack.app/logbook</span>
               </div>
             </div>
-            <div class="flex items-center gap-3 text-[11px] font-mono">
-              <span id="window-rbac-tier" class="text-zinc-400 font-medium">TIER 1 · STUDENT</span>
+            <div class="flex items-center gap-2 text-[11px] font-mono text-zinc-500">
+              <span class="size-1.5 rounded-full bg-emerald-400"></span>
+              <span id="window-rbac-tier">STUDENT WORKSPACE</span>
             </div>
           </div>
 
-          <!-- REDESIGNED INTERNTRACK APP SHELL (MONOCHROMATIC ZINC + INDIGO) -->
-          <div id="app-screen-shell" class="grid grid-cols-12 min-h-[590px] max-h-[590px] rounded-b-xl overflow-visible relative" style="background: var(--it-bg); color: var(--it-ink); transform-style: preserve-3d; transition: background 0.25s ease, color 0.25s ease;">
+          <!-- AUTHENTIC INTERNTRACK APP SHELL -->
+          <div id="app-screen-shell" class="grid grid-cols-12 min-h-[580px] max-h-[580px] rounded-b-[11px] overflow-hidden relative" style="background: var(--it-bg); color: var(--it-ink); transition: background 0.25s ease, color 0.25s ease;">
             
-            <!-- Simulated 3D Spatial Pointer / Cursor -->
+            <!-- Simulated Walkthrough Cursor -->
             <div id="sim-pointer" class="absolute z-50 left-[480px] top-[260px] flex items-start">
               <div class="relative">
-                <svg class="size-6 drop-shadow-[0_6px_12px_rgba(0,0,0,0.45)]" viewBox="0 0 24 24" fill="#4f46e5" stroke="#ffffff" stroke-width="2">
+                <svg class="size-5 drop-shadow-[0_4px_10px_rgba(0,0,0,0.4)]" viewBox="0 0 24 24" fill="#18181b" stroke="#ffffff" stroke-width="2">
                   <path d="M4 4l7.07 17 2.51-7.39L21 11.07z"/>
                 </svg>
-                <div id="pointer-ripple" class="absolute -top-2 -left-2 size-9 rounded-full border-2 border-indigo-500 opacity-0"></div>
+                <div id="pointer-ripple" class="absolute -top-2 -left-2 size-8 rounded-full border-2 border-indigo-500 opacity-0"></div>
               </div>
-              <div id="pointer-label" class="ml-1 mt-3 px-2.5 py-1 rounded-lg bg-zinc-950 text-white text-[10px] font-mono font-bold shadow-xl border border-indigo-400/50 whitespace-nowrap">
-                Clicking + Add Today's Log
+              <div id="pointer-label" class="ml-1.5 mt-3 px-2.5 py-1 rounded-full bg-zinc-950/95 text-white text-[10px] font-medium shadow-xl border border-white/15 whitespace-nowrap">
+                Navigating workspace
               </div>
             </div>
 
-            <!-- LEFT: MONOCHROMATIC ZINC SIDEBAR -->
-            <aside class="col-span-3 lg:col-span-2 flex flex-col justify-between rounded-bl-xl z-layer-base select-none transition-colors duration-200" style="background: var(--it-sidebar); color: var(--it-sidebar-ink); border-right: 1px solid var(--it-sidebar-border);">
+            <!-- In-App Toast Notification (mirrors Sonner in real app) -->
+            <div id="inapp-toast" class="toast-hidden absolute bottom-4 right-4 z-40 flex items-center gap-2.5 rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 shadow-xl max-w-xs">
+              <span class="flex size-5 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 text-[10px] font-bold shrink-0">✓</span>
+              <div class="min-w-0">
+                <p id="inapp-toast-title" class="text-[11px] font-semibold text-zinc-900 truncate">Action completed</p>
+                <p id="inapp-toast-desc" class="text-[10px] text-zinc-500 truncate">Synced with workspace</p>
+              </div>
+            </div>
+
+            <!-- LEFT SIDEBAR -->
+            <aside class="col-span-3 lg:col-span-2 flex flex-col justify-between select-none transition-colors duration-200" style="background: var(--it-sidebar); color: var(--it-sidebar-ink); border-right: 1px solid var(--it-sidebar-border);">
               <div>
-                <!-- Brand Header -->
-                <div class="flex items-center gap-2.5 px-4 py-3.5" style="border-bottom: 1px solid var(--it-sidebar-border);">
-                  <div class="size-8 rounded-lg it-accent-gradient flex items-center justify-center text-white font-bold shadow-sm shrink-0">
-                    <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+                <div class="flex items-center gap-2.5 px-3.5 py-3" style="border-bottom: 1px solid var(--it-sidebar-border);">
+                  <div class="size-7 rounded-lg it-accent-gradient flex items-center justify-center text-white font-bold shrink-0">
+                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
                   </div>
                   <div class="min-w-0">
-                    <p class="font-bold text-sm leading-none tracking-tight" style="color: var(--it-sidebar-active-ink);">InternTrack</p>
+                    <p class="font-bold text-[13px] leading-none tracking-tight" style="color: var(--it-sidebar-active-ink);">InternTrack</p>
                     <div class="mt-1 flex items-center gap-1">
-                      <span id="sb-tier-pill" class="text-[9px] font-semibold px-1.5 py-0 rounded" style="border: 1px solid var(--it-sidebar-border); color: var(--it-muted);">Tier 1</span>
+                      <span id="sb-tier-pill" class="text-[9px] font-semibold px-1 py-0 rounded" style="border: 1px solid var(--it-sidebar-border); color: var(--it-muted);">Tier 1</span>
                       <span id="sb-role-short" class="text-[9px] font-mono uppercase tracking-wider" style="color: var(--it-muted);">STUDENT</span>
                     </div>
                   </div>
                 </div>
 
                 <!-- Dynamic Categorized Sidebar Nav -->
-                <div id="sidebar-nav-container" class="px-2.5 py-3 space-y-3 text-xs"></div>
+                <div id="sidebar-nav-container" class="px-2 py-3 space-y-3 text-xs"></div>
               </div>
 
-              <!-- Sidebar Bottom User Profile Card -->
-              <div class="p-3 rounded-bl-xl" style="border-top: 1px solid var(--it-sidebar-border); background: rgba(79,70,229,0.04);">
-                <div class="flex items-center gap-2.5">
-                  <div id="sb-avatar" class="size-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0" style="background: rgba(79,70,229,0.14); color: var(--it-primary); border: 1px solid rgba(79,70,229,0.28);">
+              <!-- Sidebar Footer User -->
+              <div class="p-3" style="border-top: 1px solid var(--it-sidebar-border);">
+                <div class="flex items-center gap-2">
+                  <div id="sb-avatar" class="size-7 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0" style="background: rgba(79,70,229,0.12); color: var(--it-primary);">
                     AW
                   </div>
                   <div class="min-w-0">
-                    <p id="sb-user-name" class="text-xs font-semibold truncate" style="color: var(--it-sidebar-active-ink);">Alice Wanjiku</p>
+                    <p id="sb-user-name" class="text-[11px] font-semibold truncate" style="color: var(--it-sidebar-active-ink);">Alice Wanjiku</p>
                     <p id="sb-user-role" class="text-[10px] truncate" style="color: var(--it-muted);">Student</p>
                   </div>
-                </div>
-                <div class="mt-2 pt-2 flex items-center gap-1.5 text-[10px]" style="border-top: 1px solid var(--it-sidebar-border); color: var(--it-muted);">
-                  <span>↪</span>
-                  <span>Sign out</span>
                 </div>
               </div>
             </aside>
 
-            <!-- RIGHT: MONOCHROMATIC ZINC WORKSPACE -->
-            <section class="col-span-9 lg:col-span-10 flex flex-col justify-between p-4 sm:p-5 overflow-visible relative" style="transform-style: preserve-3d;">
+            <!-- RIGHT WORKSPACE AREA -->
+            <section class="col-span-9 lg:col-span-10 flex flex-col overflow-hidden relative">
               
-              <!-- Clean Workspace Top Bar -->
-              <div class="flex items-center justify-between pb-3 mb-1 border-b border-zinc-200 z-layer-base">
-                <span id="top-scope-badge" class="text-[11px] font-medium text-zinc-600 truncate">
-                  University of Nairobi · BSc. Computer Science
-                </span>
-
-                <div class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-2.5 py-1 shadow-2xs shrink-0">
-                  <span id="top-avatar" class="size-5 rounded-full bg-indigo-600/15 text-indigo-700 font-bold text-[10px] flex items-center justify-center">AW</span>
-                  <span id="top-user-name" class="text-xs font-semibold text-zinc-900">Alice Wanjiku</span>
-                  <span id="top-role-badge" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600">Student</span>
-                </div>
-              </div>
-
-              <!-- ROLE 0: STUDENT INTERN VIEW (Alice Wanjiku — Tier 1) -->
-              <div id="role-view-0" class="flex-1 flex flex-col justify-between space-y-3.5" style="transform-style: preserve-3d;">
-                <div class="z-layer-mid it-hero-gradient rounded-2xl p-4 sm:p-5 text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <div class="flex items-center gap-2">
-                      <span class="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-semibold backdrop-blur">
-                        ✨ Active Placement • Week 9 of 12
-                      </span>
-                      <span class="text-[11px] text-white/75">Target Defense: Sept 30, 2026</span>
-                    </div>
-                    <h2 class="mt-1.5 text-xl sm:text-2xl font-extrabold tracking-tight">Good morning, Alice!</h2>
-                    <p class="text-xs text-white/90 font-medium mt-0.5">
-                      Software Engineering Intern • TechCorp Kenya Ltd • Supervised by James Otieno (Host) &amp; Dr. Peter Kamau (Faculty)
-                    </p>
-                  </div>
-                  <div class="flex flex-wrap items-center gap-2 shrink-0">
-                    <button id="stu-btn-add-log" onclick="triggerStudentLogFlow()" type="button" class="it-hero-btn px-3.5 py-2 rounded-xl bg-white text-indigo-700 font-bold text-xs shadow-sm hover:bg-zinc-100 transition flex items-center gap-1.5">
-                      <span>＋</span>
-                      <span>Add Today's Log</span>
-                    </button>
-                    <button id="stu-btn-clock" onclick="triggerStudentClock()" type="button" class="px-3.5 py-2 rounded-xl border border-white/30 bg-white/10 text-white font-semibold text-xs hover:bg-white/20 transition flex items-center gap-1.5">
-                      <span>🕒</span>
-                      <span id="stu-clock-btn-label">Clock In (08:30 AM)</span>
-                    </button>
-                  </div>
+              <!-- Authentic AppShell Header Bar (Breadcrumb + Notification Bell + Profile) -->
+              <div class="flex items-center justify-between h-11 px-5 border-b border-zinc-200 shrink-0" style="background: var(--it-card);">
+                <div class="flex items-center gap-1.5 text-[11px] min-w-0">
+                  <span id="top-crumb-cat" class="text-zinc-500">Logbook &amp; Tracking</span>
+                  <span class="text-zinc-300">/</span>
+                  <span id="top-scope-badge" class="font-semibold text-zinc-900 truncate">Digital Logbook</span>
                 </div>
 
-                <!-- 4 Student KPI Cards -->
-                <div class="grid grid-cols-4 gap-3 z-layer-mid">
-                  <div id="stu-card-days" class="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-sm transition-all">
-                    <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-500">
-                      <span>Days Completed</span>
-                      <span class="size-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">📅</span>
-                    </div>
-                    <div class="mt-2 flex items-baseline gap-1.5">
-                      <span id="stu-days-val" class="text-2xl font-extrabold text-zinc-900">42</span>
-                      <span class="text-xs text-zinc-500">/ 60 days</span>
-                    </div>
-                    <div class="mt-2 w-full bg-zinc-100 h-1.5 rounded-full overflow-hidden">
-                      <div id="stu-days-bar" class="bg-indigo-600 h-full transition-all duration-700" style="width: 70%"></div>
-                    </div>
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <!-- In-App Notification Bell -->
+                  <div id="inapp-notif-bell" class="relative flex size-7 items-center justify-center rounded-lg text-zinc-500 border border-zinc-200 bg-zinc-50">
+                    <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                    <span id="inapp-notif-count" class="absolute -top-1 -right-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-indigo-600 px-1 text-[9px] font-bold text-white">1</span>
                   </div>
 
-                  <div class="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-sm">
-                    <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-500">
-                      <span>Total Logged Hours</span>
-                      <span class="size-6 rounded-lg bg-amber-500/15 text-amber-700 flex items-center justify-center">⏱️</span>
-                    </div>
-                    <div class="mt-2 flex items-baseline gap-1.5">
-                      <span id="stu-hours-val" class="text-2xl font-extrabold text-zinc-900">336.0</span>
-                      <span class="text-xs text-zinc-500">hours</span>
-                    </div>
-                    <p class="mt-2 text-[11px] text-emerald-600 font-medium">● 8.0 hrs/day pace</p>
-                  </div>
-
-                  <div class="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-sm">
-                    <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-500">
-                      <span>Logbook Status</span>
-                      <span class="size-6 rounded-lg bg-emerald-500/15 text-emerald-700 flex items-center justify-center">📋</span>
-                    </div>
-                    <div class="mt-2 flex items-baseline gap-1.5">
-                      <span id="stu-logs-count" class="text-2xl font-extrabold text-zinc-900">4</span>
-                      <span class="text-xs text-zinc-500">entries</span>
-                    </div>
-                    <span id="stu-queue-pill" class="inline-block mt-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700">
-                      1 draft ready to submit
-                    </span>
-                  </div>
-
-                  <div class="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-sm">
-                    <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-500">
-                      <span>RBAC Clearance</span>
-                      <span class="size-6 rounded-lg bg-indigo-500/15 text-indigo-700 flex items-center justify-center">🛡️</span>
-                    </div>
-                    <div class="mt-1.5 space-y-1 text-[10px] font-mono">
-                      <div class="text-emerald-600 font-bold">✓ logs:create</div>
-                      <div class="text-emerald-600 font-bold">✓ attendance:record</div>
-                      <div class="text-rose-500">🔒 logs:approve (Mentor)</div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Bottom Split -->
-                <div class="grid grid-cols-12 gap-3.5 flex-1" style="transform-style: preserve-3d;">
-                  <div id="stu-card-logbook" class="col-span-7 bg-white border border-zinc-200 rounded-2xl p-4 z-layer-pop flex flex-col justify-between">
-                    <div class="flex items-center justify-between border-b border-zinc-200 pb-2.5">
-                      <div>
-                        <div class="flex items-center gap-2">
-                          <span class="text-xs font-extrabold text-zinc-900">Digital Logbook — Today's Entry</span>
-                          <span id="stu-log-status-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-400 bg-amber-50 text-amber-800">
-                            Draft
-                          </span>
-                        </div>
-                        <p class="text-[11px] text-zinc-500">2026-09-24 · 08:30–17:00 · TechCorp Product Engineering</p>
-                      </div>
-                      <button id="stu-btn-ai" onclick="triggerStudentAiPolish()" type="button" class="px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-[11px] font-bold flex items-center gap-1 hover:bg-indigo-100 transition">
-                        <span>✨</span>
-                        <span id="stu-ai-label">Polish with AI</span>
-                      </button>
-                    </div>
-
-                    <div class="my-2.5 space-y-2">
-                      <div class="text-xs font-bold text-zinc-900 bg-zinc-50 px-3 py-1.5 rounded-lg border border-zinc-200">
-                        Title: <span class="font-semibold">Onboarding Flow UI &amp; REST API Validation</span>
-                      </div>
-                      <div class="bg-zinc-50 p-2.5 rounded-xl border border-zinc-200 min-h-[74px] text-xs text-zinc-900 leading-relaxed font-normal">
-                        <span id="stu-log-desc">Working on the onboarding wizard UI components for new user registration using React 19 and Zod schema validation.</span>
-                        <span id="stu-cursor" class="inline-block w-1.5 h-3.5 bg-indigo-600 align-middle ml-0.5 animate-pulse"></span>
-                      </div>
-                    </div>
-
-                    <div class="flex items-center justify-between pt-1">
-                      <div id="stu-skill-tags" class="flex flex-wrap gap-1">
-                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md border border-zinc-200 bg-white text-zinc-900">React 19</span>
-                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md border border-zinc-200 bg-white text-zinc-900">Tailwind CSS</span>
-                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-zinc-100 text-indigo-700">UI/UX design</span>
-                      </div>
-                      <button id="stu-btn-submit" onclick="triggerStudentSubmit()" type="button" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
-                        <span>🚀</span>
-                        <span id="stu-submit-label">Submit to Field Supervisor</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div id="stu-card-milestone" class="col-span-5 bg-white border border-zinc-200 rounded-2xl p-4 z-layer-mid flex flex-col justify-between">
-                    <div>
-                      <div class="flex items-center justify-between border-b border-zinc-200 pb-2">
-                        <span class="text-xs font-extrabold text-zinc-900">Today's Shift &amp; Milestone</span>
-                        <span id="stu-shift-pill" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 flex items-center gap-1">
-                          <span class="size-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-                          Checked In 08:30 AM
-                        </span>
-                      </div>
-
-                      <div class="mt-2.5 p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-[11px] space-y-1">
-                        <div class="flex justify-between">
-                          <span class="text-zinc-500">Workplace Location:</span>
-                          <span class="font-bold text-zinc-900">TechCorp Westlands (On-Site)</span>
-                        </div>
-                        <div class="flex justify-between">
-                          <span class="text-zinc-500">Phase 2 Deliverables:</span>
-                          <span id="stu-ms-pct" class="font-bold text-indigo-600">2 of 3 tasks (67%)</span>
-                        </div>
-                      </div>
-
-                      <div class="mt-2.5 space-y-1.5 text-[11px]">
-                        <div class="flex items-center gap-2 p-1.5 rounded-lg bg-emerald-50/70 border border-emerald-200 text-zinc-900">
-                          <span class="size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold">✓</span>
-                          <span class="line-through text-zinc-500">Implement Radix dialog and tabs in review queue</span>
-                        </div>
-                        <div class="flex items-center gap-2 p-1.5 rounded-lg bg-emerald-50/70 border border-emerald-200 text-zinc-900">
-                          <span class="size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold">✓</span>
-                          <span class="line-through text-zinc-500">Build responsive stats dashboard with Recharts</span>
-                        </div>
-                        <div id="stu-ms-task3" class="flex items-center gap-2 p-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-900 transition-all">
-                          <span id="stu-ms-check3" class="size-4 rounded-full border border-zinc-400 flex items-center justify-center text-[9px] font-bold"></span>
-                          <span id="stu-ms-text3" class="font-semibold">Complete accessibility &amp; screen-reader audit</span>
-                        </div>
-                      </div>
-                    </div>
+                  <div class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-2.5 py-1 shrink-0">
+                    <span id="top-avatar" class="size-5 rounded-full bg-indigo-600/15 text-indigo-700 font-bold text-[10px] flex items-center justify-center">AW</span>
+                    <span id="top-user-name" class="text-[11px] font-semibold text-zinc-900">Alice Wanjiku</span>
+                    <span id="top-role-badge" class="text-[10px] font-medium text-zinc-500">Student</span>
                   </div>
                 </div>
               </div>
 
-              <!-- ROLE 1: FIELD SUPERVISOR VIEW (James Otieno — Host Org Tier 2) -->
-              <div id="role-view-1" class="hidden flex-1 flex flex-col justify-between space-y-3.5" style="transform-style: preserve-3d;">
-                <div class="z-layer-mid rounded-xl border border-indigo-200 bg-indigo-50/70 p-3.5 flex items-center justify-between gap-3">
-                  <div class="flex items-center gap-3">
-                    <div class="size-9 rounded-xl bg-indigo-600/15 text-indigo-700 flex items-center justify-center text-base font-bold shrink-0">🏢</div>
+              <!-- WORKSPACE CONTENT BODY -->
+              <div class="flex-1 p-5 flex flex-col justify-between overflow-hidden">
+
+                <!-- ROLE 0: STUDENT INTERN VIEW (Alice Wanjiku) -->
+                <div id="role-view-0" class="view-enter flex-1 flex flex-col justify-between gap-3.5">
+                  <!-- Clean Page Header -->
+                  <div class="flex items-center justify-between gap-4">
                     <div>
-                      <div class="flex items-center gap-2">
-                        <span class="font-extrabold text-xs text-zinc-900">Host Organization Review Queue</span>
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-200 text-indigo-700 bg-white">🏢 TechCorp Kenya Ltd</span>
-                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-500">Received Enterprise Logins</span>
-                      </div>
-                      <p class="text-[11px] text-zinc-500 mt-0.5">
-                        Scoped strictly to your assigned student mentees: <strong>Alice Wanjiku</strong> and <strong>Kevin Kiprono</strong>. Sign off daily logs or request revisions.
-                      </p>
+                      <h2 class="text-lg font-bold tracking-tight text-zinc-900">Good morning, Alice</h2>
+                      <p class="text-[11px] text-zinc-500 mt-0.5">Software Engineering Intern · TechCorp Kenya Ltd · Week 9 of 12</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <button id="stu-btn-clock" onclick="triggerStudentClock()" type="button" class="px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-zinc-900 font-semibold text-[11px] hover:bg-zinc-50 transition">
+                        <span id="stu-clock-btn-label">Clock In</span>
+                      </button>
+                      <button id="stu-btn-add-log" onclick="triggerStudentLogFlow()" type="button" class="px-3 py-1.5 rounded-lg bg-zinc-900 text-white font-semibold text-[11px] hover:bg-zinc-800 transition">
+                        New Log Entry
+                      </button>
                     </div>
                   </div>
-                  <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 shrink-0">
-                    🛡️ Direct Sign-off Authority
-                  </span>
-                </div>
 
-                <div class="flex items-center justify-between gap-3 z-layer-mid">
-                  <div class="inline-flex items-center gap-1 bg-zinc-100 p-1 rounded-xl border border-zinc-200">
-                    <span class="px-3 py-1 rounded-lg bg-white text-xs font-bold text-zinc-900 shadow-sm flex items-center gap-1.5">
-                      Pending <span id="sup-pending-badge" class="px-1.5 py-0 rounded-full bg-indigo-600 text-white text-[10px]">2</span>
-                    </span>
-                    <span class="px-3 py-1 rounded-lg text-xs font-semibold text-zinc-500 flex items-center gap-1.5">
-                      Approved <span id="sup-approved-badge" class="px-1.5 py-0 rounded-full bg-white text-zinc-900 text-[10px]">3</span>
-                    </span>
-                    <span class="px-3 py-1 rounded-lg text-xs font-semibold text-zinc-500 flex items-center gap-1.5">
-                      Revisions Requested <span class="px-1.5 py-0 rounded-full bg-amber-500/20 text-amber-800 text-[10px]">1</span>
-                    </span>
+                  <!-- 4 Minimalist KPI Cards -->
+                  <div class="grid grid-cols-4 gap-3">
+                    <div id="stu-card-days" class="bg-white border border-zinc-200 rounded-xl p-3 transition-all">
+                      <span class="text-[11px] text-zinc-500">Attendance</span>
+                      <div class="mt-1.5 flex items-baseline gap-1">
+                        <span id="stu-days-val" class="text-xl font-bold text-zinc-900">42</span>
+                        <span class="text-[11px] text-zinc-500">/ 60 days</span>
+                      </div>
+                      <div class="mt-2 w-full bg-zinc-100 h-1 rounded-full overflow-hidden">
+                        <div id="stu-days-bar" class="bg-indigo-600 h-full transition-all duration-700" style="width: 70%"></div>
+                      </div>
+                    </div>
+
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Logged Hours</span>
+                      <div class="mt-1.5 flex items-baseline gap-1">
+                        <span id="stu-hours-val" class="text-xl font-bold text-zinc-900">336.0</span>
+                        <span class="text-[11px] text-zinc-500">hrs</span>
+                      </div>
+                      <p class="mt-1.5 text-[10px] text-zinc-500">40 hrs this week</p>
+                    </div>
+
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Logbook Entries</span>
+                      <div class="mt-1.5 flex items-baseline gap-1">
+                        <span id="stu-logs-count" class="text-xl font-bold text-zinc-900">4</span>
+                        <span class="text-[11px] text-zinc-500">logged</span>
+                      </div>
+                      <p id="stu-queue-pill" class="mt-1.5 text-[10px] text-amber-700 font-medium">1 draft ready</p>
+                    </div>
+
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Phase 2 Progress</span>
+                      <div class="mt-1.5 flex items-baseline gap-1">
+                        <span id="stu-ms-pct" class="text-xl font-bold text-zinc-900">67%</span>
+                      </div>
+                      <p class="mt-1.5 text-[10px] text-zinc-500">Core Engineering</p>
+                    </div>
                   </div>
 
-                  <div class="flex items-center gap-2 text-xs">
-                    <span class="text-zinc-500 font-medium">Assigned Mentees:</span>
-                    <span class="px-3 py-1 rounded-lg bg-white border border-zinc-200 font-semibold text-zinc-900">All Assigned Mentees (Alice &amp; Kevin) ▾</span>
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-12 gap-3.5 flex-1" style="transform-style: preserve-3d;">
-                  <div id="sup-card-review" class="col-span-8 bg-white border border-zinc-200 rounded-2xl p-4 z-layer-pop flex flex-col justify-between">
-                    <div>
-                      <div class="flex items-start justify-between gap-2 border-b border-zinc-200 pb-2.5">
+                  <!-- Bottom Split: Logbook Editor + Shift & Milestones -->
+                  <div class="grid grid-cols-12 gap-3.5 flex-1 min-h-0">
+                    <div id="stu-card-logbook" class="col-span-7 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between transition-all">
+                      <div class="flex items-center justify-between border-b border-zinc-200 pb-2.5">
                         <div>
                           <div class="flex items-center gap-2">
-                            <h3 class="text-sm font-extrabold text-zinc-900">Vulnerability assessment on customer portal API</h3>
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-200 text-indigo-700 bg-indigo-50">Kevin Kiprono</span>
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/30 text-emerald-700 bg-emerald-50">+ Alice Wanjiku</span>
+                            <span class="text-xs font-semibold text-zinc-900">Today's Logbook Entry</span>
+                            <span id="stu-log-status-badge" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">Draft</span>
                           </div>
-                          <p class="text-[11px] text-zinc-500 mt-0.5">Logged Date: 2026-09-24 • Hours: 08:30 - 17:00 (8.0 hrs)</p>
+                          <p class="text-[10px] text-zinc-500 mt-0.5">Sept 24, 2026 · TechCorp Product Engineering</p>
                         </div>
-                        <span id="sup-sub-status" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-300">
-                          Submitted
+                        <button id="stu-btn-ai" onclick="triggerStudentAiPolish()" type="button" class="px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-[11px] font-semibold hover:bg-indigo-100 transition">
+                          <span id="stu-ai-label">Refine Summary</span>
+                        </button>
+                      </div>
+
+                      <div class="my-2.5 space-y-2">
+                        <div class="text-xs font-semibold text-zinc-900">Onboarding Flow UI &amp; REST API Validation</div>
+                        <div class="bg-zinc-50 p-3 rounded-lg border border-zinc-200 min-h-[78px] text-[11px] text-zinc-700 leading-relaxed">
+                          <span id="stu-log-desc">Working on the onboarding wizard UI components for new user registration using React 19 and Zod schema validation.</span>
+                          <span id="stu-cursor" class="inline-block w-1 h-3 bg-indigo-600 align-middle ml-0.5 animate-pulse"></span>
+                        </div>
+                      </div>
+
+                      <div class="flex items-center justify-between pt-2 border-t border-zinc-200">
+                        <div id="stu-skill-tags" class="flex flex-wrap gap-1">
+                          <span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700">React 19</span>
+                          <span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700">Tailwind CSS</span>
+                          <span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700">TypeScript</span>
+                        </div>
+                        <button id="stu-btn-submit" onclick="triggerStudentSubmit()" type="button" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-[11px] transition">
+                          <span id="stu-submit-label">Submit for Review</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div id="stu-card-milestone" class="col-span-5 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between transition-all">
+                      <div>
+                        <div class="flex items-center justify-between border-b border-zinc-200 pb-2.5">
+                          <span class="text-xs font-semibold text-zinc-900">Shift &amp; Milestones</span>
+                          <span id="stu-shift-pill" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">On Site</span>
+                        </div>
+
+                        <div class="mt-3 space-y-2 text-[11px]">
+                          <div class="flex items-center gap-2.5 p-2 rounded-lg bg-zinc-50 border border-zinc-200">
+                            <span class="size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0">✓</span>
+                            <span class="line-through text-zinc-500">Build Radix dialog &amp; tabs in review queue</span>
+                          </div>
+                          <div class="flex items-center gap-2.5 p-2 rounded-lg bg-zinc-50 border border-zinc-200">
+                            <span class="size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0">✓</span>
+                            <span class="line-through text-zinc-500">Responsive KPI dashboard with Recharts</span>
+                          </div>
+                          <div id="stu-ms-task3" class="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-zinc-200 transition-all">
+                            <span id="stu-ms-check3" class="size-4 rounded-full border border-zinc-300 flex items-center justify-center text-[9px] font-bold shrink-0"></span>
+                            <span id="stu-ms-text3" class="font-medium text-zinc-900">Complete accessibility &amp; keyboard audit</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="pt-2.5 border-t border-zinc-200 flex items-center justify-between text-[10px] text-zinc-500">
+                        <span>Host Mentor: <strong class="text-zinc-900">James Otieno</strong></span>
+                        <span>TechCorp Westlands</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ROLE 1: FIELD SUPERVISOR VIEW (James Otieno) -->
+                <div id="role-view-1" class="hidden view-enter flex-1 flex flex-col justify-between gap-3.5">
+                  <div class="flex items-center justify-between gap-4">
+                    <div>
+                      <h2 class="text-lg font-bold tracking-tight text-zinc-900">Review Queue</h2>
+                      <p class="text-[11px] text-zinc-500 mt-0.5">TechCorp Kenya Ltd · Product Engineering · 2 assigned interns</p>
+                    </div>
+                    <div class="inline-flex items-center gap-1 bg-zinc-100 p-1 rounded-lg border border-zinc-200 text-[11px]">
+                      <span class="px-2.5 py-1 rounded-md bg-white font-semibold text-zinc-900 shadow-2xs">
+                        Pending <span id="sup-pending-badge" class="ml-1 text-indigo-600">2</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-md font-medium text-zinc-500">
+                        Approved <span id="sup-approved-badge" class="ml-1">3</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-md font-medium text-zinc-500">Revisions 1</span>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-12 gap-3.5 flex-1 min-h-0">
+                    <div id="sup-card-review" class="col-span-8 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between transition-all">
+                      <div>
+                        <div class="flex items-start justify-between gap-2 border-b border-zinc-200 pb-3">
+                          <div>
+                            <div class="flex items-center gap-2">
+                              <h3 class="text-sm font-semibold text-zinc-900">Vulnerability assessment on customer portal API</h3>
+                              <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700">Kevin Kiprono</span>
+                            </div>
+                            <p class="text-[10px] text-zinc-500 mt-0.5">Sept 24, 2026 · 08:30 – 17:00 (8.0 hrs)</p>
+                          </div>
+                          <span id="sup-sub-status" class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0">
+                            Pending Review
+                          </span>
+                        </div>
+
+                        <p class="text-xs text-zinc-600 mt-3 leading-relaxed">
+                          Conducted automated and manual security testing using OWASP ZAP and Postman. Identified 2 CORS misconfigurations and drafted remediation notes alongside PostgreSQL schema indexing.
+                        </p>
+
+                        <div class="flex flex-wrap gap-1.5 mt-2.5">
+                          <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-zinc-100 text-zinc-700">OWASP ZAP</span>
+                          <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-zinc-100 text-zinc-700">Postman</span>
+                          <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-zinc-100 text-zinc-700">PostgreSQL</span>
+                        </div>
+
+                        <div class="mt-3.5 space-y-1.5">
+                          <label class="text-[11px] font-semibold text-zinc-900">Mentor Feedback Note</label>
+                          <div class="bg-zinc-50 border border-zinc-200 rounded-lg p-2.5 text-[11px] text-zinc-700 min-h-[52px]">
+                            <span id="sup-feedback-text">Verified CORS remediation and PostgreSQL index benchmarks on staging. Clear documentation.</span>
+                            <span class="inline-block w-1 h-3 bg-indigo-600 align-middle ml-0.5 animate-pulse"></span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="flex items-center justify-between pt-3 border-t border-zinc-200">
+                        <span class="text-[10px] text-zinc-500">Reviewer: James Otieno</span>
+                        <div class="flex items-center gap-2">
+                          <button type="button" class="px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 font-semibold text-[11px] hover:bg-zinc-50 transition">
+                            Request Revision
+                          </button>
+                          <button id="sup-btn-approve" onclick="triggerSupervisorApprove()" type="button" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px] transition">
+                            <span id="sup-approve-label">Sign Off &amp; Approve</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-span-4 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between">
+                      <div class="space-y-3">
+                        <div class="text-xs font-semibold text-zinc-900 border-b border-zinc-200 pb-2.5">Assigned Interns</div>
+                        <div class="p-3 rounded-lg bg-zinc-50 border border-zinc-200 space-y-1.5">
+                          <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-zinc-900">Alice Wanjiku</span>
+                            <span class="text-[10px] font-mono text-emerald-700">42/60d</span>
+                          </div>
+                          <p class="text-[10px] text-zinc-500">Software Engineering · On Track</p>
+                          <div class="w-full bg-zinc-200 h-1 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full" style="width: 70%"></div></div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-zinc-50 border border-zinc-200 space-y-1.5">
+                          <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-zinc-900">Kevin Kiprono</span>
+                            <span class="text-[10px] font-mono text-amber-700">18/60d</span>
+                          </div>
+                          <p class="text-[10px] text-zinc-500">Cybersecurity · In Progress</p>
+                          <div class="w-full bg-zinc-200 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-full" style="width: 30%"></div></div>
+                        </div>
+                      </div>
+                      <p class="text-[10px] text-zinc-500 pt-2.5 border-t border-zinc-200">
+                        Signed entries sync automatically to the student's academic assessor.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ROLE 2: FACULTY ASSESSOR (Dr. Joyce Chelangat) -->
+                <div id="role-view-2" class="hidden view-enter flex-1 flex flex-col justify-between gap-3.5">
+                  <div class="flex items-center justify-between gap-4">
+                    <div>
+                      <h2 class="text-lg font-bold tracking-tight text-zinc-900">Performance Evaluations</h2>
+                      <p class="text-[11px] text-zinc-500 mt-0.5">University of Nairobi · Software Engineering · Mid-Term &amp; Final Rubrics</p>
+                    </div>
+                    <button id="uni-btn-eval" onclick="triggerUniEvaluation()" type="button" class="px-3 py-1.5 rounded-lg bg-zinc-900 text-white font-semibold text-[11px] hover:bg-zinc-800 transition shrink-0">
+                      New Evaluation
+                    </button>
+                  </div>
+
+                  <div class="grid grid-cols-4 gap-3">
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Evaluations</span>
+                      <div id="uni-eval-count" class="text-xl font-bold text-zinc-900 mt-1">1</div>
+                      <p class="text-[10px] text-zinc-500 mt-1">Signed on file</p>
+                    </div>
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Average Score</span>
+                      <div id="uni-eval-avg" class="text-xl font-bold text-zinc-900 mt-1">4.8 / 5.0</div>
+                      <p class="text-[10px] text-emerald-600 font-medium mt-1">Distinction tier</p>
+                    </div>
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Offer Endorsements</span>
+                      <div id="uni-eval-offers" class="text-xl font-bold text-zinc-900 mt-1">1</div>
+                      <p class="text-[10px] text-zinc-500 mt-1">Recommended</p>
+                    </div>
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Defense Ready</span>
+                      <div id="uni-eval-ready" class="text-xl font-bold text-zinc-900 mt-1">3 of 4</div>
+                      <p class="text-[10px] text-zinc-500 mt-1">Clearance unlocked</p>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-12 gap-3.5 flex-1 min-h-0">
+                    <div id="uni-card-rubric" class="col-span-7 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between transition-all">
+                      <div class="flex items-center justify-between border-b border-zinc-200 pb-2.5">
+                        <div>
+                          <span class="text-xs font-semibold text-zinc-900">Final Assessment Rubric</span>
+                          <p class="text-[10px] text-zinc-500 mt-0.5">Alice Wanjiku (CS/2021/0042) · TechCorp Kenya</p>
+                        </div>
+                        <span id="uni-grade-pill" class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold">
+                          Grade A · 4.8/5.0
                         </span>
                       </div>
 
-                      <p class="text-xs text-zinc-900 mt-2.5 leading-relaxed">
-                        Conducted automated and manual vulnerability assessment using OWASP ZAP and Postman. Identified 2 CORS misconfigurations and drafted remediation notes alongside PostgreSQL analytics schema indexing.
-                      </p>
-
-                      <div class="flex flex-wrap gap-1.5 mt-2">
-                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-zinc-100 text-zinc-900">OWASP ZAP</span>
-                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-zinc-100 text-zinc-900">Postman</span>
-                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-zinc-100 text-zinc-900">Burp Suite</span>
-                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-zinc-100 text-zinc-900">PostgreSQL</span>
-                      </div>
-
-                      <div class="mt-3 space-y-1">
-                        <label class="text-[11px] font-bold text-zinc-900 flex items-center gap-1">
-                          <span>💬</span> Mentor Guidance / Engineering Sign-Off Note
-                        </label>
-                        <div class="bg-zinc-50 border border-zinc-200 rounded-xl p-2.5 text-xs text-zinc-900 min-h-[48px]">
-                          <span id="sup-feedback-text">Verified CORS remediation and PostgreSQL index benchmarks on staging. Great analytical rigor!</span>
-                          <span class="inline-block w-1.5 h-3.5 bg-indigo-600 align-middle ml-0.5 animate-pulse"></span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="flex items-center justify-between pt-3 border-t border-zinc-200">
-                      <div class="flex items-center gap-2">
-                        <button id="sup-btn-approve" onclick="triggerSupervisorApprove()" type="button" class="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
-                          <span>✓</span>
-                          <span id="sup-approve-label">Sign Off &amp; Approve</span>
-                        </button>
-                        <button type="button" class="px-3 py-1.5 rounded-xl border border-amber-400 bg-amber-50 text-amber-900 font-semibold text-xs hover:bg-amber-100 transition flex items-center gap-1">
-                          <span>↺</span>
-                          <span>Request Revision</span>
-                        </button>
-                      </div>
-                      <span class="text-[10px] font-mono text-zinc-500">Reviewer: James Otieno (TechCorp)</span>
-                    </div>
-                  </div>
-
-                  <div class="col-span-4 bg-white border border-zinc-200 rounded-2xl p-4 z-layer-mid flex flex-col justify-between">
-                    <div class="space-y-2.5">
-                      <div class="text-xs font-extrabold text-zinc-900 border-b border-zinc-200 pb-2">
-                        Assigned TechCorp Mentees (2)
-                      </div>
-                      <div class="p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 space-y-1">
-                        <div class="flex items-center justify-between">
-                          <span class="text-xs font-bold text-zinc-900">Alice Wanjiku</span>
-                          <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">42/60d</span>
-                        </div>
-                        <p class="text-[10px] text-zinc-500">CS/2021/0042 • Software Eng. Intern</p>
-                      </div>
-                      <div class="p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 space-y-1">
-                        <div class="flex items-center justify-between">
-                          <span class="text-xs font-bold text-zinc-900">Kevin Kiprono</span>
-                          <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">18/60d</span>
-                        </div>
-                        <p class="text-[10px] text-zinc-500">CS/2021/0104 • Cybersecurity Intern</p>
-                      </div>
-                    </div>
-
-                    <div class="p-2.5 rounded-xl bg-amber-50/70 border border-amber-200 text-[10px] font-mono space-y-1">
-                      <div class="font-bold text-amber-900">TIER 2 HOST ORG PERMISSIONS:</div>
-                      <div class="text-emerald-600 font-bold">✓ logs:approve (Sign off logs)</div>
-                      <div class="text-emerald-600 font-bold">✓ attendance:audit (Verify hours)</div>
-                      <div class="text-rose-500">🔒 supervisors:assign (Uni Admin only)</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- ROLE 2: UNIVERSITY ACADEMIC SUPERVISOR (Dr. Joyce Chelangat — Tier 3) -->
-              <div id="role-view-2" class="hidden flex-1 flex flex-col justify-between space-y-3.5" style="transform-style: preserve-3d;">
-                <div class="z-layer-mid it-hero-gradient rounded-2xl p-4 sm:p-5 text-white shadow-lg flex items-center justify-between gap-4">
-                  <div>
-                    <div class="flex items-center gap-2">
-                      <span class="px-2.5 py-0.5 rounded-full bg-white/15 border border-white/25 text-[11px] font-semibold">
-                        🏛️ Academic &amp; Field Rubrics
-                      </span>
-                      <span class="text-[11px] text-white/75">University of Nairobi • Dept. of Software Engineering</span>
-                    </div>
-                    <h2 class="mt-1.5 text-xl font-extrabold tracking-tight">Performance Evaluations &amp; Grading</h2>
-                    <p class="text-xs text-white/85 mt-0.5">
-                      Conduct verified mid-term reviews, certify milestone phases, and record final academic exit assessments.
-                    </p>
-                  </div>
-                  <button id="uni-btn-eval" onclick="triggerUniEvaluation()" type="button" class="it-hero-btn px-3.5 py-2 rounded-xl bg-white text-indigo-700 font-bold text-xs shadow-sm hover:bg-zinc-100 transition shrink-0">
-                    🏅 Conduct New Evaluation
-                  </button>
-                </div>
-
-                <div class="grid grid-cols-4 gap-3 z-layer-mid">
-                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
-                    <div class="text-[10px] font-bold uppercase text-zinc-500">Total Evaluations</div>
-                    <div id="uni-eval-count" class="text-2xl font-extrabold text-zinc-900 mt-1">1</div>
-                    <div class="text-[10px] text-zinc-500 mt-0.5">Signed assessments on file</div>
-                  </div>
-                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
-                    <div class="text-[10px] font-bold uppercase text-zinc-500">Average Overall Score</div>
-                    <div id="uni-eval-avg" class="text-2xl font-extrabold text-indigo-600 mt-1">4.8 / 5.0</div>
-                    <div class="text-[10px] text-emerald-600 font-semibold mt-0.5">Distinction-tier performance</div>
-                  </div>
-                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
-                    <div class="text-[10px] font-bold uppercase text-zinc-500">Job Offer Endorsements</div>
-                    <div id="uni-eval-offers" class="text-2xl font-extrabold text-zinc-900 mt-1">1</div>
-                    <div class="text-[10px] text-zinc-500 mt-0.5">Full-time conversion recommended</div>
-                  </div>
-                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
-                    <div class="text-[10px] font-bold uppercase text-zinc-500">Defense Ready</div>
-                    <div id="uni-eval-ready" class="text-2xl font-extrabold text-indigo-600 mt-1">3 of 4</div>
-                    <div class="text-[10px] text-zinc-500 mt-0.5">Graduation clearance unlocked</div>
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-12 gap-3.5 flex-1" style="transform-style: preserve-3d;">
-                  <div id="uni-card-rubric" class="col-span-7 bg-white border border-zinc-200 rounded-2xl p-4 z-layer-pop flex flex-col justify-between">
-                    <div class="flex items-center justify-between border-b border-zinc-200 pb-2">
-                      <div>
-                        <span class="text-xs font-extrabold text-zinc-900">Academic Assessor Rubric — Final Assessment</span>
-                        <p class="text-[11px] text-zinc-500">Candidate: <strong>Alice Wanjiku (CS/2021/0042)</strong> • TechCorp Kenya Ltd</p>
-                      </div>
-                      <span id="uni-grade-pill" class="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 text-xs font-extrabold">
-                        A (Distinction) • 4.8/5.0
-                      </span>
-                    </div>
-
-                    <div class="space-y-2.5 my-2">
-                      <div>
-                        <div class="flex justify-between text-[11px] font-semibold text-zinc-900 mb-1">
-                          <span>1. Technical Engineering &amp; Architecture</span>
-                          <span class="font-mono font-bold text-indigo-600">5.0 / 5.0</span>
-                        </div>
-                        <div class="w-full h-2 rounded-full bg-zinc-100 overflow-hidden">
-                          <div id="uni-bar-1" class="h-full bg-indigo-600 transition-all duration-700" style="width: 100%"></div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <div class="flex justify-between text-[11px] font-semibold text-zinc-900 mb-1">
-                          <span>2. Workplace Punctuality &amp; Attendance Audit</span>
-                          <span class="font-mono font-bold text-indigo-600">5.0 / 5.0</span>
-                        </div>
-                        <div class="w-full h-2 rounded-full bg-zinc-100 overflow-hidden">
-                          <div id="uni-bar-2" class="h-full bg-indigo-600 transition-all duration-700" style="width: 100%"></div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <div class="flex justify-between text-[11px] font-semibold text-zinc-900 mb-1">
-                          <span>3. Technical Documentation &amp; Logbook Rigor</span>
-                          <span class="font-mono font-bold text-emerald-600">4.5 / 5.0</span>
-                        </div>
-                        <div class="w-full h-2 rounded-full bg-zinc-100 overflow-hidden">
-                          <div id="uni-bar-3" class="h-full bg-emerald-500 transition-all duration-700" style="width: 90%"></div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <div class="flex justify-between text-[11px] font-semibold text-zinc-900 mb-1">
-                          <span>4. Oral Defense &amp; Problem Solving</span>
-                          <span class="font-mono font-bold text-indigo-600">5.0 / 5.0</span>
-                        </div>
-                        <div class="w-full h-2 rounded-full bg-zinc-100 overflow-hidden">
-                          <div id="uni-bar-4" class="h-full bg-indigo-600 transition-all duration-700" style="width: 100%"></div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="flex items-center justify-between pt-2 border-t border-zinc-200">
-                      <span class="text-[11px] font-semibold text-zinc-500">Recommendation: <strong class="text-emerald-600">Full Time Offer</strong></span>
-                      <button id="uni-btn-save-eval" onclick="triggerUniEvaluation()" type="button" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-sm hover:bg-indigo-700 transition">
-                        <span id="uni-save-eval-label">✓ Certify &amp; Record Grade</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div class="col-span-5 bg-white border border-zinc-200 rounded-2xl p-4 z-layer-mid flex flex-col justify-between">
-                    <div class="space-y-2">
-                      <div class="text-xs font-extrabold text-zinc-900 border-b border-zinc-200 pb-2">
-                        Faculty Milestone Certification
-                      </div>
-                      <div class="p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs space-y-1">
-                        <div class="flex items-center justify-between">
-                          <span class="font-bold text-zinc-900">Phase 1: Orientation</span>
-                          <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Certified ✓</span>
-                        </div>
-                        <p class="text-[10px] text-zinc-500">Weeks 1–2 • Git, Docker, Architecture</p>
-                      </div>
-                      <div id="uni-ms-phase2" class="p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs space-y-1 transition-all">
-                        <div class="flex items-center justify-between">
-                          <span class="font-bold text-zinc-900">Phase 2: Core Modules</span>
-                          <span id="uni-ms-badge2" class="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800">Ready to Certify</span>
-                        </div>
-                        <p class="text-[10px] text-zinc-500">Weeks 3–6 • React 19, Tailwind v4, Radix UI</p>
-                      </div>
-                    </div>
-
-                    <div class="p-2.5 rounded-xl bg-indigo-50/80 border border-indigo-200 text-[10px] font-mono space-y-1">
-                      <div class="font-bold text-indigo-950">FACULTY ASSESSOR PERMISSIONS:</div>
-                      <div class="text-emerald-600 font-bold">✓ assessments:grade (Midterm/Final)</div>
-                      <div class="text-emerald-600 font-bold">✓ milestones:certify (Phase Sign-off)</div>
-                      <div class="text-rose-500">🔒 rbac:manage (Uni Admin / Dean only)</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- ROLE 3: UNIVERSITY ADMIN / DEAN (Dr. Peter Kamau — Tier 4) -->
-              <div id="role-view-3" class="hidden flex-1 flex flex-col justify-between space-y-3" style="transform-style: preserve-3d;">
-                <div id="admin-alert-banner" class="z-layer-mid rounded-xl border border-rose-300 bg-rose-50/95 px-4 py-2.5 flex items-center justify-between gap-3">
-                  <div class="flex items-center gap-2.5">
-                    <span class="text-base">⚠️</span>
-                    <div>
-                      <div class="text-xs font-extrabold text-rose-950">Pending Faculty Assessor Allocation &amp; Attendance Risk Alert</div>
-                      <p id="admin-alert-desc" class="text-[11px] text-rose-800">
-                        1 candidate flagged: <strong>Kevin Kiprono (CS/2021/0104)</strong> at TechCorp Kenya Ltd is missing an assigned University Academic Supervisor.
-                      </p>
-                    </div>
-                  </div>
-                  <button id="admin-btn-pair-now" onclick="triggerAdminPairSupervisor()" type="button" class="px-3 py-1.5 rounded-lg bg-rose-700 hover:bg-rose-800 text-white text-xs font-bold shrink-0 shadow-sm transition">
-                    Pair Kevin Kiprono Now →
-                  </button>
-                </div>
-
-                <div class="grid grid-cols-4 gap-3 z-layer-mid">
-                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
-                    <div class="text-[10px] font-bold uppercase text-zinc-500">Placed Cohort</div>
-                    <div class="text-2xl font-extrabold text-zinc-900 mt-1">4</div>
-                    <div class="text-[10px] text-zinc-500">TechCorp, Safaricom, KCB</div>
-                  </div>
-                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
-                    <div class="text-[10px] font-bold uppercase text-zinc-500">Dual-Supervised Rate</div>
-                    <div id="admin-dual-rate" class="text-2xl font-extrabold text-amber-600 mt-1">75%</div>
-                    <div id="admin-dual-sub" class="text-[10px] text-amber-700 font-semibold">3 of 4 fully paired</div>
-                  </div>
-                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
-                    <div class="text-[10px] font-bold uppercase text-zinc-500">Supervisor Roster</div>
-                    <div id="admin-sup-count" class="text-2xl font-extrabold text-zinc-900 mt-1">6</div>
-                    <div class="text-[10px] text-zinc-500">3 Host Org • 3 Faculty</div>
-                  </div>
-                  <div class="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
-                    <div class="text-[10px] font-bold uppercase text-zinc-500">RBAC Governance</div>
-                    <div class="text-2xl font-extrabold text-indigo-600 mt-1">Tier 4</div>
-                    <div class="text-[10px] text-emerald-600 font-semibold">13 System Permissions</div>
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-12 gap-3.5 flex-1" style="transform-style: preserve-3d;">
-                  <div id="admin-card-pairing" class="col-span-7 bg-white border border-zinc-200 rounded-2xl p-3.5 z-layer-pop flex flex-col justify-between">
-                    <div>
-                      <div class="flex items-center justify-between border-b border-zinc-200 pb-2">
+                      <div class="space-y-2.5 my-2">
                         <div>
-                          <h3 class="text-xs font-extrabold text-zinc-900">Candidate Dual-Supervisor Allocation Matrix</h3>
-                          <p class="text-[10px] text-zinc-500">Pairs Host Org Field Supervisor + University Assessor &amp; dispatches student-bound login</p>
+                          <div class="flex justify-between text-[11px] text-zinc-700 mb-1">
+                            <span>Technical Engineering &amp; Architecture</span>
+                            <span class="font-mono font-semibold text-zinc-900">5.0</span>
+                          </div>
+                          <div class="w-full h-1.5 rounded-full bg-zinc-100 overflow-hidden">
+                            <div id="uni-bar-1" class="h-full bg-indigo-600 transition-all duration-700" style="width: 100%"></div>
+                          </div>
                         </div>
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700">Dual Mentorship</span>
+
+                        <div>
+                          <div class="flex justify-between text-[11px] text-zinc-700 mb-1">
+                            <span>Attendance &amp; Workplace Ethics</span>
+                            <span class="font-mono font-semibold text-zinc-900">5.0</span>
+                          </div>
+                          <div class="w-full h-1.5 rounded-full bg-zinc-100 overflow-hidden">
+                            <div id="uni-bar-2" class="h-full bg-indigo-600 transition-all duration-700" style="width: 100%"></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div class="flex justify-between text-[11px] text-zinc-700 mb-1">
+                            <span>Logbook Rigor &amp; Documentation</span>
+                            <span class="font-mono font-semibold text-zinc-900">4.5</span>
+                          </div>
+                          <div class="w-full h-1.5 rounded-full bg-zinc-100 overflow-hidden">
+                            <div id="uni-bar-3" class="h-full bg-emerald-500 transition-all duration-700" style="width: 90%"></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div class="flex justify-between text-[11px] text-zinc-700 mb-1">
+                            <span>Oral Defense &amp; Problem Solving</span>
+                            <span class="font-mono font-semibold text-zinc-900">5.0</span>
+                          </div>
+                          <div class="w-full h-1.5 rounded-full bg-zinc-100 overflow-hidden">
+                            <div id="uni-bar-4" class="h-full bg-indigo-600 transition-all duration-700" style="width: 100%"></div>
+                          </div>
+                        </div>
                       </div>
 
-                      <div class="mt-2 divide-y divide-zinc-200 text-[11px]">
-                        <div class="py-1.5 flex items-center justify-between">
-                          <div>
-                            <div class="font-bold text-zinc-900">Alice Wanjiku <span class="font-mono text-[10px] text-zinc-500">CS/2021/0042</span></div>
-                            <div class="text-[10px] text-zinc-500">TechCorp Kenya Ltd</div>
-                          </div>
-                          <div class="text-[10px]">
-                            <div>🏢 James Otieno <span class="text-emerald-600 font-mono">[🔒 Bound]</span></div>
-                            <div>🏛️ Dr. Peter Kamau</div>
-                          </div>
-                          <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">Dual-Supervised</span>
-                        </div>
-
-                        <div class="py-1.5 flex items-center justify-between">
-                          <div>
-                            <div class="font-bold text-zinc-900">Brian Mwangi <span class="font-mono text-[10px] text-zinc-500">CS/2021/0088</span></div>
-                            <div class="text-[10px] text-zinc-500">Safaricom PLC</div>
-                          </div>
-                          <div class="text-[10px]">
-                            <div>🏢 Grace Muthoni <span class="text-emerald-600 font-mono">[🔒 Bound]</span></div>
-                            <div>🏛️ Dr. Joyce Chelangat</div>
-                          </div>
-                          <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">Dual-Supervised</span>
-                        </div>
-
-                        <div id="admin-row-kevin" class="py-2 px-2 rounded-xl bg-amber-50/70 border border-amber-300 flex items-center justify-between transition-all">
-                          <div>
-                            <div class="font-bold text-zinc-900">Kevin Kiprono <span class="font-mono text-[10px] text-zinc-500">CS/2021/0104</span></div>
-                            <div class="text-[10px] text-zinc-500">TechCorp Kenya Ltd (Cybersecurity)</div>
-                          </div>
-                          <div class="text-[10px]">
-                            <div>🏢 James Otieno <span class="text-emerald-600 font-mono">[🔒 Bound]</span></div>
-                            <div id="admin-kevin-uni-sup" class="text-rose-500 font-bold">⚠️ Missing Academic Assessor</div>
-                          </div>
-                          <span id="admin-kevin-status" class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-bold text-[10px]">Needs Allocation</span>
-                        </div>
+                      <div class="flex items-center justify-between pt-2.5 border-t border-zinc-200">
+                        <span class="text-[11px] text-zinc-500">Endorsement: <strong class="text-emerald-700">Full-Time Offer</strong></span>
+                        <button id="uni-btn-save-eval" onclick="triggerUniEvaluation()" type="button" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white font-semibold text-[11px] hover:bg-indigo-700 transition">
+                          <span id="uni-save-eval-label">Certify &amp; Record Grade</span>
+                        </button>
                       </div>
                     </div>
 
-                    <div class="flex items-center justify-between pt-2 border-t border-zinc-200">
-                      <span class="text-[10px] font-mono text-zinc-500">🔑 Pre-provisioned logins dispatched automatically</span>
-                      <button id="admin-btn-assign" onclick="triggerAdminPairSupervisor()" type="button" class="px-3 py-1 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-sm hover:bg-indigo-700 transition">
-                        <span id="admin-assign-label">+ Pair Mentors &amp; Dispatch Login</span>
+                    <div class="col-span-5 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between">
+                      <div class="space-y-2.5">
+                        <div class="text-xs font-semibold text-zinc-900 border-b border-zinc-200 pb-2.5">Milestone Certification</div>
+                        <div class="p-3 rounded-lg bg-zinc-50 border border-zinc-200 text-xs space-y-1">
+                          <div class="flex items-center justify-between">
+                            <span class="font-semibold text-zinc-900">Phase 1: Orientation</span>
+                            <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">Certified</span>
+                          </div>
+                          <p class="text-[10px] text-zinc-500">Weeks 1–2 · Git, Docker, Architecture</p>
+                        </div>
+                        <div id="uni-ms-phase2" class="p-3 rounded-lg bg-zinc-50 border border-zinc-200 text-xs space-y-1 transition-all">
+                          <div class="flex items-center justify-between">
+                            <span class="font-semibold text-zinc-900">Phase 2: Core Modules</span>
+                            <span id="uni-ms-badge2" class="text-[10px] font-medium px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">Ready</span>
+                          </div>
+                          <p class="text-[10px] text-zinc-500">Weeks 3–6 · React 19, Tailwind, APIs</p>
+                        </div>
+                      </div>
+                      <p class="text-[10px] text-zinc-500 pt-2.5 border-t border-zinc-200">
+                        Certified milestones unlock defense scheduling for the University Admin.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ROLE 3: UNIVERSITY ADMIN (Dr. Peter Kamau) -->
+                <div id="role-view-3" class="hidden view-enter flex-1 flex flex-col justify-between gap-3.5">
+                  <div class="flex items-center justify-between gap-4">
+                    <div>
+                      <h2 class="text-lg font-bold tracking-tight text-zinc-900">Good morning, Dr. Peter Kamau</h2>
+                      <p class="text-[11px] text-zinc-500 mt-0.5">University of Nairobi · School of Computing &amp; Informatics</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <button id="admin-btn-assign" onclick="triggerAdminPairSupervisor()" type="button" class="px-3 py-1.5 rounded-lg bg-zinc-900 text-white font-semibold text-[11px] hover:bg-zinc-800 transition">
+                        <span id="admin-assign-label">Assign Assessor</span>
+                      </button>
+                      <button id="admin-btn-export" onclick="triggerAdminExportDossier()" type="button" class="px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-zinc-900 font-semibold text-[11px] hover:bg-zinc-50 transition">
+                        <span id="admin-export-label">Export Dossier</span>
                       </button>
                     </div>
                   </div>
 
-                  <div id="admin-card-rbac" class="col-span-5 bg-white border border-zinc-200 rounded-2xl p-3.5 z-layer-mid flex flex-col justify-between">
-                    <div>
-                      <div class="flex items-center justify-between border-b border-zinc-200 pb-2">
-                        <span class="text-xs font-extrabold text-zinc-900">RBAC Control Matrix (`rbac:manage`)</span>
-                        <span class="text-[10px] font-mono font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">DEAN ONLY</span>
+                  <div class="grid grid-cols-4 gap-3">
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Enrolled Cohort</span>
+                      <div class="text-xl font-bold text-zinc-900 mt-1">4</div>
+                      <p class="text-[10px] text-zinc-500 mt-1">Active placements</p>
+                    </div>
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Dual-Supervision</span>
+                      <div id="admin-dual-rate" class="text-xl font-bold text-amber-600 mt-1">75%</div>
+                      <p id="admin-dual-sub" class="text-[10px] text-amber-700 font-medium mt-1">3 of 4 paired</p>
+                    </div>
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Supervisor Roster</span>
+                      <div id="admin-sup-count" class="text-xl font-bold text-zinc-900 mt-1">6</div>
+                      <p class="text-[10px] text-zinc-500 mt-1">3 host · 3 faculty</p>
+                    </div>
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Accreditation</span>
+                      <div id="admin-export-pill" class="text-xl font-bold text-zinc-900 mt-1">Ready</div>
+                      <p class="text-[10px] text-zinc-500 mt-1">Senate PDF format</p>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-12 gap-3.5 flex-1 min-h-0">
+                    <div id="admin-card-pairing" class="col-span-8 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between transition-all">
+                      <div>
+                        <div class="flex items-center justify-between border-b border-zinc-200 pb-2.5">
+                          <span class="text-xs font-semibold text-zinc-900">Placement &amp; Dual-Supervisor Roster</span>
+                          <span class="text-[10px] text-zinc-500">Host Mentor + Faculty Assessor</span>
+                        </div>
+
+                        <div class="mt-2 divide-y divide-zinc-200 text-[11px]">
+                          <div class="py-2 flex items-center justify-between">
+                            <div>
+                              <div class="font-semibold text-zinc-900">Alice Wanjiku</div>
+                              <div class="text-[10px] text-zinc-500">TechCorp Kenya · 42/60d</div>
+                            </div>
+                            <div class="text-[10px] text-zinc-600">James Otieno / Dr. Peter Kamau</div>
+                            <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium text-[10px]">Dual-Supervised</span>
+                          </div>
+
+                          <div class="py-2 flex items-center justify-between">
+                            <div>
+                              <div class="font-semibold text-zinc-900">Brian Mwangi</div>
+                              <div class="text-[10px] text-zinc-500">Safaricom PLC · 39/60d</div>
+                            </div>
+                            <div class="text-[10px] text-zinc-600">Grace Muthoni / Dr. Joyce Chelangat</div>
+                            <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium text-[10px]">Dual-Supervised</span>
+                          </div>
+
+                          <div id="admin-row-kevin" class="py-2 px-2.5 mt-1 rounded-lg bg-amber-50/70 border border-amber-200 flex items-center justify-between transition-all">
+                            <div>
+                              <div class="font-semibold text-zinc-900">Kevin Kiprono</div>
+                              <div class="text-[10px] text-zinc-500">TechCorp Kenya · 18/60d</div>
+                            </div>
+                            <div id="admin-kevin-uni-sup" class="text-[10px] text-amber-800 font-semibold">Missing Faculty Assessor</div>
+                            <span id="admin-kevin-status" class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-medium text-[10px]">Needs Allocation</span>
+                          </div>
+                        </div>
                       </div>
 
-                      <div class="mt-2 space-y-1.5 text-[11px]">
-                        <div class="flex items-center justify-between p-1.5 rounded-lg bg-zinc-50 border border-zinc-200">
-                          <div>
-                            <div class="font-bold text-zinc-900">Administrative Log Override</div>
-                            <div class="text-[9px] font-mono text-zinc-500">logs:override • Arbitrate locked entries</div>
-                          </div>
-                          <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-bold">ENABLED</span>
-                        </div>
-
-                        <div class="flex items-center justify-between p-1.5 rounded-lg bg-zinc-50 border border-zinc-200">
-                          <div>
-                            <div class="font-bold text-zinc-900">Assign Dual Supervisors</div>
-                            <div class="text-[9px] font-mono text-zinc-500">supervisors:assign • Pair Host + Faculty</div>
-                          </div>
-                          <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-bold">ENABLED</span>
-                        </div>
-
-                        <div id="admin-rbac-row-export" class="flex items-center justify-between p-1.5 rounded-lg bg-zinc-50 border border-zinc-200 transition-all">
-                          <div>
-                            <div class="font-bold text-zinc-900">Accreditation Dossier Export</div>
-                            <div class="text-[9px] font-mono text-zinc-500">accreditation:export • Senate PDF</div>
-                          </div>
-                          <span id="admin-export-pill" class="px-2 py-0.5 rounded-full bg-indigo-600 text-white text-[9px] font-bold">READY</span>
-                        </div>
+                      <div class="pt-2.5 border-t border-zinc-200 flex items-center justify-between text-[10px] text-zinc-500">
+                        <span>Pre-provisioned supervisor credentials dispatch automatically on save.</span>
                       </div>
                     </div>
 
-                    <button id="admin-btn-export" onclick="triggerAdminExportDossier()" type="button" class="w-full py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-1.5">
-                      <span>📄</span>
-                      <span id="admin-export-label">Export Certified Graduation Dossier (PDF)</span>
-                    </button>
+                    <div id="admin-card-rbac" class="col-span-4 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between transition-all">
+                      <div>
+                        <div class="text-xs font-semibold text-zinc-900 border-b border-zinc-200 pb-2.5">Governance &amp; RBAC</div>
+                        <div class="mt-2.5 space-y-2 text-[11px]">
+                          <div class="flex items-center justify-between py-1">
+                            <span class="text-zinc-700">Log Override</span>
+                            <span class="text-[10px] font-medium text-emerald-700">Enabled</span>
+                          </div>
+                          <div class="flex items-center justify-between py-1 border-t border-zinc-100">
+                            <span class="text-zinc-700">Supervisor Pairing</span>
+                            <span class="text-[10px] font-medium text-emerald-700">Enabled</span>
+                          </div>
+                          <div class="flex items-center justify-between py-1 border-t border-zinc-100">
+                            <span class="text-zinc-700">Dossier Export</span>
+                            <span class="text-[10px] font-medium text-emerald-700">Enabled</span>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="text-[10px] text-zinc-500 pt-2.5 border-t border-zinc-200">
+                        All 13 institutional permissions enforced per role tier.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
+              </div>
             </section>
           </div>
         </div>
       </div>
     </main>
 
-    <!-- 4. MINIMAL CONTEXTUAL CAPTION BAR -->
-    <footer class="relative z-30 w-full max-w-[1160px] mx-auto pb-4 px-4 sm:px-6 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400">
-      <p id="s2-role-summary" class="truncate text-zinc-300">
-        <span class="font-semibold text-white">Student Intern</span> — Daily shift check-in, structured logbook drafting, and milestone tracking.
-      </p>
-      <span class="text-[11px] text-zinc-500 shrink-0">Drag stage to orbit · Scroll to switch roles</span>
+    <!-- 4. GUIDED WALKTHROUGH BAR -->
+    <footer class="relative z-30 w-full max-w-[1160px] mx-auto pb-4 px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span id="walkthrough-step-badge" class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/10 px-2.5 py-1 text-[10px] font-semibold text-emerald-300 shrink-0">
+          Step 1 of 4
+        </span>
+        <p id="s2-role-summary" class="truncate text-zinc-300 text-xs">
+          <span class="font-semibold text-white">Student</span> — Daily shift check-in, structured logbook drafting, and milestone tracking.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button
+          type="button"
+          onclick="prevWorkflow()"
+          class="inline-flex items-center justify-center size-7 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-zinc-300 hover:text-white transition"
+          aria-label="Previous walkthrough step"
+        >
+          &larr;
+        </button>
+        <button
+          type="button"
+          onclick="nextWorkflow()"
+          class="inline-flex items-center justify-center size-7 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-zinc-300 hover:text-white transition"
+          aria-label="Next walkthrough step"
+        >
+          &rarr;
+        </button>
+      </div>
     </footer>
   </div>
 
@@ -1937,17 +1820,16 @@
           key: 'student',
           tier: 'Tier 1',
           short: 'STUDENT',
-          windowTier: 'TIER 1 · STUDENT',
-          url: 'https://interntrack.uonbi.ac.ke/logbook',
+          windowTier: 'STUDENT WORKSPACE',
+          url: 'interntrack.app/logbook',
           name: 'Alice Wanjiku',
           roleLabel: 'Student',
           initials: 'AW',
-          scopeBadge: 'University of Nairobi · BSc. Computer Science (CS/2021/0042)',
-          hudIcon: '',
-          hudPerm: 'logs:create · attendance:record',
-          hudTitle: 'Daily shift check-in & logbook submission',
+          crumbCat: 'Logbook & Tracking',
+          scopeBadge: 'Digital Logbook',
+          notifCount: 1,
           summary: 'Daily shift check-in, structured logbook drafting, and milestone tracking.',
-          baseCamera: { rx: 7, ry: -9, rz: 0.4, scale: 0.96, tx: 0, ty: 0 },
+          baseCamera: { rx: 1.5, ry: -1.5, rz: 0, scale: 0.99, tx: 0, ty: 0 },
           navGroups: [
             { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
             { cat: 'LOGBOOK & TRACKING', items: [{ label: 'Digital Logbook', active: true }, { label: 'Attendance & Clock', active: false }, { label: 'Milestones Roadmap', active: false }] },
@@ -1959,21 +1841,19 @@
           key: 'field_supervisor',
           tier: 'Tier 2',
           short: 'HOST',
-          windowTier: 'TIER 2 · FIELD MENTOR',
-          url: 'https://interntrack.uonbi.ac.ke/review',
+          windowTier: 'FIELD MENTOR WORKSPACE',
+          url: 'interntrack.app/review',
           name: 'James Otieno',
-          roleLabel: 'Host Org Field Supervisor',
+          roleLabel: 'Host Org Mentor',
           initials: 'JO',
-          scopeBadge: 'TechCorp Kenya Ltd · Bound to assigned mentees',
-          hudIcon: '',
-          hudPerm: 'logs:approve · attendance:audit',
-          hudTitle: 'Reviewing daily logbook & mentor sign-off',
-          summary: 'Scoped to assigned company interns for daily log verification and revision feedback.',
-          baseCamera: { rx: 6, ry: 8, rz: -0.4, scale: 0.96, tx: 0, ty: 0 },
+          crumbCat: 'Supervisory Controls',
+          scopeBadge: 'Review Queue',
+          notifCount: 2,
+          summary: 'Scoped to assigned company interns for daily log verification and mentor feedback.',
+          baseCamera: { rx: 1.5, ry: 1.5, rz: 0, scale: 0.99, tx: 0, ty: 0 },
           navGroups: [
             { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
-            { cat: 'LOGBOOK & TRACKING', items: [{ label: 'Milestones Roadmap', active: false }] },
-            { cat: 'SUPERVISORY CONTROLS', items: [{ label: 'Review Queue', active: true }, { label: 'Assigned Interns', active: false }, { label: 'Performance Evaluations', active: false }] },
+            { cat: 'SUPERVISORY CONTROLS', items: [{ label: 'Review Queue', active: true }, { label: 'Assigned Interns', active: false }, { label: 'Evaluations', active: false }] },
             { cat: 'ACCOUNT', items: [{ label: 'My Profile', active: false }] }
           ]
         },
@@ -1982,21 +1862,19 @@
           key: 'uni_supervisor',
           tier: 'Tier 3',
           short: 'FACULTY',
-          windowTier: 'TIER 3 · FACULTY ASSESSOR',
-          url: 'https://interntrack.uonbi.ac.ke/evaluations',
+          windowTier: 'FACULTY ASSESSOR WORKSPACE',
+          url: 'interntrack.app/evaluations',
           name: 'Dr. Joyce Chelangat',
-          roleLabel: 'University Academic Assessor',
+          roleLabel: 'Faculty Assessor',
           initials: 'JC',
-          scopeBadge: 'University of Nairobi · Software Engineering Assessor',
-          hudIcon: '',
-          hudPerm: 'assessments:grade · milestones:certify',
-          hudTitle: 'Grading 5-point rubric & certifying milestones',
+          crumbCat: 'Supervisory Controls',
+          scopeBadge: 'Performance Evaluations',
+          notifCount: 1,
           summary: 'Certifies academic milestone phases and records official evaluation rubrics.',
-          baseCamera: { rx: 8, ry: -7, rz: 0.3, scale: 0.96, tx: 0, ty: 0 },
+          baseCamera: { rx: 1.5, ry: -1.5, rz: 0, scale: 0.99, tx: 0, ty: 0 },
           navGroups: [
             { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
-            { cat: 'LOGBOOK & TRACKING', items: [{ label: 'Milestones Roadmap', active: false }] },
-            { cat: 'SUPERVISORY CONTROLS', items: [{ label: 'Review Queue', active: false }, { label: 'Assigned Interns', active: false }, { label: 'Performance Evaluations', active: true }] },
+            { cat: 'SUPERVISORY CONTROLS', items: [{ label: 'Review Queue', active: false }, { label: 'Assigned Interns', active: false }, { label: 'Evaluations', active: true }] },
             { cat: 'ACCOUNT', items: [{ label: 'My Profile', active: false }] }
           ]
         },
@@ -2005,21 +1883,19 @@
           key: 'uni_admin',
           tier: 'Tier 4',
           short: 'UNIVERSITY',
-          windowTier: 'TIER 4 · UNIVERSITY ADMIN',
-          url: 'https://interntrack.uonbi.ac.ke/assignments',
+          windowTier: 'UNIVERSITY ADMIN WORKSPACE',
+          url: 'interntrack.app/assignments',
           name: 'Dr. Peter Kamau',
           roleLabel: 'University Admin',
           initials: 'DP',
-          scopeBadge: 'Dean of Computing · Pairing, Credentials & RBAC',
-          hudIcon: '',
-          hudPerm: 'supervisors:assign · rbac:manage',
-          hudTitle: 'Pairing dual supervisors & governing RBAC',
+          crumbCat: 'Institutional & RBAC',
+          scopeBadge: 'Supervisor Pairing',
+          notifCount: 2,
           summary: 'Provisions supervisor accounts, pairs dual mentors, governs RBAC, and exports dossiers.',
-          baseCamera: { rx: 6.5, ry: 6.5, rz: -0.3, scale: 0.96, tx: 0, ty: 0 },
+          baseCamera: { rx: 1.5, ry: 1.5, rz: 0, scale: 0.99, tx: 0, ty: 0 },
           navGroups: [
-            { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
-            { cat: 'SUPERVISORY CONTROLS', items: [{ label: 'Review Queue', active: false }, { label: 'Assigned Interns', active: false }, { label: 'Performance Evaluations', active: false }] },
-            { cat: 'INSTITUTIONAL & RBAC', items: [{ label: 'Supervisor Accounts', active: false }, { label: 'Supervisor Pairing', active: true }, { label: 'RBAC Control Matrix', active: false }, { label: 'Placement Accreditation', active: false }] }
+            { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }] },
+            { cat: 'INSTITUTIONAL & RBAC', items: [{ label: 'Supervisor Accounts', active: false }, { label: 'Supervisor Pairing', active: true }, { label: 'RBAC Matrix', active: false }, { label: 'Accreditation', active: false }] }
           ]
         }
       ];
@@ -2030,14 +1906,51 @@
       let stepStartTime = Date.now();
       const ROLE_DURATION = 9500;
       let scriptTimers = [];
+      let toastTimer = null;
 
       const rigEl = document.getElementById('camera-rig');
-      let camState = { rx: 7, ry: -9, rz: 0.4, scale: 0.96, tx: 0, ty: 0 };
+      let camState = { rx: 1.5, ry: -1.5, rz: 0, scale: 0.99, tx: 0, ty: 0 };
 
-      function setCameraTransform(rx, ry, rz, scale = 0.96, tx = 0, ty = 0) {
+      function showInAppToast(title, desc) {
+        const toastEl = document.getElementById('inapp-toast');
+        const tTitle = document.getElementById('inapp-toast-title');
+        const tDesc = document.getElementById('inapp-toast-desc');
+        if (!toastEl) return;
+        if (tTitle) tTitle.textContent = title;
+        if (tDesc) tDesc.textContent = desc || '';
+        toastEl.classList.remove('toast-hidden');
+        toastEl.classList.add('toast-visible');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toastEl.classList.remove('toast-visible');
+          toastEl.classList.add('toast-hidden');
+        }, 2400);
+      }
+
+      function hideInAppToast() {
+        const toastEl = document.getElementById('inapp-toast');
+        if (toastTimer) clearTimeout(toastTimer);
+        if (toastEl) {
+          toastEl.classList.remove('toast-visible');
+          toastEl.classList.add('toast-hidden');
+        }
+      }
+
+      function setNotifBadge(count) {
+        const el = document.getElementById('inapp-notif-count');
+        if (!el) return;
+        if (count <= 0) {
+          el.classList.add('hidden');
+        } else {
+          el.classList.remove('hidden');
+          el.textContent = String(count);
+        }
+      }
+
+      function setCameraTransform(rx, ry, rz, scale = 0.99, tx = 0, ty = 0) {
         camState = { rx, ry, rz, scale, tx, ty };
         if (!rigEl) return;
-        const vhFit = Math.min(1, Math.max(0.64, (window.innerHeight - 115) / 660));
+        const vhFit = Math.min(1, Math.max(0.64, (window.innerHeight - 130) / 640));
         const vwFit = Math.min(1, Math.max(0.6, (window.innerWidth - 48) / 1180));
         const finalScale = +(scale * Math.min(vhFit, vwFit)).toFixed(3);
         rigEl.style.transform = `translate3d(${tx}px, ${ty}px, 0px) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg) scale(${finalScale})`;
@@ -2060,10 +1973,27 @@
               void rip.offsetWidth;
               rip.classList.add('click-ripple');
             }
-            setTimeout(() => ptr.classList.remove('clicking'), 220);
-          }, 620);
+            setTimeout(() => ptr.classList.remove('clicking'), 200);
+          }, 560);
           scriptTimers.push(t);
         }
+      }
+
+      // Compute exact element center inside #app-screen-shell (immune to 3D scale)
+      function movePointerToEl(elId, labelText, click = false) {
+        const shell = document.getElementById('app-screen-shell');
+        const target = document.getElementById(elId);
+        if (!shell || !target) return;
+
+        let x = target.offsetWidth / 2;
+        let y = target.offsetHeight / 2;
+        let cur = target;
+        while (cur && cur !== shell) {
+          x += cur.offsetLeft;
+          y += cur.offsetTop;
+          cur = cur.offsetParent;
+        }
+        movePointer(Math.round(x), Math.round(y), labelText, click);
       }
 
       function clearFocusCards() {
@@ -2113,16 +2043,17 @@
         const msTask3 = document.getElementById('stu-ms-task3');
         const msPct = document.getElementById('stu-ms-pct');
 
-        if (btnLbl) btnLbl.textContent = '✓ Clocked In (08:30 AM)';
+        if (btnLbl) btnLbl.textContent = 'Clocked In · 08:30';
         if (daysVal) daysVal.textContent = '43';
         if (daysBar) daysBar.style.width = '72%';
         if (hoursVal) hoursVal.textContent = '344.0';
         if (msCheck3) {
-          msCheck3.className = 'size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold';
+          msCheck3.className = 'size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0';
           msCheck3.textContent = '✓';
         }
-        if (msTask3) msTask3.className = 'flex items-center gap-2 p-1.5 rounded-lg bg-emerald-50/80 border border-emerald-300 text-zinc-900 transition-all';
-        if (msPct) msPct.textContent = '3 of 3 tasks (100%)';
+        if (msTask3) msTask3.className = 'flex items-center gap-2.5 p-2 rounded-lg bg-emerald-50/70 border border-emerald-200 transition-all';
+        if (msPct) msPct.textContent = '100%';
+        showInAppToast('Clocked in at 08:30 AM', 'Attendance recorded · TechCorp Westlands');
         spawnPacket3D(0, 1);
       }
 
@@ -2130,16 +2061,17 @@
         const desc = document.getElementById('stu-log-desc');
         const aiLbl = document.getElementById('stu-ai-label');
         const tags = document.getElementById('stu-skill-tags');
-        if (aiLbl) aiLbl.textContent = '✨ AI Polished!';
+        if (aiLbl) aiLbl.textContent = 'Refined';
         if (desc) {
-          desc.textContent = 'Engineered responsive onboarding wizard UI in React 19 with strict Zod validation and REST API integration. Achieved 92% Jest unit test coverage across country phone formats.';
+          desc.textContent = 'Engineered responsive onboarding wizard UI in React 19 with strict Zod validation and REST API integration. Achieved 92% Jest unit test coverage.';
         }
-        if (tags && tags.children.length < 5) {
+        if (tags && tags.children.length < 4) {
           const extra = document.createElement('span');
-          extra.className = 'text-[10px] font-semibold px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 border border-emerald-400/40';
-          extra.textContent = '+ Zod & Jest (92%)';
+          extra.className = 'text-[10px] font-medium px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200';
+          extra.textContent = 'Zod & Jest';
           tags.appendChild(extra);
         }
+        showInAppToast('Log summary refined', 'Technical competencies tagged automatically');
       }
 
       function triggerStudentSubmit() {
@@ -2148,12 +2080,17 @@
         const qPill = document.getElementById('stu-queue-pill');
         const count = document.getElementById('stu-logs-count');
         if (badge) {
-          badge.textContent = 'Submitted to James Otieno';
-          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500 bg-emerald-50 text-emerald-700';
+          badge.textContent = 'Submitted';
+          badge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200';
         }
-        if (subLbl) subLbl.textContent = '✓ Sent to Host Supervisor';
-        if (qPill) qPill.textContent = '2 in supervisor review queue';
+        if (subLbl) subLbl.textContent = 'Sent to Mentor';
+        if (qPill) {
+          qPill.textContent = 'In mentor review';
+          qPill.className = 'mt-1.5 text-[10px] text-emerald-700 font-medium';
+        }
         if (count) count.textContent = '5';
+        setNotifBadge(0);
+        showInAppToast('Logbook entry submitted', 'Queued for James Otieno at TechCorp Kenya');
         spawnPacket3D(0, 1);
       }
 
@@ -2168,12 +2105,14 @@
         const approved = document.getElementById('sup-approved-badge');
         const btnLbl = document.getElementById('sup-approve-label');
         if (status) {
-          status.textContent = '✓ Approved by Host Org';
-          status.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-400';
+          status.textContent = 'Approved';
+          status.className = 'text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0';
         }
         if (pending) pending.textContent = '1';
         if (approved) approved.textContent = '4';
-        if (btnLbl) btnLbl.textContent = '✓ Signed Off & Logged';
+        if (btnLbl) btnLbl.textContent = 'Signed Off';
+        setNotifBadge(1);
+        showInAppToast('Submission signed off', 'Kevin Kiprono’s entry approved & synced');
         spawnPacket3D(1, 2);
       }
 
@@ -2186,11 +2125,13 @@
         if (count) count.textContent = '2';
         if (offers) offers.textContent = '2';
         if (ready) ready.textContent = '4 of 4';
-        if (btnLbl) btnLbl.textContent = '✓ Grade A Recorded on Transcript';
+        if (btnLbl) btnLbl.textContent = 'Grade Recorded';
         if (msBadge) {
-          msBadge.textContent = 'Certified by Faculty ✓';
-          msBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800';
+          msBadge.textContent = 'Certified';
+          msBadge.className = 'text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200';
         }
+        setNotifBadge(0);
+        showInAppToast('Grade A recorded', 'Phase 2 certified for Alice Wanjiku');
         spawnPacket3D(2, 3);
       }
 
@@ -2200,51 +2141,50 @@
         const kevinRow = document.getElementById('admin-row-kevin');
         const kevinSup = document.getElementById('admin-kevin-uni-sup');
         const kevinStatus = document.getElementById('admin-kevin-status');
-        const alertBanner = document.getElementById('admin-alert-banner');
-        const alertDesc = document.getElementById('admin-alert-desc');
         const assignLbl = document.getElementById('admin-assign-label');
 
         if (rate) {
           rate.textContent = '100%';
-          rate.className = 'text-2xl font-extrabold text-emerald-600 mt-1';
+          rate.className = 'text-xl font-bold text-emerald-600 mt-1';
         }
         if (sub) {
-          sub.textContent = '4 of 4 fully paired ✓';
-          sub.className = 'text-[10px] text-emerald-700 font-semibold';
+          sub.textContent = '4 of 4 paired';
+          sub.className = 'text-[10px] text-emerald-700 font-medium mt-1';
         }
         if (kevinRow) {
-          kevinRow.className = 'py-2 px-2 rounded-xl bg-emerald-50/80 border border-emerald-400 flex items-center justify-between transition-all';
+          kevinRow.className = 'py-2 px-2.5 mt-1 rounded-lg bg-emerald-50/70 border border-emerald-200 flex items-center justify-between transition-all';
         }
         if (kevinSup) {
-          kevinSup.textContent = '🏛️ Dr. Joyce Chelangat (Paired)';
-          kevinSup.className = 'text-emerald-700 font-bold';
+          kevinSup.textContent = 'James Otieno / Dr. Joyce Chelangat';
+          kevinSup.className = 'text-[10px] text-emerald-700 font-medium';
         }
         if (kevinStatus) {
           kevinStatus.textContent = 'Dual-Supervised';
-          kevinStatus.className = 'px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]';
+          kevinStatus.className = 'px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium text-[10px]';
         }
-        if (alertBanner) {
-          alertBanner.className = 'z-layer-mid rounded-xl border border-emerald-300 bg-emerald-50/95 px-4 py-2.5 flex items-center justify-between gap-3';
-        }
-        if (alertDesc) {
-          alertDesc.innerHTML = 'All 4 placement candidates are now <strong>100% Dual-Supervised</strong> with pre-provisioned university credentials bound.';
-          alertDesc.className = 'text-[11px] text-emerald-800';
-        }
-        if (assignLbl) assignLbl.textContent = '✓ Paired & Credentials Dispatched';
+        if (assignLbl) assignLbl.textContent = 'Paired';
+        setNotifBadge(1);
+        showInAppToast('Assessor assigned', 'Dr. Joyce Chelangat paired with Kevin Kiprono');
         spawnPacket3D(3, 0);
       }
 
       function triggerAdminExportDossier() {
         const lbl = document.getElementById('admin-export-label');
         const pill = document.getElementById('admin-export-pill');
-        if (lbl) lbl.textContent = '✓ Graduation Board Dossier Exported (PDF)';
-        if (pill) pill.textContent = 'EXPORTED ✓';
+        if (lbl) lbl.textContent = 'Exported PDF';
+        if (pill) {
+          pill.textContent = 'Exported';
+          pill.className = 'text-xl font-bold text-emerald-600 mt-1';
+        }
+        setNotifBadge(0);
+        showInAppToast('Accreditation dossier exported', 'Certified Senate PDF ready for download');
         spawnPacket3D(3, 0);
       }
 
       function runRoleChoreography(idx) {
         clearRoleTimers();
         clearFocusCards();
+        hideInAppToast();
         const role = ROLES[idx];
 
         setCameraTransform(role.baseCamera.rx, role.baseCamera.ry, role.baseCamera.rz, role.baseCamera.scale);
@@ -2261,42 +2201,49 @@
           const elCheck3 = document.getElementById('stu-ms-check3');
           const elTask3 = document.getElementById('stu-ms-task3');
           const elMsPct = document.getElementById('stu-ms-pct');
+          const elQueue = document.getElementById('stu-queue-pill');
+          const elCount = document.getElementById('stu-logs-count');
 
-          if (elClockLbl) elClockLbl.textContent = 'Clock In (08:30 AM)';
+          if (elClockLbl) elClockLbl.textContent = 'Clock In';
           if (elDays) elDays.textContent = '42';
           if (elBar) elBar.style.width = '70%';
           if (elHours) elHours.textContent = '336.0';
-          if (elAiLbl) elAiLbl.textContent = 'Polish with AI';
+          if (elAiLbl) elAiLbl.textContent = 'Refine Summary';
           if (elDesc) elDesc.textContent = 'Working on the onboarding wizard UI components for new user registration using React 19 and Zod schema validation.';
           if (elBadge) {
             elBadge.textContent = 'Draft';
-            elBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-400 bg-amber-50 text-amber-800';
+            elBadge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200';
           }
-          if (elSubLbl) elSubLbl.textContent = 'Submit to Field Supervisor';
+          if (elSubLbl) elSubLbl.textContent = 'Submit for Review';
+          if (elQueue) {
+            elQueue.textContent = '1 draft ready';
+            elQueue.className = 'mt-1.5 text-[10px] text-amber-700 font-medium';
+          }
+          if (elCount) elCount.textContent = '4';
           if (elCheck3) {
-            elCheck3.className = 'size-4 rounded-full border border-zinc-400 flex items-center justify-center text-[9px] font-bold';
+            elCheck3.className = 'size-4 rounded-full border border-zinc-300 flex items-center justify-center text-[9px] font-bold shrink-0';
             elCheck3.textContent = '';
           }
-          if (elTask3) elTask3.className = 'flex items-center gap-2 p-1.5 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-900 transition-all';
-          if (elMsPct) elMsPct.textContent = '2 of 3 tasks (67%)';
+          if (elTask3) elTask3.className = 'flex items-center gap-2.5 p-2 rounded-lg bg-white border border-zinc-200 transition-all';
+          if (elMsPct) elMsPct.textContent = '67%';
 
           if (!RM && autoMotion && mode === 'case') {
             scriptTimers.push(setTimeout(() => {
-              focusCard3D('stu-card-milestone', { rx: 9, ry: -12, rz: 0.6, scale: 0.99, tx: -12, ty: -6 });
-              movePointer(930, 120, 'Punching Daily Attendance (attendance:record)', true);
-              scriptTimers.push(setTimeout(triggerStudentClock, 650));
+              focusCard3D('stu-card-days');
+              movePointerToEl('stu-btn-clock', 'Clocking in for shift', true);
+              scriptTimers.push(setTimeout(triggerStudentClock, 620));
             }, 900));
 
             scriptTimers.push(setTimeout(() => {
-              focusCard3D('stu-card-logbook', { rx: 6, ry: -5, rz: 0.2, scale: 1.0, tx: 14, ty: -10 });
-              movePointer(580, 355, 'Polishing Log with AI Assistant', true);
-              scriptTimers.push(setTimeout(triggerStudentAiPolish, 650));
-            }, 3600));
+              focusCard3D('stu-card-logbook');
+              movePointerToEl('stu-btn-ai', 'Refining daily summary', true);
+              scriptTimers.push(setTimeout(triggerStudentAiPolish, 620));
+            }, 3500));
 
             scriptTimers.push(setTimeout(() => {
-              movePointer(570, 520, 'Submitting Logbook (logs:create)', true);
-              scriptTimers.push(setTimeout(triggerStudentSubmit, 650));
-            }, 6400));
+              movePointerToEl('stu-btn-submit', 'Submitting to mentor', true);
+              scriptTimers.push(setTimeout(triggerStudentSubmit, 620));
+            }, 6300));
           }
 
         } else if (idx === 1) {
@@ -2305,8 +2252,8 @@
           const sApp = document.getElementById('sup-approved-badge');
           const sLbl = document.getElementById('sup-approve-label');
           if (sSt) {
-            sSt.textContent = 'Submitted';
-            sSt.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-300';
+            sSt.textContent = 'Pending Review';
+            sSt.className = 'text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0';
           }
           if (sPend) sPend.textContent = '2';
           if (sApp) sApp.textContent = '3';
@@ -2314,14 +2261,14 @@
 
           if (!RM && autoMotion && mode === 'case') {
             scriptTimers.push(setTimeout(() => {
-              focusCard3D('sup-card-review', { rx: 7.5, ry: 10, rz: -0.5, scale: 0.99, tx: 10, ty: -8 });
-              movePointer(440, 445, 'Writing Host Org Engineering Feedback', false);
-            }, 1000));
+              focusCard3D('sup-card-review');
+              movePointerToEl('sup-feedback-text', 'Adding mentor feedback', false);
+            }, 900));
 
             scriptTimers.push(setTimeout(() => {
-              movePointer(315, 520, 'Approving Mentee Deliverable (logs:approve)', true);
-              scriptTimers.push(setTimeout(triggerSupervisorApprove, 650));
-            }, 4600));
+              movePointerToEl('sup-btn-approve', 'Signing off submission', true);
+              scriptTimers.push(setTimeout(triggerSupervisorApprove, 620));
+            }, 4300));
           }
 
         } else if (idx === 2) {
@@ -2337,10 +2284,10 @@
           if (uCnt) uCnt.textContent = '1';
           if (uOff) uOff.textContent = '1';
           if (uRdy) uRdy.textContent = '3 of 4';
-          if (uLbl) uLbl.textContent = '✓ Certify & Record Grade';
+          if (uLbl) uLbl.textContent = 'Certify & Record Grade';
           if (uMs2) {
-            uMs2.textContent = 'Ready to Certify';
-            uMs2.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800';
+            uMs2.textContent = 'Ready';
+            uMs2.className = 'text-[10px] font-medium px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200';
           }
           if (b1) b1.style.width = '30%';
           if (b2) b2.style.width = '30%';
@@ -2349,8 +2296,8 @@
 
           if (!RM && autoMotion && mode === 'case') {
             scriptTimers.push(setTimeout(() => {
-              focusCard3D('uni-card-rubric', { rx: 8.5, ry: -9, rz: 0.4, scale: 0.99, tx: 12, ty: -8 });
-              movePointer(480, 390, 'Scoring Standardized 5-Point Rubric', false);
+              focusCard3D('uni-card-rubric');
+              movePointerToEl('uni-card-rubric', 'Scoring rubric criteria', false);
               if (b1) b1.style.width = '100%';
               if (b2) b2.style.width = '100%';
               if (b3) b3.style.width = '90%';
@@ -2358,9 +2305,9 @@
             }, 900));
 
             scriptTimers.push(setTimeout(() => {
-              movePointer(585, 520, 'Recording Official Grade A (assessments:grade)', true);
-              scriptTimers.push(setTimeout(triggerUniEvaluation, 650));
-            }, 4800));
+              movePointerToEl('uni-btn-save-eval', 'Recording Grade A', true);
+              scriptTimers.push(setTimeout(triggerUniEvaluation, 620));
+            }, 4500));
           }
 
         } else if (idx === 3) {
@@ -2371,46 +2318,44 @@
           const aSt = document.getElementById('admin-kevin-status');
           const aAss = document.getElementById('admin-assign-label');
           const aExp = document.getElementById('admin-export-label');
-          const aBan = document.getElementById('admin-alert-banner');
-          const aDesc = document.getElementById('admin-alert-desc');
+          const aPill = document.getElementById('admin-export-pill');
 
           if (aRate) {
             aRate.textContent = '75%';
-            aRate.className = 'text-2xl font-extrabold text-amber-600 mt-1';
+            aRate.className = 'text-xl font-bold text-amber-600 mt-1';
           }
           if (aSub) {
-            aSub.textContent = '3 of 4 fully paired';
-            aSub.className = 'text-[10px] text-amber-700 font-semibold';
+            aSub.textContent = '3 of 4 paired';
+            aSub.className = 'text-[10px] text-amber-700 font-medium mt-1';
           }
-          if (aRow) aRow.className = 'py-2 px-2 rounded-xl bg-amber-50/70 border border-amber-300 flex items-center justify-between transition-all';
+          if (aRow) aRow.className = 'py-2 px-2.5 mt-1 rounded-lg bg-amber-50/70 border border-amber-200 flex items-center justify-between transition-all';
           if (aSup) {
-            aSup.textContent = '⚠️ Missing Academic Assessor';
-            aSup.className = 'text-rose-500 font-bold';
+            aSup.textContent = 'Missing Faculty Assessor';
+            aSup.className = 'text-[10px] text-amber-800 font-semibold';
           }
           if (aSt) {
             aSt.textContent = 'Needs Allocation';
-            aSt.className = 'px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-bold text-[10px]';
+            aSt.className = 'px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-medium text-[10px]';
           }
-          if (aBan) aBan.className = 'z-layer-mid rounded-xl border border-rose-300 bg-rose-50/95 px-4 py-2.5 flex items-center justify-between gap-3';
-          if (aDesc) {
-            aDesc.innerHTML = '1 candidate flagged: <strong>Kevin Kiprono (CS/2021/0104)</strong> at TechCorp Kenya Ltd is missing an assigned University Academic Supervisor.';
-            aDesc.className = 'text-[11px] text-rose-800';
+          if (aAss) aAss.textContent = 'Assign Assessor';
+          if (aExp) aExp.textContent = 'Export Dossier';
+          if (aPill) {
+            aPill.textContent = 'Ready';
+            aPill.className = 'text-xl font-bold text-zinc-900 mt-1';
           }
-          if (aAss) aAss.textContent = '+ Pair Mentors & Dispatch Login';
-          if (aExp) aExp.textContent = 'Export Certified Graduation Dossier (PDF)';
 
           if (!RM && autoMotion && mode === 'case') {
             scriptTimers.push(setTimeout(() => {
-              focusCard3D('admin-card-pairing', { rx: 7.5, ry: 9, rz: -0.4, scale: 0.99, tx: 12, ty: -8 });
-              movePointer(555, 520, 'Pairing Dual Mentors & Binding Login (supervisors:assign)', true);
-              scriptTimers.push(setTimeout(triggerAdminPairSupervisor, 650));
-            }, 1400));
+              focusCard3D('admin-card-pairing');
+              movePointerToEl('admin-btn-assign', 'Assigning faculty assessor', true);
+              scriptTimers.push(setTimeout(triggerAdminPairSupervisor, 620));
+            }, 1200));
 
             scriptTimers.push(setTimeout(() => {
-              focusCard3D('admin-card-rbac', { rx: 7, ry: -8, rz: 0.3, scale: 0.99, tx: -14, ty: -8 });
-              movePointer(915, 520, 'Exporting Dean Accreditation Dossier (accreditation:export)', true);
-              scriptTimers.push(setTimeout(triggerAdminExportDossier, 650));
-            }, 5400));
+              focusCard3D('admin-card-rbac');
+              movePointerToEl('admin-btn-export', 'Exporting Senate PDF', true);
+              scriptTimers.push(setTimeout(triggerAdminExportDossier, 620));
+            }, 5000));
           }
         }
       }
@@ -2424,17 +2369,14 @@
           const btn = document.getElementById(`role-btn-${i}`);
           const view = document.getElementById(`role-view-${i}`);
           const prog = document.getElementById(`role-prog-${i}`);
-          const foot = document.getElementById(`footer-card-${i}`);
 
           if (i === idx) {
             if (btn) btn.className = 'role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 bg-white text-zinc-950 shadow-sm';
             if (view) view.classList.remove('hidden');
-            if (foot) foot.className = 'cursor-pointer p-2.5 rounded-xl border border-indigo-400/60 bg-indigo-500/15 transition flex flex-col justify-between';
           } else {
             if (btn) btn.className = 'role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-zinc-400 hover:text-white';
             if (view) view.classList.add('hidden');
             if (prog) prog.style.width = i < idx ? '100%' : '0%';
-            if (foot) foot.className = 'cursor-pointer p-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition flex flex-col justify-between';
           }
         }
 
@@ -2445,13 +2387,12 @@
         const elSbAv = document.getElementById('sb-avatar');
         const elSbName = document.getElementById('sb-user-name');
         const elSbRole = document.getElementById('sb-user-role');
+        const elCrumbCat = document.getElementById('top-crumb-cat');
         const elTopScope = document.getElementById('top-scope-badge');
         const elTopAv = document.getElementById('top-avatar');
         const elTopName = document.getElementById('top-user-name');
         const elTopRole = document.getElementById('top-role-badge');
-        const elHudBadge = document.getElementById('hud-role-badge');
-        const elHudPerm = document.getElementById('hud-perm-code');
-        const elHudTitle = document.getElementById('hud-action-title');
+        const elStepBadge = document.getElementById('walkthrough-step-badge');
 
         if (elUrl) elUrl.textContent = role.url;
         if (elTierWin) elTierWin.textContent = role.windowTier;
@@ -2461,14 +2402,14 @@
         if (elSbName) elSbName.textContent = role.name;
         if (elSbRole) elSbRole.textContent = role.roleLabel;
 
+        if (elCrumbCat) elCrumbCat.textContent = role.crumbCat;
         if (elTopScope) elTopScope.textContent = role.scopeBadge;
         if (elTopAv) elTopAv.textContent = role.initials;
         if (elTopName) elTopName.textContent = role.name;
         if (elTopRole) elTopRole.textContent = role.roleLabel;
+        if (elStepBadge) elStepBadge.textContent = `Step ${idx + 1} of 4`;
 
-        if (elHudBadge) elHudBadge.textContent = role.hudIcon;
-        if (elHudPerm) elHudPerm.textContent = role.hudPerm;
-        if (elHudTitle) elHudTitle.textContent = role.hudTitle;
+        setNotifBadge(role.notifCount ?? 0);
 
         const elSummary = document.getElementById('s2-role-summary');
         if (elSummary && role.summary) {
@@ -3147,6 +3088,8 @@
       /* ── 10. Event Listeners ── */
       window.toHero = toHero;
       window.toCase = toCase;
+      window.prevWorkflow = prevWorkflow;
+      window.nextWorkflow = nextWorkflow;
 
       // Scene 1 Triggers
       if (btnOverview) btnOverview.addEventListener('click', toHero);
