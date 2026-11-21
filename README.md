@@ -52,16 +52,16 @@ Traditional university attachment and internship programs suffer from critical o
 
 InternTrack Pro is engineered as a high-performance, full-stack TypeScript application utilizing modern web standards:
 
-| Layer                       | Technologies                                                                                                                |
-| :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------- |
-| **Frontend Framework**      | [React 19](https://react.dev/), [TypeScript](https://www.typescriptlang.org/)                                               |
-| **Routing & SSR**           | [TanStack Start](https://tanstack.com/start), [TanStack Router](https://tanstack.com/router) (type-safe file-based routing) |
-| **Data Fetching & State**   | [TanStack Query](https://tanstack.com/query) with reactive in-memory & session persistence                                  |
-| **UI Components & Icons**   | [shadcn/ui](https://ui.shadcn.com/) primitives, [Radix UI](https://www.radix-ui.com/), [Lucide React](https://lucide.dev/)  |
-| **Styling & Design Tokens** | [Tailwind CSS v4](https://tailwindcss.com/) with custom OKLCH color palettes and glassmorphism                              |
-| **Charts & Visualizations** | [Recharts](https://recharts.org/) (time-series attendance curves, competency radars, completion meters)                     |
-| **Notifications**           | [Sonner](https://sonner.emilkowal.ski/) rich-toast notification engine                                                      |
-| **Runtime & Build Tooling** | [Vite](https://vitejs.dev/), [Nitro Server](https://nitro.unjs.io/)                                                         |
+| Layer                       | Technologies                                                                                                               |
+| :-------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
+| **Frontend Framework**      | [React 19](https://react.dev/), [TypeScript](https://www.typescriptlang.org/)                                              |
+| **Routing & SSR**           | [inertia.JS], [inertia.js] (type-safe file-based routing)                                                                  |
+| **Data Fetching & State**   | [TanStack Query](https://tanstack.com/query) with reactive in-memory & session persistence                                 |
+| **UI Components & Icons**   | [shadcn/ui](https://ui.shadcn.com/) primitives, [Radix UI](https://www.radix-ui.com/), [Lucide React](https://lucide.dev/) |
+| **Styling & Design Tokens** | [Tailwind CSS v4](https://tailwindcss.com/) with custom OKLCH color palettes and glassmorphism                             |
+| **Charts & Visualizations** | [Recharts](https://recharts.org/) (time-series attendance curves, competency radars, completion meters)                    |
+| **Notifications**           | [Sonner](https://sonner.emilkowal.ski/) rich-toast notification engine                                                     |
+| **Runtime & Build Tooling** | [Vite](https://vitejs.dev/), [Nitro Server](https://nitro.unjs.io/)                                                        |
 
 ---
 

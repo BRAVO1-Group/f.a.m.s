@@ -25,7 +25,7 @@ $admins = [
         'university_code' => null,
     ],
     [
-        'name' => 'Prof. Samuel Mugisha',
+        'name' => 'Prof. Juma Lubega',
         'email' => 'admin.mak@university.ac.ug',
         'university_code' => 'MAK',
     ],

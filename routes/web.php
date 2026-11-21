@@ -1,7 +1,26 @@
+
 <?php
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UniversityController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\SupervisorController;
+use App\Http\Controllers\PlacementController;
+use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\LogbookController;
+use App\Http\Controllers\MilestoneController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RoleController;
+
+
+// Public routes
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -16,58 +35,65 @@ Route::get('/auth', function () {
 })->name('auth');
 
 
+// Authenticated routes
+
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
-    Route::get('/logbook', function () {
-        return Inertia::render('logbook');
-    })->name('logbook');
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile');
 
-    Route::get('/attendance', function () {
-        return Inertia::render('attendance');
-    })->name('attendance');
+    Route::put('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
 
-    Route::get('/milestones', function () {
-        return Inertia::render('milestones');
-    })->name('milestones');
+    // University management
+    Route::resource('universities', UniversityController::class);
 
-    Route::get('/review', function () {
-        return Inertia::render('review');
-    })->name('review');
+    // Student management
+    Route::resource('students', StudentController::class);
 
-    Route::get('/students', function () {
-        return Inertia::render('admin/students');
-    })->name('students');
+    // Supervisor management
+    Route::resource('supervisors', SupervisorController::class);
 
-    Route::get('/evaluations', function () {
-        return Inertia::render('evaluations');
-    })->name('evaluations');
+    // Placement management
+    Route::resource('placements', PlacementController::class);
 
-    Route::get('/supervisors', function () {
-        return Inertia::render('admin/supervisors');
-    })->name('supervisors');
+    // Assignment management
+    Route::resource('assignments', AssignmentController::class);
 
-    Route::get('/assignments', function () {
-        return Inertia::render('admin/assignments');
-    })->name('assignments');
+    // Attendance
+    Route::get('/attendance', [AttendanceController::class, 'index'])
+        ->name('attendance');
 
-    Route::get('/rbac', function () {
-        return Inertia::render('admin/rbac');
-    })->name('rbac');
+    // Logbooks
+    Route::get('/logbook', [LogbookController::class, 'index'])
+        ->name('logbook');
 
-    Route::get('/admin', function () {
-    return Inertia::render('admin/placements');
-    })->name('admin');
+    // Milestones
+    Route::get('/milestones', [MilestoneController::class, 'index'])
+        ->name('milestones');
 
-    Route::get('/reports', function () {
-        return Inertia::render('reports');
-    })->name('reports');
+    // Reviews
+    Route::get('/review', [ReviewController::class, 'index'])
+        ->name('review');
 
-    Route::get('/profile', function () {
-        return Inertia::render('profile');
-    })->name('profile');
+    // Evaluations
+    Route::get('/evaluations', [EvaluationController::class, 'index'])
+        ->name('evaluations');
 
+    // Reports
+    Route::get('/reports', [ReportController::class, 'index'])
+        ->name('reports');
+
+    // Role-based access control
+    Route::get('/rbac', [RoleController::class, 'index'])
+        ->name('rbac');
+
+    // Admin placements page (existing URL)
+    Route::get('/admin', [PlacementController::class, 'index'])
+        ->name('admin');
 });
