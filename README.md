@@ -1,6 +1,6 @@
 # InternTrack Pro — Smart Internship Management System
 
-InternTrack Pro is a modern, enterprise-grade Digital Internship Management & Logbook Operating System designed to replace traditional paper-based attachment logbooks with a secure, centralized, and accredited online platform.
+InternTrack is a modern, enterprise-grade Digital Internship Management & Logbook Operating System designed to replace traditional paper-based attachment logbooks with a secure, centralized, and accredited online platform.
 
 The system connects **Students**, **Host Organization Field Supervisors**, **University Faculty Assessors**, and **Institutional Administrators** into a unified, real-time workflow. It streamlines daily logging, automated attendance verification, dual-track supervisor sign-offs, and institutional defense clearance.
 
@@ -303,9 +303,7 @@ The output directory `.output/` is ready for zero-config serverless or edge depl
 
 ---
 
-## Lovable Integration
 
-This project is connected with [Lovable](https://lovable.dev).
 
 ### Development with Lovable
 
