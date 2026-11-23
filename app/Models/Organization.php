@@ -22,4 +22,8 @@ class Organization extends Model
     {
         return $this->hasMany(Supervisor::class);
     }
+    public function placements(): HasMany
+   {
+    return $this->hasMany(Placement::class);
+   }
 }

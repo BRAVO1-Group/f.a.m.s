@@ -1,65 +1,80 @@
 <?php
 
 namespace App\Http\Controllers;
-use Inertia\Inertia;
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $user = auth ()->user();
-        return Inertia::render('dashboard', compact('user'));
-    }
+        $user = auth()->user();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        // Load the authenticated user's student profile.
+        $student = $user->student;
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        // Retrieve only this student's placements and related records.
+        $placements = $student
+            ? $student->placements()
+                ->with([
+                    'organization',
+                    'supervisor.user',
+                    'logbooks',
+                ])
+                ->latest()
+                ->get()
+            : collect();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        // Collect logbook entries belonging to this student's placements.
+        $logbooks = $placements->flatMap(
+            fn ($placement) => $placement->logbooks
+        );
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        // Find the student's active placement.
+        $activePlacement = $placements->firstWhere('status', 'active');
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        // Calculate dashboard statistics.
+        $dashboardData = [
+            'activePlacement' => $activePlacement,
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            'placements' => $placements,
+
+            'statistics' => [
+                'totalPlacements' => $placements->count(),
+
+                'activePlacements' => $placements
+                    ->where('status', 'active')
+                    ->count(),
+
+                'totalLogbooks' => $logbooks->count(),
+
+                'submittedLogbooks' => $logbooks
+                    ->where('status', 'submitted')
+                    ->count(),
+
+                'approvedLogbooks' => $logbooks
+                    ->where('status', 'approved')
+                    ->count(),
+
+                'totalHours' => $logbooks
+                    ->sum('hours_worked'),
+
+                'loggedDays' => $logbooks
+                    ->pluck('log_date')
+                    ->unique()
+                    ->count(),
+            ],
+
+            'recentLogbooks' => $logbooks
+                ->sortByDesc('log_date')
+                ->take(5)
+                ->values(),
+        ];
+
+        return Inertia::render('dashboard', [
+            'user' => $user,
+            'dashboardData' => $dashboardData,
+        ]);
     }
 }

@@ -47,6 +47,8 @@ Route::middleware(['auth'])->group(function () {
 
     // BUSINESS LOGIC ROUTES
 
+    Route::get('/dashboard', [DashboardController::class, 'index'])-> name('dashboard.index');
+
     // Profile operations
     Route::put('/profile', [ProfileController::class, 'update'])
         ->name('profile.update');
