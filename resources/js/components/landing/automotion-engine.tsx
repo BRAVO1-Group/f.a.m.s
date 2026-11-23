@@ -308,7 +308,7 @@ export function AutomotionEngine({
                 <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-indigo-500/25 text-indigo-300 border border-indigo-400/30">
                   {role.hudPerm}
                 </span>
-                <span className="text-[10px] font-mono text-emerald-400 font-semibold">● EXCLUSIVE ACTION</span>
+                <span className="text-[10px] font-mono text-lime-400 font-semibold">● EXCLUSIVE ACTION</span>
               </div>
               <p className="text-xs font-bold text-white truncate mt-0.5">{role.hudTitle}</p>
             </div>
@@ -320,9 +320,9 @@ export function AutomotionEngine({
               <div className="flex items-center gap-2">
                 <span className="size-2.5 rounded-full bg-rose-500" />
                 <span className="size-2.5 rounded-full bg-amber-500" />
-                <span className="size-2.5 rounded-full bg-emerald-500" />
+                <span className="size-2.5 rounded-full bg-lime-500" />
                 <div className="ml-3 flex items-center gap-1.5 bg-zinc-900 border border-white/10 px-3 py-0.5 rounded-md text-[11px] font-mono text-indigo-300/90">
-                  <span>🔒</span>
+                  <span></span>
                   <span>{role.url}</span>
                 </div>
               </div>
@@ -331,7 +331,7 @@ export function AutomotionEngine({
                   RBAC SESSION: <strong className="text-white">{role.windowTier}</strong>
                 </span>
                 <span className="text-zinc-600">|</span>
-                <span className="text-emerald-400/90">DRAG STAGE TO ORBIT 3D</span>
+                <span className="text-lime-400/90">DRAG STAGE TO ORBIT 3D</span>
               </div>
             </div>
 
@@ -581,28 +581,28 @@ export function AutomotionEngine({
           {[
             {
               idx: 0,
-              title: "🎓 1. Student Intern",
+              title: "1. Student Intern",
               badge: "Tier 1",
               badgeClass: "bg-indigo-500/20 text-indigo-300",
               desc: "Only role that punches daily attendance, drafts logbooks with AI Polish & checks milestone tasks.",
             },
             {
               idx: 1,
-              title: "🏢 2. Field Supervisor",
+              title: "2. Field Supervisor",
               badge: "Tier 2 Host",
-              badgeClass: "bg-emerald-500/20 text-emerald-300",
+              badgeClass: "bg-lime-500/20 text-lime-300",
               desc: "Pre-provisioned login bound to assigned company interns. Signs off daily technical logs or requests revisions.",
             },
             {
               idx: 2,
-              title: "🏛️ 3. Uni Supervisor",
+              title: "️ 3. Uni Supervisor",
               badge: "Tier 3 Faculty",
               badgeClass: "bg-sky-500/20 text-sky-300",
               desc: "Certifies academic milestone phases across companies & grades official Mid-Term/Final rubrics.",
             },
             {
               idx: 3,
-              title: "⚖️ 4. Uni Admin (Dean)",
+              title: "️ 4. Uni Admin (Dean)",
               badge: "Tier 4 Dean",
               badgeClass: "bg-purple-500/20 text-purple-300",
               desc: "Creates supervisor accounts, pairs dual mentors (`supervisors:assign`), governs RBAC & exports dossiers.",

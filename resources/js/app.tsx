@@ -40,7 +40,11 @@ createInertiaApp({
     const module = await page();
     const Page = module.default;
 
-    const isPublicPage = name === "welcome" || name === "auth/login";
+    const isPublicPage =
+      name === "welcome" ||
+      name === "auth/login" ||
+      name === "walkthrough" ||
+      name === "auth/mentor-onboard";
 
     if (isPublicPage) {
       return Page;

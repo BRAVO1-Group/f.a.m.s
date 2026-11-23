@@ -2,8 +2,8 @@
 
 .fams-root {
   --green-950: #051910;
-  --green-900: #0b2f20;
-  --emerald: #10b981;
+  --green-900: #142217;
+  --emerald: #9CE840;
   --ink: #0d0f0e;
   --n: 1px;
   --mbs: 1;
@@ -545,7 +545,7 @@ img.fams-cut {
 }
 
 .it-accent-gradient {
-  background: linear-gradient(120deg, #4f46e5 0%, #10b981 100%);
+  background: linear-gradient(120deg, #4f46e5 0%, #9CE840 100%);
 }
 
 #app-screen-shell.dark-theme [class~="bg-white"]:not(.it-hero-btn) {
@@ -582,10 +582,10 @@ img.fams-cut {
 }
 
 #app-screen-shell.dark-theme [class*="bg-amber-50"],
-#app-screen-shell.dark-theme [class*="bg-emerald-50"],
+#app-screen-shell.dark-theme [class*="bg-lime-50"],
 #app-screen-shell.dark-theme [class*="bg-indigo-50"],
 #app-screen-shell.dark-theme [class*="bg-rose-50"],
-#app-screen-shell.dark-theme [class*="bg-emerald-100"],
+#app-screen-shell.dark-theme [class*="bg-lime-100"],
 #app-screen-shell.dark-theme [class*="bg-amber-100"],
 #app-screen-shell.dark-theme [class*="bg-indigo-100"] {
   background-color: rgba(39, 39, 42, 0.85) !important;
@@ -593,8 +593,8 @@ img.fams-cut {
   color: #e4e4e7 !important;
 }
 
-#app-screen-shell.dark-theme [class*="text-emerald-7"],
-#app-screen-shell.dark-theme [class*="text-emerald-8"] {
+#app-screen-shell.dark-theme [class*="text-lime-7"],
+#app-screen-shell.dark-theme [class*="text-lime-8"] {
   color: #34d399 !important;
 }
 

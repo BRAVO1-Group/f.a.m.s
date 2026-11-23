@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>FAMS — Field Attachment Management System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Inter+Tight:wght@100..900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Inter+Tight:wght@100..900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (window.tailwind) {
+      window.tailwind.config = {
+        corePlugins: {
+          preflight: false
+        }
+      };
+    }
+  </script>
   <style>
     /* ── Colour Tokens & Variables ── */
     :root {
-      --green-900: #0b2f20;
-      --green-800: #11402c;
-      --green-700: #1a5a40;
-      --mint: #cfeee0;
+      --green-950: #0c140e;
+      --green-900: #142217;
+      --green-800: #1d3320;
+      --green-700: #2d5424;
+      --emerald: #9CE840;
+      --lime-glow: rgba(156, 232, 64, 0.4);
+      --mint: #d8f39b;
       --ink: #0d0f0e;
       --n: 1px;
       --mbs: 1;
-      --th: 120px;
       --glide: 0s;
     }
 
@@ -26,30 +41,68 @@
       inherits: true;
       initial-value: 0px;
     }
+
     @property --mt {
       syntax: '<length>';
       inherits: true;
       initial-value: 0px;
     }
+
     @property --mb {
       syntax: '<length>';
       inherits: true;
       initial-value: 0px;
     }
+
     @property --ms {
       syntax: '<length>';
       inherits: true;
       initial-value: 0px;
     }
 
-    /* ── Global Reset ── */
-    *, *::before, *::after {
+    /* ── Scoped Resets (Scene 1 preserved, Scene 2 Tailwind utilities intact) ── */
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
+    }
+
+    html,
+    body {
       margin: 0;
       padding: 0;
     }
 
-    html, body {
+    .stage *,
+    .stage *::before,
+    .stage *::after {
+      margin: 0;
+      padding: 0;
+    }
+
+    :where(#s2-3d-engine) *,
+    :where(#s2-3d-engine) *::before,
+    :where(#s2-3d-engine) *::after {
+      border-width: 0;
+      border-style: solid;
+      border-color: #e4e4e7;
+    }
+
+    :where(#s2-3d-engine) button {
+      background-color: transparent;
+      background-image: none;
+      cursor: pointer;
+      font: inherit;
+      color: inherit;
+      padding: 0;
+    }
+
+    :where(#s2-3d-engine) :is(h1, h2, h3, h4, p) {
+      margin: 0;
+    }
+
+    html,
+    body {
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -69,7 +122,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: linear-gradient(180deg, #0c3523 0%, #14503a 45%, #9fd8bf 100%);
+      background: linear-gradient(180deg, #132216 0%, #244720 45%, #b8e67e 100%);
     }
 
     /* ── The 1440x810 Frame ── */
@@ -97,7 +150,7 @@
       pointer-events: none;
       --o: 73.125px;
       --ob: 73.125px;
-      will-change: transform, filter;
+      will-change: transform, filter; filter: hue-rotate(-32deg) saturate(1.08);
     }
 
     .caseplate {
@@ -111,7 +164,7 @@
       --o: 105.47px;
       --ob: 40.78px;
       z-index: 7;
-      will-change: opacity, filter;
+      will-change: opacity, filter; filter: hue-rotate(-32deg) saturate(1.08);
     }
 
     .trans {
@@ -127,7 +180,9 @@
       --ob: 0px;
     }
 
-    .plate, .trans, .caseplate {
+    .plate,
+    .trans,
+    .caseplate {
       mask-image:
         linear-gradient(180deg,
           transparent calc(var(--o, 0px) + var(--m0)),
@@ -153,13 +208,35 @@
         --ms var(--glide) cubic-bezier(.65, 0, .35, 1);
     }
 
-    /* Edge Fade State Classes */
-    .d-fade { --m0: 0px; --mt: 0px; --mb: 0px; --ms: 0px; }
-    .d-fade.m-case { --m0: 0px; --mt: 110px; --mb: 60px; --ms: 170px; }
-    .m-fade { --m0: 0px; --mt: 190px; --mb: 0px; --ms: 140px; }
-    .m-fade.m-case { --m0: 48px; --mt: 40px; --mb: 70px; --ms: 140px; }
+    .d-fade {
+      --m0: 0px;
+      --mt: 0px;
+      --mb: 0px;
+      --ms: 0px;
+    }
 
-    /* ── Wordmark "FAMS" (Desktop) ── */
+    .d-fade.m-case {
+      --m0: 0px;
+      --mt: 110px;
+      --mb: 60px;
+      --ms: 170px;
+    }
+
+    .m-fade {
+      --m0: 0px;
+      --mt: 190px;
+      --mb: 0px;
+      --ms: 140px;
+    }
+
+    .m-fade.m-case {
+      --m0: 48px;
+      --mt: 40px;
+      --mb: 70px;
+      --ms: 140px;
+    }
+
+    /* ── Scene 1: Wordmark "FAMS" ── */
     svg.wm {
       position: absolute;
       left: 0;
@@ -171,7 +248,7 @@
       pointer-events: none;
     }
 
-    /* ── Man Cutout ── */
+    /* ── Scene 1: Man Cutout ── */
     img.cut {
       position: absolute;
       left: 0;
@@ -182,7 +259,7 @@
       z-index: 4;
     }
 
-    /* ── Handwriting Script ── */
+    /* ── Scene 1: Handwriting Script ── */
     .script {
       position: absolute;
       top: 148px;
@@ -200,7 +277,7 @@
       white-space: nowrap;
     }
 
-    /* ── Lanyard Badge (Desktop Frame) ── */
+    /* ── Scene 1: Lanyard Badge ── */
     .badge {
       position: absolute;
       left: 986px;
@@ -284,14 +361,6 @@
       color: #141615;
     }
 
-    .card .row span {
-      font-weight: 700;
-    }
-
-    .card .row b {
-      font-weight: 600;
-    }
-
     .badge .hit {
       position: absolute;
       left: 160px;
@@ -302,38 +371,22 @@
       cursor: grab;
     }
 
-    /* ── Laptop Screen ── */
+    /* ═══════════════════════════════════════════════════
+       SCENE 2: FLASH TARGET & FULL 3D AUTO-MOTION ENGINE
+       ═══════════════════════════════════════════════════ */
     .screen {
       position: absolute;
       left: 272.8px;
       top: 102.7px;
       width: 894.4px;
       height: 604.7px;
-      border-radius: 3px;
-      background: #000;
+      border-radius: 5px;
+      background: #09090b;
       overflow: hidden;
       opacity: 0;
       z-index: 8;
       pointer-events: none;
-    }
-
-    .screen video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background: #000;
-      opacity: 0;
-    }
-
-    .screen::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(115deg, rgba(255, 255, 255, .07) 0%, rgba(255, 255, 255, 0) 38%);
-      z-index: 1;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 30px rgba(0, 0, 0, 0.8);
     }
 
     .screen .flash {
@@ -342,21 +395,265 @@
       background: #fff;
       opacity: 0;
       pointer-events: none;
-      z-index: 2;
+      z-index: 25;
     }
 
-    .screen-hit {
-      position: absolute;
-      left: 272.8px;
-      top: 102.7px;
-      width: 894.4px;
-      height: 604.7px;
-      cursor: pointer;
-      display: none;
-      z-index: 9;
+    /* Full-Viewport Scene 2 Container (#s2-3d-engine) */
+    #s2-3d-engine {
+      --it-sidebar: #f4f4f5;
+      --it-sidebar-border: #e4e4e7;
+      --it-sidebar-ink: #3f3f46;
+      --it-sidebar-active: #ffffff;
+      --it-sidebar-active-ink: #09090b;
+      --it-bg: #fafafa;
+      --it-card: #ffffff;
+      --it-surface-muted: #f4f4f5;
+      --it-border: #e4e4e7;
+      --it-ink: #18181b;
+      --it-muted: #71717a;
+      --it-primary: #589E10;
+      --it-emerald: #9CE840;
+      --it-amber: #f59e0b;
+      --it-indigo: #589E10;
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #09090b;
+      color: #f4f4f5;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.96);
+      transition: opacity 0.48s cubic-bezier(0.22, 1, 0.36, 1), transform 0.56s cubic-bezier(0.22, 1, 0.36, 1);
+      user-select: none;
+      -webkit-user-select: none;
     }
 
-    /* ── Viewport-Pinned Fixed UI ── */
+    body.is-case #s2-3d-engine {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+
+    #app-screen-shell.dark-theme {
+      --it-sidebar: #09090b;
+      --it-sidebar-border: rgba(255, 255, 255, 0.08);
+      --it-sidebar-ink: #d4d4d8;
+      --it-sidebar-active: #1e1e24;
+      --it-sidebar-active-ink: #ffffff;
+      --it-bg: #111114;
+      --it-card: #18181b;
+      --it-surface-muted: #27272a;
+      --it-border: rgba(255, 255, 255, 0.1);
+      --it-ink: #fafafa;
+      --it-muted: #a1a1aa;
+      --it-primary: #6366f1;
+    }
+
+    /* Subtle Perspective Stage & Camera Rig */
+    .stage-viewport {
+      perspective: 2200px;
+      perspective-origin: 50% 50%;
+    }
+
+    .camera-rig {
+      transition: transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+
+    .camera-rig.dragging {
+      transition: none !important;
+    }
+
+    /* Crisp Browser Window Chassis */
+    .laptop-3d-body {
+      position: relative;
+      border-radius: 16px;
+      background: #141418;
+      padding: 6px;
+      box-shadow:
+        0 32px 80px -20px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Clean Flat Layers (no jarring Z-detachment) */
+    .z-layer-base,
+    .z-layer-mid,
+    .z-layer-pop,
+    .z-layer-modal,
+    .z-layer-hud {
+      transition: box-shadow 0.45s ease, border-color 0.45s ease, opacity 0.35s ease;
+    }
+
+    /* Subtle spotlight focus ring for active walkthrough target */
+    .card-3d-focus {
+      box-shadow:
+        0 0 0 1.5px rgba(79, 70, 229, 0.5),
+        0 14px 32px -12px rgba(15, 23, 42, 0.16) !important;
+      border-color: rgba(79, 70, 229, 0.45) !important;
+    }
+
+    @keyframes viewFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .view-enter {
+      animation: viewFadeIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* In-app Toast Notification */
+    #inapp-toast {
+      transition: opacity 0.28s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #inapp-toast.toast-hidden {
+      opacity: 0;
+      transform: translateY(10px) scale(0.97);
+      pointer-events: none;
+    }
+
+    #inapp-toast.toast-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .it-accent-gradient {
+      background: linear-gradient(120deg, #9CE840 0%, #468C12 100%);
+    }
+
+    /* Dynamic Light/Dark Overrides inside #app-screen-shell */
+    #app-screen-shell .themed-card {
+      background: var(--it-card) !important;
+      border-color: var(--it-border) !important;
+      color: var(--it-ink) !important;
+    }
+
+    #app-screen-shell .themed-muted {
+      background: var(--it-surface-muted) !important;
+      border-color: var(--it-border) !important;
+      color: var(--it-ink) !important;
+    }
+
+    #app-screen-shell.dark-theme [class~="bg-white"]:not(.it-hero-btn) {
+      background-color: var(--it-card) !important;
+      border-color: var(--it-border) !important;
+      color: var(--it-ink) !important;
+    }
+
+    #app-screen-shell.dark-theme [class~="bg-zinc-50"],
+    #app-screen-shell.dark-theme [class~="bg-zinc-100"] {
+      background-color: var(--it-surface-muted) !important;
+      border-color: var(--it-border) !important;
+      color: var(--it-ink) !important;
+    }
+
+    #app-screen-shell.dark-theme [class~="text-zinc-900"],
+    #app-screen-shell.dark-theme [class~="text-zinc-800"] {
+      color: #fafafa !important;
+    }
+
+    #app-screen-shell.dark-theme [class~="text-zinc-500"],
+    #app-screen-shell.dark-theme [class~="text-zinc-600"] {
+      color: #a1a1aa !important;
+    }
+
+    #app-screen-shell.dark-theme [class~="text-lime-700"]:not(.it-hero-btn),
+    #app-screen-shell.dark-theme [class~="text-lime-600"]:not(.it-hero-btn) {
+      color: #818cf8 !important;
+    }
+
+    #app-screen-shell.dark-theme [class~="border-zinc-200"],
+    #app-screen-shell.dark-theme [class~="divide-zinc-200"] {
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    #app-screen-shell.dark-theme [class*="bg-amber-50"],
+    #app-screen-shell.dark-theme [class*="bg-lime-50"],
+    #app-screen-shell.dark-theme [class*="bg-lime-50"],
+    #app-screen-shell.dark-theme [class*="bg-rose-50"],
+    #app-screen-shell.dark-theme [class*="bg-lime-100"],
+    #app-screen-shell.dark-theme [class*="bg-amber-100"],
+    #app-screen-shell.dark-theme [class*="bg-lime-100"] {
+      background-color: rgba(39, 39, 42, 0.85) !important;
+      border-color: rgba(255, 255, 255, 0.14) !important;
+      color: #e4e4e7 !important;
+    }
+
+    #app-screen-shell.dark-theme [class*="text-lime-7"],
+    #app-screen-shell.dark-theme [class*="text-lime-8"] {
+      color: #9CE840 !important;
+    }
+
+    #app-screen-shell.dark-theme [class*="text-amber-7"],
+    #app-screen-shell.dark-theme [class*="text-amber-8"],
+    #app-screen-shell.dark-theme [class*="text-amber-9"] {
+      color: #fcd34d !important;
+    }
+
+    #app-screen-shell.dark-theme [class*="text-lime-8"],
+    #app-screen-shell.dark-theme [class*="text-lime-9"] {
+      color: #a5b4fc !important;
+    }
+
+    #app-screen-shell.dark-theme [class*="text-rose-8"],
+    #app-screen-shell.dark-theme [class*="text-rose-9"] {
+      color: #fda4af !important;
+    }
+
+    /* Simulated Walkthrough Pointer (exact 1:1 DOM alignment) */
+    #sim-pointer {
+      transition: left 0.62s cubic-bezier(0.22, 1, 0.36, 1), top 0.62s cubic-bezier(0.22, 1, 0.36, 1), transform 0.16s ease, opacity 0.25s ease;
+      pointer-events: none;
+    }
+
+    #sim-pointer.clicking {
+      transform: scale(0.86);
+    }
+
+    @keyframes pulseRing {
+      0% {
+        transform: scale(0.3);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(2.4);
+        opacity: 0;
+      }
+    }
+
+    .click-ripple {
+      animation: pulseRing 0.55s ease-out forwards;
+    }
+
+    #s2-3d-engine ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+
+    #s2-3d-engine ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    #s2-3d-engine ::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.28);
+      border-radius: 999px;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       VIEWPORT-PINNED FIXED UI (SCENE 1 OVERVIEW)
+       ═══════════════════════════════════════════════════ */
     .ui {
       position: fixed;
       inset: 0;
@@ -364,61 +661,106 @@
       pointer-events: none;
     }
 
-    /* Nav Tags */
-    .tag {
+    /* Scene 1 Minimalist Floating Top Nav */
+    .s1-nav {
       position: absolute;
+      top: 20px;
+      left: 24px;
+      right: 24px;
+      max-width: 1360px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+      transition: opacity .3s ease, transform .3s ease;
+    }
+
+    .s1-nav-group {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      height: calc(37 * var(--n));
-      padding: 0 calc(18 * var(--n));
-      font-family: 'Inter Tight', sans-serif;
-      font-weight: 650;
-      font-size: calc(16.5 * var(--n));
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      background: #ffffff;
-      border: none;
-      text-decoration: none;
-      white-space: nowrap;
+      gap: 4px;
+      padding: 5px;
+      border-radius: 9999px;
+      background: rgba(6, 24, 16, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
       pointer-events: auto;
-      cursor: pointer;
-      box-shadow: 0 calc(3 * var(--n)) 0 rgba(0, 0, 0, .18), 0 calc(6 * var(--n)) calc(14 * var(--n)) rgba(0, 0, 0, .18);
-      transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s cubic-bezier(.2, .8, .2, 1);
     }
 
-    .tag:hover {
-      transform: translateY(calc(-2 * var(--n))) rotate(-1.5deg);
-      box-shadow: 0 calc(5 * var(--n)) 0 rgba(0, 0, 0, .22), 0 calc(10 * var(--n)) calc(18 * var(--n)) rgba(0, 0, 0, .2);
-    }
-
-    .tag:active {
-      transform: translateY(calc(1 * var(--n)));
-      box-shadow: 0 calc(1 * var(--n)) 0 rgba(0, 0, 0, .18);
-    }
-
-    .t1 { left: calc(30 * var(--n)); top: calc(7 * var(--n)); }
-    .t2 { left: calc(233 * var(--n)); top: calc(7 * var(--n)); }
-    .t3 { right: calc(244 * var(--n)); top: calc(7 * var(--n)); }
-    .t4 { right: calc(32 * var(--n)); top: calc(7 * var(--n)); }
-
-    /* Centre Logo */
-    .nav-logo {
-      position: absolute;
-      left: 50%;
-      top: calc(14 * var(--n));
-      transform: translateX(-50%);
+    .s1-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 12px 0 10px;
       font-family: 'Inter Tight', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: #ffffff;
+      border-right: 1px solid rgba(255, 255, 255, 0.14);
+      margin-right: 2px;
+    }
+
+    .s1-brand-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 9999px;
+      background: #9CE840;
+      box-shadow: 0 0 10px rgba(52, 211, 153, 0.75);
+    }
+
+    .s1-link {
+      display: inline-flex;
+      align-items: center;
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 9999px;
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 13px;
       font-weight: 600;
-      font-size: calc(19 * var(--n));
-      letter-spacing: .14em;
-      color: #fff;
-      background: none;
+      color: rgba(255, 255, 255, 0.78);
+      background: transparent;
       border: none;
       cursor: pointer;
-      opacity: 0;
+      text-decoration: none;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    .s1-link:hover,
+    .s1-link.is-active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .s1-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 40px;
+      padding: 0 18px;
+      border-radius: 9999px;
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #141E17;
+      background: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      text-decoration: none;
       pointer-events: auto;
-      transition: opacity .4s ease;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    }
+
+    .s1-cta:hover {
+      background: #f1f9e4;
+      transform: translateY(-1px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
     }
 
     /* Scroll Hint */
@@ -426,227 +768,69 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      bottom: calc(22 * var(--n));
+      bottom: 24px;
       font-family: 'Inter Tight', sans-serif;
-      font-size: calc(12 * var(--n));
-      letter-spacing: .18em;
+      font-size: 11px;
+      letter-spacing: .16em;
       text-transform: uppercase;
       font-weight: 600;
-      color: #fff;
-      opacity: 0.85;
-      display: flex;
-      flex-direction: column;
+      color: rgba(255, 255, 255, 0.9);
+      display: inline-flex;
       align-items: center;
-      gap: calc(10 * var(--n));
-      pointer-events: none;
-      transition: opacity .3s;
+      gap: 10px;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      background: rgba(6, 24, 16, 0.48);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      pointer-events: auto;
+      cursor: pointer;
+      transition: opacity .3s ease, background .2s ease, transform .2s ease;
+    }
+
+    .hint:hover {
+      background: rgba(6, 24, 16, 0.72);
+      transform: translateX(-50%) translateY(-1px);
     }
 
     .hint-line {
-      width: calc(1.5 * var(--n));
-      height: calc(22 * var(--n));
-      background: rgba(255, 255, 255, .35);
+      width: 1.5px;
+      height: 14px;
+      background: rgba(255, 255, 255, .3);
       position: relative;
       overflow: hidden;
+      border-radius: 9999px;
     }
 
     .hint-bead {
       width: 100%;
-      height: 40%;
-      background: #fff;
+      height: 45%;
+      background: #9CE840;
       position: absolute;
-      top: -40%;
+      top: -45%;
       animation: drip 1.6s cubic-bezier(.6, 0, .4, 1) infinite;
     }
 
     @keyframes drip {
-      0% { top: -40%; }
-      100% { top: 100%; }
-    }
+      0% {
+        top: -45%;
+      }
 
-    /* ── Case UI (Desktop) ── */
-    /* Punched Paper Ticket */
-    .ticket {
-      position: absolute;
-      right: calc(32 * var(--n));
-      top: calc(98 * var(--n));
-      width: calc(348 * var(--n));
-      height: calc(182 * var(--n));
-      background: #ffffff;
-      border-radius: calc(3 * var(--n));
-      box-shadow: 0 calc(18 * var(--n)) calc(40 * var(--n)) rgba(0, 0, 0, .28);
-      padding: calc(26 * var(--n)) calc(34 * var(--n)) 0 calc(44 * var(--n));
-      transform-origin: 50% 0;
-      opacity: 0;
-      pointer-events: auto;
-      color: var(--ink);
-    }
-
-    .hole {
-      position: absolute;
-      width: calc(21 * var(--n));
-      height: calc(21 * var(--n));
-      background-color: var(--green-800);
-      border-radius: 50%;
-      box-shadow: inset 0 calc(2 * var(--n)) calc(3 * var(--n)) rgba(0, 0, 0, .35);
-    }
-
-    .hl-tl { top: calc(12 * var(--n)); left: calc(12 * var(--n)); }
-    .hl-tr { top: calc(12 * var(--n)); right: calc(12 * var(--n)); }
-    .hl-bl { bottom: calc(12 * var(--n)); left: calc(12 * var(--n)); }
-    .hl-br { bottom: calc(12 * var(--n)); right: calc(12 * var(--n)); }
-
-    .ticket-title {
-      font-family: 'Anton', sans-serif;
-      font-size: calc(50 * var(--n));
-      line-height: 1;
-      letter-spacing: -0.01em;
-      white-space: nowrap;
-      text-transform: uppercase;
-      color: var(--ink);
-    }
-
-    .ticket-rows {
-      margin-top: calc(8 * var(--n));
-      text-align: right;
-    }
-
-    .t-row {
-      font-weight: 700;
-      font-size: calc(12 * var(--n));
-      letter-spacing: 0.02em;
-      padding: calc(4 * var(--n)) 0 calc(3 * var(--n));
-      border-bottom: 1.5px dotted #2a2a2a;
-      color: var(--ink);
-    }
-
-    /* Case Description */
-    .desc {
-      position: absolute;
-      left: calc(28 * var(--n));
-      top: calc(326 * var(--n));
-      width: calc(172 * var(--n));
-      color: #fff;
-      pointer-events: none;
-    }
-
-    .desc-k {
-      font-weight: 700;
-      font-size: calc(17 * var(--n));
-      letter-spacing: -0.02em;
-      color: #fff;
-      opacity: 0;
-    }
-
-    .desc-p {
-      margin-top: calc(14 * var(--n));
-      font-size: calc(15 * var(--n));
-      line-height: 1.36;
-      font-weight: 500;
-      color: rgba(255, 255, 255, .92);
-      opacity: 0;
-    }
-
-    .desc-num {
-      margin-top: calc(22 * var(--n));
-      font-size: calc(12 * var(--n));
-      letter-spacing: 0.16em;
-      font-weight: 700;
-      color: rgba(255, 255, 255, .7);
-      opacity: 0;
-    }
-
-    /* Prev / Next Case Buttons */
-    .nav-case {
-      position: absolute;
-      bottom: calc(150 * var(--n));
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: calc(9 * var(--n));
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #fff;
-      opacity: 0;
-      pointer-events: auto;
-      transition: opacity .3s;
-    }
-
-    .nav-case.prev { left: calc(95 * var(--n)); }
-    .nav-case.next { right: calc(95 * var(--n)); }
-
-    .nav-case .c {
-      width: calc(50 * var(--n));
-      height: calc(50 * var(--n));
-      border-radius: 50%;
-      border: 1.6px solid rgba(255, 255, 255, .9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform .2s ease, background-color .2s ease;
-    }
-
-    .nav-case .c svg {
-      width: calc(24 * var(--n));
-      height: calc(24 * var(--n));
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .nav-case.next .c {
-      background: #ffffff;
-      border-color: #ffffff;
-      color: var(--green-800);
-    }
-
-    .nav-case.next:hover .c {
-      background-color: var(--mint);
-      border-color: var(--mint);
-    }
-
-    .nav-case:hover .c {
-      transform: scale(1.08);
-    }
-
-    .nav-case.dim {
-      opacity: 0.45 !important;
-      cursor: default;
-    }
-
-    .nav-case .lbl {
-      font-family: 'Inter Tight', sans-serif;
-      font-weight: 600;
-      font-size: calc(15 * var(--n));
-      line-height: 1.05;
-      text-align: center;
-      color: #fff;
-      white-space: nowrap;
+      100% {
+        top: 100%;
+      }
     }
 
     /* ── State Visibility Toggles ── */
-    body.is-case .nav-logo {
-      opacity: 1;
-    }
-
+    body.is-case .s1-nav,
     body.is-case .hint,
     body.busy .hint {
       visibility: hidden;
       opacity: 0;
+      pointer-events: none;
     }
 
-    body.is-case .nav-case {
-      opacity: 1;
-    }
-
-    body.is-case .screen-hit {
-      display: block;
-    }
-
-    /* Initial pre-entrance hiding */
     .js .pre {
       opacity: 0 !important;
     }
@@ -657,9 +841,11 @@
 
     /* ── Mobile Responsive Rules (<= 820px) ── */
     @media (max-width: 820px) {
+
       .frame .wm,
       .frame .script,
-      .frame .badge {
+      .frame .badge,
+      .sound-tag {
         display: none !important;
       }
 
@@ -671,16 +857,15 @@
         z-index: 5;
       }
 
-      /* Mobile Stage */
       .stage {
-        background: #0b3b2a;
+        background: #142417;
       }
 
       .stage::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, #1b4a34 0%, #1b4a34 55%, #2f6a50 80%, #7fb79d 100%);
+        background: linear-gradient(180deg, #1b361e 0%, #1b361e 55%, #376328 80%, #9fd166 100%);
         opacity: 0;
         transition: opacity 1.6s ease;
         pointer-events: none;
@@ -690,24 +875,29 @@
         opacity: 1;
       }
 
-      /* Mobile Nav Tags */
-      .tag {
-        font-size: 13px;
-        height: 30px;
-        padding: 0 12px;
+      .s1-nav {
+        top: 12px;
+        left: 12px;
+        right: 12px;
       }
 
-      .t1 { left: 12px; top: 12px; }
-      .t2 { right: 12px; top: 12px; left: auto; }
-      .t3 { left: 12px; top: calc(12px + 44 * var(--n)); right: auto; }
-      .t4 { right: 12px; top: calc(12px + 44 * var(--n)); }
-
-      body.is-case .t3,
-      body.is-case .t4 {
-        visibility: hidden;
+      .s1-brand {
+        padding: 0 8px;
+        font-size: 12px;
       }
 
-      /* Mobile Wordmark */
+      .s1-link {
+        height: 28px;
+        padding: 0 10px;
+        font-size: 12px;
+      }
+
+      .s1-cta {
+        height: 34px;
+        padding: 0 14px;
+        font-size: 12px;
+      }
+
       svg.m-wm {
         position: absolute;
         left: 3vw;
@@ -719,7 +909,6 @@
         z-index: 1;
       }
 
-      /* Mobile Script */
       .m-script {
         position: absolute;
         right: 6vw;
@@ -734,7 +923,6 @@
         white-space: nowrap;
       }
 
-      /* Mobile Badge */
       .m-badge {
         position: absolute;
         right: 2vw;
@@ -757,83 +945,21 @@
         transform: scale(var(--mbs)) translate(calc(-288px + 13.5vw), 0);
       }
 
-      /* Mobile Hint */
       .hint {
         bottom: 18px;
         font-size: 11px;
       }
 
-      /* Mobile Case Mode */
-      body.is-case .nav-logo {
-        display: none !important;
-      }
-
-      .ticket {
-        left: 50% !important;
-        right: auto !important;
-        transform: translateX(-50%) !important;
-        top: 62px !important;
-        width: min(86vw, 360px) !important;
-        height: auto !important;
-        padding: 22px 26px 16px 36px !important;
-      }
-
-      .ticket-title {
-        font-size: 38px !important;
-      }
-
-      .t-row {
-        font-size: 11px !important;
-      }
-
-      .hole {
-        width: 15px !important;
-        height: 15px !important;
-      }
-
-      .desc {
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        top: calc(62px + var(--th) + 18px) !important;
-        width: min(86vw, 360px) !important;
-        text-align: center;
-      }
-
-      .desc-k { font-size: 15px !important; }
-      .desc-p { font-size: 13.5px !important; }
-      .desc-num { display: none !important; }
-
-      .nav-case {
-        bottom: calc(env(safe-area-inset-bottom, 0px) + 2.2vh) !important;
-        flex-direction: row !important;
-        gap: 8px !important;
-      }
-
-      .nav-case.prev { left: 6vw !important; }
-      .nav-case.next { right: 6vw !important; }
-
-      .nav-case .c {
-        width: 42px !important;
-        height: 42px !important;
-      }
-
-      .nav-case .c svg {
-        width: 20px !important;
-        height: 20px !important;
-      }
-
-      .nav-case .lbl {
-        font-size: 12.5px !important;
-      }
-
-      .nav-case br {
-        display: none !important;
+      #s2-3d-engine {
+        overflow-y: auto;
       }
     }
 
-    /* ── Reduced Motion ── */
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+
+      *,
+      *::before,
+      *::after {
         animation: none !important;
         transition: none !important;
       }
@@ -841,6 +967,7 @@
   </style>
   <script>document.documentElement.classList.add('js');</script>
 </head>
+
 <body>
   <!-- ── Stage Container ── -->
   <div class="stage" id="stage">
@@ -852,12 +979,13 @@
       <svg class="wm pre" id="wm" viewBox="0 0 1440 380" preserveAspectRatio="none">
         <defs>
           <linearGradient id="wm-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
-            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9"/>
-            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.28"/>
+            <stop offset="0" stop-color="#ffffff" stop-opacity="1" />
+            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9" />
+            <stop offset="1" stop-color="#ddf2b8" stop-opacity="0.28" />
           </linearGradient>
         </defs>
-        <text x="14" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400" letter-spacing="-6px" fill="url(#wm-grad)">FAMS</text>
+        <text x="14" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400"
+          letter-spacing="-6px" fill="url(#wm-grad)">FAMS</text>
       </svg>
 
       <!-- 3. Man Cutout -->
@@ -883,91 +1011,739 @@
       <div class="script pre" id="script">field-attachment</div>
 
       <!-- 6. Camera Push Video -->
-      <video class="trans" id="trans" playsinline muted preload="auto"></video>
+      <video class="trans" id="trans" playsinline muted preload="auto" crossorigin="anonymous"></video>
 
       <!-- 7. Caseplate Photo -->
       <img class="caseplate" id="caseplate" alt="" crossorigin="anonymous">
 
-      <!-- 8. Laptop Display -->
+      <!-- 8. Laptop Screen Flash Target (Crossfades into Scene 2 #s2-3d-engine) -->
       <div class="screen" id="screen">
-        <video class="case-vid" id="cv0" playsinline muted loop crossorigin="anonymous"></video>
-        <video class="case-vid" id="cv1" playsinline muted loop crossorigin="anonymous"></video>
-        <video class="case-vid" id="cv2" playsinline muted loop crossorigin="anonymous"></video>
         <div class="flash" id="flash"></div>
       </div>
-
-      <!-- 9. Laptop Display Hit Target -->
-      <div class="screen-hit" id="screen-hit" title="Next case"></div>
     </div>
   </div>
 
   <!-- ── Viewport-Pinned Fixed UI ── -->
   <div class="ui">
-    <!-- Nav Tags -->
-    <button class="tag t1 pre" id="btn-overview" type="button">overview</button>
-    <button class="tag t2 pre" id="btn-features" type="button">features</button>
-    <a class="tag t3 pre" id="btn-contacts" href="#contacts">contacts</a>
-    <a class="tag t4 pre" id="btn-demo" href="#demo">request a demo</a>
+    <!-- Scene 1 Minimalist Floating Nav -->
+    <header class="s1-nav pre" id="s1-nav">
+      <nav class="s1-nav-group" aria-label="Primary">
+        <span class="s1-brand">
+          <span class="s1-brand-dot"></span>
+          FAMS
+        </span>
+        <button class="s1-link is-active" id="btn-overview" type="button">Overview</button>
+        <button class="s1-link" id="btn-features" type="button">Interactive Tour</button>
+      </nav>
 
-    <!-- Centre Nav Logo -->
-    <button class="nav-logo" id="btn-logo" type="button" aria-label="Back to overview">FAMS</button>
+      <a class="s1-cta" id="btn-demo" href="/auth" target="_top">
+        <span>Sign In</span>
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </header>
 
     <!-- Scroll Hint -->
-    <div class="hint pre" id="hint">
-      <div class="hint-line"><div class="hint-bead"></div></div>
-      <span>scroll into the system</span>
-    </div>
+    <button class="hint pre" id="hint" type="button" aria-label="Scroll into the system">
+      <span class="hint-line">
+        <span class="hint-bead"></span>
+      </span>
+      <span>Scroll to explore</span>
+    </button>
 
     <!-- Mobile-Only Copies Layer -->
     <div class="m-only" id="m-only">
       <svg class="m-wm pre" id="m-wm" viewBox="0 0 1440 380" preserveAspectRatio="none">
         <defs>
           <linearGradient id="m-wm-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
-            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9"/>
-            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.3"/>
+            <stop offset="0" stop-color="#ffffff" stop-opacity="1" />
+            <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9" />
+            <stop offset="1" stop-color="#ddf2b8" stop-opacity="0.3" />
           </linearGradient>
         </defs>
-        <text x="10" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400" letter-spacing="-6px" fill="url(#m-wm-grad)">FAMS</text>
+        <text x="10" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400"
+          letter-spacing="-6px" fill="url(#m-wm-grad)">FAMS</text>
       </svg>
       <div class="m-script pre" id="m-script">field-attachment</div>
       <div class="m-badge" id="m-badge"></div>
     </div>
 
-    <!-- Case UI: Ticket -->
-    <div class="ticket" id="ticket">
-      <div class="hole hl-tl"></div>
-      <div class="hole hl-tr"></div>
-      <div class="hole hl-bl"></div>
-      <div class="hole hl-br"></div>
-      <h2 class="ticket-title" id="t-title">PLACEMENT HUB</h2>
-      <div class="ticket-rows" id="t-rows">
-        <div class="t-row">STUDENT PORTAL</div>
-        <div class="t-row">PLACEMENTS</div>
-        <div class="t-row">2026</div>
-      </div>
-    </div>
+  </div>
 
-    <!-- Case UI: Description -->
-    <div class="desc" id="desc">
-      <div class="desc-k" id="d-k">// placement hub</div>
-      <p class="desc-p" id="d-p">— students browse host organisations, apply for attachment and track every request through to approval.</p>
-      <div class="desc-num" id="d-num">01 / 03</div>
-    </div>
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       SCENE 2: INTERNTRACK 3D AUTO-MOTION ENGINE (EXACT hero-laptop-views)
+       ═══════════════════════════════════════════════════════════════════════ -->
+  <div id="s2-3d-engine" aria-hidden="true">
+    <!-- 1. SUBTLE 3D ARCHITECTURAL GRID CANVAS -->
+    <canvas id="webgl-stage" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
 
-    <!-- Case UI: Prev/Next Buttons -->
-    <button class="nav-case prev" id="btn-prev" type="button" aria-label="Previous case">
-      <div class="c">
-        <svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    <!-- 2. MINIMALIST TOP CONTROL BAR -->
+    <header class="relative z-30 w-full max-w-[1360px] mx-auto pt-4 px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3">
+      <!-- Left: Back to Scene 1 -->
+      <div class="flex items-center gap-2.5">
+        <button
+          type="button"
+          onclick="toHero()"
+          class="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-zinc-300 hover:text-white transition backdrop-blur-md"
+        >
+          <span aria-hidden="true">&larr;</span>
+          <span>Overview</span>
+        </button>
       </div>
-      <span class="lbl">previous <br>case</span>
-    </button>
-    <button class="nav-case next" id="btn-next" type="button" aria-label="Next case">
-      <div class="c">
-        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+
+      <!-- Center: Clean 4-Role Segmented Switcher -->
+      <nav aria-label="Role perspectives" class="inline-flex items-center gap-1 p-1 rounded-full bg-zinc-900/90 border border-white/10 backdrop-blur-xl shadow-lg">
+        <button id="role-btn-0" type="button" onclick="selectRole(0, true)" class="role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 bg-white text-zinc-950 shadow-sm">
+          <span>Student</span>
+          <span id="role-prog-0" class="absolute bottom-0 left-0 h-[2px] bg-lime-500 transition-all duration-100" style="width: 0%"></span>
+        </button>
+        <button id="role-btn-1" type="button" onclick="selectRole(1, true)" class="role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-zinc-400 hover:text-white">
+          <span>Field Mentor</span>
+          <span id="role-prog-1" class="absolute bottom-0 left-0 h-[2px] bg-lime-400 transition-all duration-100" style="width: 0%"></span>
+        </button>
+        <button id="role-btn-2" type="button" onclick="selectRole(2, true)" class="role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-zinc-400 hover:text-white">
+          <span>Faculty</span>
+          <span id="role-prog-2" class="absolute bottom-0 left-0 h-[2px] bg-sky-400 transition-all duration-100" style="width: 0%"></span>
+        </button>
+        <button id="role-btn-3" type="button" onclick="selectRole(3, true)" class="role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-zinc-400 hover:text-white">
+          <span>Uni Admin</span>
+          <span id="role-prog-3" class="absolute bottom-0 left-0 h-[2px] bg-purple-400 transition-all duration-100" style="width: 0%"></span>
+        </button>
+      </nav>
+
+      <!-- Right: Subtle Controls + Sign In -->
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          onclick="toggleAutoMotion()"
+          class="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium text-zinc-300 hover:text-white transition backdrop-blur-md"
+          title="Toggle auto-play tour"
+        >
+          <span id="automotion-icon" class="size-2 rounded-full bg-lime-400 inline-block"></span>
+          <span id="automotion-text" class="hidden sm:inline">Auto-play</span>
+        </button>
+
+        <button
+          type="button"
+          onclick="toggleThemeMode()"
+          class="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium text-zinc-300 hover:text-white transition backdrop-blur-md"
+          title="Toggle workspace preview theme"
+        >
+          <span id="theme-mode-icon" class="size-2 rounded-full bg-lime-400 inline-block"></span>
+          <span id="theme-mode-text" class="hidden md:inline">Light</span>
+        </button>
+
+        <a
+          href="/auth"
+          target="_top"
+          class="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-white hover:bg-zinc-100 text-xs font-bold text-zinc-950 shadow-lg transition"
+          style="text-decoration: none;"
+          aria-label="Sign In to InternTrack Workspace"
+        >
+          <span>Sign In</span>
+          <span aria-hidden="true">&rarr;</span>
+        </a>
       </div>
-      <span class="lbl">next <br>case</span>
-    </button>
+    </header>
+
+    <!-- 3. CENTER 3D PERSPECTIVE STAGE (THE AUTHENTIC INTERNTRACK APP) -->
+    <main class="relative z-20 flex-1 flex items-center justify-center px-4 py-2 stage-viewport" id="stage-viewport">
+      
+      <!-- Crisp Browser Frame (subtle perspective, draggable) -->
+      <div id="camera-rig" class="camera-rig w-full max-w-[1160px]" style="transform: rotateX(1.5deg) rotateY(-1.5deg) scale(0.99);">
+        
+        <!-- Browser Workstation Window -->
+        <div class="laptop-3d-body">
+          
+          <!-- Browser Chrome Bar -->
+          <div class="bg-zinc-950 px-4 py-2 rounded-t-[11px] border-b border-white/10 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2">
+              <span class="size-2.5 rounded-full bg-zinc-700"></span>
+              <span class="size-2.5 rounded-full bg-zinc-700"></span>
+              <span class="size-2.5 rounded-full bg-zinc-700"></span>
+              <div class="ml-3 flex items-center gap-1.5 bg-zinc-900/90 border border-white/8 px-2.5 py-0.5 rounded-md text-[11px] font-mono text-zinc-400">
+                <svg class="size-3 text-lime-400/80 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span id="browser-url">interntrack.app/logbook</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-[11px] font-mono text-zinc-500">
+              <span class="size-1.5 rounded-full bg-lime-400"></span>
+              <span id="window-rbac-tier">STUDENT WORKSPACE</span>
+            </div>
+          </div>
+
+          <!-- AUTHENTIC INTERNTRACK APP SHELL -->
+          <div id="app-screen-shell" class="grid grid-cols-12 min-h-[580px] max-h-[580px] rounded-b-[11px] overflow-hidden relative" style="background: var(--it-bg); color: var(--it-ink); transition: background 0.25s ease, color 0.25s ease;">
+            
+            <!-- Simulated Walkthrough Cursor -->
+            <div id="sim-pointer" class="absolute z-50 left-[480px] top-[260px] flex items-start">
+              <div class="relative">
+                <svg class="size-5 drop-shadow-[0_4px_10px_rgba(0,0,0,0.4)]" viewBox="0 0 24 24" fill="#18181b" stroke="#ffffff" stroke-width="2">
+                  <path d="M4 4l7.07 17 2.51-7.39L21 11.07z"/>
+                </svg>
+                <div id="pointer-ripple" class="absolute -top-2 -left-2 size-8 rounded-full border-2 border-lime-500 opacity-0"></div>
+              </div>
+              <div id="pointer-label" class="ml-1.5 mt-3 px-2.5 py-1 rounded-full bg-zinc-950/95 text-white text-[10px] font-medium shadow-xl border border-white/15 whitespace-nowrap">
+                Navigating workspace
+              </div>
+            </div>
+
+            <!-- In-App Toast Notification (mirrors Sonner in real app) -->
+            <div id="inapp-toast" class="toast-hidden absolute bottom-4 right-4 z-40 flex items-center gap-2.5 rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 shadow-xl max-w-xs">
+              <span class="flex size-5 items-center justify-center rounded-full bg-lime-500/15 text-lime-600 text-[10px] font-bold shrink-0"></span>
+              <div class="min-w-0">
+                <p id="inapp-toast-title" class="text-[11px] font-semibold text-zinc-900 truncate">Action completed</p>
+                <p id="inapp-toast-desc" class="text-[10px] text-zinc-500 truncate">Synced with workspace</p>
+              </div>
+            </div>
+
+            <!-- LEFT SIDEBAR -->
+            <aside class="col-span-3 lg:col-span-2 flex flex-col justify-between select-none transition-colors duration-200" style="background: var(--it-sidebar); color: var(--it-sidebar-ink); border-right: 1px solid var(--it-sidebar-border);">
+              <div>
+                <div class="flex items-center gap-2.5 px-3.5 py-3" style="border-bottom: 1px solid var(--it-sidebar-border);">
+                  <div class="size-7 rounded-lg it-accent-gradient flex items-center justify-center text-white font-bold shrink-0">
+                    <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+                  </div>
+                  <div class="min-w-0">
+                    <p class="font-bold text-[13px] leading-none tracking-tight" style="color: var(--it-sidebar-active-ink);">InternTrack</p>
+                    <div class="mt-1 flex items-center gap-1">
+                      <span id="sb-tier-pill" class="text-[9px] font-semibold px-1 py-0 rounded" style="border: 1px solid var(--it-sidebar-border); color: var(--it-muted);">Tier 1</span>
+                      <span id="sb-role-short" class="text-[9px] font-mono uppercase tracking-wider" style="color: var(--it-muted);">STUDENT</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dynamic Categorized Sidebar Nav -->
+                <div id="sidebar-nav-container" class="px-2 py-3 space-y-3 text-xs"></div>
+              </div>
+
+              <!-- Sidebar Footer User -->
+              <div class="p-3" style="border-top: 1px solid var(--it-sidebar-border);">
+                <div class="flex items-center gap-2">
+                  <div id="sb-avatar" class="size-7 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0" style="background: rgba(79,70,229,0.12); color: var(--it-primary);">
+                    AW
+                  </div>
+                  <div class="min-w-0">
+                    <p id="sb-user-name" class="text-[11px] font-semibold truncate" style="color: var(--it-sidebar-active-ink);">Alice Wanjiku</p>
+                    <p id="sb-user-role" class="text-[10px] truncate" style="color: var(--it-muted);">Student</p>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <!-- RIGHT WORKSPACE AREA -->
+            <section class="col-span-9 lg:col-span-10 flex flex-col overflow-hidden relative">
+              
+              <!-- Authentic AppShell Header Bar (Breadcrumb + Notification Bell + Profile) -->
+              <div class="flex items-center justify-between h-11 px-5 border-b border-zinc-200 shrink-0" style="background: var(--it-card);">
+                <div class="flex items-center gap-1.5 text-[11px] min-w-0">
+                  <span id="top-crumb-cat" class="text-zinc-500">Logbook &amp; Tracking</span>
+                  <span class="text-zinc-300">/</span>
+                  <span id="top-scope-badge" class="font-semibold text-zinc-900 truncate">Digital Logbook</span>
+                </div>
+
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <!-- In-App Notification Bell -->
+                  <div id="inapp-notif-bell" class="relative flex size-7 items-center justify-center rounded-lg text-zinc-500 border border-zinc-200 bg-zinc-50">
+                    <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                    <span id="inapp-notif-count" class="absolute -top-1 -right-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-lime-600 px-1 text-[9px] font-bold text-white">1</span>
+                  </div>
+
+                  <div class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-2.5 py-1 shrink-0">
+                    <span id="top-avatar" class="size-5 rounded-full bg-lime-600/15 text-lime-700 font-bold text-[10px] flex items-center justify-center">AW</span>
+                    <span id="top-user-name" class="text-[11px] font-semibold text-zinc-900">Alice Wanjiku</span>
+                    <span id="top-role-badge" class="text-[10px] font-medium text-zinc-500">Student</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- WORKSPACE CONTENT BODY -->
+              <div class="flex-1 p-5 flex flex-col justify-between overflow-hidden">
+
+                <!-- ROLE 0: STUDENT INTERN VIEW (Alice Wanjiku) -->
+                <div id="role-view-0" class="view-enter flex-1 flex flex-col justify-between gap-3.5">
+                  <!-- Clean Page Header -->
+                  <div class="flex items-center justify-between gap-4">
+                    <div>
+                      <h2 class="text-lg font-bold tracking-tight text-zinc-900">Good morning, Alice</h2>
+                      <p class="text-[11px] text-zinc-500 mt-0.5">Software Engineering Intern · TechCorp Kenya Ltd · Week 9 of 12</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <button id="stu-btn-clock" onclick="triggerStudentClock()" type="button" class="px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-zinc-900 font-semibold text-[11px] hover:bg-zinc-50 transition">
+                        <span id="stu-clock-btn-label">Clock In</span>
+                      </button>
+                      <button id="stu-btn-add-log" onclick="triggerStudentLogFlow()" type="button" class="px-3 py-1.5 rounded-lg bg-zinc-900 text-white font-semibold text-[11px] hover:bg-zinc-800 transition">
+                        New Log Entry
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- 4 Minimalist KPI Cards -->
+                  <div class="grid grid-cols-4 gap-3">
+                    <div id="stu-card-days" class="bg-white border border-zinc-200 rounded-xl p-3 transition-all">
+                      <span class="text-[11px] text-zinc-500">Attendance</span>
+                      <div class="mt-1.5 flex items-baseline gap-1">
+                        <span id="stu-days-val" class="text-xl font-bold text-zinc-900">42</span>
+                        <span class="text-[11px] text-zinc-500">/ 60 days</span>
+                      </div>
+                      <div class="mt-2 w-full bg-zinc-100 h-1 rounded-full overflow-hidden">
+                        <div id="stu-days-bar" class="bg-lime-600 h-full transition-all duration-700" style="width: 70%"></div>
+                      </div>
+                    </div>
+
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Logged Hours</span>
+                      <div class="mt-1.5 flex items-baseline gap-1">
+                        <span id="stu-hours-val" class="text-xl font-bold text-zinc-900">336.0</span>
+                        <span class="text-[11px] text-zinc-500">hrs</span>
+                      </div>
+                      <p class="mt-1.5 text-[10px] text-zinc-500">40 hrs this week</p>
+                    </div>
+
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Logbook Entries</span>
+                      <div class="mt-1.5 flex items-baseline gap-1">
+                        <span id="stu-logs-count" class="text-xl font-bold text-zinc-900">4</span>
+                        <span class="text-[11px] text-zinc-500">logged</span>
+                      </div>
+                      <p id="stu-queue-pill" class="mt-1.5 text-[10px] text-amber-700 font-medium">1 draft ready</p>
+                    </div>
+
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Phase 2 Progress</span>
+                      <div class="mt-1.5 flex items-baseline gap-1">
+                        <span id="stu-ms-pct" class="text-xl font-bold text-zinc-900">67%</span>
+                      </div>
+                      <p class="mt-1.5 text-[10px] text-zinc-500">Core Engineering</p>
+                    </div>
+                  </div>
+
+                  <!-- Bottom Split: Logbook Editor + Shift & Milestones -->
+                  <div class="grid grid-cols-12 gap-3.5 flex-1 min-h-0">
+                    <div id="stu-card-logbook" class="col-span-7 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between transition-all">
+                      <div class="flex items-center justify-between border-b border-zinc-200 pb-2.5">
+                        <div>
+                          <div class="flex items-center gap-2">
+                            <span class="text-xs font-semibold text-zinc-900">Today's Logbook Entry</span>
+                            <span id="stu-log-status-badge" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">Draft</span>
+                          </div>
+                          <p class="text-[10px] text-zinc-500 mt-0.5">Sept 24, 2026 · TechCorp Product Engineering</p>
+                        </div>
+                        <button id="stu-btn-ai" onclick="triggerStudentAiPolish()" type="button" class="px-2.5 py-1 rounded-lg bg-lime-50 border border-lime-200 text-lime-700 text-[11px] font-semibold hover:bg-lime-100 transition">
+                          <span id="stu-ai-label">Refine Summary</span>
+                        </button>
+                      </div>
+
+                      <div class="my-2.5 space-y-2">
+                        <div class="text-xs font-semibold text-zinc-900">Onboarding Flow UI &amp; REST API Validation</div>
+                        <div class="bg-zinc-50 p-3 rounded-lg border border-zinc-200 min-h-[78px] text-[11px] text-zinc-700 leading-relaxed">
+                          <span id="stu-log-desc">Working on the onboarding wizard UI components for new user registration using React 19 and Zod schema validation.</span>
+                          <span id="stu-cursor" class="inline-block w-1 h-3 bg-lime-600 align-middle ml-0.5 animate-pulse"></span>
+                        </div>
+                      </div>
+
+                      <div class="flex items-center justify-between pt-2 border-t border-zinc-200">
+                        <div id="stu-skill-tags" class="flex flex-wrap gap-1">
+                          <span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700">React 19</span>
+                          <span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700">Tailwind CSS</span>
+                          <span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700">TypeScript</span>
+                        </div>
+                        <button id="stu-btn-submit" onclick="triggerStudentSubmit()" type="button" class="px-3.5 py-1.5 rounded-lg bg-lime-600 hover:bg-lime-700 text-white font-semibold text-[11px] transition">
+                          <span id="stu-submit-label">Submit for Review</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div id="stu-card-milestone" class="col-span-5 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between transition-all">
+                      <div>
+                        <div class="flex items-center justify-between border-b border-zinc-200 pb-2.5">
+                          <span class="text-xs font-semibold text-zinc-900">Shift &amp; Milestones</span>
+                          <span id="stu-shift-pill" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200">On Site</span>
+                        </div>
+
+                        <div class="mt-3 space-y-2 text-[11px]">
+                          <div class="flex items-center gap-2.5 p-2 rounded-lg bg-zinc-50 border border-zinc-200">
+                            <span class="size-4 rounded-full bg-lime-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0"></span>
+                            <span class="line-through text-zinc-500">Build Radix dialog &amp; tabs in review queue</span>
+                          </div>
+                          <div class="flex items-center gap-2.5 p-2 rounded-lg bg-zinc-50 border border-zinc-200">
+                            <span class="size-4 rounded-full bg-lime-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0"></span>
+                            <span class="line-through text-zinc-500">Responsive KPI dashboard with Recharts</span>
+                          </div>
+                          <div id="stu-ms-task3" class="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-zinc-200 transition-all">
+                            <span id="stu-ms-check3" class="size-4 rounded-full border border-zinc-300 flex items-center justify-center text-[9px] font-bold shrink-0"></span>
+                            <span id="stu-ms-text3" class="font-medium text-zinc-900">Complete accessibility &amp; keyboard audit</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="pt-2.5 border-t border-zinc-200 flex items-center justify-between text-[10px] text-zinc-500">
+                        <span>Host Mentor: <strong class="text-zinc-900">James Otieno</strong></span>
+                        <span>TechCorp Westlands</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ROLE 1: FIELD SUPERVISOR VIEW (James Otieno) -->
+                <div id="role-view-1" class="hidden view-enter flex-1 flex flex-col justify-between gap-3.5">
+                  <div class="flex items-center justify-between gap-4">
+                    <div>
+                      <h2 class="text-lg font-bold tracking-tight text-zinc-900">Review Queue</h2>
+                      <p class="text-[11px] text-zinc-500 mt-0.5">TechCorp Kenya Ltd · Product Engineering · 2 assigned interns</p>
+                    </div>
+                    <div class="inline-flex items-center gap-1 bg-zinc-100 p-1 rounded-lg border border-zinc-200 text-[11px]">
+                      <span class="px-2.5 py-1 rounded-md bg-white font-semibold text-zinc-900 shadow-2xs">
+                        Pending <span id="sup-pending-badge" class="ml-1 text-lime-600">2</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-md font-medium text-zinc-500">
+                        Approved <span id="sup-approved-badge" class="ml-1">3</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-md font-medium text-zinc-500">Revisions 1</span>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-12 gap-3.5 flex-1 min-h-0">
+                    <div id="sup-card-review" class="col-span-8 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between transition-all">
+                      <div>
+                        <div class="flex items-start justify-between gap-2 border-b border-zinc-200 pb-3">
+                          <div>
+                            <div class="flex items-center gap-2">
+                              <h3 class="text-sm font-semibold text-zinc-900">Vulnerability assessment on customer portal API</h3>
+                              <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700">Kevin Kiprono</span>
+                            </div>
+                            <p class="text-[10px] text-zinc-500 mt-0.5">Sept 24, 2026 · 08:30 – 17:00 (8.0 hrs)</p>
+                          </div>
+                          <span id="sup-sub-status" class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 shrink-0">
+                            Pending Review
+                          </span>
+                        </div>
+
+                        <p class="text-xs text-zinc-600 mt-3 leading-relaxed">
+                          Conducted automated and manual security testing using OWASP ZAP and Postman. Identified 2 CORS misconfigurations and drafted remediation notes alongside PostgreSQL schema indexing.
+                        </p>
+
+                        <div class="flex flex-wrap gap-1.5 mt-2.5">
+                          <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-zinc-100 text-zinc-700">OWASP ZAP</span>
+                          <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-zinc-100 text-zinc-700">Postman</span>
+                          <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-zinc-100 text-zinc-700">PostgreSQL</span>
+                        </div>
+
+                        <div class="mt-3.5 space-y-1.5">
+                          <label class="text-[11px] font-semibold text-zinc-900">Mentor Feedback Note</label>
+                          <div class="bg-zinc-50 border border-zinc-200 rounded-lg p-2.5 text-[11px] text-zinc-700 min-h-[52px]">
+                            <span id="sup-feedback-text">Verified CORS remediation and PostgreSQL index benchmarks on staging. Clear documentation.</span>
+                            <span class="inline-block w-1 h-3 bg-lime-600 align-middle ml-0.5 animate-pulse"></span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="flex items-center justify-between pt-3 border-t border-zinc-200">
+                        <span class="text-[10px] text-zinc-500">Reviewer: James Otieno</span>
+                        <div class="flex items-center gap-2">
+                          <button type="button" class="px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 font-semibold text-[11px] hover:bg-zinc-50 transition">
+                            Request Revision
+                          </button>
+                          <button id="sup-btn-approve" onclick="triggerSupervisorApprove()" type="button" class="px-3.5 py-1.5 rounded-lg bg-lime-600 hover:bg-lime-700 text-white font-semibold text-[11px] transition">
+                            <span id="sup-approve-label">Sign Off &amp; Approve</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-span-4 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between">
+                      <div class="space-y-3">
+                        <div class="text-xs font-semibold text-zinc-900 border-b border-zinc-200 pb-2.5">Assigned Interns</div>
+                        <div class="p-3 rounded-lg bg-zinc-50 border border-zinc-200 space-y-1.5">
+                          <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-zinc-900">Alice Wanjiku</span>
+                            <span class="text-[10px] font-mono text-lime-700">42/60d</span>
+                          </div>
+                          <p class="text-[10px] text-zinc-500">Software Engineering · On Track</p>
+                          <div class="w-full bg-zinc-200 h-1 rounded-full overflow-hidden"><div class="bg-lime-500 h-full" style="width: 70%"></div></div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-zinc-50 border border-zinc-200 space-y-1.5">
+                          <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-zinc-900">Kevin Kiprono</span>
+                            <span class="text-[10px] font-mono text-amber-700">18/60d</span>
+                          </div>
+                          <p class="text-[10px] text-zinc-500">Cybersecurity · In Progress</p>
+                          <div class="w-full bg-zinc-200 h-1 rounded-full overflow-hidden"><div class="bg-amber-500 h-full" style="width: 30%"></div></div>
+                        </div>
+                      </div>
+                      <p class="text-[10px] text-zinc-500 pt-2.5 border-t border-zinc-200">
+                        Signed entries sync automatically to the student's academic assessor.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ROLE 2: FACULTY ASSESSOR (Dr. Joyce Chelangat) -->
+                <div id="role-view-2" class="hidden view-enter flex-1 flex flex-col justify-between gap-3.5">
+                  <div class="flex items-center justify-between gap-4">
+                    <div>
+                      <h2 class="text-lg font-bold tracking-tight text-zinc-900">Performance Evaluations</h2>
+                      <p class="text-[11px] text-zinc-500 mt-0.5">University of Nairobi · Software Engineering · Mid-Term &amp; Final Rubrics</p>
+                    </div>
+                    <button id="uni-btn-eval" onclick="triggerUniEvaluation()" type="button" class="px-3 py-1.5 rounded-lg bg-zinc-900 text-white font-semibold text-[11px] hover:bg-zinc-800 transition shrink-0">
+                      New Evaluation
+                    </button>
+                  </div>
+
+                  <div class="grid grid-cols-4 gap-3">
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Evaluations</span>
+                      <div id="uni-eval-count" class="text-xl font-bold text-zinc-900 mt-1">1</div>
+                      <p class="text-[10px] text-zinc-500 mt-1">Signed on file</p>
+                    </div>
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Average Score</span>
+                      <div id="uni-eval-avg" class="text-xl font-bold text-zinc-900 mt-1">4.8 / 5.0</div>
+                      <p class="text-[10px] text-lime-600 font-medium mt-1">Distinction tier</p>
+                    </div>
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Offer Endorsements</span>
+                      <div id="uni-eval-offers" class="text-xl font-bold text-zinc-900 mt-1">1</div>
+                      <p class="text-[10px] text-zinc-500 mt-1">Recommended</p>
+                    </div>
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Defense Ready</span>
+                      <div id="uni-eval-ready" class="text-xl font-bold text-zinc-900 mt-1">3 of 4</div>
+                      <p class="text-[10px] text-zinc-500 mt-1">Clearance unlocked</p>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-12 gap-3.5 flex-1 min-h-0">
+                    <div id="uni-card-rubric" class="col-span-7 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between transition-all">
+                      <div class="flex items-center justify-between border-b border-zinc-200 pb-2.5">
+                        <div>
+                          <span class="text-xs font-semibold text-zinc-900">Final Assessment Rubric</span>
+                          <p class="text-[10px] text-zinc-500 mt-0.5">Alice Wanjiku (CS/2021/0042) · TechCorp Kenya</p>
+                        </div>
+                        <span id="uni-grade-pill" class="px-2.5 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 text-[11px] font-semibold">
+                          Grade A · 4.8/5.0
+                        </span>
+                      </div>
+
+                      <div class="space-y-2.5 my-2">
+                        <div>
+                          <div class="flex justify-between text-[11px] text-zinc-700 mb-1">
+                            <span>Technical Engineering &amp; Architecture</span>
+                            <span class="font-mono font-semibold text-zinc-900">5.0</span>
+                          </div>
+                          <div class="w-full h-1.5 rounded-full bg-zinc-100 overflow-hidden">
+                            <div id="uni-bar-1" class="h-full bg-lime-600 transition-all duration-700" style="width: 100%"></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div class="flex justify-between text-[11px] text-zinc-700 mb-1">
+                            <span>Attendance &amp; Workplace Ethics</span>
+                            <span class="font-mono font-semibold text-zinc-900">5.0</span>
+                          </div>
+                          <div class="w-full h-1.5 rounded-full bg-zinc-100 overflow-hidden">
+                            <div id="uni-bar-2" class="h-full bg-lime-600 transition-all duration-700" style="width: 100%"></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div class="flex justify-between text-[11px] text-zinc-700 mb-1">
+                            <span>Logbook Rigor &amp; Documentation</span>
+                            <span class="font-mono font-semibold text-zinc-900">4.5</span>
+                          </div>
+                          <div class="w-full h-1.5 rounded-full bg-zinc-100 overflow-hidden">
+                            <div id="uni-bar-3" class="h-full bg-lime-500 transition-all duration-700" style="width: 90%"></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div class="flex justify-between text-[11px] text-zinc-700 mb-1">
+                            <span>Oral Defense &amp; Problem Solving</span>
+                            <span class="font-mono font-semibold text-zinc-900">5.0</span>
+                          </div>
+                          <div class="w-full h-1.5 rounded-full bg-zinc-100 overflow-hidden">
+                            <div id="uni-bar-4" class="h-full bg-lime-600 transition-all duration-700" style="width: 100%"></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="flex items-center justify-between pt-2.5 border-t border-zinc-200">
+                        <span class="text-[11px] text-zinc-500">Endorsement: <strong class="text-lime-700">Full-Time Offer</strong></span>
+                        <button id="uni-btn-save-eval" onclick="triggerUniEvaluation()" type="button" class="px-3.5 py-1.5 rounded-lg bg-lime-600 text-white font-semibold text-[11px] hover:bg-lime-700 transition">
+                          <span id="uni-save-eval-label">Certify &amp; Record Grade</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="col-span-5 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between">
+                      <div class="space-y-2.5">
+                        <div class="text-xs font-semibold text-zinc-900 border-b border-zinc-200 pb-2.5">Milestone Certification</div>
+                        <div class="p-3 rounded-lg bg-zinc-50 border border-zinc-200 text-xs space-y-1">
+                          <div class="flex items-center justify-between">
+                            <span class="font-semibold text-zinc-900">Phase 1: Orientation</span>
+                            <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-lime-50 text-lime-700 border border-lime-200">Certified</span>
+                          </div>
+                          <p class="text-[10px] text-zinc-500">Weeks 1–2 · Git, Docker, Architecture</p>
+                        </div>
+                        <div id="uni-ms-phase2" class="p-3 rounded-lg bg-zinc-50 border border-zinc-200 text-xs space-y-1 transition-all">
+                          <div class="flex items-center justify-between">
+                            <span class="font-semibold text-zinc-900">Phase 2: Core Modules</span>
+                            <span id="uni-ms-badge2" class="text-[10px] font-medium px-2 py-0.5 rounded bg-lime-50 text-lime-700 border border-lime-200">Ready</span>
+                          </div>
+                          <p class="text-[10px] text-zinc-500">Weeks 3–6 · React 19, Tailwind, APIs</p>
+                        </div>
+                      </div>
+                      <p class="text-[10px] text-zinc-500 pt-2.5 border-t border-zinc-200">
+                        Certified milestones unlock defense scheduling for the University Admin.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ROLE 3: UNIVERSITY ADMIN (Dr. Peter Kamau) -->
+                <div id="role-view-3" class="hidden view-enter flex-1 flex flex-col justify-between gap-3.5">
+                  <div class="flex items-center justify-between gap-4">
+                    <div>
+                      <h2 class="text-lg font-bold tracking-tight text-zinc-900">Good morning, Dr. Peter Kamau</h2>
+                      <p class="text-[11px] text-zinc-500 mt-0.5">University of Nairobi · School of Computing &amp; Informatics</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <button id="admin-btn-assign" onclick="triggerAdminPairSupervisor()" type="button" class="px-3 py-1.5 rounded-lg bg-zinc-900 text-white font-semibold text-[11px] hover:bg-zinc-800 transition">
+                        <span id="admin-assign-label">Assign Assessor</span>
+                      </button>
+                      <button id="admin-btn-export" onclick="triggerAdminExportDossier()" type="button" class="px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-zinc-900 font-semibold text-[11px] hover:bg-zinc-50 transition">
+                        <span id="admin-export-label">Export Dossier</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-4 gap-3">
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Enrolled Cohort</span>
+                      <div class="text-xl font-bold text-zinc-900 mt-1">4</div>
+                      <p class="text-[10px] text-zinc-500 mt-1">Active placements</p>
+                    </div>
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Dual-Supervision</span>
+                      <div id="admin-dual-rate" class="text-xl font-bold text-amber-600 mt-1">75%</div>
+                      <p id="admin-dual-sub" class="text-[10px] text-amber-700 font-medium mt-1">3 of 4 paired</p>
+                    </div>
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Supervisor Roster</span>
+                      <div id="admin-sup-count" class="text-xl font-bold text-zinc-900 mt-1">6</div>
+                      <p class="text-[10px] text-zinc-500 mt-1">3 host · 3 faculty</p>
+                    </div>
+                    <div class="bg-white border border-zinc-200 rounded-xl p-3">
+                      <span class="text-[11px] text-zinc-500">Accreditation</span>
+                      <div id="admin-export-pill" class="text-xl font-bold text-zinc-900 mt-1">Ready</div>
+                      <p class="text-[10px] text-zinc-500 mt-1">Senate PDF format</p>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-12 gap-3.5 flex-1 min-h-0">
+                    <div id="admin-card-pairing" class="col-span-8 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between transition-all">
+                      <div>
+                        <div class="flex items-center justify-between border-b border-zinc-200 pb-2.5">
+                          <span class="text-xs font-semibold text-zinc-900">Placement &amp; Dual-Supervisor Roster</span>
+                          <span class="text-[10px] text-zinc-500">Host Mentor + Faculty Assessor</span>
+                        </div>
+
+                        <div class="mt-2 divide-y divide-zinc-200 text-[11px]">
+                          <div class="py-2 flex items-center justify-between">
+                            <div>
+                              <div class="font-semibold text-zinc-900">Alice Wanjiku</div>
+                              <div class="text-[10px] text-zinc-500">TechCorp Kenya · 42/60d</div>
+                            </div>
+                            <div class="text-[10px] text-zinc-600">James Otieno / Dr. Peter Kamau</div>
+                            <span class="px-2 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 font-medium text-[10px]">Dual-Supervised</span>
+                          </div>
+
+                          <div class="py-2 flex items-center justify-between">
+                            <div>
+                              <div class="font-semibold text-zinc-900">Brian Mwangi</div>
+                              <div class="text-[10px] text-zinc-500">Safaricom PLC · 39/60d</div>
+                            </div>
+                            <div class="text-[10px] text-zinc-600">Grace Muthoni / Dr. Joyce Chelangat</div>
+                            <span class="px-2 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 font-medium text-[10px]">Dual-Supervised</span>
+                          </div>
+
+                          <div id="admin-row-kevin" class="py-2 px-2.5 mt-1 rounded-lg bg-amber-50/70 border border-amber-200 flex items-center justify-between transition-all">
+                            <div>
+                              <div class="font-semibold text-zinc-900">Kevin Kiprono</div>
+                              <div class="text-[10px] text-zinc-500">TechCorp Kenya · 18/60d</div>
+                            </div>
+                            <div id="admin-kevin-uni-sup" class="text-[10px] text-amber-800 font-semibold">Missing Faculty Assessor</div>
+                            <span id="admin-kevin-status" class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-medium text-[10px]">Needs Allocation</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="pt-2.5 border-t border-zinc-200 flex items-center justify-between text-[10px] text-zinc-500">
+                        <span>Pre-provisioned supervisor credentials dispatch automatically on save.</span>
+                      </div>
+                    </div>
+
+                    <div id="admin-card-rbac" class="col-span-4 bg-white border border-zinc-200 rounded-xl p-4 flex flex-col justify-between transition-all">
+                      <div>
+                        <div class="text-xs font-semibold text-zinc-900 border-b border-zinc-200 pb-2.5">Governance &amp; RBAC</div>
+                        <div class="mt-2.5 space-y-2 text-[11px]">
+                          <div class="flex items-center justify-between py-1">
+                            <span class="text-zinc-700">Log Override</span>
+                            <span class="text-[10px] font-medium text-lime-700">Enabled</span>
+                          </div>
+                          <div class="flex items-center justify-between py-1 border-t border-zinc-100">
+                            <span class="text-zinc-700">Supervisor Pairing</span>
+                            <span class="text-[10px] font-medium text-lime-700">Enabled</span>
+                          </div>
+                          <div class="flex items-center justify-between py-1 border-t border-zinc-100">
+                            <span class="text-zinc-700">Dossier Export</span>
+                            <span class="text-[10px] font-medium text-lime-700">Enabled</span>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="text-[10px] text-zinc-500 pt-2.5 border-t border-zinc-200">
+                        All 13 institutional permissions enforced per role tier.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 4. GUIDED WALKTHROUGH BAR -->
+    <footer class="relative z-30 w-full max-w-[1160px] mx-auto pb-4 px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span id="walkthrough-step-badge" class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/10 px-2.5 py-1 text-[10px] font-semibold text-lime-300 shrink-0">
+          Step 1 of 4
+        </span>
+        <p id="s2-role-summary" class="truncate text-zinc-300 text-xs">
+          <span class="font-semibold text-white">Student</span> — Daily shift check-in, structured logbook drafting, and milestone tracking.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button
+          type="button"
+          onclick="prevWorkflow()"
+          class="inline-flex items-center justify-center size-7 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-zinc-300 hover:text-white transition"
+          aria-label="Previous walkthrough step"
+        >
+          &larr;
+        </button>
+        <button
+          type="button"
+          onclick="nextWorkflow()"
+          class="inline-flex items-center justify-center size-7 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-zinc-300 hover:text-white transition"
+          aria-label="Next walkthrough step"
+        >
+          &rarr;
+        </button>
+      </div>
+    </footer>
   </div>
 
   <script>
@@ -986,32 +1762,8 @@
         trans: CF + 'hf_20261111_001144_2b054228-95af-41d5-922d-b02979fe485b.mp4',
       };
 
-      const R2 = 'https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/aaaf/';
-      const CASES = [
-        {
-          video: R2 + 'vell-lookbook.mp4',
-          title: 'PLACEMENT HUB',
-          rows: ['STUDENT PORTAL', 'PLACEMENTS', '2026'],
-          key: '// placement hub',
-          text: '— students browse host organisations, apply for attachment and track every request through to approval.',
-        },
-        {
-          video: R2 + 'vasari-vhs-hero.mp4',
-          title: 'DIGITAL LOGBOOK',
-          rows: ['INTERNS', 'WEEKLY LOGS', '2026'],
-          key: '// digital logbook',
-          text: '— interns record daily activities and supervisors sign off in one tap, no more paper logbooks.',
-        },
-        {
-          video: R2 + 'living-portrait-hero.mp4',
-          title: 'SUPERVISION',
-          rows: ['SUPERVISORS', 'ASSESSMENT', '2026'],
-          key: '// supervision',
-          text: '— academic and field supervisors schedule visits, score interns and generate final reports automatically.',
-        },
-      ];
-
-      /* ── 2. DOM Elements ── */
+      /* ── 3. DOM Elements (Scene 1 + Scene 2 3D Engine) ── */
+      const s2Engine = document.getElementById('s2-3d-engine');
       const frameEl = document.getElementById('frame');
       const stageEl = document.getElementById('stage');
       const plateImg = document.getElementById('plate');
@@ -1020,83 +1772,879 @@
       const badgeImg = document.getElementById('badge-img');
       const transVideo = document.getElementById('trans');
       const screenEl = document.getElementById('screen');
-      const screenHitEl = document.getElementById('screen-hit');
       const flashEl = document.getElementById('flash');
-      const caseVids = [document.getElementById('cv0'), document.getElementById('cv1'), document.getElementById('cv2')];
 
       const wmSvg = document.getElementById('wm');
       const scriptEl = document.getElementById('script');
       const badgeEl = document.getElementById('badge');
       const badgeHitEl = document.getElementById('badge-hit');
-      const hintEl = document.getElementById('hint');
 
       const btnOverview = document.getElementById('btn-overview');
       const btnFeatures = document.getElementById('btn-features');
       const btnContacts = document.getElementById('btn-contacts');
       const btnDemo = document.getElementById('btn-demo');
-      const btnLogo = document.getElementById('btn-logo');
-      const btnPrev = document.getElementById('btn-prev');
-      const btnNext = document.getElementById('btn-next');
 
-      const ticketEl = document.getElementById('ticket');
-      const tTitleEl = document.getElementById('t-title');
-      const tRowsEl = document.getElementById('t-rows');
-      const descEl = document.getElementById('desc');
-      const dKEl = document.getElementById('d-k');
-      const dPEl = document.getElementById('d-p');
-      const dNumEl = document.getElementById('d-num');
-
-      const mOnlyEl = document.getElementById('m-only');
       const mWmSvg = document.getElementById('m-wm');
       const mScriptEl = document.getElementById('m-script');
       const mBadgeEl = document.getElementById('m-badge');
 
-      /* ── 3. State ── */
+      /* ── 4. Scene State ── */
       let mode = 'hero';
-      let currentCase = 0;
       let busy = false;
       let transReady = false;
       let badgeSway = null;
       let entered = false;
       const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Assign image sources
+      // Assign Scene 1 media sources
       plateImg.src = ASSETS.plate;
       casePlateImg.src = ASSETS.casePlate;
       cutImg.src = ASSETS.cut;
       badgeImg.src = ASSETS.badge;
-      caseVids[0].src = CASES[0].video;
+
+      transVideo.src = ASSETS.trans;
+      transVideo.addEventListener('loadeddata', () => { transReady = true; });
+      transVideo.addEventListener('canplaythrough', () => { transReady = true; });
 
       // Clone mobile badge
       const mobileBadgeClone = badgeEl.cloneNode(true);
       mobileBadgeClone.id = 'badge-mobile-clone';
       mBadgeEl.appendChild(mobileBadgeClone);
 
-      // Preload transition video with Blob fetch for seamless seek
-      fetch(ASSETS.trans)
-        .then((r) => r.blob())
-        .then((b) => {
-          transVideo.src = URL.createObjectURL(b);
-        })
-        .catch(() => {
-          transVideo.src = ASSETS.trans;
+      /* ═══════════════════════════════════════════════════════════════════════
+         SCENE 2: EXACT hero-laptop-views.html 3D AUTO-MOTION ENGINE
+         ═══════════════════════════════════════════════════════════════════════ */
+      const ROLES = [
+        {
+          idx: 0,
+          key: 'student',
+          tier: 'Tier 1',
+          short: 'STUDENT',
+          windowTier: 'STUDENT WORKSPACE',
+          url: 'interntrack.app/logbook',
+          name: 'Alice Wanjiku',
+          roleLabel: 'Student',
+          initials: 'AW',
+          crumbCat: 'Logbook & Tracking',
+          scopeBadge: 'Digital Logbook',
+          notifCount: 1,
+          summary: 'Daily shift check-in, structured logbook drafting, and milestone tracking.',
+          baseCamera: { rx: 1.5, ry: -1.5, rz: 0, scale: 0.99, tx: 0, ty: 0 },
+          navGroups: [
+            { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
+            { cat: 'LOGBOOK & TRACKING', items: [{ label: 'Digital Logbook', active: true }, { label: 'Attendance & Clock', active: false }, { label: 'Milestones Roadmap', active: false }] },
+            { cat: 'ACCOUNT', items: [{ label: 'My Profile', active: false }] }
+          ]
+        },
+        {
+          idx: 1,
+          key: 'field_supervisor',
+          tier: 'Tier 2',
+          short: 'HOST',
+          windowTier: 'FIELD MENTOR WORKSPACE',
+          url: 'interntrack.app/review',
+          name: 'James Otieno',
+          roleLabel: 'Host Org Mentor',
+          initials: 'JO',
+          crumbCat: 'Supervisory Controls',
+          scopeBadge: 'Review Queue',
+          notifCount: 2,
+          summary: 'Scoped to assigned company interns for daily log verification and mentor feedback.',
+          baseCamera: { rx: 1.5, ry: 1.5, rz: 0, scale: 0.99, tx: 0, ty: 0 },
+          navGroups: [
+            { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
+            { cat: 'SUPERVISORY CONTROLS', items: [{ label: 'Review Queue', active: true }, { label: 'Assigned Interns', active: false }, { label: 'Evaluations', active: false }] },
+            { cat: 'ACCOUNT', items: [{ label: 'My Profile', active: false }] }
+          ]
+        },
+        {
+          idx: 2,
+          key: 'uni_supervisor',
+          tier: 'Tier 3',
+          short: 'FACULTY',
+          windowTier: 'FACULTY ASSESSOR WORKSPACE',
+          url: 'interntrack.app/evaluations',
+          name: 'Dr. Joyce Chelangat',
+          roleLabel: 'Faculty Assessor',
+          initials: 'JC',
+          crumbCat: 'Supervisory Controls',
+          scopeBadge: 'Performance Evaluations',
+          notifCount: 1,
+          summary: 'Certifies academic milestone phases and records official evaluation rubrics.',
+          baseCamera: { rx: 1.5, ry: -1.5, rz: 0, scale: 0.99, tx: 0, ty: 0 },
+          navGroups: [
+            { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }, { label: 'Reports & Dossier', active: false }] },
+            { cat: 'SUPERVISORY CONTROLS', items: [{ label: 'Review Queue', active: false }, { label: 'Assigned Interns', active: false }, { label: 'Evaluations', active: true }] },
+            { cat: 'ACCOUNT', items: [{ label: 'My Profile', active: false }] }
+          ]
+        },
+        {
+          idx: 3,
+          key: 'uni_admin',
+          tier: 'Tier 4',
+          short: 'UNIVERSITY',
+          windowTier: 'UNIVERSITY ADMIN WORKSPACE',
+          url: 'interntrack.app/assignments',
+          name: 'Dr. Peter Kamau',
+          roleLabel: 'University Admin',
+          initials: 'DP',
+          crumbCat: 'Institutional & RBAC',
+          scopeBadge: 'Supervisor Pairing',
+          notifCount: 2,
+          summary: 'Provisions supervisor accounts, pairs dual mentors, governs RBAC, and exports dossiers.',
+          baseCamera: { rx: 1.5, ry: 1.5, rz: 0, scale: 0.99, tx: 0, ty: 0 },
+          navGroups: [
+            { cat: 'OVERVIEW', items: [{ label: 'Dashboard', active: false }] },
+            { cat: 'INSTITUTIONAL & RBAC', items: [{ label: 'Supervisor Accounts', active: false }, { label: 'Supervisor Pairing', active: true }, { label: 'RBAC Matrix', active: false }, { label: 'Accreditation', active: false }] }
+          ]
+        }
+      ];
+
+      let activeRole = 0;
+      let autoMotion = true;
+      let exploded = false;
+      let stepStartTime = Date.now();
+      const ROLE_DURATION = 9500;
+      let scriptTimers = [];
+      let toastTimer = null;
+
+      const rigEl = document.getElementById('camera-rig');
+      let camState = { rx: 1.5, ry: -1.5, rz: 0, scale: 0.99, tx: 0, ty: 0 };
+
+      function showInAppToast(title, desc) {
+        const toastEl = document.getElementById('inapp-toast');
+        const tTitle = document.getElementById('inapp-toast-title');
+        const tDesc = document.getElementById('inapp-toast-desc');
+        if (!toastEl) return;
+        if (tTitle) tTitle.textContent = title;
+        if (tDesc) tDesc.textContent = desc || '';
+        toastEl.classList.remove('toast-hidden');
+        toastEl.classList.add('toast-visible');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toastEl.classList.remove('toast-visible');
+          toastEl.classList.add('toast-hidden');
+        }, 2400);
+      }
+
+      function hideInAppToast() {
+        const toastEl = document.getElementById('inapp-toast');
+        if (toastTimer) clearTimeout(toastTimer);
+        if (toastEl) {
+          toastEl.classList.remove('toast-visible');
+          toastEl.classList.add('toast-hidden');
+        }
+      }
+
+      function setNotifBadge(count) {
+        const el = document.getElementById('inapp-notif-count');
+        if (!el) return;
+        if (count <= 0) {
+          el.classList.add('hidden');
+        } else {
+          el.classList.remove('hidden');
+          el.textContent = String(count);
+        }
+      }
+
+      function setCameraTransform(rx, ry, rz, scale = 0.99, tx = 0, ty = 0) {
+        camState = { rx, ry, rz, scale, tx, ty };
+        if (!rigEl) return;
+        const vhFit = Math.min(1, Math.max(0.64, (window.innerHeight - 130) / 640));
+        const vwFit = Math.min(1, Math.max(0.6, (window.innerWidth - 48) / 1180));
+        const finalScale = +(scale * Math.min(vhFit, vwFit)).toFixed(3);
+        rigEl.style.transform = `translate3d(${tx}px, ${ty}px, 0px) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg) scale(${finalScale})`;
+      }
+
+      function movePointer(leftPx, topPx, labelText, click = false) {
+        const ptr = document.getElementById('sim-pointer');
+        const lbl = document.getElementById('pointer-label');
+        const rip = document.getElementById('pointer-ripple');
+        if (!ptr) return;
+        ptr.style.left = leftPx + 'px';
+        ptr.style.top = topPx + 'px';
+        if (lbl && labelText) lbl.textContent = labelText;
+
+        if (click) {
+          const t = setTimeout(() => {
+            ptr.classList.add('clicking');
+            if (rip) {
+              rip.classList.remove('click-ripple');
+              void rip.offsetWidth;
+              rip.classList.add('click-ripple');
+            }
+            setTimeout(() => ptr.classList.remove('clicking'), 200);
+          }, 560);
+          scriptTimers.push(t);
+        }
+      }
+
+      // Compute exact element center inside #app-screen-shell (immune to 3D scale)
+      function movePointerToEl(elId, labelText, click = false) {
+        const shell = document.getElementById('app-screen-shell');
+        const target = document.getElementById(elId);
+        if (!shell || !target) return;
+
+        let x = target.offsetWidth / 2;
+        let y = target.offsetHeight / 2;
+        let cur = target;
+        while (cur && cur !== shell) {
+          x += cur.offsetLeft;
+          y += cur.offsetTop;
+          cur = cur.offsetParent;
+        }
+        movePointer(Math.round(x), Math.round(y), labelText, click);
+      }
+
+      function clearFocusCards() {
+        document.querySelectorAll('.card-3d-focus').forEach((el) => el.classList.remove('card-3d-focus'));
+      }
+
+      function focusCard3D(cardId, camOverride) {
+        clearFocusCards();
+        const el = document.getElementById(cardId);
+        if (el) el.classList.add('card-3d-focus');
+        if (camOverride) {
+          setCameraTransform(camOverride.rx, camOverride.ry, camOverride.rz || 0, camOverride.scale || 0.98, camOverride.tx || 0, camOverride.ty || 0);
+        }
+      }
+
+      function renderSidebarNav(roleObj) {
+        const container = document.getElementById('sidebar-nav-container');
+        if (!container) return;
+        container.innerHTML = roleObj.navGroups.map((group) => `
+          <div class="space-y-1">
+            <p class="px-2.5 text-[9px] font-bold uppercase tracking-wider" style="color: var(--it-muted); opacity: 0.75;">${group.cat}</p>
+            ${group.items.map((item) => `
+              <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium" style="${
+                item.active
+                  ? 'background: var(--it-sidebar-active); color: var(--it-sidebar-active-ink); font-weight: 700; box-shadow: inset 2.5px 0 0 var(--it-primary);'
+                  : 'color: var(--it-sidebar-ink); opacity: 0.78;'
+              }">
+                <span class="size-1.5 rounded-full" style="background: ${item.active ? 'var(--it-primary)' : 'var(--it-muted)'};"></span>
+                <span class="truncate">${item.label}</span>
+              </div>
+            `).join('')}
+          </div>
+        `).join('');
+      }
+
+      function clearRoleTimers() {
+        scriptTimers.forEach((t) => clearTimeout(t));
+        scriptTimers = [];
+      }
+
+      function triggerStudentClock() {
+        const btnLbl = document.getElementById('stu-clock-btn-label');
+        const daysVal = document.getElementById('stu-days-val');
+        const daysBar = document.getElementById('stu-days-bar');
+        const hoursVal = document.getElementById('stu-hours-val');
+        const msCheck3 = document.getElementById('stu-ms-check3');
+        const msTask3 = document.getElementById('stu-ms-task3');
+        const msPct = document.getElementById('stu-ms-pct');
+
+        if (btnLbl) btnLbl.textContent = 'Clocked In · 08:30';
+        if (daysVal) daysVal.textContent = '43';
+        if (daysBar) daysBar.style.width = '72%';
+        if (hoursVal) hoursVal.textContent = '344.0';
+        if (msCheck3) {
+          msCheck3.className = 'size-4 rounded-full bg-lime-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0';
+          msCheck3.textContent = '';
+        }
+        if (msTask3) msTask3.className = 'flex items-center gap-2.5 p-2 rounded-lg bg-lime-50/70 border border-lime-200 transition-all';
+        if (msPct) msPct.textContent = '100%';
+        showInAppToast('Clocked in at 08:30 AM', 'Attendance recorded · TechCorp Westlands');
+        spawnPacket3D(0, 1);
+      }
+
+      function triggerStudentAiPolish() {
+        const desc = document.getElementById('stu-log-desc');
+        const aiLbl = document.getElementById('stu-ai-label');
+        const tags = document.getElementById('stu-skill-tags');
+        if (aiLbl) aiLbl.textContent = 'Refined';
+        if (desc) {
+          desc.textContent = 'Engineered responsive onboarding wizard UI in React 19 with strict Zod validation and REST API integration. Achieved 92% Jest unit test coverage.';
+        }
+        if (tags && tags.children.length < 4) {
+          const extra = document.createElement('span');
+          extra.className = 'text-[10px] font-medium px-2 py-0.5 rounded-md bg-lime-50 text-lime-700 border border-lime-200';
+          extra.textContent = 'Zod & Jest';
+          tags.appendChild(extra);
+        }
+        showInAppToast('Log summary refined', 'Technical competencies tagged automatically');
+      }
+
+      function triggerStudentSubmit() {
+        const badge = document.getElementById('stu-log-status-badge');
+        const subLbl = document.getElementById('stu-submit-label');
+        const qPill = document.getElementById('stu-queue-pill');
+        const count = document.getElementById('stu-logs-count');
+        if (badge) {
+          badge.textContent = 'Submitted';
+          badge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200';
+        }
+        if (subLbl) subLbl.textContent = 'Sent to Mentor';
+        if (qPill) {
+          qPill.textContent = 'In mentor review';
+          qPill.className = 'mt-1.5 text-[10px] text-lime-700 font-medium';
+        }
+        if (count) count.textContent = '5';
+        setNotifBadge(0);
+        showInAppToast('Logbook entry submitted', 'Queued for James Otieno at TechCorp Kenya');
+        spawnPacket3D(0, 1);
+      }
+
+      function triggerStudentLogFlow() {
+        triggerStudentAiPolish();
+        setTimeout(triggerStudentSubmit, 600);
+      }
+
+      function triggerSupervisorApprove() {
+        const status = document.getElementById('sup-sub-status');
+        const pending = document.getElementById('sup-pending-badge');
+        const approved = document.getElementById('sup-approved-badge');
+        const btnLbl = document.getElementById('sup-approve-label');
+        if (status) {
+          status.textContent = 'Approved';
+          status.className = 'text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 shrink-0';
+        }
+        if (pending) pending.textContent = '1';
+        if (approved) approved.textContent = '4';
+        if (btnLbl) btnLbl.textContent = 'Signed Off';
+        setNotifBadge(1);
+        showInAppToast('Submission signed off', 'Kevin Kiprono’s entry approved & synced');
+        spawnPacket3D(1, 2);
+      }
+
+      function triggerUniEvaluation() {
+        const count = document.getElementById('uni-eval-count');
+        const offers = document.getElementById('uni-eval-offers');
+        const ready = document.getElementById('uni-eval-ready');
+        const btnLbl = document.getElementById('uni-save-eval-label');
+        const msBadge = document.getElementById('uni-ms-badge2');
+        if (count) count.textContent = '2';
+        if (offers) offers.textContent = '2';
+        if (ready) ready.textContent = '4 of 4';
+        if (btnLbl) btnLbl.textContent = 'Grade Recorded';
+        if (msBadge) {
+          msBadge.textContent = 'Certified';
+          msBadge.className = 'text-[10px] font-medium px-2 py-0.5 rounded bg-lime-50 text-lime-700 border border-lime-200';
+        }
+        setNotifBadge(0);
+        showInAppToast('Grade A recorded', 'Phase 2 certified for Alice Wanjiku');
+        spawnPacket3D(2, 3);
+      }
+
+      function triggerAdminPairSupervisor() {
+        const rate = document.getElementById('admin-dual-rate');
+        const sub = document.getElementById('admin-dual-sub');
+        const kevinRow = document.getElementById('admin-row-kevin');
+        const kevinSup = document.getElementById('admin-kevin-uni-sup');
+        const kevinStatus = document.getElementById('admin-kevin-status');
+        const assignLbl = document.getElementById('admin-assign-label');
+
+        if (rate) {
+          rate.textContent = '100%';
+          rate.className = 'text-xl font-bold text-lime-600 mt-1';
+        }
+        if (sub) {
+          sub.textContent = '4 of 4 paired';
+          sub.className = 'text-[10px] text-lime-700 font-medium mt-1';
+        }
+        if (kevinRow) {
+          kevinRow.className = 'py-2 px-2.5 mt-1 rounded-lg bg-lime-50/70 border border-lime-200 flex items-center justify-between transition-all';
+        }
+        if (kevinSup) {
+          kevinSup.textContent = 'James Otieno / Dr. Joyce Chelangat';
+          kevinSup.className = 'text-[10px] text-lime-700 font-medium';
+        }
+        if (kevinStatus) {
+          kevinStatus.textContent = 'Dual-Supervised';
+          kevinStatus.className = 'px-2 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 font-medium text-[10px]';
+        }
+        if (assignLbl) assignLbl.textContent = 'Paired';
+        setNotifBadge(1);
+        showInAppToast('Assessor assigned', 'Dr. Joyce Chelangat paired with Kevin Kiprono');
+        spawnPacket3D(3, 0);
+      }
+
+      function triggerAdminExportDossier() {
+        const lbl = document.getElementById('admin-export-label');
+        const pill = document.getElementById('admin-export-pill');
+        if (lbl) lbl.textContent = 'Exported PDF';
+        if (pill) {
+          pill.textContent = 'Exported';
+          pill.className = 'text-xl font-bold text-lime-600 mt-1';
+        }
+        setNotifBadge(0);
+        showInAppToast('Accreditation dossier exported', 'Certified Senate PDF ready for download');
+        spawnPacket3D(3, 0);
+      }
+
+      function runRoleChoreography(idx) {
+        clearRoleTimers();
+        clearFocusCards();
+        hideInAppToast();
+        const role = ROLES[idx];
+
+        setCameraTransform(role.baseCamera.rx, role.baseCamera.ry, role.baseCamera.rz, role.baseCamera.scale);
+
+        if (idx === 0) {
+          const elClockLbl = document.getElementById('stu-clock-btn-label');
+          const elDays = document.getElementById('stu-days-val');
+          const elBar = document.getElementById('stu-days-bar');
+          const elHours = document.getElementById('stu-hours-val');
+          const elAiLbl = document.getElementById('stu-ai-label');
+          const elDesc = document.getElementById('stu-log-desc');
+          const elBadge = document.getElementById('stu-log-status-badge');
+          const elSubLbl = document.getElementById('stu-submit-label');
+          const elCheck3 = document.getElementById('stu-ms-check3');
+          const elTask3 = document.getElementById('stu-ms-task3');
+          const elMsPct = document.getElementById('stu-ms-pct');
+          const elQueue = document.getElementById('stu-queue-pill');
+          const elCount = document.getElementById('stu-logs-count');
+
+          if (elClockLbl) elClockLbl.textContent = 'Clock In';
+          if (elDays) elDays.textContent = '42';
+          if (elBar) elBar.style.width = '70%';
+          if (elHours) elHours.textContent = '336.0';
+          if (elAiLbl) elAiLbl.textContent = 'Refine Summary';
+          if (elDesc) elDesc.textContent = 'Working on the onboarding wizard UI components for new user registration using React 19 and Zod schema validation.';
+          if (elBadge) {
+            elBadge.textContent = 'Draft';
+            elBadge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200';
+          }
+          if (elSubLbl) elSubLbl.textContent = 'Submit for Review';
+          if (elQueue) {
+            elQueue.textContent = '1 draft ready';
+            elQueue.className = 'mt-1.5 text-[10px] text-amber-700 font-medium';
+          }
+          if (elCount) elCount.textContent = '4';
+          if (elCheck3) {
+            elCheck3.className = 'size-4 rounded-full border border-zinc-300 flex items-center justify-center text-[9px] font-bold shrink-0';
+            elCheck3.textContent = '';
+          }
+          if (elTask3) elTask3.className = 'flex items-center gap-2.5 p-2 rounded-lg bg-white border border-zinc-200 transition-all';
+          if (elMsPct) elMsPct.textContent = '67%';
+
+          if (!RM && autoMotion && mode === 'case') {
+            scriptTimers.push(setTimeout(() => {
+              focusCard3D('stu-card-days');
+              movePointerToEl('stu-btn-clock', 'Clocking in for shift', true);
+              scriptTimers.push(setTimeout(triggerStudentClock, 620));
+            }, 900));
+
+            scriptTimers.push(setTimeout(() => {
+              focusCard3D('stu-card-logbook');
+              movePointerToEl('stu-btn-ai', 'Refining daily summary', true);
+              scriptTimers.push(setTimeout(triggerStudentAiPolish, 620));
+            }, 3500));
+
+            scriptTimers.push(setTimeout(() => {
+              movePointerToEl('stu-btn-submit', 'Submitting to mentor', true);
+              scriptTimers.push(setTimeout(triggerStudentSubmit, 620));
+            }, 6300));
+          }
+
+        } else if (idx === 1) {
+          const sSt = document.getElementById('sup-sub-status');
+          const sPend = document.getElementById('sup-pending-badge');
+          const sApp = document.getElementById('sup-approved-badge');
+          const sLbl = document.getElementById('sup-approve-label');
+          if (sSt) {
+            sSt.textContent = 'Pending Review';
+            sSt.className = 'text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 shrink-0';
+          }
+          if (sPend) sPend.textContent = '2';
+          if (sApp) sApp.textContent = '3';
+          if (sLbl) sLbl.textContent = 'Sign Off & Approve';
+
+          if (!RM && autoMotion && mode === 'case') {
+            scriptTimers.push(setTimeout(() => {
+              focusCard3D('sup-card-review');
+              movePointerToEl('sup-feedback-text', 'Adding mentor feedback', false);
+            }, 900));
+
+            scriptTimers.push(setTimeout(() => {
+              movePointerToEl('sup-btn-approve', 'Signing off submission', true);
+              scriptTimers.push(setTimeout(triggerSupervisorApprove, 620));
+            }, 4300));
+          }
+
+        } else if (idx === 2) {
+          const uCnt = document.getElementById('uni-eval-count');
+          const uOff = document.getElementById('uni-eval-offers');
+          const uRdy = document.getElementById('uni-eval-ready');
+          const uLbl = document.getElementById('uni-save-eval-label');
+          const uMs2 = document.getElementById('uni-ms-badge2');
+          const b1 = document.getElementById('uni-bar-1');
+          const b2 = document.getElementById('uni-bar-2');
+          const b3 = document.getElementById('uni-bar-3');
+          const b4 = document.getElementById('uni-bar-4');
+          if (uCnt) uCnt.textContent = '1';
+          if (uOff) uOff.textContent = '1';
+          if (uRdy) uRdy.textContent = '3 of 4';
+          if (uLbl) uLbl.textContent = 'Certify & Record Grade';
+          if (uMs2) {
+            uMs2.textContent = 'Ready';
+            uMs2.className = 'text-[10px] font-medium px-2 py-0.5 rounded bg-lime-50 text-lime-700 border border-lime-200';
+          }
+          if (b1) b1.style.width = '30%';
+          if (b2) b2.style.width = '30%';
+          if (b3) b3.style.width = '30%';
+          if (b4) b4.style.width = '30%';
+
+          if (!RM && autoMotion && mode === 'case') {
+            scriptTimers.push(setTimeout(() => {
+              focusCard3D('uni-card-rubric');
+              movePointerToEl('uni-card-rubric', 'Scoring rubric criteria', false);
+              if (b1) b1.style.width = '100%';
+              if (b2) b2.style.width = '100%';
+              if (b3) b3.style.width = '90%';
+              if (b4) b4.style.width = '100%';
+            }, 900));
+
+            scriptTimers.push(setTimeout(() => {
+              movePointerToEl('uni-btn-save-eval', 'Recording Grade A', true);
+              scriptTimers.push(setTimeout(triggerUniEvaluation, 620));
+            }, 4500));
+          }
+
+        } else if (idx === 3) {
+          const aRate = document.getElementById('admin-dual-rate');
+          const aSub = document.getElementById('admin-dual-sub');
+          const aRow = document.getElementById('admin-row-kevin');
+          const aSup = document.getElementById('admin-kevin-uni-sup');
+          const aSt = document.getElementById('admin-kevin-status');
+          const aAss = document.getElementById('admin-assign-label');
+          const aExp = document.getElementById('admin-export-label');
+          const aPill = document.getElementById('admin-export-pill');
+
+          if (aRate) {
+            aRate.textContent = '75%';
+            aRate.className = 'text-xl font-bold text-amber-600 mt-1';
+          }
+          if (aSub) {
+            aSub.textContent = '3 of 4 paired';
+            aSub.className = 'text-[10px] text-amber-700 font-medium mt-1';
+          }
+          if (aRow) aRow.className = 'py-2 px-2.5 mt-1 rounded-lg bg-amber-50/70 border border-amber-200 flex items-center justify-between transition-all';
+          if (aSup) {
+            aSup.textContent = 'Missing Faculty Assessor';
+            aSup.className = 'text-[10px] text-amber-800 font-semibold';
+          }
+          if (aSt) {
+            aSt.textContent = 'Needs Allocation';
+            aSt.className = 'px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 font-medium text-[10px]';
+          }
+          if (aAss) aAss.textContent = 'Assign Assessor';
+          if (aExp) aExp.textContent = 'Export Dossier';
+          if (aPill) {
+            aPill.textContent = 'Ready';
+            aPill.className = 'text-xl font-bold text-zinc-900 mt-1';
+          }
+
+          if (!RM && autoMotion && mode === 'case') {
+            scriptTimers.push(setTimeout(() => {
+              focusCard3D('admin-card-pairing');
+              movePointerToEl('admin-btn-assign', 'Assigning faculty assessor', true);
+              scriptTimers.push(setTimeout(triggerAdminPairSupervisor, 620));
+            }, 1200));
+
+            scriptTimers.push(setTimeout(() => {
+              focusCard3D('admin-card-rbac');
+              movePointerToEl('admin-btn-export', 'Exporting Senate PDF', true);
+              scriptTimers.push(setTimeout(triggerAdminExportDossier, 620));
+            }, 5000));
+          }
+        }
+      }
+
+      function selectRole(idx, manual = false) {
+        activeRole = idx;
+        stepStartTime = Date.now();
+        const role = ROLES[idx];
+
+        for (let i = 0; i < 4; i++) {
+          const btn = document.getElementById(`role-btn-${i}`);
+          const view = document.getElementById(`role-view-${i}`);
+          const prog = document.getElementById(`role-prog-${i}`);
+
+          if (i === idx) {
+            if (btn) btn.className = 'role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 bg-white text-zinc-950 shadow-sm';
+            if (view) view.classList.remove('hidden');
+          } else {
+            if (btn) btn.className = 'role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-zinc-400 hover:text-white';
+            if (view) view.classList.add('hidden');
+            if (prog) prog.style.width = i < idx ? '100%' : '0%';
+          }
+        }
+
+        const elUrl = document.getElementById('browser-url');
+        const elTierWin = document.getElementById('window-rbac-tier');
+        const elSbTier = document.getElementById('sb-tier-pill');
+        const elSbShort = document.getElementById('sb-role-short');
+        const elSbAv = document.getElementById('sb-avatar');
+        const elSbName = document.getElementById('sb-user-name');
+        const elSbRole = document.getElementById('sb-user-role');
+        const elCrumbCat = document.getElementById('top-crumb-cat');
+        const elTopScope = document.getElementById('top-scope-badge');
+        const elTopAv = document.getElementById('top-avatar');
+        const elTopName = document.getElementById('top-user-name');
+        const elTopRole = document.getElementById('top-role-badge');
+        const elStepBadge = document.getElementById('walkthrough-step-badge');
+
+        if (elUrl) elUrl.textContent = role.url;
+        if (elTierWin) elTierWin.textContent = role.windowTier;
+        if (elSbTier) elSbTier.textContent = role.tier;
+        if (elSbShort) elSbShort.textContent = role.short;
+        if (elSbAv) elSbAv.textContent = role.initials;
+        if (elSbName) elSbName.textContent = role.name;
+        if (elSbRole) elSbRole.textContent = role.roleLabel;
+
+        if (elCrumbCat) elCrumbCat.textContent = role.crumbCat;
+        if (elTopScope) elTopScope.textContent = role.scopeBadge;
+        if (elTopAv) elTopAv.textContent = role.initials;
+        if (elTopName) elTopName.textContent = role.name;
+        if (elTopRole) elTopRole.textContent = role.roleLabel;
+        if (elStepBadge) elStepBadge.textContent = `Step ${idx + 1} of 4`;
+
+        setNotifBadge(role.notifCount ?? 0);
+
+        const elSummary = document.getElementById('s2-role-summary');
+        if (elSummary && role.summary) {
+          elSummary.innerHTML = `<span class="font-semibold text-white">${role.roleLabel}</span> — ${role.summary}`;
+        }
+
+        renderSidebarNav(role);
+        runRoleChoreography(idx);
+      }
+
+      function toggleAutoMotion() {
+        autoMotion = !autoMotion;
+        const ic = document.getElementById('automotion-icon');
+        const tx = document.getElementById('automotion-text');
+        if (ic) ic.textContent = autoMotion ? '⏸' : '▶';
+        if (tx) tx.textContent = autoMotion ? 'Auto-play' : 'Paused';
+        if (autoMotion) {
+          stepStartTime = Date.now();
+          runRoleChoreography(activeRole);
+        } else {
+          clearRoleTimers();
+        }
+      }
+
+      function toggleExplodeLayers() {
+        exploded = !exploded;
+        if (rigEl) rigEl.classList.toggle('exploded', exploded);
+        const btn = document.getElementById('btn-explode');
+        if (btn) {
+          if (exploded) {
+            btn.className = 'px-2.5 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-zinc-950 transition flex items-center gap-1 shadow-sm';
+            setCameraTransform(14, -18, 1.5, 0.9);
+          } else {
+            btn.className = 'px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-lime-200 border border-white/10 transition flex items-center gap-1';
+            const r = ROLES[activeRole].baseCamera;
+            setCameraTransform(r.rx, r.ry, r.rz, r.scale);
+          }
+        }
+      }
+
+      function resetCameraAngle() {
+        exploded = false;
+        if (rigEl) rigEl.classList.remove('exploded');
+        const btn = document.getElementById('btn-explode');
+        if (btn) btn.className = 'px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-lime-200 border border-white/10 transition flex items-center gap-1';
+        clearFocusCards();
+        const r = ROLES[activeRole].baseCamera;
+        setCameraTransform(r.rx, r.ry, r.rz, r.scale);
+      }
+
+      // Interactive Mouse / Pointer 3D Orbit Dragging
+      let isDragging = false;
+      let startX = 0, startY = 0;
+      let dragRx = 7, dragRy = -9;
+
+      const stageViewport = document.getElementById('stage-viewport');
+      if (stageViewport && rigEl) {
+        stageViewport.addEventListener('pointerdown', (e) => {
+          if (e.target.closest('button, a')) return;
+          isDragging = true;
+          rigEl.classList.add('dragging');
+          startX = e.clientX;
+          startY = e.clientY;
+          dragRx = camState.rx;
+          dragRy = camState.ry;
         });
 
-      transVideo.addEventListener('loadeddata', () => {
-        transReady = true;
+        window.addEventListener('pointermove', (e) => {
+          if (!isDragging) return;
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          const newRy = Math.max(-28, Math.min(28, dragRy + dx * 0.08));
+          const newRx = Math.max(-14, Math.min(24, dragRx - dy * 0.08));
+          setCameraTransform(newRx, newRy, camState.rz, camState.scale, camState.tx, camState.ty);
+        });
+
+        window.addEventListener('pointerup', () => {
+          if (!isDragging) return;
+          isDragging = false;
+          rigEl.classList.remove('dragging');
+        });
+      }
+
+      function tickLoop() {
+        const now = Date.now();
+        if (mode === 'case' && autoMotion && !isDragging && !RM) {
+          const elapsed = now - stepStartTime;
+          const pct = Math.min(100, (elapsed / ROLE_DURATION) * 100);
+          const progEl = document.getElementById(`role-prog-${activeRole}`);
+          if (progEl) progEl.style.width = `${pct}%`;
+
+          if (elapsed >= ROLE_DURATION) {
+            selectRole((activeRole + 1) % ROLES.length, false);
+          }
+        }
+        requestAnimationFrame(tickLoop);
+      }
+
+      // 3D Spatial Canvas Renderer (3D Perspective Grid + 4 Role Nodes + Packets)
+      const canvas = document.getElementById('webgl-stage');
+      const ctx = canvas ? canvas.getContext('2d') : null;
+      let packets = [];
+
+      function spawnPacket3D(fromIdx, toIdx) {
+        packets.push({ from: fromIdx, to: toIdx, t: 0 });
+      }
+
+      function resizeCanvas() {
+        if (!canvas || !ctx) return;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resizeCanvas();
+
+      function project3D(x, y, z, W, H, rotY, rotX) {
+        const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+        const x1 = x * cosY - z * sinY;
+        const z1 = z * cosY + x * sinY;
+
+        const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+        const y2 = y * cosX - z1 * sinX;
+        const z2 = z1 * cosX + y * sinX;
+
+        const fov = 700;
+        const dist = 850;
+        const scale = fov / Math.max(100, dist + z2);
+        return {
+          sx: W / 2 + x1 * scale,
+          sy: H / 2 + y2 * scale,
+          scale
+        };
+      }
+
+      let time3D = 0;
+      function render3DCanvas() {
+        if (ctx && mode === 'case') {
+          time3D += 0.012;
+          const W = window.innerWidth;
+          const H = window.innerHeight;
+          ctx.clearRect(0, 0, W, H);
+
+          const rotY = (camState.ry * Math.PI) / 180 * 0.45 + Math.sin(time3D * 0.5) * 0.05;
+          const rotX = (camState.rx * Math.PI) / 180 * 0.35;
+
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.045)';
+          ctx.lineWidth = 1;
+          const gridY = 340;
+          for (let gx = -900; gx <= 900; gx += 150) {
+            const p1 = project3D(gx, gridY, -500, W, H, rotY, rotX);
+            const p2 = project3D(gx, gridY, 700, W, H, rotY, rotX);
+            ctx.beginPath();
+            ctx.moveTo(p1.sx, p1.sy);
+            ctx.lineTo(p2.sx, p2.sy);
+            ctx.stroke();
+          }
+          for (let gz = -500; gz <= 700; gz += 150) {
+            const p1 = project3D(-900, gridY, gz, W, H, rotY, rotX);
+            const p2 = project3D(900, gridY, gz, W, H, rotY, rotX);
+            ctx.beginPath();
+            ctx.moveTo(p1.sx, p1.sy);
+            ctx.lineTo(p2.sx, p2.sy);
+            ctx.stroke();
+          }
+
+          packets = packets.filter((pkt) => pkt.t <= 1);
+          packets.forEach((pkt) => {
+            pkt.t += 0.022;
+          });
+        }
+        requestAnimationFrame(render3DCanvas);
+      }
+
+      // Dual Light + Dark Theme Toggle synced with Dashboard localStorage
+      let currentThemeMode = 'light';
+      function resolvePreferredTheme() {
+        try {
+          const saved = window.localStorage.getItem('interntrack-theme');
+          if (saved === 'dark' || saved === 'light') return saved;
+        } catch (_) {}
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      function applyArtifactTheme(themeMode, persist = false) {
+        currentThemeMode = themeMode === 'dark' ? 'dark' : 'light';
+        const shell = document.getElementById('app-screen-shell');
+        const icon = document.getElementById('theme-mode-icon');
+        const text = document.getElementById('theme-mode-text');
+        if (shell) shell.classList.toggle('dark-theme', currentThemeMode === 'dark');
+        if (icon) icon.textContent = '';
+        if (text) text.textContent = currentThemeMode === 'dark' ? 'Dark' : 'Light';
+        if (persist) {
+          try {
+            window.localStorage.setItem('interntrack-theme', currentThemeMode);
+          } catch (_) {}
+        }
+      }
+
+      function toggleThemeMode() {
+        applyArtifactTheme(currentThemeMode === 'dark' ? 'light' : 'dark', true);
+      }
+
+      applyArtifactTheme(resolvePreferredTheme(), false);
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'interntrack-theme') applyArtifactTheme(resolvePreferredTheme(), false);
       });
 
-      /* ── 4. Frame Fitting & Layout (pose) ── */
+      // Expose inline handlers cleanly to global scope
+      window.selectRole = selectRole;
+      window.toggleAutoMotion = toggleAutoMotion;
+      window.toggleExplodeLayers = toggleExplodeLayers;
+      window.resetCameraAngle = resetCameraAngle;
+      window.toggleThemeMode = toggleThemeMode;
+      window.triggerStudentLogFlow = triggerStudentLogFlow;
+      window.triggerStudentClock = triggerStudentClock;
+      window.triggerStudentAiPolish = triggerStudentAiPolish;
+      window.triggerStudentSubmit = triggerStudentSubmit;
+      window.triggerSupervisorApprove = triggerSupervisorApprove;
+      window.triggerUniEvaluation = triggerUniEvaluation;
+      window.triggerAdminPairSupervisor = triggerAdminPairSupervisor;
+      window.triggerAdminExportDossier = triggerAdminExportDossier;
+
+      requestAnimationFrame(tickLoop);
+      requestAnimationFrame(render3DCanvas);
+
+      /* ── Frame Fitting & Layout (pose) ── */
       function pose(m) {
         const W = window.innerWidth;
         const H = window.innerHeight;
         const isMobile = W <= 820;
 
-        // Set unit variable
         const n = isMobile ? W / 430 : Math.min(W / 1440, H / 900);
         document.documentElement.style.setProperty('--n', `${n}px`);
 
-        // Fade classes
         frameEl.classList.remove('d-fade', 'm-fade');
         frameEl.classList.add(isMobile ? 'm-fade' : 'd-fade');
 
@@ -1111,8 +2659,8 @@
             y = 0;
             fitHero(s, x, y, W, H);
           } else {
-            const top = 66 * u;
-            const fit = (H - top - 28 * u) / (762 - 79);
+            const top = 56 * u;
+            const fit = (H - top - 32 * u) / (762 - 79);
             if (fit >= cover) {
               s = cover;
               y = Math.min(0, Math.max(H - 810 * s, top - 79 * s));
@@ -1123,26 +2671,19 @@
             x = (W - 1440 * s) / 2;
           }
         } else {
-          // Mobile fitting
           if (m === 'hero') {
             s = Math.min(W / 650, (0.62 * H) / 810);
             x = W / 2 - 805 * s;
             y = H - 790 * s;
           } else {
             const navH = 0.022 * H + 42 + 22;
-            const ticketH = ticketEl ? ticketEl.offsetHeight : 120;
-            const descH = descEl ? descEl.offsetHeight : 60;
-            const uiBottom = 62 + ticketH + 18 + Math.max(60, descH) + 14;
-            s = Math.min((W - 28) / 905, Math.max(0.2, (H - navH - uiBottom) / (762 - 95)));
+            s = Math.min((W - 24) / 905, Math.max(0.2, (H - navH - 140) / (762 - 95)));
             x = W / 2 - 720 * s;
-            y = H - navH - 762 * s;
+            y = H - navH - 755 * s;
           }
 
           const mbadgeW = 0.27 * W;
           document.documentElement.style.setProperty('--mbs', (mbadgeW / 582).toString());
-          if (ticketEl) {
-            document.documentElement.style.setProperty('--th', `${ticketEl.offsetHeight}px`);
-          }
         }
 
         return { s, x, y };
@@ -1153,18 +2694,15 @@
         const vr = Math.min(1440, (W - x) / s);
         const pad = 18 / s;
 
-        // Wordmark positioning
         wmSvg.style.left = `${vl + 0.6 * pad}px`;
         wmSvg.style.width = `${vr - vl - 1.2 * pad}px`;
 
-        // Badge positioning
         const bLeft = Math.min(986, vr - pad - 417);
         const vb = Math.min(810, (H - y) / s);
         const bTop = Math.min(-165, vb - 56 / s - 935);
         badgeEl.style.left = `${bLeft}px`;
         badgeEl.style.top = `${bTop}px`;
 
-        // Script positioning
         scriptEl.style.left = `${vl + pad + 70}px`;
       }
 
@@ -1180,12 +2718,15 @@
         }
       }
 
-      // Initial placement
       place('hero');
 
       window.addEventListener('resize', () => {
         frameEl.classList.remove('glide');
         place(mode);
+        resizeCanvas();
+        if (mode === 'case') {
+          setCameraTransform(camState.rx, camState.ry, camState.rz, camState.scale, camState.tx, camState.ty);
+        }
       });
 
       /* ── 5. Entrance Sequence ── */
@@ -1193,31 +2734,29 @@
         if (entered) return;
         entered = true;
 
-        // Remove initial hiding class
         document.querySelectorAll('.pre').forEach((el) => el.classList.remove('pre'));
 
         if (RM) {
-          fillCase(0);
+          selectRole(0, false);
           return;
         }
 
-        const tags = [btnOverview, btnFeatures, btnContacts, btnDemo];
-        tags.forEach((tag, i) => {
-          tag.animate(
+        const s1Nav = document.getElementById('s1-nav');
+        if (s1Nav) {
+          s1Nav.animate(
             [
-              { opacity: 0, transform: 'translateY(-40px) rotate(-4deg)' },
+              { opacity: 0, transform: 'translateY(-14px)' },
               { opacity: 1, transform: 'none' },
             ],
             {
-              duration: 700,
-              delay: 120 + i * 80,
-              easing: 'cubic-bezier(.3, 1.5, .5, 1)',
+              duration: 600,
+              delay: 120,
+              easing: 'cubic-bezier(.16, 1, .3, 1)',
               fill: 'both',
             }
           );
-        });
+        }
 
-        // Wordmark entrance
         [wmSvg, mWmSvg].forEach((wm) => {
           if (!wm) return;
           wm.animate(
@@ -1226,15 +2765,14 @@
               { opacity: 1, transform: 'translateY(0)', clipPath: 'inset(0)' },
             ],
             {
-              duration: 1100,
-              delay: 260,
-              easing: 'cubic-bezier(.2, .8, .2, 1)',
+              duration: 900,
+              delay: 200,
+              easing: 'cubic-bezier(.16, 1, .3, 1)',
               fill: 'both',
             }
           );
         });
 
-        // Script entrance
         [scriptEl, mScriptEl].forEach((sc) => {
           if (!sc) return;
           sc.animate(
@@ -1244,82 +2782,104 @@
             ],
             {
               duration: 900,
-              delay: 1050,
-              easing: 'cubic-bezier(.5, 0, .3, 1)',
+              delay: 450,
+              easing: 'cubic-bezier(.2, .8, .2, 1)',
               fill: 'both',
             }
           );
         });
 
-        // Badge entrance
-        const bAnim = badgeEl.animate(
+        const bIn = badgeEl.animate(
           [
-            { opacity: 0, transform: 'translateY(-120%) rotate(8deg)', offset: 0 },
-            { opacity: 1, transform: 'translateY(0) rotate(-3deg)', offset: 0.6 },
-            { transform: 'translateY(0) rotate(1.6deg)', offset: 0.8 },
-            { opacity: 1, transform: 'translateY(0) rotate(0)', offset: 1 },
+            { opacity: 0, transform: 'translateY(-110%) rotate(6deg)', offset: 0 },
+            { opacity: 1, transform: 'translateY(0) rotate(-2deg)', offset: 0.7 },
+            { opacity: 1, transform: 'rotate(0)', offset: 1 },
           ],
           {
-            duration: 1500,
-            delay: 700,
+            duration: 1200,
+            delay: 400,
             easing: 'cubic-bezier(.2, .8, .2, 1)',
             fill: 'both',
           }
         );
 
-        // Hint entrance
-        hintEl.animate(
-          [{ opacity: 0 }, { opacity: 0.85 }],
-          {
-            duration: 600,
-            delay: 1800,
-            easing: 'cubic-bezier(.2, .8, .2, 1)',
-            fill: 'both',
-          }
-        );
-
-        bAnim.finished.then(() => {
+        bIn.finished.then(() => {
           startBadgeSway();
         });
-
-        fillCase(0);
       }
 
       function startBadgeSway() {
-        if (mode === 'hero' && !RM) {
-          badgeSway = badgeEl.animate(
-            [{ transform: 'rotate(-1.1deg)' }, { transform: 'rotate(1.1deg)' }],
-            {
-              duration: 3200,
-              iterations: Infinity,
-              direction: 'alternate',
-              easing: 'ease-in-out',
-            }
-          );
-        }
+        if (badgeSway) badgeSway.cancel();
+        badgeSway = badgeEl.animate(
+          [
+            { transform: 'rotate(-0.8deg)' },
+            { transform: 'rotate(0.8deg)' },
+            { transform: 'rotate(-0.8deg)' },
+          ],
+          {
+            duration: 5400,
+            iterations: Infinity,
+            easing: 'ease-in-out',
+          }
+        );
       }
 
-      // Badge Hover Swing
-      badgeHitEl.addEventListener('pointerenter', () => {
-        if (mode === 'hero' && !RM) {
-          badgeEl.animate(
-            [
-              { transform: 'rotate(0)' },
-              { transform: 'rotate(-6deg)' },
-              { transform: 'rotate(4deg)' },
-              { transform: 'rotate(-2deg)' },
-              { transform: 'rotate(0)' },
-            ],
-            {
-              duration: 1400,
-              easing: 'ease-out',
-              composite: 'add',
-            }
-          );
-        }
+      /* ── Drag & Flick on Lanyard Badge ── */
+      let dragging = false;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let badgeRot = 0;
+      let badgeVelocity = 0;
+      let lastDragX = 0;
+      let lastDragTime = 0;
+
+      badgeHitEl.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        badgeHitEl.setPointerCapture(e.pointerId);
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        lastDragX = e.clientX;
+        lastDragTime = Date.now();
+        if (badgeSway) badgeSway.pause();
       });
 
-      // Wait for font and hero plate
+      window.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - dragStartX;
+        const now = Date.now();
+        const dt = Math.max(1, now - lastDragTime);
+        badgeVelocity = (e.clientX - lastDragX) / dt;
+        lastDragX = e.clientX;
+        lastDragTime = now;
+
+        badgeRot = Math.max(-18, Math.min(18, dx * 0.08));
+        badgeEl.style.transform = `rotate(${badgeRot}deg)`;
+      });
+
+      window.addEventListener('pointerup', (e) => {
+        if (!dragging) return;
+        dragging = false;
+        try { badgeHitEl.releasePointerCapture(e.pointerId); } catch (_) { }
+
+        const fling = Math.max(-25, Math.min(25, badgeRot + badgeVelocity * 12));
+        const settle = badgeEl.animate(
+          [
+            { transform: `rotate(${badgeRot}deg)` },
+            { transform: `rotate(${fling}deg)`, offset: 0.25 },
+            { transform: 'rotate(0deg)' },
+          ],
+          {
+            duration: 900,
+            easing: 'cubic-bezier(.17, .89, .32, 1.25)',
+          }
+        );
+
+        settle.finished.then(() => {
+          badgeEl.style.transform = '';
+          startBadgeSway();
+        });
+      });
+
       const fontReady = document.fonts ? document.fonts.ready : Promise.resolve();
       const plateReady = new Promise((resolve) => {
         if (plateImg.complete && plateImg.naturalHeight > 0) resolve();
@@ -1331,119 +2891,22 @@
 
       Promise.race([
         Promise.all([fontReady, plateReady]),
-        new Promise((r) => setTimeout(r, 2500)),
+        new Promise((r) => setTimeout(r, 2200)),
       ]).then(() => {
         requestAnimationFrame(runEntrance);
       });
-      setTimeout(runEntrance, 4000); // failsafe
+      setTimeout(runEntrance, 3500);
 
-      /* ── 6. Case Population ── */
-      function fillCase(i) {
-        const c = CASES[i];
-        tTitleEl.textContent = c.title;
-        tRowsEl.innerHTML = c.rows.map((r) => `<div class="t-row">${r}</div>`).join('');
-        dKEl.textContent = c.key;
-        dPEl.textContent = c.text;
-        dNumEl.textContent = `0${i + 1} / 03`;
-
-        if (i === 0) btnPrev.classList.add('dim');
-        else btnPrev.classList.remove('dim');
-      }
-
-      function playOnly(n) {
-        caseVids.forEach((v, i) => {
-          if (i === n) {
-            if (!v.src && CASES[n].video) v.src = CASES[n].video;
-            v.style.opacity = '1';
-            v.currentTime = 0;
-            v.play().catch(() => {});
-          } else {
-            v.style.opacity = '0';
-            v.pause();
-          }
-        });
-      }
-
-      function caseIn(n, first) {
-        fillCase(n);
-
-        // Ticket animation
-        ticketEl.animate(
-          [
-            { opacity: 0, transform: 'translateY(-60px) rotate(-6deg)', offset: 0 },
-            { transform: 'translateY(6px) rotate(1.2deg)', offset: 0.7 },
-            { opacity: 1, transform: 'none', offset: 1 },
-          ],
-          {
-            duration: 800,
-            delay: first ? 150 : 0,
-            easing: 'cubic-bezier(.2, .8, .2, 1)',
-            fill: 'both',
-          }
-        );
-
-        // Description children
-        const descChildren = [dKEl, dPEl, dNumEl];
-        descChildren.forEach((child, k) => {
-          child.animate(
-            [
-              { opacity: 0, transform: 'translateY(14px)' },
-              { opacity: 1, transform: 'none' },
-            ],
-            {
-              duration: 600,
-              delay: (first ? 250 : 80) + k * 70,
-              easing: 'cubic-bezier(.2, .8, .2, 1)',
-              fill: 'both',
-            }
-          );
-        });
-      }
-
-      function caseOut() {
-        ticketEl.animate(
-          [
-            { opacity: 1, transform: 'none' },
-            { opacity: 0, transform: 'translateY(-40px) rotate(4deg)' },
-          ],
-          {
-            duration: 380,
-            easing: 'cubic-bezier(.5, 0, .75, 0)',
-            fill: 'forwards',
-          }
-        );
-
-        const descChildren = [dKEl, dPEl, dNumEl];
-        descChildren.forEach((child, k) => {
-          child.animate(
-            [
-              { opacity: 1, transform: 'none' },
-              { opacity: 0, transform: 'translateY(-10px)' },
-            ],
-            {
-              duration: 300,
-              delay: k * 40,
-              easing: 'cubic-bezier(.5, 0, .75, 0)',
-              fill: 'forwards',
-            }
-          );
-        });
-      }
-
-      /* ── 7. Hero -> Laptop Dive (toCase) ── */
+      /* ── 6. Hero -> Laptop Dive (toCase) ── */
       function toCase() {
         if (busy || mode === 'case') return;
         busy = true;
         document.body.classList.add('busy');
 
-        // heroOut
         [wmSvg, mWmSvg].forEach((wm) => {
           if (!wm) return;
           wm.animate(
-            [
-              { opacity: 1, transform: 'translateY(0)' },
-              { opacity: 0, transform: 'translateY(-40px)' },
-            ],
+            [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-40px)' }],
             { duration: 380, easing: 'cubic-bezier(.5, 0, .75, 0)', fill: 'forwards' }
           );
         });
@@ -1459,10 +2922,7 @@
 
         if (badgeSway) badgeSway.cancel();
         badgeEl.animate(
-          [
-            { opacity: 1, transform: 'translateY(0) rotate(0)' },
-            { opacity: 0, transform: 'translateY(-110%) rotate(-6deg)' },
-          ],
+          [{ opacity: 1, transform: 'translateY(0) rotate(0)' }, { opacity: 0, transform: 'translateY(-110%) rotate(-6deg)' }],
           { duration: 380, easing: 'cubic-bezier(.5, 0, .75, 0)', fill: 'forwards' }
         );
 
@@ -1492,8 +2952,7 @@
             });
           });
 
-          // Play video with eased speed curve
-          transVideo.play().catch(() => {});
+          transVideo.play().catch(() => { });
           const duration = transVideo.duration || 5.04;
 
           function tickSpeed() {
@@ -1515,39 +2974,24 @@
         }, 330);
       }
 
-      /* ── 8. Arrive in Case Mode ── */
+      /* ── 7. Arrive in Case Mode (Activate Full #s2-3d-engine) ── */
       function arriveCase() {
         mode = 'case';
         document.body.classList.add('is-case');
+        if (s2Engine) s2Engine.setAttribute('aria-hidden', 'false');
 
         plateImg.style.visibility = 'hidden';
         cutImg.style.opacity = '0';
         screenEl.style.opacity = '1';
 
-        // Flash on screen
         flashEl.animate(
-          [
-            { opacity: 0 },
-            { opacity: 0.55 },
-            { opacity: 0 },
-          ],
+          [{ opacity: 0 }, { opacity: 0.55 }, { opacity: 0 }],
           { duration: 600, easing: 'ease-out' }
         );
 
-        // First video reveal
-        caseVids[0].animate(
-          [
-            { opacity: 0, transform: 'scale(1.06)' },
-            { opacity: 1, transform: 'scale(1)' },
-          ],
-          { duration: 700, fill: 'both' }
-        );
-
-        playOnly(0);
-        caseIn(0, true);
-
-        // Preload video 2
-        if (!caseVids[1].src) caseVids[1].src = CASES[1].video;
+        resizeCanvas();
+        selectRole(0, false);
+        try { window.parent.postMessage({ type: 'fams-scene', mode: 'case' }, '*'); } catch (_) { }
 
         setTimeout(() => {
           busy = false;
@@ -1556,78 +3000,19 @@
         }, 700);
       }
 
-      /* ── 9. Switching Cases (swapTo) ── */
-      function swapTo(n) {
-        if (busy) return;
-        busy = true;
-
-        const oldIdx = currentCase;
-        currentCase = n;
-
-        // 1. In parallel: caseOut and old video fade
-        caseOut();
-        caseVids[oldIdx].animate(
-          [{ opacity: 1 }, { opacity: 0 }],
-          { duration: 350, fill: 'forwards' }
-        );
-
-        setTimeout(() => {
-          caseVids[oldIdx].pause();
-
-          // 2. Flash
-          flashEl.animate(
-            [{ opacity: 0 }, { opacity: 0.35 }, { opacity: 0 }],
-            { duration: 420 }
-          );
-
-          // 3. New video entrance
-          caseVids[n].animate(
-            [
-              { opacity: 0, transform: 'scale(1.04)' },
-              { opacity: 1, transform: 'scale(1)' },
-            ],
-            { duration: 500, fill: 'both' }
-          );
-
-          playOnly(n);
-          caseIn(n, false);
-
-          // Preload next video
-          const nextIdx = (n + 1) % CASES.length;
-          if (!caseVids[nextIdx].src) caseVids[nextIdx].src = CASES[nextIdx].video;
-
-          setTimeout(() => {
-            busy = false;
-          }, 520);
-        }, 350);
-      }
-
-      function nextCase() {
-        if (busy) return;
-        const next = (currentCase + 1) % CASES.length;
-        swapTo(next);
-      }
-
-      function prevCase() {
-        if (busy) return;
-        if (currentCase === 0) {
-          toHero();
-        } else {
-          swapTo(currentCase - 1);
-        }
-      }
-
-      /* ── 10. Back to Hero (toHero) ── */
+      /* ── 8. Back to Hero (toHero) ── */
       function toHero() {
         if (busy || mode === 'hero') return;
         busy = true;
+        clearRoleTimers();
+        clearFocusCards();
         document.body.classList.add('busy');
 
-        caseOut();
-        caseVids.forEach((v) => v.pause());
+        if (s2Engine) s2Engine.setAttribute('aria-hidden', 'true');
         screenEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' });
-
         document.body.classList.remove('is-case');
+        try { window.parent.postMessage({ type: 'fams-scene', mode: 'hero' }, '*'); } catch (_) { }
+
         frameEl.style.setProperty('--glide', '.9s');
         frameEl.classList.add('glide');
         place('hero');
@@ -1636,30 +3021,20 @@
         cutImg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, delay: 150, fill: 'forwards' });
 
         casePlateImg.animate(
-          [
-            { opacity: 1, filter: 'blur(0)' },
-            { opacity: 0, filter: 'blur(12px)' },
-          ],
+          [{ opacity: 1, filter: 'blur(0)' }, { opacity: 0, filter: 'blur(12px)' }],
           { duration: 800, easing: 'cubic-bezier(.65, 0, .35, 1)', fill: 'forwards' }
         );
 
         plateImg.animate(
-          [
-            { transform: 'scale(1.12)', filter: 'blur(8px)' },
-            { transform: 'scale(1)', filter: 'blur(0)' },
-          ],
+          [{ transform: 'scale(1.12)', filter: 'blur(8px)' }, { transform: 'scale(1)', filter: 'blur(0)' }],
           { duration: 900, easing: 'cubic-bezier(.2, .8, .2, 1)', fill: 'forwards' }
         );
 
         setTimeout(() => {
-          // heroIn
           [wmSvg, mWmSvg].forEach((wm) => {
             if (!wm) return;
             wm.animate(
-              [
-                { opacity: 0, transform: 'translateY(40px)' },
-                { opacity: 1, transform: 'translateY(0)' },
-              ],
+              [{ opacity: 0, transform: 'translateY(40px)' }, { opacity: 1, transform: 'translateY(0)' }],
               { duration: 700, fill: 'forwards' }
             );
           });
@@ -1667,10 +3042,7 @@
           [scriptEl, mScriptEl].forEach((sc) => {
             if (!sc) return;
             sc.animate(
-              [
-                { opacity: 0, clipPath: 'inset(0 100% 0 0)' },
-                { opacity: 1, clipPath: 'inset(0)' },
-              ],
+              [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0)' }],
               { duration: 700, delay: 250, fill: 'forwards' }
             );
           });
@@ -1689,7 +3061,7 @@
           });
 
           mode = 'hero';
-          currentCase = 0;
+          activeRole = 0;
           screenEl.style.opacity = '0';
 
           setTimeout(() => {
@@ -1700,67 +3072,87 @@
         }, 250);
       }
 
-      /* ── 11. Event Listeners ── */
-      // Wheel navigation
-      let lastWheelTime = 0;
-      window.addEventListener(
-        'wheel',
-        (e) => {
-          e.preventDefault();
-          const now = Date.now();
-          if (now - lastWheelTime < 900) return;
-          if (Math.abs(e.deltaY) < 18) return;
+      /* ── 9. Stepper Actions ── */
+      function nextWorkflow() {
+        if (busy) return;
+        const next = (activeRole + 1) % ROLES.length;
+        selectRole(next, true);
+      }
 
-          lastWheelTime = now;
-          if (mode === 'hero') {
-            if (e.deltaY > 0) toCase();
-          } else {
-            if (e.deltaY > 0) {
-              nextCase();
-            } else {
-              prevCase();
-            }
+      function prevWorkflow() {
+        if (busy) return;
+        const prev = (activeRole - 1 + ROLES.length) % ROLES.length;
+        selectRole(prev, true);
+      }
+
+      /* ── 10. Event Listeners ── */
+      window.toHero = toHero;
+      window.toCase = toCase;
+      window.prevWorkflow = prevWorkflow;
+      window.nextWorkflow = nextWorkflow;
+
+      // Scene 1 Triggers
+      if (btnOverview) btnOverview.addEventListener('click', toHero);
+      if (btnFeatures) btnFeatures.addEventListener('click', toCase);
+      if (btnContacts) btnContacts.addEventListener('click', (e) => e.preventDefault());
+      const hintBtn = document.getElementById('hint');
+      if (hintBtn) hintBtn.addEventListener('click', toCase);
+      if (btnDemo) btnDemo.addEventListener('click', (e) => {
+        e.preventDefault();
+        try {
+          if (window.top && window.top !== window) {
+            window.top.location.href = '/auth';
+            return;
           }
-        },
-        { passive: false }
-      );
+        } catch (_) { }
+        window.location.href = '/auth';
+      });
 
-      // Touch navigation
+      // Wheel Navigation
+      let lastWheelTime = 0;
+      window.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const now = Date.now();
+        if (now - lastWheelTime < 800) return;
+        if (Math.abs(e.deltaY) < 18) return;
+
+        lastWheelTime = now;
+        if (mode === 'hero') {
+          if (e.deltaY > 0) toCase();
+        } else {
+          if (e.deltaY > 0) nextWorkflow();
+          else prevWorkflow();
+        }
+      }, { passive: false });
+
+      // Touch Gestures (avoid colliding with 3D Orbit drag inside #stage-viewport)
       let touchStartY = 0;
       let touchStartX = 0;
-      window.addEventListener(
-        'touchstart',
-        (e) => {
-          if (e.touches && e.touches.length) {
-            touchStartY = e.touches[0].clientY;
-            touchStartX = e.touches[0].clientX;
+      let touchInsideStage = false;
+      window.addEventListener('touchstart', (e) => {
+        touchInsideStage = !!(e.target && e.target.closest && e.target.closest('#stage-viewport'));
+        if (e.touches && e.touches.length) {
+          touchStartY = e.touches[0].clientY;
+          touchStartX = e.touches[0].clientX;
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', (e) => {
+        if (touchInsideStage && mode === 'case') return;
+        if (e.changedTouches && e.changedTouches.length) {
+          const dy = e.changedTouches[0].clientY - touchStartY;
+          const dx = e.changedTouches[0].clientX - touchStartX;
+
+          if (mode === 'hero') {
+            if (dy <= -40) toCase();
+          } else {
+            if (dy <= -55 || dx <= -55) nextWorkflow();
+            else if (dy >= 55 || dx >= 55) prevWorkflow();
           }
-        },
-        { passive: true }
-      );
+        }
+      }, { passive: true });
 
-      window.addEventListener(
-        'touchend',
-        (e) => {
-          if (e.changedTouches && e.changedTouches.length) {
-            const dy = e.changedTouches[0].clientY - touchStartY;
-            const dx = e.changedTouches[0].clientX - touchStartX;
-
-            if (mode === 'hero') {
-              if (dy <= -40) toCase();
-            } else {
-              if (dy <= -40 || dx <= -40) {
-                nextCase();
-              } else if (dy >= 40 || dx >= 40) {
-                prevCase();
-              }
-            }
-          }
-        },
-        { passive: true }
-      );
-
-      // Keyboard navigation
+      // Keyboard Controls
       window.addEventListener('keydown', (e) => {
         if (mode === 'hero') {
           if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
@@ -1768,37 +3160,27 @@
             toCase();
           }
         } else {
-          if (['ArrowDown', 'PageDown', ' ', 'ArrowRight'].includes(e.key)) {
+          if (e.key === 'Escape') {
             e.preventDefault();
-            nextCase();
-          } else if (['ArrowUp', 'PageUp', 'ArrowLeft'].includes(e.key)) {
+            toHero();
+          } else if (e.key === ' ') {
             e.preventDefault();
-            prevCase();
+            toggleAutoMotion();
+          } else if (['ArrowRight', 'ArrowDown', 'PageDown'].includes(e.key)) {
+            e.preventDefault();
+            nextWorkflow();
+          } else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {
+            e.preventDefault();
+            prevWorkflow();
           }
         }
       });
-
-      // UI Clicks
-      btnOverview.addEventListener('click', toHero);
-      btnFeatures.addEventListener('click', toCase);
-      btnLogo.addEventListener('click', toHero);
-      btnPrev.addEventListener('click', prevCase);
-      btnNext.addEventListener('click', nextCase);
-      screenHitEl.addEventListener('click', nextCase);
-
-      // Prevent dummy link jumps
-      btnContacts.addEventListener('click', (e) => e.preventDefault());
-      btnDemo.addEventListener('click', (e) => {
-        e.preventDefault();
-        try {
-          if (window.top && window.top !== window) {
-            window.top.location.href = '/auth';
-            return;
-          }
-        } catch (_) {}
-        window.location.href = '/auth';
-      });
+      // Deep link to laptop mode
+      if (window.location.hash === '#case' || window.location.search.includes('case')) {
+        setTimeout(toCase, 600);
+      }
     })();
   </script>
 </body>
+
 </html>

@@ -230,7 +230,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
       </div>
 
       {/* ── KPI Cards ── */}
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard
           label="Assigned Interns"
           value={assignedStudents.length}
@@ -255,98 +255,129 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
 
       {/* ── Assigned Student Details (Candidate Profile & Placement Cards) ── */}
       <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <h2 className="text-lg font-semibold tracking-tight text-foreground flex items-center gap-2">
-              <Users className="size-5 text-primary" />
-              Interns Assigned to TechCorp Kenya Ltd
-            </h2>
-            <p className="text-xs text-muted-foreground">
-              Assigned candidates placed under your company's field supervision by the University
-            </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#18221B] text-[#9CE840] shadow-xs">
+              <Users className="size-5" />
+            </div>
+            <div>
+              <h2 className="font-display text-lg font-bold tracking-tight text-foreground">
+                Interns Assigned to {company.name}
+              </h2>
+              <p className="text-xs text-muted-foreground">
+                Candidates placed under your organization&apos;s workplace supervision
+              </p>
+            </div>
           </div>
-          <Button asChild size="sm" variant="outline" className="text-xs font-semibold">
+          <Button asChild size="sm" variant="outline" className="rounded-xl text-xs font-semibold h-9">
             <Link href="/students">View Candidate Roster</Link>
           </Button>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-5 md:grid-cols-2">
           {assignedStudents.map((student) => {
             const progressPct = Math.round((student.daysLogged / student.requiredDays) * 100);
+            const initials = student.name
+              .split(" ")
+              .map((p) => p[0])
+              .join("");
+
             return (
               <Card
                 key={student.id}
-                className="shadow-card border-border/80 hover:border-primary/40 transition"
+                className="rounded-xl border border-border/60 bg-card"
               >
-                <CardHeader className="pb-3">
+                <CardHeader className="p-5 pb-4">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="size-11 border border-border">
-                        <AvatarFallback className="bg-primary/10 text-primary font-bold text-sm">
-                          {student.name
-                            .split(" ")
-                            .map((p) => p[0])
-                            .join("")}
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Avatar className="size-10 shrink-0 rounded-lg">
+                        <AvatarFallback className="rounded-lg bg-muted font-semibold text-xs text-foreground">
+                          {initials}
                         </AvatarFallback>
                       </Avatar>
-                      <div>
-                        <CardTitle className="text-base font-semibold">{student.name}</CardTitle>
-                        <CardDescription className="font-mono text-xs text-muted-foreground">
-                          {student.regNo} • {student.degree}
+                      <div className="min-w-0">
+                        <CardTitle className="truncate text-base font-semibold text-foreground">
+                          {student.name}
+                        </CardTitle>
+                        <CardDescription className="truncate text-xs text-muted-foreground mt-0.5">
+                          <span className="font-mono">{student.regNo}</span> · {student.degree}
                         </CardDescription>
                       </div>
                     </div>
-                    <Badge
-                      variant="outline"
-                      className="text-xs font-medium border-success/40 bg-success/10 text-success"
-                    >
+
+                    <Badge variant="secondary" className="text-[11px] font-medium shrink-0">
                       {student.status}
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4 text-xs">
-                  <div className="grid grid-cols-2 gap-2 rounded-lg bg-muted/50 p-3">
-                    <div>
-                      <span className="text-[11px] text-muted-foreground block font-medium">
-                        Placement Role
-                      </span>
-                      <span className="font-semibold text-foreground">{student.role}</span>
-                      <span className="text-[11px] text-muted-foreground block">
+
+                <CardContent className="space-y-4 px-5 pb-5 pt-0">
+                  {/* Structured 2-Column Metadata Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="rounded-xl border border-border/60 bg-background/70 p-3.5 space-y-1">
+                      <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                        <Briefcase className="size-3.5 shrink-0 text-[#589E10] dark:text-primary" />
+                        <span>Placement Role</span>
+                      </div>
+                      <p className="text-xs font-bold text-foreground leading-snug pt-0.5">
+                        {student.role}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground">
                         {student.department}
-                      </span>
+                      </p>
                     </div>
-                    <div>
-                      <span className="text-[11px] text-muted-foreground block font-medium">
-                        Designated Field Mentor
-                      </span>
-                      <span className="font-semibold text-foreground">{student.mentor}</span>
-                      <span className="text-[11px] text-muted-foreground block">
-                        Academic: {student.academicSupervisor}
-                      </span>
+
+                    <div className="rounded-xl border border-border/60 bg-background/70 p-3.5 space-y-1">
+                      <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                        <UserCheck className="size-3.5 shrink-0 text-[#589E10] dark:text-primary" />
+                        <span>Supervision Team</span>
+                      </div>
+                      <p className="text-xs font-bold text-foreground leading-snug pt-0.5">
+                        {student.mentor} <span className="font-normal text-muted-foreground">(Host)</span>
+                      </p>
+                      <p className="text-[11px] text-muted-foreground">
+                        Faculty: {student.academicSupervisor}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs font-medium">
-                      <span className="text-muted-foreground">Attachment Attendance Pace</span>
-                      <span className="font-mono font-semibold text-foreground">
-                        {student.daysLogged} / {student.requiredDays} Days ({progressPct}%)
+                  {/* Attendance Progress Meter Box */}
+                  <div className="rounded-xl border border-border/60 bg-background/70 p-3.5 space-y-2.5">
+                    <div className="flex items-center justify-between gap-2 text-xs">
+                      <span className="font-medium text-muted-foreground flex items-center gap-1.5">
+                        <CalendarCheck className="size-3.5 text-[#589E10] dark:text-primary" />
+                        Attachment Attendance Pace
                       </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono text-xs font-bold text-foreground">
+                          {student.daysLogged} / {student.requiredDays} Days
+                        </span>
+                        <span className="rounded-md bg-primary/20 px-1.5 py-0.5 font-mono text-[10px] font-bold text-foreground">
+                          {progressPct}%
+                        </span>
+                      </div>
                     </div>
                     <Progress value={progressPct} className="h-2" />
                   </div>
 
-                  <div className="flex items-center justify-between pt-1 border-t border-border/60">
-                    <span className="text-[11px] text-muted-foreground">
-                      Attendance Rate: <strong>{student.attendanceRate}</strong>
-                    </span>
+                  {/* Card Footer Action Row */}
+                  <div className="flex items-center justify-between gap-3 pt-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground">Attendance Rate:</span>
+                      <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 font-mono text-xs font-bold text-foreground">
+                        {student.attendanceRate}
+                      </span>
+                    </div>
+
                     <Button
                       asChild
                       size="sm"
-                      variant="ghost"
-                      className="text-xs text-primary font-semibold h-7"
+                      className="h-8 rounded-lg px-3.5 text-xs font-semibold gap-1"
                     >
-                      <Link href="/review">Review Submissions →</Link>
+                      <Link href="/review">
+                        <span>Review Submissions</span>
+                        <ChevronRight className="size-3.5" />
+                      </Link>
                     </Button>
                   </div>
                 </CardContent>
@@ -357,21 +388,21 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
       </div>
 
       {/* ── Submissions Requiring Host Organization Approval ── */}
-      <Card className="shadow-card border-border/80">
-        <CardHeader className="flex flex-col items-start justify-between gap-3 pb-3 sm:flex-row sm:items-center">
+      <Card className="border-border/70 rounded-2xl">
+        <CardHeader className="flex flex-col items-start justify-between gap-3 p-5 pb-3 sm:flex-row sm:items-center">
           <div>
-            <CardTitle className="text-base font-semibold">
+            <CardTitle className="font-display text-base font-bold">
               Submissions Requiring Host Org Sign-Off
             </CardTitle>
             <CardDescription>
               Review technical deliverables submitted by your assigned mentees
             </CardDescription>
           </div>
-          <Button asChild size="sm" variant="outline" className="text-xs font-semibold">
+          <Button asChild size="sm" variant="outline" className="rounded-xl text-xs font-semibold h-9">
             <Link href="/review">Open Full Review Queue</Link>
           </Button>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-3 p-5 pt-2">
           {pendingActivities.length === 0 ? (
             <div className="py-8 text-center text-sm text-muted-foreground border border-dashed rounded-xl">
               <CheckCircle2 className="mx-auto size-8 text-success mb-2" />
@@ -383,20 +414,20 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
               return (
                 <div
                   key={act.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-primary/30"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-border/70 bg-background/70 p-4 transition hover:border-primary/50"
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-1.5 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="font-semibold text-sm text-foreground">{act.title}</span>
-                      <Badge variant="outline" className="text-xs border-primary/30 text-primary">
+                      <span className="inline-flex items-center rounded-md bg-[#18221B] px-2 py-0.5 text-[11px] font-semibold text-[#9CE840]">
                         {student?.name ?? "Intern"}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        Date: {act.activity_date}
+                      </span>
+                      <span className="text-xs text-muted-foreground font-mono">
+                        {act.activity_date}
                       </span>
                     </div>
                     <p className="text-xs text-muted-foreground line-clamp-1">{act.description}</p>
-                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
                       {act.tools_used.map((t) => (
                         <Badge key={t} variant="secondary" className="text-[10px] py-0">
                           {t}
@@ -409,17 +440,20 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
                     <Button
                       size="sm"
                       onClick={() => handleQuickApprove(act)}
-                      className="h-8 rounded-lg bg-primary text-primary-foreground text-xs font-semibold"
+                      className="h-8 rounded-lg bg-primary text-primary-foreground text-xs font-semibold gap-1"
                     >
-                      <Check className="mr-1 size-3.5" /> Quick Approve
+                      <Check className="size-3.5" /> Quick Approve
                     </Button>
                     <Button
                       asChild
                       size="sm"
                       variant="outline"
-                      className="h-8 rounded-lg text-xs font-semibold"
+                      className="h-8 rounded-lg text-xs font-semibold gap-1"
                     >
-                      <Link href="/review">Review Details →</Link>
+                      <Link href="/review">
+                        <span>Review Details</span>
+                        <ChevronRight className="size-3.5" />
+                      </Link>
                     </Button>
                   </div>
                 </div>

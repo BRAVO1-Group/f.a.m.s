@@ -20,7 +20,7 @@ export function UniSupervisorView({
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full bg-white/15 border border-white/25 text-[11px] font-semibold">
-              🏛️ Academic &amp; Field Rubrics
+              ️ Academic &amp; Field Rubrics
             </span>
             <span className="text-[11px] text-white/75">University of Nairobi • Dept. of Software Engineering</span>
           </div>
@@ -34,7 +34,7 @@ export function UniSupervisorView({
           onClick={onCertify}
           className="it-hero-btn px-3.5 py-2 rounded-xl bg-white text-indigo-700 font-bold text-xs shadow-sm hover:bg-zinc-100 transition shrink-0"
         >
-          🏅 Conduct New Evaluation
+          Conduct New Evaluation
         </button>
       </div>
 
@@ -48,7 +48,7 @@ export function UniSupervisorView({
         <div className="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
           <div className="text-[10px] font-bold uppercase text-zinc-500">Average Overall Score</div>
           <div className="text-2xl font-extrabold text-indigo-600 mt-1">4.8 / 5.0</div>
-          <div className="text-[10px] text-emerald-600 font-semibold mt-0.5">Distinction-tier performance</div>
+          <div className="text-[10px] text-lime-600 font-semibold mt-0.5">Distinction-tier performance</div>
         </div>
         <div className="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
           <div className="text-[10px] font-bold uppercase text-zinc-500">Job Offer Endorsements</div>
@@ -77,7 +77,7 @@ export function UniSupervisorView({
                 Candidate: <strong>Alice Wanjiku (CS/2021/0042)</strong> • TechCorp Kenya Ltd
               </p>
             </div>
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 text-xs font-extrabold">
+            <span className="px-2.5 py-0.5 rounded-full bg-lime-500/15 text-lime-700 border border-lime-500/30 text-xs font-extrabold">
               A (Distinction) • 4.8/5.0
             </span>
           </div>
@@ -86,7 +86,7 @@ export function UniSupervisorView({
             {[
               { label: "1. Technical Engineering & Architecture", score: "5.0 / 5.0", targetWidth: "100%", bar: "bg-indigo-600", text: "text-indigo-600" },
               { label: "2. Workplace Punctuality & Attendance Audit", score: "5.0 / 5.0", targetWidth: "100%", bar: "bg-indigo-600", text: "text-indigo-600" },
-              { label: "3. Technical Documentation & Logbook Rigor", score: "4.5 / 5.0", targetWidth: "90%", bar: "bg-emerald-500", text: "text-emerald-600" },
+              { label: "3. Technical Documentation & Logbook Rigor", score: "4.5 / 5.0", targetWidth: "90%", bar: "bg-lime-500", text: "text-lime-600" },
               { label: "4. Oral Defense & Problem Solving", score: "5.0 / 5.0", targetWidth: "100%", bar: "bg-indigo-600", text: "text-indigo-600" },
             ].map((row) => (
               <div key={row.label}>
@@ -106,14 +106,14 @@ export function UniSupervisorView({
 
           <div className="flex items-center justify-between pt-2 border-t border-zinc-200">
             <span className="text-[11px] font-semibold text-zinc-500">
-              Recommendation: <strong className="text-emerald-600">Full Time Offer</strong>
+              Recommendation: <strong className="text-lime-600">Full Time Offer</strong>
             </span>
             <button
               type="button"
               onClick={onCertify}
               className="px-3.5 py-1.5 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-sm hover:bg-indigo-700 transition"
             >
-              <span>{certified ? "✓ Grade A Recorded on Transcript" : "✓ Certify & Record Grade"}</span>
+              <span>{certified ? "Grade A Recorded on Transcript" : "Certify & Record Grade"}</span>
             </button>
           </div>
         </div>
@@ -126,9 +126,8 @@ export function UniSupervisorView({
             <div className="p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs space-y-1">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-zinc-900">Phase 1: Orientation</span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
-                  Certified ✓
-                </span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-lime-100 text-lime-800">
+                  Certified </span>
               </div>
               <p className="text-[10px] text-zinc-500">Weeks 1–2 • Git, Docker, Architecture</p>
             </div>
@@ -138,10 +137,10 @@ export function UniSupervisorView({
                 <span
                   className={cn(
                     "text-[10px] font-bold px-2 py-0.5 rounded",
-                    certified ? "bg-emerald-100 text-emerald-800" : "bg-indigo-100 text-indigo-800",
+                    certified ? "bg-lime-100 text-lime-800" : "bg-indigo-100 text-indigo-800",
                   )}
                 >
-                  {certified ? "Certified by Faculty ✓" : "Ready to Certify"}
+                  {certified ? "Certified by Faculty " : "Ready to Certify"}
                 </span>
               </div>
               <p className="text-[10px] text-zinc-500">Weeks 3–6 • React 19, Tailwind v4, Radix UI</p>
@@ -150,9 +149,9 @@ export function UniSupervisorView({
 
           <div className="p-2.5 rounded-xl bg-indigo-50/80 border border-indigo-200 text-[10px] font-mono space-y-1">
             <div className="font-bold text-indigo-950">FACULTY ASSESSOR PERMISSIONS:</div>
-            <div className="text-emerald-600 font-bold">✓ assessments:grade (Midterm/Final)</div>
-            <div className="text-emerald-600 font-bold">✓ milestones:certify (Phase Sign-off)</div>
-            <div className="text-rose-500">🔒 rbac:manage (Uni Admin / Dean only)</div>
+            <div className="text-lime-600 font-bold">assessments:grade (Midterm/Final)</div>
+            <div className="text-lime-600 font-bold">milestones:certify (Phase Sign-off)</div>
+            <div className="text-rose-500">rbac:manage (Uni Admin / Dean only)</div>
           </div>
         </div>
       </div>

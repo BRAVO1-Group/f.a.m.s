@@ -105,7 +105,7 @@ export function ThreeDStageCanvas({
 
         const nodeCoords = [
           { x: -640, y: -160, z: -80, color: "#6366f1", label: "T1 STUDENT" },
-          { x: 640, y: -160, z: -80, color: "#10b981", label: "T2 FIELD SUP" },
+          { x: 640, y: -160, z: -80, color: "#9CE840", label: "T2 FIELD SUP" },
           { x: 640, y: 170, z: -60, color: "#38bdf8", label: "T3 UNI SUP" },
           { x: -640, y: 170, z: -60, color: "#a855f7", label: "T4 UNI ADMIN" },
         ];
@@ -143,7 +143,7 @@ export function ThreeDStageCanvas({
           ctx.beginPath();
           ctx.arc(px, py, 5, 0, Math.PI * 2);
           ctx.fillStyle = "#34d399";
-          ctx.shadowColor = "#10b981";
+          ctx.shadowColor = "#9CE840";
           ctx.shadowBlur = 14;
           ctx.fill();
           ctx.shadowBlur = 0;

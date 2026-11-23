@@ -28,7 +28,7 @@ export function StudentRoleView({
         <div>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-semibold backdrop-blur">
-              ✨ Active Placement • Week 9 of 12
+              Active Placement • Week 9 of 12
             </span>
             <span className="text-[11px] text-white/75">Target Defense: Sept 30, 2026</span>
           </div>
@@ -51,8 +51,8 @@ export function StudentRoleView({
             onClick={onClockIn}
             className="px-3.5 py-2 rounded-xl border border-white/30 bg-white/10 text-white font-semibold text-xs hover:bg-white/20 transition flex items-center gap-1.5"
           >
-            <span>🕒</span>
-            <span>{clockedIn ? "✓ Clocked In (08:30 AM)" : "Clock In (08:30 AM)"}</span>
+            <span></span>
+            <span>{clockedIn ? "Clocked In (08:30 AM)" : "Clock In (08:30 AM)"}</span>
           </button>
         </div>
       </div>
@@ -62,7 +62,7 @@ export function StudentRoleView({
         <div className="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-sm transition-all">
           <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-500">
             <span>Days Completed</span>
-            <span className="size-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">📅</span>
+            <span className="size-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center"></span>
           </div>
           <div className="mt-2 flex items-baseline gap-1.5">
             <span className="text-2xl font-extrabold text-zinc-900">{clockedIn ? 43 : 42}</span>
@@ -82,19 +82,19 @@ export function StudentRoleView({
             <span className="text-2xl font-extrabold text-zinc-900">{clockedIn ? "344.0" : "336.0"}</span>
             <span className="text-xs text-zinc-500">hours</span>
           </div>
-          <p className="mt-2 text-[11px] text-emerald-600 font-medium">● 8.0 hrs/day pace</p>
+          <p className="mt-2 text-[11px] text-lime-600 font-medium">● 8.0 hrs/day pace</p>
         </div>
 
         <div className="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-sm">
           <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-500">
             <span>Logbook Status</span>
-            <span className="size-6 rounded-lg bg-emerald-500/15 text-emerald-700 flex items-center justify-center">📋</span>
+            <span className="size-6 rounded-lg bg-lime-500/15 text-lime-700 flex items-center justify-center"></span>
           </div>
           <div className="mt-2 flex items-baseline gap-1.5">
             <span className="text-2xl font-extrabold text-zinc-900">{submitted ? 5 : 4}</span>
             <span className="text-xs text-zinc-500">entries</span>
           </div>
-          <span className="inline-block mt-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700">
+          <span className="inline-block mt-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-lime-500/15 text-lime-700">
             {submitted ? "2 in supervisor review queue" : "1 draft ready to submit"}
           </span>
         </div>
@@ -102,12 +102,12 @@ export function StudentRoleView({
         <div className="bg-white border border-zinc-200 rounded-xl p-3.5 shadow-sm">
           <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-500">
             <span>RBAC Clearance</span>
-            <span className="size-6 rounded-lg bg-indigo-500/15 text-indigo-700 flex items-center justify-center">🛡️</span>
+            <span className="size-6 rounded-lg bg-indigo-500/15 text-indigo-700 flex items-center justify-center">️</span>
           </div>
           <div className="mt-1.5 space-y-1 text-[10px] font-mono">
-            <div className="text-emerald-600 font-bold">✓ logs:create</div>
-            <div className="text-emerald-600 font-bold">✓ attendance:record</div>
-            <div className="text-rose-500">🔒 logs:approve (Mentor)</div>
+            <div className="text-lime-600 font-bold">logs:create</div>
+            <div className="text-lime-600 font-bold">attendance:record</div>
+            <div className="text-rose-500">logs:approve (Mentor)</div>
           </div>
         </div>
       </div>
@@ -128,7 +128,7 @@ export function StudentRoleView({
                   className={cn(
                     "text-[10px] font-bold px-2 py-0.5 rounded-full border",
                     submitted
-                      ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                      ? "border-lime-500 bg-lime-50 text-lime-700"
                       : "border-amber-400 bg-amber-50 text-amber-800",
                   )}
                 >
@@ -142,8 +142,8 @@ export function StudentRoleView({
               onClick={onAiPolish}
               className="px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-[11px] font-bold flex items-center gap-1 hover:bg-indigo-100 transition"
             >
-              <span>✨</span>
-              <span>{aiPolished ? "✨ AI Polished!" : "Polish with AI"}</span>
+              <span></span>
+              <span>{aiPolished ? "AI Polished!" : "Polish with AI"}</span>
             </button>
           </div>
 
@@ -173,7 +173,7 @@ export function StudentRoleView({
                 UI/UX design
               </span>
               {aiPolished && (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 border border-emerald-400/40">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-lime-500/15 text-lime-700 border border-lime-400/40">
                   + Zod &amp; Jest (92%)
                 </span>
               )}
@@ -183,8 +183,8 @@ export function StudentRoleView({
               onClick={onSubmit}
               className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5"
             >
-              <span>🚀</span>
-              <span>{submitted ? "✓ Sent to Host Supervisor" : "Submit to Field Supervisor"}</span>
+              <span></span>
+              <span>{submitted ? "Sent to Host Supervisor" : "Submit to Field Supervisor"}</span>
             </button>
           </div>
         </div>
@@ -198,8 +198,8 @@ export function StudentRoleView({
           <div>
             <div className="flex items-center justify-between border-b border-zinc-200 pb-2">
               <span className="text-xs font-extrabold text-zinc-900">Today&apos;s Shift &amp; Milestone</span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 flex items-center gap-1">
-                <span className="size-1.5 rounded-full bg-emerald-500 animate-ping" />
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-lime-500/15 text-lime-700 flex items-center gap-1">
+                <span className="size-1.5 rounded-full bg-lime-500 animate-ping" />
                 Checked In 08:30 AM
               </span>
             </div>
@@ -218,33 +218,31 @@ export function StudentRoleView({
             </div>
 
             <div className="mt-2.5 space-y-1.5 text-[11px]">
-              <div className="flex items-center gap-2 p-1.5 rounded-lg bg-emerald-50/70 border border-emerald-200 text-zinc-900">
-                <span className="size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold">
-                  ✓
-                </span>
+              <div className="flex items-center gap-2 p-1.5 rounded-lg bg-lime-50/70 border border-lime-200 text-zinc-900">
+                <span className="size-4 rounded-full bg-lime-600 text-white flex items-center justify-center text-[9px] font-bold">
+                  </span>
                 <span className="line-through text-zinc-500">Implement Radix dialog and tabs in review queue</span>
               </div>
-              <div className="flex items-center gap-2 p-1.5 rounded-lg bg-emerald-50/70 border border-emerald-200 text-zinc-900">
-                <span className="size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold">
-                  ✓
-                </span>
+              <div className="flex items-center gap-2 p-1.5 rounded-lg bg-lime-50/70 border border-lime-200 text-zinc-900">
+                <span className="size-4 rounded-full bg-lime-600 text-white flex items-center justify-center text-[9px] font-bold">
+                  </span>
                 <span className="line-through text-zinc-500">Build responsive stats dashboard with Recharts</span>
               </div>
               <div
                 className={cn(
                   "flex items-center gap-2 p-1.5 rounded-lg border transition-all",
                   clockedIn
-                    ? "bg-emerald-50/80 border-emerald-300 text-zinc-900"
+                    ? "bg-lime-50/80 border-lime-300 text-zinc-900"
                     : "bg-zinc-50 border-zinc-200 text-zinc-900",
                 )}
               >
                 <span
                   className={cn(
                     "size-4 rounded-full flex items-center justify-center text-[9px] font-bold",
-                    clockedIn ? "bg-emerald-600 text-white" : "border border-zinc-400",
+                    clockedIn ? "bg-lime-600 text-white" : "border border-zinc-400",
                   )}
                 >
-                  {clockedIn ? "✓" : ""}
+                  {clockedIn ? "" : ""}
                 </span>
                 <span className="font-semibold">Complete accessibility &amp; screen-reader audit</span>
               </div>

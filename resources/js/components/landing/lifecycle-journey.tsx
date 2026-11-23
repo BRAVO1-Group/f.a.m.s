@@ -129,7 +129,7 @@ export function LifecycleJourney() {
                 <ul className="space-y-1.5 text-xs text-foreground/80">
                   {stage.deliverables.map((item) => (
                     <li key={item} className="flex items-center gap-2">
-                      <CheckCircle2 className="size-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <CheckCircle2 className="size-3.5 text-lime-600 dark:text-lime-400 shrink-0" />
                       <span className="leading-snug">{item}</span>
                     </li>
                   ))}

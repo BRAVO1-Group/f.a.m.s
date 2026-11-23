@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Award, CheckCircle2, FileCheck } from "lucide-react";
+import { Award, CheckCircle2, FileCheck, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { EmptyState } from "@/components/ui/empty-state";
 import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,12 +34,19 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAppUser } from "@/lib/app-user";
-import { evaluations as initialEvaluations, type MockEvaluation } from "@/lib/mock-data";
+import {
+  getStoredEvaluations,
+  saveStoredEvaluations,
+  type MockEvaluation,
+} from "@/lib/mock-data";
 
 export default function EvaluationsPage() {
   const { name } = useAppUser();
-  const [evalList, setEvalList] = useState<MockEvaluation[]>(initialEvaluations);
+  const [evalList, setEvalList] = useState<MockEvaluation[]>(getStoredEvaluations);
   const [evalOpen, setEvalOpen] = useState(false);
+  const [editingEvalId, setEditingEvalId] = useState<string | null>(null);
+  const [deletingEval, setDeletingEval] = useState<MockEvaluation | null>(null);
+  const [confirmSubmitOpen, setConfirmSubmitOpen] = useState(false);
 
   // Form state
   const [studentId, setStudentId] = useState("student-1");
@@ -58,8 +67,25 @@ export default function EvaluationsPage() {
     { studentId: "student-4", name: "Kevin Kiprono", regNo: "CS/2021/0104", company: "TechCorp" },
   ];
 
+  const openEditEval = (ev: MockEvaluation) => {
+    setEditingEvalId(ev.id);
+    setStudentId(ev.student_id);
+    setPeriod(ev.period);
+    setTechnical(String(ev.ratings.technical));
+    setPunctuality(String(ev.ratings.punctuality));
+    setCommunication(String(ev.ratings.communication));
+    setProblemSolving(String(ev.ratings.problem_solving));
+    setRecommendation(ev.recommendation);
+    setComments(ev.comments);
+    setEvalOpen(true);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setConfirmSubmitOpen(true);
+  };
+
+  const executeSaveEvaluation = () => {
     const t = Number(technical);
     const p = Number(punctuality);
     const c = Number(communication);
@@ -72,6 +98,30 @@ export default function EvaluationsPage() {
     else if (score < 4.5) letter = "B+ (Very Good)";
 
     const targetStudent = universityCohort.find((s) => s.studentId === studentId);
+
+    if (editingEvalId) {
+      const updated = evalList.map((item) =>
+        item.id === editingEvalId
+          ? {
+              ...item,
+              student_id: studentId,
+              period,
+              ratings: { technical: t, punctuality: p, communication: c, problem_solving: ps },
+              overall_score: score,
+              grade: letter,
+              recommendation,
+              comments: comments || item.comments,
+            }
+          : item,
+      );
+      setEvalList(updated);
+      saveStoredEvaluations(updated);
+      setEditingEvalId(null);
+      setConfirmSubmitOpen(false);
+      setEvalOpen(false);
+      toast.success("Evaluation updated");
+      return;
+    }
 
     const newEval: MockEvaluation = {
       id: `eval-${Date.now()}`,
@@ -93,7 +143,10 @@ export default function EvaluationsPage() {
       supervisor_name: name || "James Otieno",
     };
 
-    setEvalList([newEval, ...evalList]);
+    const updated = [newEval, ...evalList];
+    setEvalList(updated);
+    saveStoredEvaluations(updated);
+    setConfirmSubmitOpen(false);
     setEvalOpen(false);
     toast.success("Performance evaluation recorded!", {
       description: `${period} grade of ${letter} signed off for ${targetStudent?.name ?? "student"}.`,
@@ -177,7 +230,8 @@ export default function EvaluationsPage() {
                 <TableHead>Rubric Ratings</TableHead>
                 <TableHead>Grade & Score</TableHead>
                 <TableHead>Recommendation</TableHead>
-                <TableHead className="text-right">Date</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -226,16 +280,82 @@ export default function EvaluationsPage() {
                         {item.recommendation.replace(/_/g, " ")}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right text-xs font-mono text-muted-foreground">
+                    <TableCell className="text-xs font-mono text-muted-foreground">
                       {item.evaluation_date}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => openEditEval(item)}
+                          className="h-7 w-7 p-0"
+                          title="Edit Evaluation"
+                        >
+                          <Pencil className="size-3.5" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setDeletingEval(item)}
+                          className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                          title="Delete Evaluation"
+                        >
+                          <Trash2 className="size-3.5" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 );
               })}
             </TableBody>
           </Table>
+          {evalList.length === 0 && (
+            <EmptyState
+              icon={Award}
+              title="No Performance Evaluations Recorded Yet"
+              description="Click 'Conduct New Evaluation' to grade an assigned student's technical skills, workplace conduct, and attendance."
+              actionLabel="Conduct New Evaluation"
+              onAction={() => {
+                setEditingEvalId(null);
+                setEvalOpen(true);
+              }}
+            />
+          )}
         </CardContent>
       </Card>
+
+      {/* Yes / No Confirmation Dialogs for Submitting & Deleting Evaluations */}
+      <ConfirmDialog
+        open={confirmSubmitOpen}
+        onOpenChange={setConfirmSubmitOpen}
+        title={editingEvalId ? "Save Changes to Grading Form?" : "Submit Official Student Grading Form?"}
+        description="Are you sure you want to record and sign off on this student performance grade? It will be added to the student's accreditation dossier."
+        confirmLabel="Yes, Sign & Save Grade"
+        cancelLabel="No, Review Scores"
+        onConfirm={executeSaveEvaluation}
+      />
+
+      <ConfirmDialog
+        open={Boolean(deletingEval)}
+        onOpenChange={(open) => {
+          if (!open) setDeletingEval(null);
+        }}
+        title="Delete Evaluation Record?"
+        description="Are you sure you want to permanently delete this performance evaluation record?"
+        confirmLabel="Yes, Delete Record"
+        cancelLabel="No, Keep Record"
+        variant="destructive"
+        onConfirm={() => {
+          if (deletingEval) {
+            const updated = evalList.filter((e) => e.id !== deletingEval.id);
+            setEvalList(updated);
+            saveStoredEvaluations(updated);
+            setDeletingEval(null);
+            toast.success("Evaluation deleted");
+          }
+        }}
+      />
 
       {/* ── Conduct Evaluation Dialog ── */}
       <Dialog open={evalOpen} onOpenChange={setEvalOpen}>

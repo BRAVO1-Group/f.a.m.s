@@ -7,6 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { EmptyState } from "@/components/ui/empty-state";
+import { enqueueOfflineAction, isAppOffline } from "@/components/ui/network-banner";
 import {
   Dialog,
   DialogContent,
@@ -64,6 +67,8 @@ export default function LogbookPage() {
   const [search, setSearch] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [activitiesList, setActivitiesList] = useState<MockActivity[]>(getStoredActivities);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [pendingSubmitId, setPendingSubmitId] = useState<string | null>(null);
 
   useEffect(() => {
     const handler = () => setActivitiesList(getStoredActivities());
@@ -203,11 +208,20 @@ export default function LogbookPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <Card className="shadow-card">
-          <CardContent className="p-8 text-center text-sm text-muted-foreground">
-            No entries yet. Click "New entry" to record your first activity.
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={FilePenLine}
+          title={search ? "No Matching Logbook Entries Found" : "Your Digital Logbook Is Empty"}
+          description={
+            search
+              ? "Try adjusting your search keywords or clear the filter to view all entries."
+              : "Record your daily workplace tasks, technical tools, and skills learned, then submit them for your Field Mentor's comment and sign-off."
+          }
+          actionLabel="Create First Logbook Entry"
+          onAction={() => {
+            setDraft(emptyDraft());
+            setOpen(true);
+          }}
+        />
       ) : (
         <div className="space-y-3">
           {filtered.map((a) => (
@@ -270,14 +284,14 @@ export default function LogbookPage() {
                     >
                       Edit
                     </Button>
-                    <Button size="sm" onClick={() => submitExisting(a.id)}>
+                    <Button size="sm" onClick={() => setPendingSubmitId(a.id)}>
                       <Send className="size-4" /> Submit
                     </Button>
                     <Button
                       size="sm"
                       variant="ghost"
                       className="text-destructive"
-                      onClick={() => deleteEntry(a.id)}
+                      onClick={() => setPendingDeleteId(a.id)}
                     >
                       <Trash2 className="size-4" />
                     </Button>
@@ -414,6 +428,44 @@ export default function LogbookPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {/* Yes / No Confirmation Dialogs for Submitting & Deleting Logbook Entries */}
+      <ConfirmDialog
+        open={Boolean(pendingSubmitId)}
+        onOpenChange={(v) => {
+          if (!v) setPendingSubmitId(null);
+        }}
+        title="Submit Logbook Entry to Field Mentor?"
+        description="Are you sure you want to submit this logbook entry for your Field Mentor's review, comment, and official sign-off?"
+        confirmLabel="Yes, Submit Entry"
+        cancelLabel="No, Keep Editing"
+        onConfirm={() => {
+          if (pendingSubmitId) {
+            submitExisting(pendingSubmitId);
+            if (isAppOffline()) {
+              enqueueOfflineAction("logbook_submit", `Submitted logbook entry ${pendingSubmitId}`);
+            }
+            setPendingSubmitId(null);
+          }
+        }}
+      />
+
+      <ConfirmDialog
+        open={Boolean(pendingDeleteId)}
+        onOpenChange={(v) => {
+          if (!v) setPendingDeleteId(null);
+        }}
+        title="Delete This Logbook Entry?"
+        description="Are you sure you want to permanently delete this draft logbook entry? This action cannot be undone."
+        confirmLabel="Yes, Delete Entry"
+        cancelLabel="No, Keep Entry"
+        variant="destructive"
+        onConfirm={() => {
+          if (pendingDeleteId) {
+            deleteEntry(pendingDeleteId);
+            setPendingDeleteId(null);
+          }
+        }}
+      />
     </div>
   );
 }

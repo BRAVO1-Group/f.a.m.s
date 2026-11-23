@@ -1,6 +1,6 @@
 export default function LandingPage() {
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-[#0b2f20]">
+    <div className="relative h-screen w-screen overflow-hidden bg-[#141F17]">
       {/* ── FAMS Interactive Hero (Scene 1 Poster + Scene 2 3D Workspace Tour) ── */}
       <iframe
         src="/index.html"

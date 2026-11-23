@@ -1,21 +1,27 @@
 import { useState, useEffect } from "react";
+import { Link } from "@inertiajs/react";
 import {
   Building2,
   Copy,
+  ExternalLink,
   GraduationCap,
   KeyRound,
   Lock,
   Mail,
+  Pencil,
   Phone,
   Plus,
   Search,
   ShieldCheck,
+  Trash2,
   UserCheck,
   UserPlus,
   Users,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +45,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   getStoredSupervisors,
   addSupervisor,
+  updateSupervisor,
+  deleteSupervisor,
   type MockSupervisor,
   type SupervisorType,
 } from "@/lib/mock-data";
@@ -48,6 +56,8 @@ export default function SupervisorsPage() {
   const [filter, setFilter] = useState<"all" | "organization" | "university">("all");
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
+  const [editingSupervisorId, setEditingSupervisorId] = useState<string | null>(null);
+  const [deletingSupervisor, setDeletingSupervisor] = useState<MockSupervisor | null>(null);
   const [selectedSupervisorCreds, setSelectedSupervisorCreds] = useState<MockSupervisor | null>(
     null,
   );
@@ -67,6 +77,18 @@ export default function SupervisorsPage() {
     return () => window.removeEventListener("internflow-data-change", handler);
   }, []);
 
+  const openEditSupervisor = (sup: MockSupervisor) => {
+    setEditingSupervisorId(sup.id);
+    setSupType(sup.type);
+    setFullName(sup.full_name);
+    setEmail(sup.email);
+    setPhone(sup.phone);
+    setTitle(sup.title);
+    setOrgOrUni(sup.organization_name || "TechCorp Kenya Ltd");
+    setDeptOrFaculty(sup.faculty_department || "Engineering");
+    setCreateOpen(true);
+  };
+
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !email.trim() || !title.trim()) {
@@ -74,29 +96,47 @@ export default function SupervisorsPage() {
       return;
     }
 
-    addSupervisor({
-      full_name: fullName.trim(),
-      email: email.trim(),
-      phone: phone.trim() || "+254 700 000 000",
-      type: supType,
-      title: title.trim(),
-      organization_name: supType === "organization" ? orgOrUni : "University of Nairobi",
-      faculty_department:
-        deptOrFaculty.trim() ||
-        (supType === "organization" ? "Engineering" : "School of Computing"),
-    });
+    if (editingSupervisorId) {
+      updateSupervisor(editingSupervisorId, {
+        full_name: fullName.trim(),
+        email: email.trim(),
+        phone: phone.trim() || "+254 700 000 000",
+        type: supType,
+        title: title.trim(),
+        organization_name: supType === "organization" ? orgOrUni : "University of Nairobi",
+        faculty_department:
+          deptOrFaculty.trim() ||
+          (supType === "organization" ? "Engineering" : "School of Computing"),
+      });
+      setSupervisorsList(getStoredSupervisors());
+      setCreateOpen(false);
+      setEditingSupervisorId(null);
+      toast.success("Supervisor record updated");
+    } else {
+      addSupervisor({
+        full_name: fullName.trim(),
+        email: email.trim(),
+        phone: phone.trim() || "+254 700 000 000",
+        type: supType,
+        title: title.trim(),
+        organization_name: supType === "organization" ? orgOrUni : "University of Nairobi",
+        faculty_department:
+          deptOrFaculty.trim() ||
+          (supType === "organization" ? "Engineering" : "School of Computing"),
+      });
 
-    setSupervisorsList(getStoredSupervisors());
-    setCreateOpen(false);
+      setSupervisorsList(getStoredSupervisors());
+      setCreateOpen(false);
 
-    toast.success(
-      supType === "organization"
-        ? "Host Organization Mentor created!"
-        : "University Academic Supervisor created!",
-      {
-        description: `${fullName} is now registered in the institutional supervisor directory.`,
-      },
-    );
+      toast.success(
+        supType === "organization"
+          ? "Host Organization Mentor created!"
+          : "University Academic Supervisor created!",
+        {
+          description: `${fullName} is now registered in the institutional supervisor directory.`,
+        },
+      );
+    }
 
     setFullName("");
     setEmail("");
@@ -366,24 +406,87 @@ export default function SupervisorsPage() {
                         </Badge>
                       </div>
 
-                      {isOrg && (
+                      <div className="flex items-center gap-1">
+                        {isOrg && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setSelectedSupervisorCreds(sup)}
+                            className="h-7 text-[11px] px-2"
+                          >
+                            <KeyRound className="mr-1 size-3" /> OTP Link
+                          </Button>
+                        )}
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => setSelectedSupervisorCreds(sup)}
-                          className="h-7 text-[11px] px-2 text-primary hover:bg-primary/10"
+                          onClick={() => openEditSupervisor(sup)}
+                          title="Edit Supervisor"
+                          className="h-7 w-7 p-0"
                         >
-                          <KeyRound className="mr-1 size-3" /> Credentials
+                          <Pencil className="size-3.5" />
                         </Button>
-                      )}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setDeletingSupervisor(sup)}
+                          title="Delete Supervisor"
+                          className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="size-3.5" />
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               );
             })}
           </div>
+          {filtered.length === 0 && (
+            <EmptyState
+              icon={Users}
+              title="No Supervisors Found"
+              description="No supervisors match your current filter. Click 'Create Supervisor Account' to provision a Field Mentor or Academic Assessor."
+              actionLabel="Create Supervisor Account"
+              onAction={() => {
+                setEditingSupervisorId(null);
+                setCreateOpen(true);
+              }}
+            />
+          )}
         </CardContent>
       </Card>
+
+      {/* Yes / No Confirmation Dialog for Deleting a Supervisor */}
+      <ConfirmDialog
+        open={Boolean(deletingSupervisor)}
+        onOpenChange={(open) => {
+          if (!open) setDeletingSupervisor(null);
+        }}
+        title="Delete Supervisor Account?"
+        description={
+          deletingSupervisor ? (
+            <>
+              Are you sure you want to permanently remove{" "}
+              <strong>{deletingSupervisor.full_name}</strong> ({deletingSupervisor.email}) from the
+              institutional supervisor directory?
+            </>
+          ) : (
+            ""
+          )
+        }
+        confirmLabel="Yes, Delete Supervisor"
+        cancelLabel="No, Keep Account"
+        variant="destructive"
+        onConfirm={() => {
+          if (deletingSupervisor) {
+            deleteSupervisor(deletingSupervisor.id);
+            setSupervisorsList(getStoredSupervisors());
+            toast.success(`Removed ${deletingSupervisor.full_name}`);
+            setDeletingSupervisor(null);
+          }
+        }}
+      />
 
       {/* ── View Supervisor Credentials Modal ── */}
       <Dialog
@@ -465,18 +568,27 @@ export default function SupervisorsPage() {
                 </span>
               </div>
 
-              <DialogFooter className="pt-2">
+              <DialogFooter className="pt-2 flex-col sm:flex-row gap-2">
                 <Button
                   size="sm"
+                  variant="outline"
                   onClick={() => {
-                    const text = `InternTrack Field Supervisor Login\nSupervisor: ${selectedSupervisorCreds.full_name}\nOrganization: ${selectedSupervisorCreds.organization_name}\nEmail: ${selectedSupervisorCreds.email}\nScope: Bound strictly to assigned candidates.`;
-                    navigator.clipboard?.writeText(text);
-                    toast.success("Dispatched credentials copied to clipboard!");
+                    const otpLink = `${window.location.origin}/mentor-onboard?student=Alice+Wanjiku&reg=CS/2021/0042&company=${encodeURIComponent(selectedSupervisorCreds.organization_name || "TechCorp Solutions")}&mentor=${encodeURIComponent(selectedSupervisorCreds.full_name)}&email=${encodeURIComponent(selectedSupervisorCreds.email)}&otp=OTP-849201`;
+                    navigator.clipboard?.writeText(otpLink);
+                    toast.success("Special Field Mentor OTP Onboarding Link copied!");
                   }}
-                  className="w-full text-xs font-semibold"
+                  className="flex-1 text-xs font-semibold"
                 >
                   <Copy className="mr-1.5 size-3.5" />
-                  Copy Login Details
+                  Copy OTP Link
+                </Button>
+                <Button asChild size="sm" className="flex-1 text-xs font-semibold">
+                  <Link
+                    href={`/mentor-onboard?student=Alice+Wanjiku&reg=CS/2021/0042&company=${encodeURIComponent(selectedSupervisorCreds.organization_name || "TechCorp Solutions")}&mentor=${encodeURIComponent(selectedSupervisorCreds.full_name)}&email=${encodeURIComponent(selectedSupervisorCreds.email)}&otp=OTP-849201`}
+                  >
+                    <span>Open Mentor OTP Link</span>
+                    <ExternalLink className="ml-1.5 size-3.5" />
+                  </Link>
                 </Button>
               </DialogFooter>
             </div>

@@ -28,7 +28,7 @@ export function LandingFooter() {
             </p>
 
             <div className="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-background/80 px-3 py-1.5 text-xs text-muted-foreground">
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="size-2 rounded-full bg-lime-500 animate-pulse" />
               <span className="font-medium text-foreground">All Systems Operational</span>
               <span className="text-[10px] text-muted-foreground/70">• CUE v2.4 API</span>
             </div>
@@ -108,7 +108,7 @@ export function LandingFooter() {
             <ul className="space-y-2 text-xs text-muted-foreground">
               <li>
                 <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <ShieldCheck className="size-3.5 text-lime-600 dark:text-lime-400" />
                   CUE & TVETA Aligned
                 </span>
               </li>
