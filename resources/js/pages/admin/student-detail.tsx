@@ -33,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { recordAuditEvent } from "@/components/dashboard/audit-trail-panel";
 import { useAppUser } from "@/lib/app-user";
@@ -161,6 +162,7 @@ export default function StudentDetailPage() {
   const [logComments, setLogComments] = useState<Record<string, string>>({});
   const [logWarnings, setLogWarnings] = useState<Record<string, string>>({});
   const [editingLogId, setEditingLogId] = useState<string | null>(null);
+  const [logFilter, setLogFilter] = useState<"all" | "approved" | "submitted" | "needs_correction">("all");
   const [gradeWarning, setGradeWarning] = useState<string | null>(null);
 
   // Confirm Dialogs
@@ -204,6 +206,15 @@ export default function StudentDetailPage() {
   }, []);
 
   const studentActivities = activitiesList.filter((a) => a.student_id === student.id);
+  const approvedActivitiesCount = studentActivities.filter((a) => a.status === "approved").length;
+  const pendingActivitiesCount = studentActivities.filter((a) => a.status === "submitted").length;
+  const revisionActivitiesCount = studentActivities.filter(
+    (a) => a.status === "needs_correction",
+  ).length;
+  const visibleActivities =
+    logFilter === "all"
+      ? studentActivities
+      : studentActivities.filter((a) => a.status === logFilter);
   const studentEvals = evalList.filter((e) => e.student_id === student.id);
   const progressPct = Math.round((student.daysLogged / student.requiredDays) * 100);
   const initials = student.name
@@ -364,23 +375,14 @@ export default function StudentDetailPage() {
             </div>
           </div>
 
-          {/* Quick Switch Between Assigned Students */}
-          <div className="flex flex-wrap items-center gap-1.5 shrink-0">
-            {["student-1", "student-4"].map((id) => {
-              const s = STUDENT_DIRECTORY[id];
-              if (!s) return null;
-              return (
-                <Button
-                  key={s.id}
-                  asChild
-                  size="sm"
-                  variant={s.id === student.id ? "default" : "outline"}
-                  className="h-8 text-xs"
-                >
-                  <Link href={`/students/${s.id}`}>{s.name}</Link>
-                </Button>
-              );
-            })}
+          {/* Strictly This Student's Contact & Academic Profile Info (No Other Student Names) */}
+          <div className="flex flex-wrap items-center gap-2 shrink-0 text-xs">
+            <Badge variant="outline" className="px-2.5 py-1 font-normal text-muted-foreground">
+              {student.degree}
+            </Badge>
+            <Badge variant="outline" className="px-2.5 py-1 font-mono font-normal text-muted-foreground">
+              {student.email}
+            </Badge>
           </div>
         </CardContent>
       </Card>
@@ -453,32 +455,66 @@ export default function StudentDetailPage() {
 
       {/* ── SECTION 2: Student Logbook Entries & Field Mentor Comments (Spacious, Clear Approved vs Pending State) ── */}
       <Card className="rounded-xl border border-border/60 bg-card">
-        <CardHeader className="p-6 pb-4 border-b border-border/50">
+        <CardHeader className="p-6 pb-4 border-b border-border/50 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <CardTitle className="flex items-center gap-2 text-base font-semibold">
                 <MessageSquareText className="size-4 text-muted-foreground" />
-                {student.name}&apos;s Logbook Entries &amp; Field Mentor Comments
+                {student.name}&apos;s Logbook Submissions
               </CardTitle>
               <CardDescription className="mt-0.5">
-                Inspect the student&apos;s full daily work log, tools, and challenges, then write your Field Mentor comment to approve or request revision
+                View {student.name}&apos;s signed and approved logbook submissions alongside pending entries awaiting your Field Mentor comment
               </CardDescription>
             </div>
             <Badge variant="outline" className="w-fit font-mono text-xs">
-              {studentActivities.filter((a) => a.status === "approved").length} of{" "}
-              {studentActivities.length} Approved
+              {approvedActivitiesCount} of {studentActivities.length} Signed &amp; Approved
             </Badge>
           </div>
+
+          {/* Filter Tabs for This Student's Submissions */}
+          <Tabs
+            value={logFilter}
+            onValueChange={(v) =>
+              setLogFilter(v as "all" | "approved" | "submitted" | "needs_correction")
+            }
+          >
+            <TabsList className="h-9">
+              <TabsTrigger value="all" className="text-xs gap-1.5">
+                All Submissions
+                <span className="rounded-md bg-background/80 px-1.5 py-0.2 font-mono text-[11px] font-semibold">
+                  {studentActivities.length}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger value="approved" className="text-xs gap-1.5">
+                Signed &amp; Approved
+                <span className="rounded-md bg-background/80 px-1.5 py-0.2 font-mono text-[11px] font-semibold">
+                  {approvedActivitiesCount}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger value="submitted" className="text-xs gap-1.5">
+                Pending Sign-Off
+                <span className="rounded-md bg-background/80 px-1.5 py-0.2 font-mono text-[11px] font-semibold">
+                  {pendingActivitiesCount}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger value="needs_correction" className="text-xs gap-1.5">
+                Revisions
+                <span className="rounded-md bg-background/80 px-1.5 py-0.2 font-mono text-[11px] font-semibold">
+                  {revisionActivitiesCount}
+                </span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </CardHeader>
 
         <CardContent className="p-6 space-y-5">
-          {studentActivities.length === 0 ? (
+          {visibleActivities.length === 0 ? (
             <EmptyState
-              title="No Logbook Entries Submitted Yet"
-              description="This student has not submitted any logbook entries yet."
+              title="No Logbook Submissions in This View"
+              description={`No ${logFilter === "approved" ? "signed and approved" : logFilter === "submitted" ? "pending" : ""} logbook entries found for ${student.name}.`}
             />
           ) : (
-            studentActivities.map((act) => {
+            visibleActivities.map((act) => {
               const isApproved = act.status === "approved";
               const isRevision = act.status === "needs_correction";
               const isEditing = editingLogId === act.id || !isApproved;
