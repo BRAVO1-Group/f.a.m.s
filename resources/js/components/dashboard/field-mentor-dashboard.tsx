@@ -619,18 +619,18 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
                       return (
                         <div
                           key={act.id}
-                          className="rounded-lg border border-[#589E10]/35 bg-[#9CE840]/12 dark:border-[#9CE840]/30 dark:bg-[#9CE840]/10 p-3 space-y-1.5 text-xs"
+                          className="rounded-lg border border-border/60 bg-background/60 p-3 space-y-1.5 text-xs"
                         >
                           <div className="flex items-center justify-between gap-2">
                             <span className="font-semibold text-foreground truncate">
                               {act.title}
                             </span>
-                            <span className="inline-flex items-center gap-1 rounded-full border border-[#589E10]/40 bg-[#9CE840]/25 px-2 py-0.5 text-[10px] font-bold text-[#2D5408] dark:border-[#9CE840]/40 dark:bg-[#9CE840]/20 dark:text-[#9CE840] shrink-0">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-[#589E10]/40 bg-[#9CE840]/15 px-2 py-0.5 text-[10px] font-semibold text-[#2D5408] dark:border-[#9CE840]/35 dark:bg-[#9CE840]/12 dark:text-[#9CE840] shrink-0">
                               <CheckCircle2 className="size-3" />
                               Approved
                             </span>
                           </div>
-                          <p className="text-[11px] text-foreground/85">
+                          <p className="text-[11px] text-muted-foreground">
                             {student?.name} ({act.activity_date}) ·{" "}
                             {act.supervisor_comment || act.supervisor_feedback || "Approved & Signed by Field Mentor"}
                           </p>
@@ -724,10 +724,10 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
             </CardHeader>
 
             <CardContent className="p-5 pt-2 space-y-4">
-              {/* 4 Mentor Performance Stat Boxes */}
+              {/* 4 Minimalist Mentor Performance Stat Boxes */}
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-xs">
-                <div className="rounded-xl border border-[#589E10]/35 bg-[#9CE840]/12 dark:border-[#9CE840]/30 dark:bg-[#9CE840]/10 p-3.5 space-y-1">
-                  <span className="text-[11px] font-bold uppercase text-[#2D5408] dark:text-[#9CE840]">
+                <div className="rounded-xl border border-border/60 bg-background/60 p-3.5 space-y-1">
+                  <span className="text-[11px] font-semibold uppercase text-muted-foreground">
                     Approved &amp; Signed
                   </span>
                   <p className="font-display text-2xl font-bold text-foreground">
@@ -740,8 +740,8 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-amber-500/35 bg-amber-500/10 p-3.5 space-y-1">
-                  <span className="text-[11px] font-bold uppercase text-amber-800 dark:text-amber-300">
+                <div className="rounded-xl border border-border/60 bg-background/60 p-3.5 space-y-1">
+                  <span className="text-[11px] font-semibold uppercase text-muted-foreground">
                     Submitted · Pending
                   </span>
                   <p className="font-display text-2xl font-bold text-foreground">

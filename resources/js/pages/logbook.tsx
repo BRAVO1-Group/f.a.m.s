@@ -268,11 +268,7 @@ export default function LogbookPage() {
             return (
             <Card
               key={a.id}
-              className={`shadow-card transition-colors ${
-                a.status === "approved"
-                  ? "border-[#589E10]/35 dark:border-[#9CE840]/30"
-                  : ""
-              }`}
+              className="shadow-none border-border/60 transition-colors"
             >
               <CardHeader className="pb-3">
                 <div className="flex flex-wrap items-start justify-between gap-2">
@@ -307,26 +303,14 @@ export default function LogbookPage() {
                   ))}
                 </div>
                 {a.status === "approved" || a.supervisor_feedback || a.supervisor_comment ? (
-                  <div
-                    className={`rounded-xl border p-3.5 text-xs space-y-1 ${
-                      a.status === "approved"
-                        ? "border-[#589E10]/35 bg-[#9CE840]/12 dark:border-[#9CE840]/30 dark:bg-[#9CE840]/10"
-                        : "border-border bg-muted"
-                    }`}
-                  >
-                    <span
-                      className={`font-bold flex items-center gap-1.5 ${
-                        a.status === "approved"
-                          ? "text-[#2D5408] dark:text-[#9CE840]"
-                          : "text-foreground"
-                      }`}
-                    >
-                      <CheckCircle2 className="size-3.5" />
+                  <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5 text-xs space-y-1">
+                    <span className="font-bold flex items-center gap-1.5 text-foreground">
+                      <CheckCircle2 className="size-3.5 text-[#589E10] dark:text-[#9CE840]" />
                       {a.status === "approved"
                         ? "APPROVED — Verified & Signed Off by Field Mentor"
                         : "Field Mentor Revision Note"}
                     </span>
-                    <p className="text-foreground/90">
+                    <p className="text-muted-foreground">
                       {a.supervisor_feedback ||
                         a.supervisor_comment ||
                         "Approved and signed off by Field Mentor."}

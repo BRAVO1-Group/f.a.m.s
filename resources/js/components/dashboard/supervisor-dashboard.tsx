@@ -236,7 +236,7 @@ export function StudentDashboard({ name, dashboardData }: StudentDashboardProps)
 
             <p className="text-xs text-muted-foreground">{supervisorPosition}</p>
 
-            <p className="text-xs text-primary break-all">{supervisorEmail}</p>
+            <p className="text-xs text-muted-foreground break-all">{supervisorEmail}</p>
           </CardContent>
         </Card>
       </div>

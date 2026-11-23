@@ -485,16 +485,16 @@ ${items || "<p>No activities recorded.</p>"}
                     </div>
 
                     <div className="grid grid-cols-3 gap-2 border-t border-border/50 pt-3">
-                      <div className="rounded-lg border border-[#589E10]/30 bg-[#9CE840]/12 dark:border-[#9CE840]/25 dark:bg-[#9CE840]/10 p-2.5">
-                        <span className="text-[10px] font-semibold uppercase text-[#2D5408] dark:text-[#9CE840] block">
+                      <div className="rounded-lg border border-border/60 bg-card p-2.5">
+                        <span className="text-[10px] font-semibold uppercase text-muted-foreground block">
                           Approved
                         </span>
                         <span className="font-mono text-sm font-bold text-foreground">
                           {m.approvedLogs} logs
                         </span>
                       </div>
-                      <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-2.5">
-                        <span className="text-[10px] font-semibold uppercase text-amber-800 dark:text-amber-300 block">
+                      <div className="rounded-lg border border-border/60 bg-card p-2.5">
+                        <span className="text-[10px] font-semibold uppercase text-muted-foreground block">
                           Submitted
                         </span>
                         <span className="font-mono text-sm font-bold text-foreground">
@@ -709,11 +709,7 @@ ${items || "<p>No activities recorded.</p>"}
                 return (
                   <div
                     key={r.id}
-                    className={`rounded-xl border p-4 space-y-2 ${
-                      isApproved
-                        ? "border-[#589E10]/35 bg-[#9CE840]/8 dark:border-[#9CE840]/25"
-                        : "border-border/60 bg-background/60"
-                    }`}
+                    className="rounded-xl border border-border/60 bg-background/60 p-4 space-y-2"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-2">

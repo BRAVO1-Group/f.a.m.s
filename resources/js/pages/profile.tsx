@@ -362,7 +362,7 @@ export default function ProfilePage() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5">
-                  <div className="flex size-9 items-center justify-center rounded-xl bg-primary/15 text-foreground">
+                  <div className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-muted text-foreground">
                     <Building2 className="size-4.5" />
                   </div>
                   <div>
@@ -374,7 +374,7 @@ export default function ProfilePage() {
                     </CardTitle>
                   </div>
                 </div>
-                <Badge className="bg-primary text-primary-foreground capitalize text-[11px]">
+                <Badge variant="secondary" className="capitalize text-[11px]">
                   {hostCompany.status}
                 </Badge>
               </div>
@@ -403,7 +403,7 @@ export default function ProfilePage() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5">
-                  <div className="flex size-9 items-center justify-center rounded-xl bg-primary/15 text-foreground">
+                  <div className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-muted text-foreground">
                     <GraduationCap className="size-4.5" />
                   </div>
                   <div>
@@ -442,7 +442,7 @@ export default function ProfilePage() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5">
-                  <div className="flex size-9 items-center justify-center rounded-xl bg-primary/15 text-foreground">
+                  <div className="flex size-9 items-center justify-center rounded-xl border border-border/60 bg-muted text-foreground">
                     <UserCheck className="size-4.5" />
                   </div>
                   <div>

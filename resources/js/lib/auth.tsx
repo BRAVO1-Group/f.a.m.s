@@ -34,36 +34,34 @@ export const ROLE_TIERS: Record<
     tier: 1,
     level: "Tier 1: Student Intern",
     description: "Daily logbook drafting, GPS attendance punch, milestone self-tracking",
-    color: "border-blue-300 text-blue-700 bg-blue-50 dark:bg-blue-950/40 dark:text-blue-300",
+    color: "border-border bg-muted text-foreground",
   },
   supervisor: {
     tier: 2,
     level: "Tier 2: Host Org Field Supervisor",
     description:
       "Received university logins tied to assigned students, daily log sign-offs, and mentor feedback",
-    color:
-      "border-emerald-300 text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-300",
+    color: "border-border bg-muted text-foreground",
   },
   org_admin: {
     tier: 3,
     level: "Tier 3: Host Org Field Mentor",
     description:
       "Company field mentor receiving university credentials, monitoring assigned intern cohort",
-    color: "border-amber-300 text-amber-700 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-300",
+    color: "border-border bg-muted text-foreground",
   },
   uni_admin: {
     tier: 4,
     level: "Tier 4: University Dean & Institutional Admin",
     description:
       "Supervisor creation, student-supervisor assignments, RBAC control matrix, accreditation dossier",
-    color:
-      "border-purple-300 text-purple-700 bg-purple-50 dark:bg-purple-950/40 dark:text-purple-300",
+    color: "border-border bg-muted text-foreground",
   },
   system_admin: {
     tier: 5,
     level: "Tier 5: System Super Administrator",
     description: "Full root access, tenant configuration, cryptographic log certification",
-    color: "border-rose-300 text-rose-700 bg-rose-50 dark:bg-rose-950/40 dark:text-rose-300",
+    color: "border-border bg-muted text-foreground",
   },
 };
 

@@ -631,15 +631,15 @@ export default function StudentDetailPage() {
                     {/* ── ACTION ZONE: Clearly Distinguishes Approved vs Awaiting Action ── */}
                     <div className="border-t border-border/50 pt-4">
                       {isApproved && editingLogId !== act.id ? (
-                        /* APPROVED STATE: Coloured Green Approval Banner + Mentor Comment + Optional "Update Comment" Button */
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-[#589E10]/35 bg-[#9CE840]/12 dark:border-[#9CE840]/30 dark:bg-[#9CE840]/10 p-4">
+                        /* APPROVED STATE: Clean Minimalist Card + Green Status Pill */
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-border/60 bg-card p-4">
                           <div className="flex items-start gap-3">
-                            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#9CE840] text-[#18221B] mt-0.5">
-                              <CheckCircle2 className="size-4" />
+                            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted text-foreground mt-0.5">
+                              <CheckCircle2 className="size-4 text-[#589E10] dark:text-[#9CE840]" />
                             </div>
                             <div className="space-y-1">
                               <div className="flex flex-wrap items-center gap-2">
-                                <span className="text-xs font-bold text-[#2D5408] dark:text-[#9CE840]">
+                                <span className="text-xs font-bold text-foreground">
                                   APPROVED — Officially Signed Off by Field Mentor
                                 </span>
                                 {act.reviewed_at && (
@@ -648,7 +648,7 @@ export default function StudentDetailPage() {
                                   </span>
                                 )}
                               </div>
-                              <p className="text-xs text-foreground/90 leading-relaxed">
+                              <p className="text-xs text-muted-foreground leading-relaxed">
                                 &ldquo;{recordedComment}&rdquo;
                               </p>
                             </div>

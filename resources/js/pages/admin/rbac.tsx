@@ -134,21 +134,21 @@ export default function RbacPage() {
           return (
             <Card
               key={r}
-              className={`border transition-all ${
-                r === role ? "border-primary ring-1 ring-primary/40 bg-primary/5" : "bg-card"
+              className={`border transition-colors shadow-none ${
+                r === role ? "border-foreground/40 bg-muted/40" : "border-border/60 bg-card"
               }`}
             >
               <CardContent className="p-4 space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-foreground text-xs">{ROLE_LABELS[r]}</span>
-                  <Badge variant="outline" className={`text-[10px] ${t.color}`}>
+                  <Badge variant="secondary" className="text-[10px]">
                     Tier {t.tier}
                   </Badge>
                 </div>
                 <p className="text-[11px] text-muted-foreground line-clamp-2">{t.description}</p>
                 <div className="pt-2 border-t border-border/50 flex items-center justify-between text-xs">
                   <span className="text-muted-foreground text-[10px]">Privileges:</span>
-                  <span className="font-mono text-[11px] font-semibold text-primary">
+                  <span className="font-mono text-[11px] font-semibold text-foreground">
                     {activePermCount} / {SYSTEM_PERMISSIONS.length}
                   </span>
                 </div>
@@ -237,7 +237,7 @@ export default function RbacPage() {
                     <TableCell>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-semibold text-primary">
+                          <span className="font-mono text-xs font-semibold text-foreground">
                             {perm.id}
                           </span>
                           <Badge variant="outline" className="text-[9px] px-1.5 py-0">

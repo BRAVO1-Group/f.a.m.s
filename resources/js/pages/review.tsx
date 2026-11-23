@@ -604,22 +604,10 @@ export default function ReviewPage() {
                 {(selectedActivity.supervisor_feedback ||
                   selectedActivity.supervisor_comment ||
                   selectedActivity.status === "approved") && (
-                  <div
-                    className={`rounded-xl border p-4 space-y-1.5 ${
-                      selectedActivity.status === "approved"
-                        ? "border-[#589E10]/35 bg-[#9CE840]/12 dark:border-[#9CE840]/30 dark:bg-[#9CE840]/10"
-                        : "border-destructive/30 bg-destructive/10"
-                    }`}
-                  >
+                  <div className="rounded-xl border border-border/60 bg-muted/30 p-4 space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span
-                        className={`text-xs font-bold flex items-center gap-1.5 ${
-                          selectedActivity.status === "approved"
-                            ? "text-[#2D5408] dark:text-[#9CE840]"
-                            : "text-destructive"
-                        }`}
-                      >
-                        <CheckCircle2 className="size-4" />
+                      <span className="text-xs font-bold flex items-center gap-1.5 text-foreground">
+                        <CheckCircle2 className="size-4 text-[#589E10] dark:text-[#9CE840]" />
                         {selectedActivity.status === "approved"
                           ? "APPROVED — Officially Signed Off by Field Mentor"
                           : "REVISION REQUESTED — Mentor Feedback"}
@@ -630,7 +618,7 @@ export default function ReviewPage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-foreground leading-relaxed">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
                       {selectedActivity.supervisor_feedback ||
                         selectedActivity.supervisor_comment ||
                         "Verified and approved by Field Mentor."}

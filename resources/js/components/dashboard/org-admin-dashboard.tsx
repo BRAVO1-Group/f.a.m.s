@@ -258,7 +258,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#18221B] text-[#9CE840] shadow-xs">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-muted text-foreground">
               <Users className="size-5" />
             </div>
             <div>
@@ -372,9 +372,9 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
                   <div className="space-y-1.5 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-semibold text-sm text-foreground">{act.title}</span>
-                      <span className="inline-flex items-center rounded-md bg-[#18221B] px-2 py-0.5 text-[11px] font-semibold text-[#9CE840]">
+                      <Badge variant="secondary" className="text-[11px] font-medium">
                         {student?.name ?? "Intern"}
-                      </span>
+                      </Badge>
                       <span className="text-xs text-muted-foreground font-mono">
                         {act.activity_date}
                       </span>

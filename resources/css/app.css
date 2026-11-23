@@ -100,11 +100,11 @@
   --border: oklch(0.915 0.007 138);
   --input: oklch(0.915 0.007 138);
   --ring: oklch(0.80 0.185 130);
-  --chart-1: oklch(0.80 0.185 130);
-  --chart-2: oklch(0.56 0.145 148);
-  --chart-3: oklch(0.62 0.125 180);
-  --chart-4: oklch(0.769 0.165 70.08);
-  --chart-5: oklch(0.32 0.025 148);
+  --chart-1: oklch(0.75 0.14 132);
+  --chart-2: oklch(0.55 0.02 148);
+  --chart-3: oklch(0.70 0.015 148);
+  --chart-4: oklch(0.42 0.015 148);
+  --chart-5: oklch(0.32 0.015 148);
   --gradient-hero: linear-gradient(
     135deg,
     oklch(0.22 0.045 148) 0%,
@@ -152,11 +152,11 @@
   --border: oklch(1 0 0 / 7%);
   --input: oklch(1 0 0 / 11%);
   --ring: oklch(0.84 0.195 130);
-  --chart-1: oklch(0.84 0.195 130);
-  --chart-2: oklch(0.66 0.155 148);
-  --chart-3: oklch(0.715 0.143 195);
-  --chart-4: oklch(0.828 0.165 84.43);
-  --chart-5: oklch(0.76 0.08 135);
+  --chart-1: oklch(0.84 0.17 130);
+  --chart-2: oklch(0.58 0.01 148);
+  --chart-3: oklch(0.42 0.01 148);
+  --chart-4: oklch(0.72 0.01 148);
+  --chart-5: oklch(0.30 0.01 148);
   --gradient-hero: linear-gradient(
     135deg,
     oklch(0.18 0.035 148) 0%,

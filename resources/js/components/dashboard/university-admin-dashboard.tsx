@@ -508,10 +508,7 @@ export function UniversityAdminDashboard({
                               <p className="text-[11px] text-muted-foreground">{orgSup.title}</p>
                             </div>
                           ) : (
-                            <Badge
-                              variant="outline"
-                              className="border-warning/40 text-warning bg-warning/10 text-[10px]"
-                            >
+                            <Badge variant="outline" className="text-[10px] text-muted-foreground">
                               Pending Mentor
                             </Badge>
                           )}
@@ -525,7 +522,7 @@ export function UniversityAdminDashboard({
                               </p>
                             </div>
                           ) : (
-                            <Badge variant="destructive" className="text-[10px]">
+                            <Badge variant="outline" className="text-[10px] text-muted-foreground">
                               Missing Academic
                             </Badge>
                           )}
@@ -535,12 +532,8 @@ export function UniversityAdminDashboard({
                         </TableCell>
                         <TableCell>
                           <Badge
-                            variant={isDualAssigned ? "default" : "secondary"}
-                            className={`text-xs ${
-                              isDualAssigned
-                                ? "bg-success/10 text-success border-success/30"
-                                : "bg-warning/10 text-warning border-warning/30"
-                            }`}
+                            variant={isDualAssigned ? "secondary" : "outline"}
+                            className="text-xs"
                           >
                             {isDualAssigned ? "Dual-Supervised" : "Needs Allocation"}
                           </Badge>
@@ -550,7 +543,7 @@ export function UniversityAdminDashboard({
                             size="sm"
                             variant="ghost"
                             onClick={() => handleOpenAssignModal(student.studentId)}
-                            className="text-xs text-primary hover:text-primary h-7.5"
+                            className="text-xs h-7.5"
                           >
                             Reassign →
                           </Button>
@@ -641,19 +634,13 @@ export function UniversityAdminDashboard({
                   return (
                     <Card
                       key={sup.id}
-                      className="border-border/80 shadow-xs hover:border-primary/40 transition-all flex flex-col justify-between"
+                      className="border-border/60 shadow-none transition-colors flex flex-col justify-between"
                     >
                       <CardContent className="p-4 space-y-3">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2.5">
-                            <Avatar className="size-9 border">
-                              <AvatarFallback
-                                className={`text-xs font-semibold ${
-                                  isOrg
-                                    ? "bg-warning/10 text-warning"
-                                    : "bg-info/10 text-info-foreground"
-                                }`}
-                              >
+                            <Avatar className="size-9 rounded-lg">
+                              <AvatarFallback className="rounded-lg bg-muted text-foreground text-xs font-semibold">
                                 {sup.full_name
                                   .split(" ")
                                   .map((p) => p[0])
@@ -671,14 +658,7 @@ export function UniversityAdminDashboard({
                             </div>
                           </div>
 
-                          <Badge
-                            variant="outline"
-                            className={`text-[10px] font-semibold shrink-0 ${
-                              isOrg
-                                ? "border-warning/40 bg-warning/10 text-warning"
-                                : "border-info/40 bg-info/10 text-info-foreground"
-                            }`}
-                          >
+                          <Badge variant="secondary" className="text-[10px] font-medium shrink-0">
                             {isOrg ? "Host Org" : "University"}
                           </Badge>
                         </div>
@@ -694,11 +674,11 @@ export function UniversityAdminDashboard({
 
                         <div className="space-y-1 text-[11px] font-mono text-muted-foreground">
                           <p className="flex items-center gap-1.5">
-                            <Mail className="size-3 text-primary shrink-0" />
+                            <Mail className="size-3 text-muted-foreground shrink-0" />
                             <span className="truncate">{sup.email}</span>
                           </p>
                           <p className="flex items-center gap-1.5">
-                            <Phone className="size-3 text-primary shrink-0" />
+                            <Phone className="size-3 text-muted-foreground shrink-0" />
                             <span>{sup.phone}</span>
                           </p>
                         </div>
@@ -797,43 +777,30 @@ export function UniversityAdminDashboard({
                           </TableCell>
                           <TableCell className="text-xs">
                             {orgSup ? (
-                              <div className="flex items-center gap-1.5">
-                                <span className="size-2 rounded-full bg-success" />
-                                <span className="font-medium text-foreground">
-                                  {orgSup.full_name}
-                                </span>
-                              </div>
+                              <span className="font-medium text-foreground">
+                                {orgSup.full_name}
+                              </span>
                             ) : (
-                              <Badge
-                                variant="outline"
-                                className="text-[10px] text-warning border-warning/40"
-                              >
+                              <Badge variant="outline" className="text-[10px] text-muted-foreground">
                                 Unassigned
                               </Badge>
                             )}
                           </TableCell>
                           <TableCell className="text-xs">
                             {academicSup ? (
-                              <div className="flex items-center gap-1.5">
-                                <span className="size-2 rounded-full bg-info" />
-                                <span className="font-medium text-foreground">
-                                  {academicSup.full_name}
-                                </span>
-                              </div>
+                              <span className="font-medium text-foreground">
+                                {academicSup.full_name}
+                              </span>
                             ) : (
-                              <Badge variant="destructive" className="text-[10px]">
+                              <Badge variant="outline" className="text-[10px] text-muted-foreground">
                                 Unassigned
                               </Badge>
                             )}
                           </TableCell>
                           <TableCell>
                             <Badge
-                              variant={isComplete ? "default" : "secondary"}
-                              className={`text-xs ${
-                                isComplete
-                                  ? "bg-success/10 text-success border-success/30"
-                                  : "bg-warning/10 text-warning border-warning/30"
-                              }`}
+                              variant={isComplete ? "secondary" : "outline"}
+                              className="text-xs"
                             >
                               {isComplete ? "Dual-Supervised" : "Pending Assessor"}
                             </Badge>
@@ -1013,7 +980,7 @@ export function UniversityAdminDashboard({
                         <TableCell>
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="font-mono text-xs font-semibold text-primary">
+                              <span className="font-mono text-xs font-semibold text-foreground">
                                 {perm.id}
                               </span>
                               <Badge variant="outline" className="text-[9px] px-1.5 py-0">

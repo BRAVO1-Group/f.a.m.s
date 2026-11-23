@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
+import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -190,40 +191,36 @@ export default function SupervisorsPage() {
   return (
     <div className="space-y-6 antialiased">
       {/* ── Host Organization Supervision Model Banner ── */}
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-start gap-3">
-          <div className="rounded-lg bg-primary/10 p-2 text-primary shrink-0">
-            <Building2 className="size-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-semibold text-sm text-foreground">
-                Host Organization Field Supervision & University Credentials
-              </span>
-              <Badge
-                variant="outline"
-                className="text-[11px] font-medium border-primary/30 text-primary"
-              >
-                Pre-Provisioned Logins
-              </Badge>
-              <Badge variant="secondary" className="text-[11px] font-medium">
-                Student-Bound Access
-              </Badge>
+      <Card className="rounded-xl border border-border/60 bg-card shadow-none">
+        <CardContent className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted p-2 text-foreground shrink-0">
+              <Building2 className="size-4.5" />
             </div>
-            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-              Host Organization Field Supervisors receive login credentials directly from the
-              university. When an organization is assigned to an intern, the field supervisor's
-              login is automatically linked strictly to that student. Supervisors cannot
-              self-register.
-            </p>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-semibold text-sm text-foreground">
+                  Host Organization Field Supervision &amp; University Credentials
+                </span>
+                <Badge variant="secondary" className="text-[11px] font-medium">
+                  Pre-Provisioned Logins
+                </Badge>
+                <Badge variant="outline" className="text-[11px] font-medium">
+                  Student-Bound Access
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                Host Organization Field Supervisors receive login credentials directly from the
+                university. When an organization is assigned to an intern, the field supervisor&apos;s
+                login is automatically linked strictly to that student.
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="text-right shrink-0">
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+          <Badge variant="secondary" className="gap-1.5 text-xs font-medium shrink-0">
             <ShieldCheck className="size-3.5" /> University Provisioned
-          </span>
-        </div>
-      </div>
+          </Badge>
+        </CardContent>
+      </Card>
 
       {/* ── Page Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
@@ -232,10 +229,7 @@ export default function SupervisorsPage() {
             <h1 className="font-display text-2xl font-bold sm:text-3xl tracking-tight text-foreground">
               Field Mentor Accounts
             </h1>
-            <Badge
-              variant="outline"
-              className="text-xs border-primary/30 text-primary bg-primary/5 font-semibold"
-            >
+            <Badge variant="secondary" className="text-xs font-medium">
               Student Host Organizations
             </Badge>
           </div>
@@ -250,7 +244,7 @@ export default function SupervisorsPage() {
             setCreateOpen(true);
           }}
           size="sm"
-          className="rounded-xl font-semibold text-xs h-9 shrink-0 shadow-xs"
+          className="rounded-lg font-semibold text-xs h-9 shrink-0"
         >
           <UserPlus className="mr-1.5 size-4" />
           Create Field Mentor Account
@@ -259,52 +253,21 @@ export default function SupervisorsPage() {
 
       {/* ── Summary Metrics ── */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Total Supervisors
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Users className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {supervisorsList.length}
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">Registered mentors & faculty</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Host Org Mentors
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600">
-                <Building2 className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">{orgCount}</p>
-            <p className="mt-2 text-xs text-muted-foreground">Field mentors across partner firms</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                University Academic Assessors
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600">
-                <GraduationCap className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">{uniCount}</p>
-            <p className="mt-2 text-xs text-muted-foreground">Departmental faculty lecturers</p>
-          </CardContent>
-        </Card>
+        <KpiCard
+          label="Total Supervisors"
+          value={supervisorsList.length}
+          meta="Registered mentors & faculty"
+        />
+        <KpiCard
+          label="Host Org Mentors"
+          value={orgCount}
+          meta="Field mentors across partner firms"
+        />
+        <KpiCard
+          label="University Academic Assessors"
+          value={uniCount}
+          meta="Departmental faculty lecturers"
+        />
       </div>
 
       {/* ── Search & Filter Controls ── */}
@@ -359,19 +322,13 @@ export default function SupervisorsPage() {
               return (
                 <Card
                   key={sup.id}
-                  className="border-border/80 shadow-xs hover:border-primary/40 transition-all flex flex-col justify-between"
+                  className="border-border/60 shadow-none transition-colors flex flex-col justify-between"
                 >
                   <CardContent className="p-4 space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2.5">
-                        <Avatar className="size-9.5 border">
-                          <AvatarFallback
-                            className={`text-xs font-semibold ${
-                              isOrg
-                                ? "bg-amber-500/10 text-amber-700"
-                                : "bg-indigo-500/10 text-indigo-700"
-                            }`}
-                          >
+                        <Avatar className="size-9.5 rounded-lg">
+                          <AvatarFallback className="rounded-lg bg-muted text-foreground text-xs font-semibold">
                             {sup.full_name
                               .split(" ")
                               .map((p) => p[0])
@@ -389,14 +346,7 @@ export default function SupervisorsPage() {
                         </div>
                       </div>
 
-                      <Badge
-                        variant="outline"
-                        className={`text-[10px] font-semibold shrink-0 ${
-                          isOrg
-                            ? "border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"
-                            : "border-indigo-300 bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300"
-                        }`}
-                      >
+                      <Badge variant="secondary" className="text-[10px] font-medium shrink-0">
                         {isOrg ? "Host Org" : "University"}
                       </Badge>
                     </div>
@@ -412,11 +362,11 @@ export default function SupervisorsPage() {
 
                     <div className="space-y-1 text-[11px] font-mono text-muted-foreground">
                       <p className="flex items-center gap-1.5">
-                        <Mail className="size-3 text-primary shrink-0" />
+                        <Mail className="size-3 text-muted-foreground shrink-0" />
                         <span className="truncate">{sup.email}</span>
                       </p>
                       <p className="flex items-center gap-1.5">
-                        <Phone className="size-3 text-primary shrink-0" />
+                        <Phone className="size-3 text-muted-foreground shrink-0" />
                         <span>{sup.phone}</span>
                       </p>
                     </div>
