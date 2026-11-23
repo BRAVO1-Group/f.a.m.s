@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import {
+  AlertTriangle,
   ArrowLeft,
   Award,
+  Calendar,
   CalendarCheck,
   Check,
   CheckCircle2,
-  ClipboardCheck,
+  Clock,
+  FileSignature,
   MessageSquareText,
-  Plus,
+  Pencil,
   RotateCcw,
-  ShieldCheck,
-  Sparkles,
+  Wrench,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -62,12 +64,6 @@ type StudentRecord = {
   todayCheckIn: string;
   todayCheckOut: string;
   attendanceVerified: boolean;
-  conductRating: "Exemplary Conduct" | "Professional & Punctual" | "Satisfactory" | "Needs Guidance";
-  conductNotes: string;
-  strengths: string[];
-  weeklyReviewWeek: number;
-  weeklyReviewStatus: "Completed" | "Due Today";
-  lastWeeklySummary: string;
 };
 
 const STUDENT_DIRECTORY: Record<string, StudentRecord> = {
@@ -90,14 +86,46 @@ const STUDENT_DIRECTORY: Record<string, StudentRecord> = {
     todayCheckIn: "08:52 AM",
     todayCheckOut: "05:06 PM",
     attendanceVerified: true,
-    conductRating: "Exemplary Conduct",
-    conductNotes:
-      "Disciplined, adheres to organization security policies, collaborates proactively in daily standups.",
-    strengths: ["REST API Design", "Query Optimization", "Automated Testing", "Problem Solving"],
-    weeklyReviewWeek: 7,
-    weeklyReviewStatus: "Completed",
-    lastWeeklySummary:
-      "Completed authentication service ahead of schedule with clean unit test coverage.",
+  },
+  "student-2": {
+    id: "student-2",
+    name: "Brian Mwangi",
+    regNo: "CS/2021/0088",
+    role: "Cloud & Network Engineering Intern",
+    department: "Infrastructure & Cloud",
+    company: "Safaricom PLC",
+    degree: "BSc. Telecommunications & Networking",
+    institution: "Kenyatta University",
+    email: "brian@university.ac.ke",
+    phone: "+254 722 998 877",
+    mentor: "Eng. James Otieno",
+    academicSupervisor: "Dr. Agnes Kimani",
+    daysLogged: 39,
+    requiredDays: 60,
+    attendanceRate: "96.0%",
+    todayCheckIn: "08:45 AM",
+    todayCheckOut: "05:00 PM",
+    attendanceVerified: true,
+  },
+  "student-3": {
+    id: "student-3",
+    name: "Carol Achieng",
+    regNo: "CS/2021/0015",
+    role: "Data Science & BI Intern",
+    department: "Business Intelligence",
+    company: "Kenya Commercial Bank",
+    degree: "BSc. Data Science & Analytics",
+    institution: "Strathmore University",
+    email: "carol@strathmore.edu",
+    phone: "+254 733 112 233",
+    mentor: "Eng. James Otieno",
+    academicSupervisor: "Dr. Agnes Kimani",
+    daysLogged: 60,
+    requiredDays: 60,
+    attendanceRate: "100%",
+    todayCheckIn: "08:30 AM",
+    todayCheckOut: "05:15 PM",
+    attendanceVerified: true,
   },
   "student-4": {
     id: "student-4",
@@ -118,14 +146,6 @@ const STUDENT_DIRECTORY: Record<string, StudentRecord> = {
     todayCheckIn: "09:01 AM",
     todayCheckOut: "05:00 PM",
     attendanceVerified: false,
-    conductRating: "Professional & Punctual",
-    conductNotes:
-      "Follows SOC escalation protocols carefully, respectful with senior engineers, keen attention to detail.",
-    strengths: ["SIEM Log Triage", "Vulnerability Scanning", "Incident Documentation"],
-    weeklyReviewWeek: 3,
-    weeklyReviewStatus: "Due Today",
-    lastWeeklySummary:
-      "Assisted with firewall rule audit and documented 14 endpoint compliance checks.",
   },
 };
 
@@ -138,8 +158,10 @@ export default function StudentDetailPage() {
   const [student, setStudent] = useState<StudentRecord>(STUDENT_DIRECTORY[studentKey]!);
   const [activitiesList, setActivitiesList] = useState<MockActivity[]>(getStoredActivities);
   const [evalList, setEvalList] = useState<MockEvaluation[]>(getStoredEvaluations);
-  const [newStrength, setNewStrength] = useState("");
   const [logComments, setLogComments] = useState<Record<string, string>>({});
+  const [logWarnings, setLogWarnings] = useState<Record<string, string>>({});
+  const [editingLogId, setEditingLogId] = useState<string | null>(null);
+  const [gradeWarning, setGradeWarning] = useState<string | null>(null);
 
   // Confirm Dialogs
   const [confirmVerifyShift, setConfirmVerifyShift] = useState(false);
@@ -207,63 +229,34 @@ export default function StudentDetailPage() {
     toast.success(`Shift verified for ${student.name}`);
   }
 
-  function handleAddStrength(e: React.FormEvent) {
-    e.preventDefault();
-    const val = newStrength.trim();
-    if (!val) {
-      toast.warning("Empty Form Warning", {
-        description: "Please type an observed student strength before clicking Add Strength.",
-      });
+  function handleRequestLogDecision(act: MockActivity, status: "approved" | "needs_correction") {
+    const commentText = (logComments[act.id] ?? "").trim();
+    if (!commentText) {
+      const msg =
+        status === "approved"
+          ? `Please write your Field Mentor comment before approving "${act.title}".`
+          : `Please enter revision instructions so ${student.name} knows what to update on "${act.title}".`;
+      setLogWarnings((prev) => ({ ...prev, [act.id]: msg }));
+      toast.warning("Empty Form Warning", { description: msg });
       return;
     }
-    if (!student.strengths.includes(val)) {
-      setStudent((prev) => ({ ...prev, strengths: [...prev.strengths, val] }));
-      recordAuditEvent({
-        actor: currentUserName || "Field Mentor",
-        actorRole: "Field Mentor",
-        action: "Documented Observed Student Strength",
-        target: `${student.name} · Competency: ${val}`,
-        category: "supervision",
-        scopes: ["supervisor", "org_admin", "uni_admin", "system_admin"],
-      });
-      toast.success(`Added "${val}" to ${student.name}'s strengths`);
-    }
-    setNewStrength("");
-  }
-
-  function handleSaveConductAndWeeklyReview(e: React.FormEvent) {
-    e.preventDefault();
-    if (!student.conductNotes.trim() || !student.lastWeeklySummary.trim()) {
-      toast.warning("Empty Form Warning", {
-        description:
-          "Please fill in both Workplace Conduct Notes and the Weekly Review Summary before saving.",
-      });
-      return;
-    }
-    setStudent((prev) => ({ ...prev, weeklyReviewStatus: "Completed" }));
-    recordAuditEvent({
-      actor: currentUserName || "Field Mentor",
-      actorRole: "Field Mentor",
-      action: `Signed Week ${student.weeklyReviewWeek} Conduct & Weekly Review`,
-      target: `${student.name} · Rating: ${student.conductRating}`,
-      category: "supervision",
-      scopes: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
+    setLogWarnings((prev) => {
+      const next = { ...prev };
+      delete next[act.id];
+      return next;
     });
-    toast.success(`Saved Week ${student.weeklyReviewWeek} review & conduct assessment`);
+    setPendingDecision({ act, status });
   }
 
   function executeLogbookDecision() {
     if (!pendingDecision) return;
     const { act, status } = pendingDecision;
-    const commentText =
-      (logComments[act.id] ?? "").trim() ||
-      (status === "approved"
-        ? `Signed and verified by Field Mentor (${currentUserName}).`
-        : "Please expand on the technical steps and resubmit.");
+    const commentText = (logComments[act.id] ?? "").trim();
 
     approveOrCorrectActivity(act.id, status, userId, commentText);
     setActivitiesList(getStoredActivities());
     setLogComments((prev) => ({ ...prev, [act.id]: "" }));
+    setEditingLogId(null);
     setPendingDecision(null);
 
     recordAuditEvent({
@@ -271,7 +264,7 @@ export default function StudentDetailPage() {
       actorRole: "Field Mentor",
       action:
         status === "approved"
-          ? "Signed & Commented on Student Logbook"
+          ? "Signed & Approved Student Logbook Entry"
           : "Returned Logbook Entry for Revision",
       target: `${student.name} · ${act.title}`,
       category: "logbook",
@@ -280,7 +273,7 @@ export default function StudentDetailPage() {
 
     toast.success(
       status === "approved"
-        ? `Signed off "${act.title}"`
+        ? `Approved & signed off "${act.title}"`
         : `Returned "${act.title}" for revision`,
     );
   }
@@ -313,15 +306,15 @@ export default function StudentDetailPage() {
       overall_score: score,
       grade: letter,
       recommendation: gradingForm.recommendation,
-      comments:
-        gradingForm.mentorComments.trim() ||
-        `Strengths: ${student.strengths.join(", ")} · Conduct: ${student.conductRating}.`,
+      comments: gradingForm.mentorComments.trim(),
       supervisor_name: currentUserName || "Eng. James Otieno",
     };
 
     const updated = [newEval, ...evalList];
     setEvalList(updated);
     saveStoredEvaluations(updated);
+    setGradingForm((prev) => ({ ...prev, mentorComments: "" }));
+    setGradeWarning(null);
     setConfirmGradeOpen(false);
 
     recordAuditEvent({
@@ -337,78 +330,86 @@ export default function StudentDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Back Button & Student Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5">
-          <Button asChild variant="outline" size="sm" className="h-9 gap-1.5">
-            <Link href="/dashboard">
-              <ArrowLeft className="size-4" />
-              Back to Dashboard
-            </Link>
-          </Button>
-          <Avatar className="size-11 rounded-xl">
-            <AvatarFallback className="rounded-xl bg-muted font-semibold text-sm text-foreground">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="font-display text-xl sm:text-2xl font-bold text-foreground">
-                {student.name}
-              </h1>
-              <Badge variant="secondary" className="font-mono text-xs">
-                {student.regNo}
-              </Badge>
-              <Badge variant="outline" className="text-xs">
-                {student.conductRating}
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {student.role} · {student.department} · {student.company}
-            </p>
-          </div>
-        </div>
-
-        {/* Switch between assigned students */}
-        <div className="flex items-center gap-2">
-          {Object.values(STUDENT_DIRECTORY).map((s) => (
-            <Button
-              key={s.id}
-              asChild
-              size="sm"
-              variant={s.id === student.id ? "default" : "outline"}
-              className="h-8 text-xs"
-            >
-              <Link href={`/students/${s.id}`}>{s.name.split(" ")[0]}</Link>
+    <div className="dashboard-page space-y-6 antialiased">
+      {/* ── Top Student Identity Banner Card ── */}
+      <Card className="rounded-xl border border-border/60 bg-card">
+        <CardContent className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <Button asChild variant="outline" size="sm" className="h-9 gap-1.5 shrink-0">
+              <Link href="/students">
+                <ArrowLeft className="size-4" />
+                Back
+              </Link>
             </Button>
-          ))}
-        </div>
-      </div>
+            <Avatar className="size-11 rounded-xl shrink-0">
+              <AvatarFallback className="rounded-xl bg-muted font-semibold text-sm text-foreground">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="font-display text-xl sm:text-2xl font-bold text-foreground">
+                  {student.name}
+                </h1>
+                <Badge variant="secondary" className="font-mono text-xs">
+                  {student.regNo}
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  {student.attendanceVerified ? "Shift Verified" : "Shift Pending"}
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                {student.role} · {student.department} · {student.company}
+              </p>
+            </div>
+          </div>
 
-      {/* SECTION 1: Attendance Verification & Placement Summary */}
-      <div className="grid gap-4 lg:grid-cols-12">
-        <Card className="lg:col-span-5 rounded-xl border border-border/60">
-          <CardHeader className="p-5 pb-3">
-            <CardTitle className="flex items-center gap-2 text-base font-semibold">
-              <CalendarCheck className="size-4 text-muted-foreground" />
-              Workplace Attendance &amp; Shift Check
-            </CardTitle>
-            <CardDescription>
-              Verify daily check-in/out hours and monitor 60-day completion pace
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-5 pt-2 space-y-4 text-xs">
-            <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/30 p-3.5">
+          {/* Quick Switch Between Assigned Students */}
+          <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+            {["student-1", "student-4"].map((id) => {
+              const s = STUDENT_DIRECTORY[id];
+              if (!s) return null;
+              return (
+                <Button
+                  key={s.id}
+                  asChild
+                  size="sm"
+                  variant={s.id === student.id ? "default" : "outline"}
+                  className="h-8 text-xs"
+                >
+                  <Link href={`/students/${s.id}`}>{s.name}</Link>
+                </Button>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ── SECTION 1: Workplace Attendance & Placement Overview (Full-Width Clean Card) ── */}
+      <Card className="rounded-xl border border-border/60 bg-card">
+        <CardHeader className="p-6 pb-3">
+          <CardTitle className="flex items-center gap-2 text-base font-semibold">
+            <CalendarCheck className="size-4 text-muted-foreground" />
+            Workplace Attendance &amp; Placement Progress
+          </CardTitle>
+          <CardDescription>
+            Verify today&apos;s workplace shift and monitor the student&apos;s 60-day completion pace
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-6 pt-2">
+          <div className="grid gap-4 md:grid-cols-3 items-center">
+            {/* Today's Shift Verification */}
+            <div className="flex items-center justify-between rounded-xl border border-border/60 bg-background/60 p-4">
               <div>
-                <p className="text-muted-foreground">Today&apos;s Recorded Shift</p>
-                <p className="mt-0.5 font-mono text-sm font-semibold text-foreground">
+                <p className="text-xs text-muted-foreground">Today&apos;s Recorded Shift</p>
+                <p className="mt-1 font-mono text-sm font-semibold text-foreground">
                   {student.todayCheckIn} – {student.todayCheckOut}
                 </p>
               </div>
               {student.attendanceVerified ? (
-                <Badge variant="secondary" className="gap-1">
-                  <CheckCircle2 className="size-3.5" /> Shift Verified
+                <Badge variant="secondary" className="gap-1.5 px-2.5 py-1 text-xs">
+                  <CheckCircle2 className="size-3.5 text-[#589E10] dark:text-primary" />
+                  Verified
                 </Badge>
               ) : (
                 <Button
@@ -422,10 +423,11 @@ export default function StudentDetailPage() {
               )}
             </div>
 
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
+            {/* Attendance Pace */}
+            <div className="rounded-xl border border-border/60 bg-background/60 p-4 space-y-2">
+              <div className="flex items-center justify-between text-xs">
                 <span className="text-muted-foreground">
-                  Cumulative Attendance ({student.attendanceRate} rate)
+                  Attendance Pace ({student.attendanceRate})
                 </span>
                 <span className="font-mono font-semibold text-foreground">
                   {student.daysLogged} / {student.requiredDays} days ({progressPct}%)
@@ -434,228 +436,310 @@ export default function StudentDetailPage() {
               <Progress value={progressPct} className="h-2" />
             </div>
 
-            <div className="grid grid-cols-2 gap-2 border-t border-border/50 pt-3">
+            {/* University & Academic Supervisor */}
+            <div className="rounded-xl border border-border/60 bg-background/60 p-4 grid grid-cols-2 gap-2 text-xs">
               <div>
-                <span className="text-muted-foreground block">University:</span>
-                <span className="font-medium text-foreground">{student.institution}</span>
+                <span className="text-muted-foreground block">University</span>
+                <span className="font-semibold text-foreground">{student.institution}</span>
               </div>
               <div>
-                <span className="text-muted-foreground block">Academic Assessor:</span>
-                <span className="font-medium text-foreground">{student.academicSupervisor}</span>
+                <span className="text-muted-foreground block">Academic Assessor</span>
+                <span className="font-semibold text-foreground">{student.academicSupervisor}</span>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* SECTION 2: Conduct at Organization, Strengths & Weekly Review */}
-        <Card className="lg:col-span-7 rounded-xl border border-border/60">
-          <CardHeader className="p-5 pb-3">
-            <CardTitle className="flex items-center gap-2 text-base font-semibold">
-              <ShieldCheck className="size-4 text-muted-foreground" />
-              Workplace Conduct, Student Strengths &amp; Weekly Review
-            </CardTitle>
-            <CardDescription>
-              Assess the student&apos;s conduct at the organization and document observed strengths
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-5 pt-2 space-y-4 text-xs">
-            {/* Observed Student Strengths */}
-            <div className="space-y-2">
-              <Label className="text-xs flex items-center gap-1.5">
-                <Sparkles className="size-3.5 text-muted-foreground" />
-                Identified Student Strengths
-              </Label>
-              <div className="flex flex-wrap gap-1.5">
-                {student.strengths.map((str) => (
-                  <Badge key={str} variant="secondary" className="text-xs font-normal">
-                    {str}
-                  </Badge>
-                ))}
-              </div>
-              <form onSubmit={handleAddStrength} className="flex items-center gap-2 pt-1">
-                <Input
-                  value={newStrength}
-                  onChange={(e) => setNewStrength(e.target.value)}
-                  placeholder="Add observed strength (e.g. Database Optimization)..."
-                  className="h-8 text-xs"
-                />
-                <Button type="submit" size="sm" variant="outline" className="h-8 text-xs gap-1">
-                  <Plus className="size-3.5" /> Add Strength
-                </Button>
-              </form>
+      {/* ── SECTION 2: Student Logbook Entries & Field Mentor Comments (Spacious, Clear Approved vs Pending State) ── */}
+      <Card className="rounded-xl border border-border/60 bg-card">
+        <CardHeader className="p-6 pb-4 border-b border-border/50">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                <MessageSquareText className="size-4 text-muted-foreground" />
+                {student.name}&apos;s Logbook Entries &amp; Field Mentor Comments
+              </CardTitle>
+              <CardDescription className="mt-0.5">
+                Inspect the student&apos;s full daily work log, tools, and challenges, then write your Field Mentor comment to approve or request revision
+              </CardDescription>
             </div>
-
-            {/* Conduct & Weekly Review Form */}
-            <form
-              onSubmit={handleSaveConductAndWeeklyReview}
-              className="space-y-3 border-t border-border/50 pt-3"
-            >
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="space-y-1">
-                  <Label className="text-xs">Conduct at Organization</Label>
-                  <Select
-                    value={student.conductRating}
-                    onValueChange={(v) =>
-                      setStudent({
-                        ...student,
-                        conductRating: v as StudentRecord["conductRating"],
-                      })
-                    }
-                  >
-                    <SelectTrigger className="h-8 text-xs">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Exemplary Conduct">Exemplary Conduct</SelectItem>
-                      <SelectItem value="Professional & Punctual">
-                        Professional &amp; Punctual
-                      </SelectItem>
-                      <SelectItem value="Satisfactory">Satisfactory</SelectItem>
-                      <SelectItem value="Needs Guidance">Needs Guidance</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-1">
-                  <Label className="text-xs">Conduct &amp; Attitude Notes</Label>
-                  <Input
-                    value={student.conductNotes}
-                    onChange={(e) => setStudent({ ...student, conductNotes: e.target.value })}
-                    className="h-8 text-xs"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <Label className="text-xs">
-                  Week {student.weeklyReviewWeek} Supervisory Review Summary
-                </Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    value={student.lastWeeklySummary}
-                    onChange={(e) =>
-                      setStudent({ ...student, lastWeeklySummary: e.target.value })
-                    }
-                    className="h-8 text-xs flex-1"
-                  />
-                  <Button type="submit" size="sm" className="h-8 text-xs font-medium shrink-0">
-                    <ClipboardCheck className="mr-1.5 size-3.5" />
-                    Save Review
-                  </Button>
-                </div>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* SECTION 3: Student Logbooks & Field Mentor Comments */}
-      <Card className="rounded-xl border border-border/60">
-        <CardHeader className="p-5 pb-3">
-          <CardTitle className="flex items-center gap-2 text-base font-semibold">
-            <MessageSquareText className="size-4 text-muted-foreground" />
-            {student.name}&apos;s Logbook Entries &amp; Field Mentor Comments
-          </CardTitle>
-          <CardDescription>
-            Review daily technical logs, write field mentor comments, and sign off or return for
-            revision
-          </CardDescription>
+            <Badge variant="outline" className="w-fit font-mono text-xs">
+              {studentActivities.filter((a) => a.status === "approved").length} of{" "}
+              {studentActivities.length} Approved
+            </Badge>
+          </div>
         </CardHeader>
-        <CardContent className="p-5 pt-2 space-y-3">
+
+        <CardContent className="p-6 space-y-5">
           {studentActivities.length === 0 ? (
             <EmptyState
               title="No Logbook Entries Submitted Yet"
               description="This student has not submitted any logbook entries yet."
             />
           ) : (
-            studentActivities.map((act) => (
-              <div
-                key={act.id}
-                className="rounded-xl border border-border/60 bg-background/50 p-4 space-y-3"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-2">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm text-foreground">{act.title}</span>
-                      <span className="font-mono text-xs text-muted-foreground">
-                        {act.activity_date}
-                      </span>
+            studentActivities.map((act) => {
+              const isApproved = act.status === "approved";
+              const isRevision = act.status === "needs_correction";
+              const isEditing = editingLogId === act.id || !isApproved;
+              const recordedComment =
+                act.supervisor_feedback ||
+                act.supervisor_comment ||
+                `Verified and signed off by Field Mentor (${currentUserName || student.mentor}).`;
+              const warningMsg = logWarnings[act.id];
+
+              return (
+                <div
+                  key={act.id}
+                  className="rounded-xl border border-border/70 bg-background/60 overflow-hidden"
+                >
+                  {/* Entry Header Bar */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/50 bg-muted/25 px-5 py-3.5">
+                    <div className="space-y-1">
+                      <h3 className="text-base font-bold text-foreground leading-snug">
+                        {act.title}
+                      </h3>
+                      <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                        <span className="inline-flex items-center gap-1.5 font-mono">
+                          <Calendar className="size-3.5" />
+                          {act.activity_date}
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 font-mono">
+                          <Clock className="size-3.5" />
+                          {act.arrival_time
+                            ? `${act.arrival_time} – ${act.departure_time || "17:00"}`
+                            : "08:30 – 17:00"}
+                        </span>
+                      </div>
                     </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      {act.description}
-                    </p>
-                  </div>
-                  <Badge
-                    variant={act.status === "approved" ? "default" : "secondary"}
-                    className="capitalize text-xs"
-                  >
-                    {act.status.replace("_", " ")}
-                  </Badge>
-                </div>
 
-                {act.supervisor_comment && (
-                  <p className="rounded-lg bg-muted/50 p-2.5 text-xs text-foreground/90">
-                    <span className="font-semibold">Field Mentor Comment: </span>
-                    {act.supervisor_comment}
-                  </p>
-                )}
+                    {/* Clear Status Badge */}
+                    <div className="flex items-center gap-2 shrink-0">
+                      {isApproved ? (
+                        <Badge
+                          variant="secondary"
+                          className="gap-1.5 px-3 py-1 text-xs font-semibold"
+                        >
+                          <CheckCircle2 className="size-3.5 text-[#589E10] dark:text-primary" />
+                          Approved &amp; Signed Off
+                        </Badge>
+                      ) : isRevision ? (
+                        <Badge variant="outline" className="gap-1.5 px-3 py-1 text-xs font-semibold">
+                          <RotateCcw className="size-3.5" />
+                          Revision Requested
+                        </Badge>
+                      ) : (
+                        <Badge variant="default" className="px-3 py-1 text-xs font-semibold">
+                          Awaiting Mentor Sign-Off
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1">
-                  <Input
-                    value={logComments[act.id] ?? ""}
-                    onChange={(e) =>
-                      setLogComments((prev) => ({ ...prev, [act.id]: e.target.value }))
-                    }
-                    placeholder={`Write field mentor comment on "${act.title}"...`}
-                    className="h-8 text-xs flex-1"
-                  />
-                  <div className="flex items-center gap-2 shrink-0">
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        if (!(logComments[act.id] ?? "").trim()) {
-                          toast.warning("Empty Form Warning", {
-                            description:
-                              "Please write your Field Mentor comment before signing off on this logbook entry.",
-                          });
-                          return;
-                        }
-                        setPendingDecision({ act, status: "approved" });
-                      }}
-                      className="h-8 text-xs font-medium gap-1"
-                    >
-                      <Check className="size-3.5" />
-                      Sign &amp; Comment
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        if (!(logComments[act.id] ?? "").trim()) {
-                          toast.warning("Empty Form Warning", {
-                            description:
-                              "Please enter revision instructions so the student knows what to update.",
-                          });
-                          return;
-                        }
-                        setPendingDecision({ act, status: "needs_correction" });
-                      }}
-                      className="h-8 text-xs font-medium gap-1"
-                    >
-                      <RotateCcw className="size-3.5" />
-                      Revision
-                    </Button>
+                  {/* Entry Body: Full Details So Mentor Clearly Sees What They Are Commenting On */}
+                  <div className="p-5 space-y-4 text-xs">
+                    {/* Task Description */}
+                    <div className="space-y-1.5">
+                      <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                        Work Completed &amp; Deliverable Summary
+                      </p>
+                      <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-line">
+                        {act.description}
+                      </p>
+                    </div>
+
+                    {/* Tools & Skills */}
+                    {(act.tools_used.length > 0 || act.skills_gained.length > 0) && (
+                      <div className="flex flex-wrap items-center gap-2 pt-1">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-muted-foreground mr-1">
+                          <Wrench className="size-3.5" />
+                          Tools &amp; Skills:
+                        </span>
+                        {act.tools_used.map((t) => (
+                          <Badge key={t} variant="secondary" className="text-xs font-medium">
+                            {t}
+                          </Badge>
+                        ))}
+                        {act.skills_gained.map((sk) => (
+                          <Badge key={sk} variant="outline" className="text-xs font-normal">
+                            {sk}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Challenges & Solutions */}
+                    {(act.challenges || act.solutions) && (
+                      <div className="grid gap-3 sm:grid-cols-2 pt-1">
+                        {act.challenges && (
+                          <div className="rounded-lg border border-border/60 bg-card p-3 space-y-1">
+                            <p className="text-[11px] font-semibold text-muted-foreground">
+                              Challenge Reported
+                            </p>
+                            <p className="text-xs text-foreground/90 leading-relaxed">
+                              {act.challenges}
+                            </p>
+                          </div>
+                        )}
+                        {act.solutions && (
+                          <div className="rounded-lg border border-border/60 bg-card p-3 space-y-1">
+                            <p className="text-[11px] font-semibold text-muted-foreground">
+                              Solution Applied
+                            </p>
+                            <p className="text-xs text-foreground/90 leading-relaxed">
+                              {act.solutions}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* ── ACTION ZONE: Clearly Distinguishes Approved vs Awaiting Action ── */}
+                    <div className="border-t border-border/50 pt-4">
+                      {isApproved && editingLogId !== act.id ? (
+                        /* APPROVED STATE: Shows Verified Seal, Mentor Comment, and Optional "Update Comment" Button */
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-border/60 bg-card p-4">
+                          <div className="flex items-start gap-3">
+                            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-foreground mt-0.5">
+                              <FileSignature className="size-4" />
+                            </div>
+                            <div className="space-y-1">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-xs font-bold text-foreground">
+                                  Officially Signed &amp; Approved by Field Mentor
+                                </span>
+                                {act.reviewed_at && (
+                                  <span className="font-mono text-[11px] text-muted-foreground">
+                                    · {new Date(act.reviewed_at).toLocaleDateString()}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-muted-foreground leading-relaxed">
+                                &ldquo;{recordedComment}&rdquo;
+                              </p>
+                            </div>
+                          </div>
+
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setLogComments((prev) => ({
+                                ...prev,
+                                [act.id]: recordedComment,
+                              }));
+                              setEditingLogId(act.id);
+                            }}
+                            className="h-8 text-xs font-medium gap-1.5 shrink-0"
+                          >
+                            <Pencil className="size-3.5" />
+                            Update Comment
+                          </Button>
+                        </div>
+                      ) : (
+                        /* COMMENT & SIGN-OFF EDITOR (Spacious Textarea + Warning Validation + Clear Action Buttons) */
+                        <div className="space-y-3 rounded-xl border border-border/60 bg-card p-4">
+                          <div className="flex items-center justify-between">
+                            <Label
+                              htmlFor={`comment-${act.id}`}
+                              className="text-xs font-semibold text-foreground flex items-center gap-1.5"
+                            >
+                              <MessageSquareText className="size-3.5 text-muted-foreground" />
+                              Field Mentor Comment &amp; Evaluation Note *
+                            </Label>
+                            <span className="text-[11px] text-muted-foreground">
+                              Required to sign off or request revision
+                            </span>
+                          </div>
+
+                          {warningMsg && (
+                            <div
+                              role="alert"
+                              className="flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-300"
+                            >
+                              <AlertTriangle className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
+                              <span>{warningMsg}</span>
+                            </div>
+                          )}
+
+                          <Textarea
+                            id={`comment-${act.id}`}
+                            rows={3}
+                            value={logComments[act.id] ?? ""}
+                            onChange={(e) => {
+                              setLogComments((prev) => ({
+                                ...prev,
+                                [act.id]: e.target.value,
+                              }));
+                              if (warningMsg && e.target.value.trim()) {
+                                setLogWarnings((prev) => {
+                                  const next = { ...prev };
+                                  delete next[act.id];
+                                  return next;
+                                });
+                              }
+                            }}
+                            placeholder={`Write your feedback, verification remarks, or revision guidance on "${act.title}"...`}
+                            className={`text-xs resize-none ${
+                              warningMsg ? "border-amber-500 focus-visible:ring-amber-500" : ""
+                            }`}
+                          />
+
+                          <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+                            <span className="text-[11px] text-muted-foreground">
+                              Your comment and signature will be attached to {student.name}&apos;s logbook.
+                            </span>
+
+                            <div className="flex flex-wrap items-center gap-2">
+                              {isApproved && editingLogId === act.id && (
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => setEditingLogId(null)}
+                                  className="h-8 text-xs"
+                                >
+                                  Cancel
+                                </Button>
+                              )}
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleRequestLogDecision(act, "needs_correction")
+                                }
+                                className="h-8 text-xs font-medium gap-1.5"
+                              >
+                                <RotateCcw className="size-3.5" />
+                                Request Revision
+                              </Button>
+                              <Button
+                                type="button"
+                                size="sm"
+                                onClick={() => handleRequestLogDecision(act, "approved")}
+                                className="h-8 text-xs font-semibold gap-1.5"
+                              >
+                                <Check className="size-3.5" />
+                                Approve &amp; Sign Logbook
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </CardContent>
       </Card>
 
-      {/* SECTION 4: Field Mentor Student Grading Form */}
-      <Card className="rounded-xl border border-border/60">
-        <CardHeader className="p-5 pb-3">
+      {/* ── SECTION 3: Field Mentor Student Grading Form ── */}
+      <Card className="rounded-xl border border-border/60 bg-card">
+        <CardHeader className="p-6 pb-3">
           <CardTitle className="flex items-center gap-2 text-base font-semibold">
             <Award className="size-4 text-muted-foreground" />
             Field Mentor Grading Form for {student.name}
@@ -664,7 +748,7 @@ export default function StudentDetailPage() {
             Evaluate technical competence, organization conduct, attendance, and problem solving
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-5 pt-2 space-y-4">
+        <CardContent className="p-6 pt-2 space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             <div className="space-y-1">
               <Label className="text-xs">Stage</Label>
@@ -677,7 +761,7 @@ export default function StudentDetailPage() {
                   })
                 }
               >
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="h-9 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -693,7 +777,7 @@ export default function StudentDetailPage() {
                 value={gradingForm.technical}
                 onValueChange={(v) => setGradingForm({ ...gradingForm, technical: v })}
               >
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="h-9 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -712,7 +796,7 @@ export default function StudentDetailPage() {
                 value={gradingForm.conductAndEthics}
                 onValueChange={(v) => setGradingForm({ ...gradingForm, conductAndEthics: v })}
               >
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="h-9 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -733,7 +817,7 @@ export default function StudentDetailPage() {
                   setGradingForm({ ...gradingForm, attendanceAndPunctuality: v })
                 }
               >
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="h-9 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -752,7 +836,7 @@ export default function StudentDetailPage() {
                 value={gradingForm.problemSolving}
                 onValueChange={(v) => setGradingForm({ ...gradingForm, problemSolving: v })}
               >
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="h-9 text-xs">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -766,48 +850,72 @@ export default function StudentDetailPage() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-            <Input
+          {gradeWarning && (
+            <div
+              role="alert"
+              className="flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-300"
+            >
+              <AlertTriangle className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
+              <span>{gradeWarning}</span>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <Label className="text-xs">Official Field Mentor Grading Remarks *</Label>
+            <Textarea
+              rows={2}
               value={gradingForm.mentorComments}
-              onChange={(e) =>
-                setGradingForm({ ...gradingForm, mentorComments: e.target.value })
-              }
-              placeholder="Write official Field Mentor grading remarks & recommendation..."
-              className="h-9 text-xs flex-1"
+              onChange={(e) => {
+                setGradingForm({ ...gradingForm, mentorComments: e.target.value });
+                if (gradeWarning && e.target.value.trim()) setGradeWarning(null);
+              }}
+              placeholder="Write official Field Mentor grading remarks & recommendation (required)..."
+              className={`text-xs resize-none ${
+                gradeWarning ? "border-amber-500 focus-visible:ring-amber-500" : ""
+              }`}
             />
+          </div>
+
+          <div className="flex justify-end">
             <Button
               type="button"
               size="sm"
               onClick={() => {
                 if (!gradingForm.mentorComments.trim()) {
+                  const msg =
+                    "Please write your Field Mentor grading remarks before submitting the grade.";
+                  setGradeWarning(msg);
                   toast.warning("Empty Form Warning", {
-                    description:
-                      "Please write your Field Mentor grading remarks before submitting the grade.",
+                    description: msg,
                   });
                   return;
                 }
+                setGradeWarning(null);
                 setConfirmGradeOpen(true);
               }}
-              className="h-9 text-xs font-semibold shrink-0"
+              className="h-9 text-xs font-semibold shrink-0 gap-1.5"
             >
+              <Award className="size-3.5" />
               Submit &amp; Sign Grade
             </Button>
           </div>
 
           {studentEvals.length > 0 && (
-            <div className="space-y-2 border-t border-border/50 pt-3">
-              <p className="text-xs font-medium text-muted-foreground">Recorded Grades</p>
+            <div className="space-y-2 border-t border-border/50 pt-4">
+              <p className="text-xs font-semibold text-muted-foreground">Recorded Grades</p>
               {studentEvals.map((ev) => (
                 <div
                   key={ev.id}
-                  className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/20 p-3 text-xs"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-lg border border-border/60 bg-background/60 p-3.5 text-xs"
                 >
-                  <div>
-                    <span className="font-semibold text-foreground">{ev.period}</span> ·{" "}
-                    <span className="font-mono text-muted-foreground">{ev.evaluation_date}</span>
-                    <p className="text-muted-foreground mt-0.5">{ev.comments}</p>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-foreground">{ev.period}</span>
+                      <span className="font-mono text-muted-foreground">{ev.evaluation_date}</span>
+                    </div>
+                    <p className="text-muted-foreground">{ev.comments}</p>
                   </div>
-                  <Badge variant="secondary" className="font-bold">
+                  <Badge variant="secondary" className="font-bold w-fit">
                     {ev.grade} ({ev.overall_score}/5.0)
                   </Badge>
                 </div>
@@ -835,18 +943,18 @@ export default function StudentDetailPage() {
         }}
         title={
           pendingDecision?.status === "approved"
-            ? "Sign Off & Approve Logbook Entry?"
+            ? "Approve & Sign Off Logbook Entry?"
             : "Return Logbook Entry for Revision?"
         }
         description={
           pendingDecision
             ? `Are you sure you want to ${
-                pendingDecision.status === "approved" ? "sign off on" : "return"
+                pendingDecision.status === "approved" ? "officially approve and sign off on" : "return"
               } "${pendingDecision.act.title}" for ${student.name}?`
             : ""
         }
         confirmLabel={
-          pendingDecision?.status === "approved" ? "Yes, Sign & Approve" : "Yes, Return Entry"
+          pendingDecision?.status === "approved" ? "Yes, Approve & Sign" : "Yes, Return Entry"
         }
         cancelLabel="No, Cancel"
         onConfirm={executeLogbookDecision}
