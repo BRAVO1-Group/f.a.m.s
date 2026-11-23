@@ -530,6 +530,9 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
                             <span className="text-xs text-muted-foreground font-mono">
                               {act.activity_date}
                             </span>
+                            <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-500/15 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 dark:text-amber-300">
+                              Submitted · Pending Approval
+                            </span>
                           </div>
                           <p className="text-xs text-muted-foreground leading-relaxed">
                             {act.description}
@@ -600,18 +603,20 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
                       return (
                         <div
                           key={act.id}
-                          className="rounded-lg border border-border/50 bg-muted/20 p-3 space-y-1 text-xs"
+                          className="rounded-lg border border-[#589E10]/35 bg-[#9CE840]/12 dark:border-[#9CE840]/30 dark:bg-[#9CE840]/10 p-3 space-y-1.5 text-xs"
                         >
                           <div className="flex items-center justify-between gap-2">
-                            <span className="font-medium text-foreground truncate">
+                            <span className="font-semibold text-foreground truncate">
                               {act.title}
                             </span>
-                            <span className="text-[11px] text-muted-foreground font-mono shrink-0">
-                              {act.activity_date}
+                            <span className="inline-flex items-center gap-1 rounded-full border border-[#589E10]/40 bg-[#9CE840]/25 px-2 py-0.5 text-[10px] font-bold text-[#2D5408] dark:border-[#9CE840]/40 dark:bg-[#9CE840]/20 dark:text-[#9CE840] shrink-0">
+                              <CheckCircle2 className="size-3" />
+                              Approved
                             </span>
                           </div>
-                          <p className="text-[11px] text-muted-foreground">
-                            {student?.name} · {act.supervisor_comment || "Signed by Field Mentor"}
+                          <p className="text-[11px] text-foreground/85">
+                            {student?.name} ({act.activity_date}) ·{" "}
+                            {act.supervisor_comment || act.supervisor_feedback || "Approved & Signed by Field Mentor"}
                           </p>
                         </div>
                       );

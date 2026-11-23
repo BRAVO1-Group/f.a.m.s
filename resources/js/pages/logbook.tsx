@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { FilePenLine, Loader2, Plus, Search, Send, Trash2 } from "lucide-react";
+import { CheckCircle2, Clock, FilePenLine, Loader2, Plus, RotateCcw, Search, Send, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,12 +53,36 @@ const emptyDraft = (): Draft => ({
   solutions: "",
 });
 
-const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-  draft: "outline",
-  submitted: "secondary",
-  approved: "default",
-  needs_correction: "destructive",
-};
+function getLogStatusMeta(status: MockActivity["status"]) {
+  if (status === "approved") {
+    return {
+      label: "Approved & Signed Off",
+      className:
+        "border-[#589E10]/40 bg-[#9CE840]/20 text-[#2D5408] dark:border-[#9CE840]/40 dark:bg-[#9CE840]/15 dark:text-[#9CE840]",
+      icon: CheckCircle2,
+    };
+  }
+  if (status === "submitted") {
+    return {
+      label: "Submitted · Pending Approval",
+      className:
+        "border-amber-500/40 bg-amber-500/15 text-amber-800 dark:text-amber-300",
+      icon: Clock,
+    };
+  }
+  if (status === "needs_correction") {
+    return {
+      label: "Revision Requested",
+      className: "border-destructive/40 bg-destructive/10 text-destructive",
+      icon: RotateCcw,
+    };
+  }
+  return {
+    label: "Saved Draft",
+    className: "border-border bg-muted text-muted-foreground",
+    icon: FilePenLine,
+  };
+}
 
 export default function LogbookPage() {
   const { userId } = useAppUser();
@@ -238,8 +262,18 @@ export default function LogbookPage() {
         />
       ) : (
         <div className="space-y-3">
-          {filtered.map((a) => (
-            <Card key={a.id} className="shadow-card">
+          {filtered.map((a) => {
+            const statusMeta = getLogStatusMeta(a.status);
+            const StatusIcon = statusMeta.icon;
+            return (
+            <Card
+              key={a.id}
+              className={`shadow-card transition-colors ${
+                a.status === "approved"
+                  ? "border-[#589E10]/35 dark:border-[#9CE840]/30"
+                  : ""
+              }`}
+            >
               <CardHeader className="pb-3">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
@@ -250,9 +284,12 @@ export default function LogbookPage() {
                       {a.departure_time ? `–${a.departure_time.slice(0, 5)}` : ""}
                     </CardDescription>
                   </div>
-                  <Badge variant={STATUS_VARIANT[a.status] ?? "secondary"} className="capitalize">
-                    {a.status.replace("_", " ")}
-                  </Badge>
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${statusMeta.className}`}
+                  >
+                    <StatusIcon className="size-3.5" />
+                    {statusMeta.label}
+                  </span>
                 </div>
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
@@ -269,11 +306,32 @@ export default function LogbookPage() {
                     </Badge>
                   ))}
                 </div>
-                {a.supervisor_feedback ? (
-                  <p className="rounded-lg bg-muted p-3 text-xs">
-                    <span className="font-medium">Supervisor feedback: </span>
-                    {a.supervisor_feedback}
-                  </p>
+                {a.status === "approved" || a.supervisor_feedback || a.supervisor_comment ? (
+                  <div
+                    className={`rounded-xl border p-3.5 text-xs space-y-1 ${
+                      a.status === "approved"
+                        ? "border-[#589E10]/35 bg-[#9CE840]/12 dark:border-[#9CE840]/30 dark:bg-[#9CE840]/10"
+                        : "border-border bg-muted"
+                    }`}
+                  >
+                    <span
+                      className={`font-bold flex items-center gap-1.5 ${
+                        a.status === "approved"
+                          ? "text-[#2D5408] dark:text-[#9CE840]"
+                          : "text-foreground"
+                      }`}
+                    >
+                      <CheckCircle2 className="size-3.5" />
+                      {a.status === "approved"
+                        ? "APPROVED — Verified & Signed Off by Field Mentor"
+                        : "Field Mentor Revision Note"}
+                    </span>
+                    <p className="text-foreground/90">
+                      {a.supervisor_feedback ||
+                        a.supervisor_comment ||
+                        "Approved and signed off by Field Mentor."}
+                    </p>
+                  </div>
                 ) : null}
                 {a.status === "draft" || a.status === "needs_correction" ? (
                   <div className="flex flex-wrap gap-2 pt-1">
@@ -313,7 +371,8 @@ export default function LogbookPage() {
                 ) : null}
               </CardContent>
             </Card>
-          ))}
+          );
+          })}
         </div>
       )}
 

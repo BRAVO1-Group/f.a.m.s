@@ -45,15 +45,19 @@ import {
 type FilterType = "submitted" | "approved" | "needs_correction";
 
 function statusLabel(status: MockActivity["status"]) {
-  if (status === "approved") return "Signed Off";
+  if (status === "approved") return "Approved & Signed Off";
   if (status === "needs_correction") return "Revision Requested";
-  return "Awaiting Sign-Off";
+  return "Submitted · Pending Approval";
 }
 
-function statusBadgeVariant(status: MockActivity["status"]): "default" | "secondary" | "outline" {
-  if (status === "approved") return "secondary";
-  if (status === "needs_correction") return "outline";
-  return "default";
+function statusPillClass(status: MockActivity["status"]) {
+  if (status === "approved") {
+    return "border-[#589E10]/40 bg-[#9CE840]/20 text-[#2D5408] dark:border-[#9CE840]/40 dark:bg-[#9CE840]/15 dark:text-[#9CE840]";
+  }
+  if (status === "needs_correction") {
+    return "border-destructive/40 bg-destructive/10 text-destructive";
+  }
+  return "border-amber-500/40 bg-amber-500/15 text-amber-800 dark:text-amber-300";
 }
 
 export default function ReviewPage() {
@@ -412,8 +416,14 @@ export default function ReviewPage() {
                         <span className="text-xs font-semibold text-foreground">
                           {studentName}
                         </span>
-                        <span className="font-mono text-[11px] text-muted-foreground">
-                          {a.activity_date}
+                        <span
+                          className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${statusPillClass(a.status)}`}
+                        >
+                          {a.status === "approved"
+                            ? "Approved"
+                            : a.status === "needs_correction"
+                              ? "Revision"
+                              : "Submitted"}
                         </span>
                       </div>
                       <p className="text-xs text-muted-foreground truncate max-w-64">
@@ -447,12 +457,14 @@ export default function ReviewPage() {
                           {nameOf(selectedActivity.student_id)}
                           <ChevronRight className="size-3.5 text-muted-foreground" />
                         </Link>
-                        <Badge
-                          variant={statusBadgeVariant(selectedActivity.status)}
-                          className="text-[11px] font-medium"
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-bold ${statusPillClass(selectedActivity.status)}`}
                         >
+                          {selectedActivity.status === "approved" && (
+                            <CheckCircle2 className="size-3.5" />
+                          )}
                           {statusLabel(selectedActivity.status)}
-                        </Badge>
+                        </span>
                       </div>
                       <p className="text-xs text-muted-foreground truncate mt-0.5">
                         {selectedStudent?.course || "BSc. Computer Science"}
@@ -589,11 +601,28 @@ export default function ReviewPage() {
                 )}
 
                 {/* Existing Mentor Comment (if already reviewed) */}
-                {(selectedActivity.supervisor_feedback || selectedActivity.supervisor_comment) && (
-                  <div className="rounded-lg border border-border/60 bg-muted/30 p-3.5 space-y-1">
+                {(selectedActivity.supervisor_feedback ||
+                  selectedActivity.supervisor_comment ||
+                  selectedActivity.status === "approved") && (
+                  <div
+                    className={`rounded-xl border p-4 space-y-1.5 ${
+                      selectedActivity.status === "approved"
+                        ? "border-[#589E10]/35 bg-[#9CE840]/12 dark:border-[#9CE840]/30 dark:bg-[#9CE840]/10"
+                        : "border-destructive/30 bg-destructive/10"
+                    }`}
+                  >
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        Recorded Field Mentor Comment
+                      <span
+                        className={`text-xs font-bold flex items-center gap-1.5 ${
+                          selectedActivity.status === "approved"
+                            ? "text-[#2D5408] dark:text-[#9CE840]"
+                            : "text-destructive"
+                        }`}
+                      >
+                        <CheckCircle2 className="size-4" />
+                        {selectedActivity.status === "approved"
+                          ? "APPROVED — Officially Signed Off by Field Mentor"
+                          : "REVISION REQUESTED — Mentor Feedback"}
                       </span>
                       {selectedActivity.reviewed_at && (
                         <span className="font-mono text-[11px] text-muted-foreground">
@@ -602,7 +631,9 @@ export default function ReviewPage() {
                       )}
                     </div>
                     <p className="text-xs text-foreground leading-relaxed">
-                      {selectedActivity.supervisor_feedback || selectedActivity.supervisor_comment}
+                      {selectedActivity.supervisor_feedback ||
+                        selectedActivity.supervisor_comment ||
+                        "Verified and approved by Field Mentor."}
                     </p>
                   </div>
                 )}

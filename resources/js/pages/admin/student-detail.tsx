@@ -549,25 +549,23 @@ export default function StudentDetailPage() {
                       </div>
                     </div>
 
-                    {/* Clear Status Badge */}
+                    {/* Clear Coloured & Labelled Status Badge */}
                     <div className="flex items-center gap-2 shrink-0">
                       {isApproved ? (
-                        <Badge
-                          variant="secondary"
-                          className="gap-1.5 px-3 py-1 text-xs font-semibold"
-                        >
-                          <CheckCircle2 className="size-3.5 text-[#589E10] dark:text-primary" />
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#589E10]/40 bg-[#9CE840]/20 px-3 py-1 text-xs font-bold text-[#2D5408] dark:border-[#9CE840]/40 dark:bg-[#9CE840]/15 dark:text-[#9CE840]">
+                          <CheckCircle2 className="size-3.5" />
                           Approved &amp; Signed Off
-                        </Badge>
+                        </span>
                       ) : isRevision ? (
-                        <Badge variant="outline" className="gap-1.5 px-3 py-1 text-xs font-semibold">
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-destructive/40 bg-destructive/10 px-3 py-1 text-xs font-bold text-destructive">
                           <RotateCcw className="size-3.5" />
                           Revision Requested
-                        </Badge>
+                        </span>
                       ) : (
-                        <Badge variant="default" className="px-3 py-1 text-xs font-semibold">
-                          Awaiting Mentor Sign-Off
-                        </Badge>
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/15 px-3 py-1 text-xs font-bold text-amber-800 dark:text-amber-300">
+                          <Clock className="size-3.5" />
+                          Submitted · Pending Approval
+                        </span>
                       )}
                     </div>
                   </div>
@@ -633,16 +631,16 @@ export default function StudentDetailPage() {
                     {/* ── ACTION ZONE: Clearly Distinguishes Approved vs Awaiting Action ── */}
                     <div className="border-t border-border/50 pt-4">
                       {isApproved && editingLogId !== act.id ? (
-                        /* APPROVED STATE: Shows Verified Seal, Mentor Comment, and Optional "Update Comment" Button */
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-border/60 bg-card p-4">
+                        /* APPROVED STATE: Coloured Green Approval Banner + Mentor Comment + Optional "Update Comment" Button */
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-[#589E10]/35 bg-[#9CE840]/12 dark:border-[#9CE840]/30 dark:bg-[#9CE840]/10 p-4">
                           <div className="flex items-start gap-3">
-                            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-foreground mt-0.5">
-                              <FileSignature className="size-4" />
+                            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#9CE840] text-[#18221B] mt-0.5">
+                              <CheckCircle2 className="size-4" />
                             </div>
                             <div className="space-y-1">
                               <div className="flex flex-wrap items-center gap-2">
-                                <span className="text-xs font-bold text-foreground">
-                                  Officially Signed &amp; Approved by Field Mentor
+                                <span className="text-xs font-bold text-[#2D5408] dark:text-[#9CE840]">
+                                  APPROVED — Officially Signed Off by Field Mentor
                                 </span>
                                 {act.reviewed_at && (
                                   <span className="font-mono text-[11px] text-muted-foreground">
@@ -650,7 +648,7 @@ export default function StudentDetailPage() {
                                   </span>
                                 )}
                               </div>
-                              <p className="text-xs text-muted-foreground leading-relaxed">
+                              <p className="text-xs text-foreground/90 leading-relaxed">
                                 &ldquo;{recordedComment}&rdquo;
                               </p>
                             </div>
