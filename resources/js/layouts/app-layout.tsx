@@ -135,7 +135,7 @@ const NAV: NavItem[] = [
     to: "/students",
     label: "Assigned Interns & Attendance",
     icon: Users,
-    roles: ["supervisor", "org_admin"],
+    roles: ["supervisor", "org_admin", "uni_admin", "system_admin"],
     category: "supervision",
   },
   {

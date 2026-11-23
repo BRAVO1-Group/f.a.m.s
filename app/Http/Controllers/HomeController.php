@@ -60,6 +60,13 @@ class HomeController extends Controller
         return Inertia::render('admin/students');
     }
 
+    public function studentDetail(string $id)
+    {
+        return Inertia::render('admin/student-detail', [
+            'studentId' => $id,
+        ]);
+    }
+
     public function supervisors()
     {
         return Inertia::render('admin/supervisors');

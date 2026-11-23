@@ -41,6 +41,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { KpiCard } from "@/components/dashboard/kpi-card";
+import { AuditTrailPanel, recordAuditEvent } from "@/components/dashboard/audit-trail-panel";
 import {
   approveOrCorrectActivity,
   evaluations as initialEvaluations,
@@ -231,6 +232,17 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
 
   function handleSaveWeeklyReview(e: React.FormEvent) {
     e.preventDefault();
+    if (
+      !weeklyForm.observedStrengths.trim() ||
+      !weeklyForm.conductNotes.trim() ||
+      !weeklyForm.weeklyComment.trim()
+    ) {
+      toast.warning("Empty Form Warning", {
+        description:
+          "Please complete the Observed Strengths, Conduct Notes, and Weekly Summary fields.",
+      });
+      return;
+    }
     const parsedStrengths = weeklyForm.observedStrengths
       .split(",")
       .map((s) => s.trim())
@@ -261,6 +273,13 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
 
   function handleSubmitGradingForm(e: React.FormEvent) {
     e.preventDefault();
+    if (!gradingForm.strengthsObserved.trim() || !gradingForm.conductSummary.trim()) {
+      toast.warning("Empty Form Warning", {
+        description:
+          "Please fill in the student's Key Strengths and Workplace Conduct evaluation before submitting.",
+      });
+      return;
+    }
     const t = Number(gradingForm.technical);
     const c = Number(gradingForm.conductAndEthics);
     const a = Number(gradingForm.attendanceAndPunctuality);
@@ -373,175 +392,85 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
         />
       </div>
 
-      {/* ── Clean, Eye-Friendly Mentee Cards (No Colored Borders, No Nested Box Clutter) ── */}
-      <div className="grid gap-4 md:grid-cols-2">
-        {mentees.map((student) => {
-          const progressPct = Math.round((student.daysLogged / student.requiredDays) * 100);
-          const initials = student.name
-            .split(" ")
-            .map((p) => p[0])
-            .join("");
+      {/* ── Clean, Minimalist Student Cards (Click to Open Dedicated Student Supervision Page) ── */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="font-display text-base font-semibold tracking-tight text-foreground">
+              Assigned Interns
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Select a student card to open their detailed supervision, attendance, conduct, strengths, and grading page
+            </p>
+          </div>
+          <Button asChild size="sm" variant="ghost" className="h-8 text-xs font-medium">
+            <Link href="/students">View All →</Link>
+          </Button>
+        </div>
 
-          return (
-            <Card key={student.id} className="rounded-xl border border-border/60 bg-card">
-              <CardHeader className="p-5 pb-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <Avatar className="size-10 shrink-0 rounded-lg">
-                      <AvatarFallback className="rounded-lg bg-muted text-foreground font-semibold text-xs">
-                        {initials}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0">
-                      <CardTitle className="truncate text-base font-semibold text-foreground">
-                        {student.name}
-                      </CardTitle>
-                      <CardDescription className="truncate text-xs text-muted-foreground mt-0.5">
-                        <span className="font-mono">{student.regNo}</span> · {student.role}
-                      </CardDescription>
-                    </div>
-                  </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          {mentees.map((student) => {
+            const progressPct = Math.round((student.daysLogged / student.requiredDays) * 100);
+            const initials = student.name
+              .split(" ")
+              .map((p) => p[0])
+              .join("");
 
-                  <Badge variant="secondary" className="text-[11px] font-medium shrink-0">
-                    {student.conductRating}
-                  </Badge>
-                </div>
-              </CardHeader>
+            return (
+              <Link
+                key={student.id}
+                href={`/students/${student.id}`}
+                className="group block focus:outline-none"
+              >
+                <Card className="rounded-xl border border-border/60 bg-card transition-all duration-150 hover:border-foreground/25 hover:shadow-sm">
+                  <CardContent className="p-5 space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <Avatar className="size-10 shrink-0 rounded-lg">
+                          <AvatarFallback className="rounded-lg bg-muted text-foreground font-semibold text-xs">
+                            {initials}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-foreground group-hover:text-[#589E10] dark:group-hover:text-primary transition-colors">
+                            {student.name}
+                          </p>
+                          <p className="truncate text-xs text-muted-foreground mt-0.5">
+                            <span className="font-mono">{student.regNo}</span> · {student.role}
+                          </p>
+                        </div>
+                      </div>
 
-              <CardContent className="px-5 pb-5 pt-0 space-y-4 text-xs">
-                {/* Row 1: Attendance & Shift Verification */}
-                <div className="space-y-2 border-t border-border/50 pt-3.5">
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="text-muted-foreground">
-                      Today&apos;s Shift:{" "}
-                      <span className="font-mono font-medium text-foreground">
-                        {student.todayCheckIn} – {student.todayCheckOut}
-                      </span>
-                    </div>
-
-                    {student.attendanceVerified ? (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
-                        <CheckCircle2 className="size-3.5 text-foreground/70" />
-                        Attendance Verified
-                      </span>
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleVerifyAttendance(student.id)}
-                        className="h-7 px-2.5 text-[11px] font-medium gap-1"
-                      >
-                        <CalendarCheck className="size-3" />
-                        Verify Shift
-                      </Button>
-                    )}
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between text-muted-foreground">
-                      <span>
-                        Attendance Pace ({student.attendanceRate} rate)
-                      </span>
-                      <span className="font-mono font-medium text-foreground">
-                        {student.daysLogged} / {student.requiredDays} days ({progressPct}%)
-                      </span>
-                    </div>
-                    <Progress value={progressPct} className="h-1.5" />
-                  </div>
-                </div>
-
-                {/* Row 2: Conduct at Organization & Weekly Review */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-border/50 pt-3.5">
-                  <div className="space-y-1">
-                    <p className="text-[11px] font-medium text-muted-foreground">
-                      Conduct at Organization
-                    </p>
-                    <p className="text-xs text-foreground/90 leading-relaxed line-clamp-2">
-                      {student.conductNotes}
-                    </p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <p className="text-[11px] font-medium text-muted-foreground">
-                        Week {student.weeklyReviewWeek} Review
-                      </p>
-                      <span className="text-[11px] font-medium text-foreground/80">
-                        {student.weeklyReviewStatus}
-                      </span>
-                    </div>
-                    <p className="text-xs text-foreground/90 leading-relaxed line-clamp-2">
-                      {student.lastWeeklySummary}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Row 3: Identified Strengths */}
-                <div className="space-y-2 border-t border-border/50 pt-3.5">
-                  <p className="text-[11px] font-medium text-muted-foreground">
-                    Identified Strengths
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {student.strengths.map((str) => (
-                      <Badge
-                        key={str}
-                        variant="secondary"
-                        className="text-[11px] font-normal px-2 py-0.5"
-                      >
-                        {str}
+                      <Badge variant="secondary" className="text-[11px] font-medium shrink-0">
+                        {student.attendanceVerified ? "Shift Verified" : "Shift Pending"}
                       </Badge>
-                    ))}
-                  </div>
-                </div>
+                    </div>
 
-                {/* Card Footer Actions */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/50 pt-3.5">
-                  <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={() => openWeeklyReview(student)}
-                      className="h-8 text-xs font-medium gap-1.5"
-                    >
-                      <ClipboardCheck className="size-3.5" />
-                      Weekly Review &amp; Strengths
-                    </Button>
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setGradingForm((prev) => ({
-                          ...prev,
-                          studentId: student.id,
-                          strengthsObserved: student.strengths.join(", "),
-                          conductSummary: student.conductNotes,
-                        }));
-                        setGradingOpen(true);
-                      }}
-                      className="h-8 text-xs font-medium"
-                    >
-                      Grade
-                    </Button>
-                  </div>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span>{student.department}</span>
+                        <span className="font-mono font-medium text-foreground">
+                          {student.daysLogged} / {student.requiredDays} days ({progressPct}%)
+                        </span>
+                      </div>
+                      <Progress value={progressPct} className="h-1.5" />
+                    </div>
 
-                  <Button
-                    asChild
-                    size="sm"
-                    variant="secondary"
-                    className="h-8 text-xs font-medium gap-1"
-                  >
-                    <Link href={`/review?student=${student.id}`}>
-                      <span>Logbooks</span>
-                      <ChevronRight className="size-3.5" />
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+                    <div className="flex items-center justify-between border-t border-border/50 pt-3 text-xs">
+                      <span className="text-muted-foreground">
+                        Week {student.weeklyReviewWeek} · {student.conductRating}
+                      </span>
+                      <span className="inline-flex items-center gap-1 font-semibold text-foreground group-hover:translate-x-0.5 transition-transform">
+                        Open Supervision Page
+                        <ChevronRight className="size-3.5" />
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       {/* ── Clean Tabbed Bottom Section: Logbook Comments vs Grading Forms ── */}
@@ -620,9 +549,16 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
                         <div className="flex items-center gap-2 shrink-0">
                           <Button
                             size="sm"
-                            onClick={() =>
-                              setPendingDecision({ act, status: "approved" })
-                            }
+                            onClick={() => {
+                              if (!(logComments[act.id] ?? "").trim()) {
+                                toast.warning("Empty Form Warning", {
+                                  description:
+                                    "Please write a Field Mentor comment before signing off on this logbook entry.",
+                                });
+                                return;
+                              }
+                              setPendingDecision({ act, status: "approved" });
+                            }}
                             className="h-8 text-xs font-medium gap-1"
                           >
                             <Check className="size-3.5" />
@@ -631,9 +567,16 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() =>
-                              setPendingDecision({ act, status: "needs_correction" })
-                            }
+                            onClick={() => {
+                              if (!(logComments[act.id] ?? "").trim()) {
+                                toast.warning("Empty Form Warning", {
+                                  description:
+                                    "Please write revision notes so the student knows what to update.",
+                                });
+                                return;
+                              }
+                              setPendingDecision({ act, status: "needs_correction" });
+                            }}
                             className="h-8 text-xs font-medium gap-1"
                           >
                             <RotateCcw className="size-3.5" />
@@ -739,6 +682,9 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* ── Live Activity & Compliance Audit Trail ── */}
+      <AuditTrailPanel role="supervisor" />
 
       {/* ── DIALOG 1: Weekly Conduct, Strengths & Review Modal ── */}
       <Dialog open={weeklyModalOpen} onOpenChange={setWeeklyModalOpen}>

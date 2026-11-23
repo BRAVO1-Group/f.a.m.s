@@ -94,7 +94,21 @@ export default function LogbookPage() {
 
   function saveDraft(submit: boolean) {
     if (!draft.title.trim()) {
-      toast.error("Title is required.");
+      toast.warning("Empty Form Warning", {
+        description: "Please enter an activity title for your logbook entry.",
+      });
+      return;
+    }
+    if (!draft.description.trim()) {
+      toast.warning("Empty Form Warning", {
+        description: "Please describe the tasks and work you completed today.",
+      });
+      return;
+    }
+    if (submit && !draft.tools_used.trim()) {
+      toast.warning("Empty Form Warning", {
+        description: "Please list at least one tool or technology used before submitting to your supervisor.",
+      });
       return;
     }
     const current = getStoredActivities();

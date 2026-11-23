@@ -56,6 +56,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { KpiCard } from "@/components/dashboard/kpi-card";
+import { AuditTrailPanel, recordAuditEvent } from "@/components/dashboard/audit-trail-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -274,7 +275,7 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
           </Button>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           {assignedStudents.map((student) => {
             const progressPct = Math.round((student.daysLogged / student.requiredDays) * 100);
             const initials = student.name
@@ -283,105 +284,57 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
               .join("");
 
             return (
-              <Card
+              <Link
                 key={student.id}
-                className="rounded-xl border border-border/60 bg-card"
+                href={`/students/${student.id}`}
+                className="group block focus:outline-none"
               >
-                <CardHeader className="p-5 pb-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <Avatar className="size-10 shrink-0 rounded-lg">
-                        <AvatarFallback className="rounded-lg bg-muted font-semibold text-xs text-foreground">
-                          {initials}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="min-w-0">
-                        <CardTitle className="truncate text-base font-semibold text-foreground">
-                          {student.name}
-                        </CardTitle>
-                        <CardDescription className="truncate text-xs text-muted-foreground mt-0.5">
-                          <span className="font-mono">{student.regNo}</span> · {student.degree}
-                        </CardDescription>
+                <Card className="rounded-xl border border-border/60 bg-card transition-all duration-150 hover:border-foreground/25 hover:shadow-sm">
+                  <CardContent className="p-5 space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <Avatar className="size-10 shrink-0 rounded-lg">
+                          <AvatarFallback className="rounded-lg bg-muted font-semibold text-xs text-foreground">
+                            {initials}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-foreground group-hover:text-[#589E10] dark:group-hover:text-primary transition-colors">
+                            {student.name}
+                          </p>
+                          <p className="truncate text-xs text-muted-foreground mt-0.5">
+                            <span className="font-mono">{student.regNo}</span> · {student.role}
+                          </p>
+                        </div>
                       </div>
+
+                      <Badge variant="secondary" className="text-[11px] font-medium shrink-0">
+                        {student.status}
+                      </Badge>
                     </div>
 
-                    <Badge variant="secondary" className="text-[11px] font-medium shrink-0">
-                      {student.status}
-                    </Badge>
-                  </div>
-                </CardHeader>
-
-                <CardContent className="space-y-4 px-5 pb-5 pt-0">
-                  {/* Structured 2-Column Metadata Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="rounded-xl border border-border/60 bg-background/70 p-3.5 space-y-1">
-                      <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        <Briefcase className="size-3.5 shrink-0 text-[#589E10] dark:text-primary" />
-                        <span>Placement Role</span>
-                      </div>
-                      <p className="text-xs font-bold text-foreground leading-snug pt-0.5">
-                        {student.role}
-                      </p>
-                      <p className="text-[11px] text-muted-foreground">
-                        {student.department}
-                      </p>
-                    </div>
-
-                    <div className="rounded-xl border border-border/60 bg-background/70 p-3.5 space-y-1">
-                      <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        <UserCheck className="size-3.5 shrink-0 text-[#589E10] dark:text-primary" />
-                        <span>Supervision Team</span>
-                      </div>
-                      <p className="text-xs font-bold text-foreground leading-snug pt-0.5">
-                        {student.mentor} <span className="font-normal text-muted-foreground">(Host)</span>
-                      </p>
-                      <p className="text-[11px] text-muted-foreground">
-                        Faculty: {student.academicSupervisor}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Attendance Progress Meter Box */}
-                  <div className="rounded-xl border border-border/60 bg-background/70 p-3.5 space-y-2.5">
-                    <div className="flex items-center justify-between gap-2 text-xs">
-                      <span className="font-medium text-muted-foreground flex items-center gap-1.5">
-                        <CalendarCheck className="size-3.5 text-[#589E10] dark:text-primary" />
-                        Attachment Attendance Pace
-                      </span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-mono text-xs font-bold text-foreground">
-                          {student.daysLogged} / {student.requiredDays} Days
-                        </span>
-                        <span className="rounded-md bg-primary/20 px-1.5 py-0.5 font-mono text-[10px] font-bold text-foreground">
-                          {progressPct}%
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span>{student.department}</span>
+                        <span className="font-mono font-medium text-foreground">
+                          {student.daysLogged} / {student.requiredDays} days ({progressPct}%)
                         </span>
                       </div>
+                      <Progress value={progressPct} className="h-1.5" />
                     </div>
-                    <Progress value={progressPct} className="h-2" />
-                  </div>
 
-                  {/* Card Footer Action Row */}
-                  <div className="flex items-center justify-between gap-3 pt-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground">Attendance Rate:</span>
-                      <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 font-mono text-xs font-bold text-foreground">
-                        {student.attendanceRate}
+                    <div className="flex items-center justify-between border-t border-border/50 pt-3 text-xs">
+                      <span className="text-muted-foreground">
+                        Mentor: {student.mentor} · {student.attendanceRate} attendance
                       </span>
-                    </div>
-
-                    <Button
-                      asChild
-                      size="sm"
-                      className="h-8 rounded-lg px-3.5 text-xs font-semibold gap-1"
-                    >
-                      <Link href="/review">
-                        <span>Review Submissions</span>
+                      <span className="inline-flex items-center gap-1 font-semibold text-foreground group-hover:translate-x-0.5 transition-transform">
+                        Open Student Profile
                         <ChevronRight className="size-3.5" />
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             );
           })}
         </div>
@@ -462,6 +415,9 @@ export function OrgAdminDashboard({ userId, name }: { userId: string; name: stri
           )}
         </CardContent>
       </Card>
+
+      {/* ── Live Activity & Compliance Audit Trail ── */}
+      <AuditTrailPanel role="org_admin" />
     </div>
   );
 }

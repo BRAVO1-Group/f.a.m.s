@@ -11,6 +11,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { BarChart3, BookOpen } from "lucide-react";
 import { getGreeting } from "./get-greeting";
 import { StudentPlacementJourney } from "./student-placement-journey";
+import { AuditTrailPanel } from "./audit-trail-panel";
 
 // --------------------------------------------------
 // TYPES RECEIVED FROM LARAVEL
@@ -438,6 +439,9 @@ export function StudentDashboard({ name, dashboardData }: StudentDashboardProps)
           )}
         </CardContent>
       </Card>
+
+      {/* ACTIVITY & COMPLIANCE AUDIT TRAIL */}
+      <AuditTrailPanel role="student" />
     </div>
   );
 }

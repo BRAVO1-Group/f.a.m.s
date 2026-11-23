@@ -82,6 +82,10 @@ export default function EvaluationsPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!comments.trim()) {
+      toast.warning("Supervisor feedback & comments are required before submitting an evaluation.");
+      return;
+    }
     setConfirmSubmitOpen(true);
   };
 
@@ -155,37 +159,39 @@ export default function EvaluationsPage() {
 
   return (
     <div className="space-y-6 antialiased">
-      {/* ── Page Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-gradient-hero p-6 sm:p-8 text-primary-foreground shadow-elevated">
-        <div>
-          <div className="flex items-center gap-2">
-            <Badge
-              variant="outline"
-              className="border-white/30 bg-white/10 text-white text-xs font-semibold"
-            >
-              Academic & Field Rubrics
-            </Badge>
-            <span className="text-xs text-primary-foreground/75">
-              Standardized Evaluation System
-            </span>
+      {/* ── High-Contrast Page Banner Card (Clean, Readable, No Eye-Straining Gradient) ── */}
+      <Card className="rounded-xl border border-border/60 bg-card">
+        <CardContent className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="secondary" className="text-xs font-semibold">
+                Academic &amp; Field Rubrics
+              </Badge>
+              <span className="text-xs text-muted-foreground">
+                Standardized Evaluation System
+              </span>
+            </div>
+            <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              Performance Evaluations &amp; Grading
+            </h1>
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl">
+              Conduct verified mid-term reviews and final exit assessments with comprehensive technical and behavioral grading rubrics.
+            </p>
           </div>
-          <h1 className="mt-2 font-display text-2xl font-bold sm:text-3xl tracking-tight">
-            Performance Evaluations & Grading
-          </h1>
-          <p className="mt-1 text-sm text-primary-foreground/80 max-w-2xl">
-            Conduct verified mid-term reviews and final exit assessments with comprehensive
-            technical and behavioral grading rubrics.
-          </p>
-        </div>
 
-        <Button
-          onClick={() => setEvalOpen(true)}
-          className="rounded-xl bg-white text-primary hover:bg-white/90 font-semibold text-xs shadow-sm h-9 shrink-0"
-        >
-          <Award className="mr-1.5 size-4" />
-          Conduct New Evaluation
-        </Button>
-      </div>
+          <Button
+            onClick={() => {
+              setEditingEvalId(null);
+              setEvalOpen(true);
+            }}
+            size="sm"
+            className="rounded-lg font-semibold text-xs h-9 shrink-0 gap-1.5"
+          >
+            <Award className="size-4" />
+            Conduct New Evaluation
+          </Button>
+        </CardContent>
+      </Card>
 
       {/* ── Metrics ── */}
       <div className="grid gap-3 sm:grid-cols-4">

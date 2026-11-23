@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Building2, Loader2, Plus, Users } from "lucide-react";
+import { Building2, Loader2, Pencil, Plus, Trash2, Users } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Dialog,
   DialogContent,
@@ -32,11 +34,11 @@ import {
 } from "@/components/ui/table";
 import {
   activities,
-  internships,
-  organizations,
   profiles,
   userRoles,
   uid,
+  getStoredOrganizations,
+  saveStoredOrganizations,
   getStoredInternships,
   saveStoredInternships,
   type MockOrganization,
@@ -44,11 +46,17 @@ import {
 } from "@/lib/mock-data";
 
 export default function AdminPage() {
-  const [, forceUpdate] = useState(0);
-  const refresh = () => forceUpdate((n) => n + 1);
+  const [orgsList, setOrgsList] = useState<MockOrganization[]>(getStoredOrganizations);
+  const [placementsList, setPlacementsList] = useState<MockInternship[]>(getStoredInternships);
 
   const [orgOpen, setOrgOpen] = useState(false);
+  const [editingOrgId, setEditingOrgId] = useState<string | null>(null);
+  const [deletingOrg, setDeletingOrg] = useState<MockOrganization | null>(null);
+
   const [placeOpen, setPlaceOpen] = useState(false);
+  const [editingPlaceId, setEditingPlaceId] = useState<string | null>(null);
+  const [deletingPlace, setDeletingPlace] = useState<MockInternship | null>(null);
+
   const [savingOrg, setSavingOrg] = useState(false);
   const [savingPlace, setSavingPlace] = useState(false);
   const [org, setOrg] = useState<Omit<MockOrganization, "id">>({
@@ -83,32 +91,94 @@ export default function AdminPage() {
     return p?.full_name || p?.email || "Unknown";
   };
 
-  const orgNameOf = (id: string) => organizations.find((o) => o.id === id)?.name ?? "—";
+  const orgNameOf = (id: string) => orgsList.find((o) => o.id === id)?.name ?? "—";
+
+  function openEditOrg(item: MockOrganization) {
+    setEditingOrgId(item.id);
+    setOrg({
+      name: item.name,
+      industry: item.industry,
+      address: item.address,
+      contact_person: item.contact_person,
+      contact_email: item.contact_email,
+    });
+    setOrgOpen(true);
+  }
 
   async function createOrg() {
-    if (!org.name.trim()) return;
+    if (!org.name.trim() || !org.industry.trim() || !org.contact_email.trim()) {
+      toast.warning("Empty Form Warning", {
+        description: "Please fill in the Organization Name, Industry, and Contact Email.",
+      });
+      return;
+    }
     setSavingOrg(true);
-    await new Promise((r) => setTimeout(r, 600));
-    organizations.push({ id: uid(), ...org });
+    await new Promise((r) => setTimeout(r, 400));
+
+    if (editingOrgId) {
+      const updated = orgsList.map((o) =>
+        o.id === editingOrgId ? { ...o, ...org } : o,
+      );
+      setOrgsList(updated);
+      saveStoredOrganizations(updated);
+      setEditingOrgId(null);
+      toast.success("Organization updated");
+    } else {
+      const newOrg: MockOrganization = { id: uid(), ...org };
+      const updated = [newOrg, ...orgsList];
+      setOrgsList(updated);
+      saveStoredOrganizations(updated);
+      toast.success("Organization added");
+    }
+
     setSavingOrg(false);
     setOrgOpen(false);
     setOrg({ name: "", industry: "", address: "", contact_person: "", contact_email: "" });
-    refresh();
-    toast.success("Organization added");
+  }
+
+  function openEditPlacement(item: MockInternship) {
+    setEditingPlaceId(item.id);
+    setPlace({
+      student_id: item.student_id,
+      organization_id: item.organization_id,
+      supervisor_id: item.supervisor_id ?? "",
+      position: item.position ?? "",
+      department: item.department ?? "",
+      start_date: item.start_date,
+      end_date: item.end_date,
+      required_days: item.required_days ?? 60,
+    });
+    setPlaceOpen(true);
   }
 
   async function createPlacement() {
-    if (!place.student_id) return;
+    if (!place.student_id || !place.organization_id || !place.position.trim()) {
+      toast.warning("Empty Form Warning", {
+        description: "Please select a Student, Host Organization, and enter the Internship Position.",
+      });
+      return;
+    }
     setSavingPlace(true);
-    await new Promise((r) => setTimeout(r, 600));
-    const newPlacement: MockInternship = { id: uid(), status: "active", ...place };
-    internships.push(newPlacement);
-    const stored = getStoredInternships();
-    saveStoredInternships([newPlacement, ...stored]);
+    await new Promise((r) => setTimeout(r, 400));
+
+    if (editingPlaceId) {
+      const updated = placementsList.map((i) =>
+        i.id === editingPlaceId ? { ...i, ...place } : i,
+      );
+      setPlacementsList(updated);
+      saveStoredInternships(updated);
+      setEditingPlaceId(null);
+      toast.success("Placement updated");
+    } else {
+      const newPlacement: MockInternship = { id: uid(), status: "active", ...place };
+      const updated = [newPlacement, ...placementsList];
+      setPlacementsList(updated);
+      saveStoredInternships(updated);
+      toast.success("Placement created");
+    }
+
     setSavingPlace(false);
     setPlaceOpen(false);
-    refresh();
-    toast.success("Placement created");
   }
 
   return (
@@ -123,10 +193,10 @@ export default function AdminPage() {
       <div className="grid gap-4 sm:grid-cols-4">
         <Stat label="Students" value={students.length} />
         <Stat label="Supervisors" value={supervisors.length} />
-        <Stat label="Organizations" value={organizations.length} />
+        <Stat label="Organizations" value={orgsList.length} />
         <Stat
           label="Active placements"
-          value={internships.filter((i) => i.status === "active").length}
+          value={placementsList.filter((i) => i.status === "active").length}
         />
       </div>
 
@@ -197,15 +267,26 @@ export default function AdminPage() {
                   <Building2 className="size-4" /> Host organizations
                 </CardTitle>
               </div>
-              <Button size="sm" onClick={() => setOrgOpen(true)}>
+              <Button
+                size="sm"
+                onClick={() => {
+                  setEditingOrgId(null);
+                  setOrg({ name: "", industry: "", address: "", contact_person: "", contact_email: "" });
+                  setOrgOpen(true);
+                }}
+              >
                 <Plus className="size-4" /> Add
               </Button>
             </CardHeader>
             <CardContent>
-              {organizations.length === 0 ? (
-                <p className="py-6 text-center text-sm text-muted-foreground">
-                  No organizations yet.
-                </p>
+              {orgsList.length === 0 ? (
+                <EmptyState
+                  icon={Building2}
+                  title="No Host Organizations Registered"
+                  description="Add partner companies that host student interns."
+                  actionLabel="Add Organization"
+                  onAction={() => setOrgOpen(true)}
+                />
               ) : (
                 <div className="overflow-x-auto">
                   <Table>
@@ -214,16 +295,39 @@ export default function AdminPage() {
                         <TableHead>Name</TableHead>
                         <TableHead>Industry</TableHead>
                         <TableHead>Contact</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {organizations.map((o) => (
+                      {orgsList.map((o) => (
                         <TableRow key={o.id}>
                           <TableCell className="font-medium">{o.name}</TableCell>
                           <TableCell>{o.industry || "—"}</TableCell>
                           <TableCell>
                             {o.contact_person || "—"}
                             <div className="text-xs text-muted-foreground">{o.contact_email}</div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => openEditOrg(o)}
+                                className="h-7 w-7 p-0"
+                                title="Edit Organization"
+                              >
+                                <Pencil className="size-3.5" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setDeletingOrg(o)}
+                                className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                                title="Delete Organization"
+                              >
+                                <Trash2 className="size-3.5" />
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -239,13 +343,25 @@ export default function AdminPage() {
           <Card className="shadow-card">
             <CardHeader className="flex flex-row items-center justify-between gap-2">
               <CardTitle className="text-base">Internship placements</CardTitle>
-              <Button size="sm" onClick={() => setPlaceOpen(true)}>
+              <Button
+                size="sm"
+                onClick={() => {
+                  setEditingPlaceId(null);
+                  setPlaceOpen(true);
+                }}
+              >
                 <Plus className="size-4" /> New placement
               </Button>
             </CardHeader>
             <CardContent>
-              {internships.length === 0 ? (
-                <p className="py-6 text-center text-sm text-muted-foreground">No placements yet.</p>
+              {placementsList.length === 0 ? (
+                <EmptyState
+                  icon={Users}
+                  title="No Internship Placements Recorded"
+                  description="Click 'New placement' to assign a student to a host organization and supervisor."
+                  actionLabel="Create Placement"
+                  onAction={() => setPlaceOpen(true)}
+                />
               ) : (
                 <div className="overflow-x-auto">
                   <Table>
@@ -255,11 +371,12 @@ export default function AdminPage() {
                         <TableHead>Organization</TableHead>
                         <TableHead>Supervisor</TableHead>
                         <TableHead>Period</TableHead>
-                        <TableHead className="text-right">Status</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {internships.map((i) => (
+                      {placementsList.map((i) => (
                         <TableRow key={i.id}>
                           <TableCell className="font-medium">{nameOf(i.student_id)}</TableCell>
                           <TableCell>{orgNameOf(i.organization_id)}</TableCell>
@@ -267,10 +384,32 @@ export default function AdminPage() {
                           <TableCell className="whitespace-nowrap text-xs">
                             {i.start_date} → {i.end_date}
                           </TableCell>
-                          <TableCell className="text-right">
+                          <TableCell>
                             <Badge variant="secondary" className="capitalize">
                               {i.status}
                             </Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => openEditPlacement(i)}
+                                className="h-7 w-7 p-0"
+                                title="Edit Placement"
+                              >
+                                <Pencil className="size-3.5" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setDeletingPlace(i)}
+                                className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                                title="Delete Placement"
+                              >
+                                <Trash2 className="size-3.5" />
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -282,6 +421,53 @@ export default function AdminPage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Yes / No Confirmation Dialogs for Deleting Organization or Placement */}
+      <ConfirmDialog
+        open={Boolean(deletingOrg)}
+        onOpenChange={(v) => {
+          if (!v) setDeletingOrg(null);
+        }}
+        title="Delete Host Organization?"
+        description={
+          deletingOrg
+            ? `Are you sure you want to delete "${deletingOrg.name}" from the host organizations directory?`
+            : ""
+        }
+        confirmLabel="Yes, Delete Organization"
+        cancelLabel="No, Keep It"
+        variant="destructive"
+        onConfirm={() => {
+          if (deletingOrg) {
+            const updated = orgsList.filter((o) => o.id !== deletingOrg.id);
+            setOrgsList(updated);
+            saveStoredOrganizations(updated);
+            setDeletingOrg(null);
+            toast.success("Organization deleted");
+          }
+        }}
+      />
+
+      <ConfirmDialog
+        open={Boolean(deletingPlace)}
+        onOpenChange={(v) => {
+          if (!v) setDeletingPlace(null);
+        }}
+        title="Delete Internship Placement Record?"
+        description="Are you sure you want to permanently remove this student placement record?"
+        confirmLabel="Yes, Delete Placement"
+        cancelLabel="No, Cancel"
+        variant="destructive"
+        onConfirm={() => {
+          if (deletingPlace) {
+            const updated = placementsList.filter((p) => p.id !== deletingPlace.id);
+            setPlacementsList(updated);
+            saveStoredInternships(updated);
+            setDeletingPlace(null);
+            toast.success("Placement deleted");
+          }
+        }}
+      />
 
       {/* Add Organization dialog */}
       <Dialog open={orgOpen} onOpenChange={setOrgOpen}>
@@ -359,7 +545,7 @@ export default function AdminPage() {
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
                 <SelectContent>
-                  {organizations.map((o) => (
+                  {orgsList.map((o) => (
                     <SelectItem key={o.id} value={o.id}>
                       {o.name}
                     </SelectItem>

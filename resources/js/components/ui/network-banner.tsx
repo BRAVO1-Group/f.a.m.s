@@ -208,36 +208,23 @@ export function NetworkStatusTogglePill() {
     window.dispatchEvent(new CustomEvent("interntrack-offline-queue-change"));
   }
 
+  if (!offline) {
+    return null;
+  }
+
   return (
     <button
       type="button"
       onClick={toggleOffline}
-      title={
-        offline
-          ? "Offline Queue Active (click to reconnect & sync)"
-          : "Online (click to test offline queue mode)"
-      }
-      className={`inline-flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-[11px] font-medium transition cursor-pointer ${
-        offline
-          ? "border-amber-500/40 bg-amber-500/15 text-amber-700 dark:text-amber-300"
-          : "border-border/60 bg-background text-muted-foreground hover:bg-muted hover:text-foreground"
-      }`}
+      title="Offline Queue Active (click to reconnect & sync)"
+      className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/15 px-2.5 text-[11px] font-medium text-amber-700 dark:text-amber-300 transition cursor-pointer"
     >
-      {offline ? (
-        <>
-          <CloudOff className="size-3.5 text-amber-600 dark:text-amber-400" />
-          <span className="hidden sm:inline">Offline</span>
-          {queueCount > 0 && (
-            <span className="rounded bg-amber-500/25 px-1 font-mono text-[10px] font-bold">
-              {queueCount}
-            </span>
-          )}
-        </>
-      ) : (
-        <>
-          <Wifi className="size-3.5 text-[#589E10] dark:text-primary" />
-          <span className="hidden sm:inline">Online</span>
-        </>
+      <CloudOff className="size-3.5 text-amber-600 dark:text-amber-400" />
+      <span className="hidden sm:inline">Offline</span>
+      {queueCount > 0 && (
+        <span className="rounded bg-amber-500/25 px-1 font-mono text-[10px] font-bold">
+          {queueCount}
+        </span>
       )}
     </button>
   );

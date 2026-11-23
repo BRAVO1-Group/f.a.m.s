@@ -56,6 +56,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { KpiCard } from "@/components/dashboard/kpi-card";
+import { AuditTrailPanel } from "@/components/dashboard/audit-trail-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -1333,6 +1334,9 @@ export function UniversityAdminDashboard({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* ── Live Institutional Audit Trail ── */}
+      <AuditTrailPanel role={(role as AppRole) || "uni_admin"} />
     </div>
   );
 }

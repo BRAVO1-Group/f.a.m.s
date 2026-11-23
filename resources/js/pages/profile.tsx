@@ -287,6 +287,12 @@ export default function ProfilePage() {
   }
 
   async function save() {
+    if (!form.full_name.trim() || !form.phone.trim() || !form.institution.trim()) {
+      toast.warning("Empty Form Warning", {
+        description: "Full Name, Phone Number, and Institution cannot be left empty.",
+      });
+      return;
+    }
     setSaving(true);
     await new Promise((r) => setTimeout(r, 600));
     const idx = DEMO_USERS.findIndex((u) => u.id === userId);

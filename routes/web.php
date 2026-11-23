@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
     Route::get('/students', [HomeController::class, 'students'])->name('students');
+    Route::get('/students/{id}', [HomeController::class, 'studentDetail'])->name('students.show');
     Route::get('/supervisors', [HomeController::class, 'supervisors'])->name('supervisors');
     Route::get('/placements', [HomeController::class, 'placements'])->name('placements');
     Route::get('/assignments', [HomeController::class, 'assignments'])->name('assignments');

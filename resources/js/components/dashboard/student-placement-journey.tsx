@@ -114,8 +114,10 @@ export function StudentPlacementJourney({ studentName }: { studentName: string }
 
   function handleAddProspectiveCompany(e: React.FormEvent) {
     e.preventDefault();
-    if (!newCompany.name.trim()) {
-      toast.error("Please enter the prospective company name.");
+    if (!newCompany.name.trim() || !newCompany.industry.trim()) {
+      toast.warning("Empty Form Warning", {
+        description: "Please enter both the prospective company name and its industry/sector.",
+      });
       return;
     }
     const list = [
@@ -492,7 +494,16 @@ export function StudentPlacementJourney({ studentName }: { studentName: string }
               <Button
                 type="button"
                 size="sm"
-                onClick={() => setConfirmUploadDialog(true)}
+                onClick={() => {
+                  if (!selectedAcceptedCompany.trim() || !uploadedFile.trim()) {
+                    toast.warning("Empty Form Warning", {
+                      description:
+                        "Please select the accepted company and attach your confirmation letter before saving.",
+                    });
+                    return;
+                  }
+                  setConfirmUploadDialog(true);
+                }}
                 className="h-8 text-xs font-semibold gap-1.5"
               >
                 <Upload className="size-3.5" />
@@ -561,7 +572,21 @@ export function StudentPlacementJourney({ studentName }: { studentName: string }
               <Button
                 type="button"
                 size="sm"
-                onClick={() => setConfirmMentorDialog(true)}
+                onClick={() => {
+                  if (
+                    !mentorForm.name.trim() ||
+                    !mentorForm.title.trim() ||
+                    !mentorForm.email.trim() ||
+                    !mentorForm.phone.trim()
+                  ) {
+                    toast.warning("Empty Form Warning", {
+                      description:
+                        "Please complete all Field Mentor fields (Full Name, Job Title, Official Email, and Phone Number).",
+                    });
+                    return;
+                  }
+                  setConfirmMentorDialog(true);
+                }}
                 className="h-8 text-xs font-semibold gap-1.5"
               >
                 <Send className="size-3.5" />
