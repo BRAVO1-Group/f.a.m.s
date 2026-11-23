@@ -57,7 +57,14 @@ class ProfileController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+      $user = auth()->user();
+      $validated = $request->validate([
+        'name'=>'required|string|max:255',
+        'email'=>'required|string|email|max:255|unique:users,email,'.$user
+        
+      ]);
+      $user->update($validated);
+      return redirect()->back()->with('success', 'Profile updated successfully.');
     }
 
     /**

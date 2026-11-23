@@ -421,3 +421,387 @@ export function StudentDashboard({ name, dashboardData }: StudentDashboardProps)
     </div>
   );
 }
+
+// --------------------------------------------------
+// SUPERVISOR DASHBOARD TYPES
+// --------------------------------------------------
+
+export type SupervisorStudent = {
+  id: number;
+  student_number: string;
+  user: {
+    name: string;
+    email: string;
+  } | null;
+  program: {
+    name: string;
+    department: {
+      name: string;
+    } | null;
+  } | null;
+};
+
+export type SupervisorPlacement = {
+  id: number;
+  start_date: string;
+  end_date: string;
+  status: string;
+  student: SupervisorStudent | null;
+  organization: {
+    name: string;
+  } | null;
+  logbooks: StudentLogbook[];
+};
+
+export type SupervisorDashboardData = {
+  supervisor: {
+    job_title: string | null;
+    department: string | null;
+    organization: {
+      name: string;
+    } | null;
+  } | null;
+
+  placements: SupervisorPlacement[];
+  students: SupervisorStudent[];
+
+  statistics: {
+    totalPlacements: number;
+    activePlacements: number;
+    pendingPlacements: number;
+    totalStudents: number;
+    totalLogbooks: number;
+    pendingLogbooks: number;
+    approvedLogbooks: number;
+    totalHours: number | string;
+  };
+
+  recentLogbooks: StudentLogbook[];
+};
+
+type SupervisorDashboardProps = {
+  name: string;
+  dashboardData: SupervisorDashboardData;
+};
+
+// --------------------------------------------------
+// SUPERVISOR DASHBOARD
+// --------------------------------------------------
+
+export function SupervisorDashboard({ name, dashboardData }: SupervisorDashboardProps) {
+  const greeting = getGreeting();
+
+  const { statistics, placements, students, recentLogbooks } = dashboardData;
+
+  const firstName = name.split(" ")[0];
+
+  const totalHours = Number(statistics.totalHours);
+
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
+  const placementChartData = useMemo(() => {
+    return [
+      {
+        status: "Active",
+        placements: statistics.activePlacements,
+      },
+      {
+        status: "Pending",
+        placements: statistics.pendingPlacements,
+      },
+      {
+        status: "Other",
+        placements:
+          statistics.totalPlacements - statistics.activePlacements - statistics.pendingPlacements,
+      },
+    ];
+  }, [statistics]);
+
+  return (
+    <div className="dashboard-page space-y-6 antialiased">
+      {/* HEADER */}
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            {greeting}, {firstName}
+          </h1>
+
+          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+            Overview of your supervised students and attachment placements.
+          </p>
+
+          <p className="mt-1 text-xs text-muted-foreground">
+            {dashboardData.supervisor?.organization?.name ?? "No organization assigned"}
+          </p>
+        </div>
+
+        <Button asChild size="sm" className="rounded-xl text-xs font-semibold h-9">
+          <Link href="/placements">View Placements</Link>
+        </Button>
+      </div>
+
+      {/* KPI STATISTICS */}
+
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <KpiCard
+          label="My Students"
+          value={statistics.totalStudents}
+          unit="students"
+          meta="Students under your supervision"
+        />
+
+        <KpiCard
+          label="Active Placements"
+          value={statistics.activePlacements}
+          unit="placements"
+          meta="Currently active attachments"
+        />
+
+        <KpiCard
+          label="Pending Logbooks"
+          value={statistics.pendingLogbooks}
+          unit="entries"
+          meta="Submitted entries awaiting review"
+        />
+
+        <KpiCard
+          label="Recorded Hours"
+          value={totalHours.toFixed(1)}
+          unit="hours"
+          meta="Hours recorded by your students"
+        />
+      </div>
+
+      {/* PLACEMENT SUMMARY */}
+
+      <Card className="shadow-card border-border/80">
+        <CardHeader>
+          <CardTitle className="text-base font-semibold">Placement Summary</CardTitle>
+
+          <CardDescription>Overview of placements assigned to your supervision.</CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div>
+              <p className="text-xs text-muted-foreground">Total Placements</p>
+              <p className="text-2xl font-bold">{statistics.totalPlacements}</p>
+            </div>
+
+            <div>
+              <p className="text-xs text-muted-foreground">Pending Placements</p>
+              <p className="text-2xl font-bold">{statistics.pendingPlacements}</p>
+            </div>
+
+            <div>
+              <p className="text-xs text-muted-foreground">Approved Logbooks</p>
+              <p className="text-2xl font-bold">{statistics.approvedLogbooks}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* PLACEMENT CHART */}
+
+      <Card className="shadow-card border-border/80">
+        <CardHeader>
+          <CardTitle className="text-base font-semibold">Placement Overview</CardTitle>
+
+          <CardDescription>Distribution of your supervised placements by status.</CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          {statistics.totalPlacements > 0 ? (
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={placementChartData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.2} />
+
+                  <XAxis dataKey="status" fontSize={11} tickLine={false} axisLine={false} />
+
+                  <YAxis allowDecimals={false} fontSize={11} tickLine={false} axisLine={false} />
+
+                  <Tooltip />
+
+                  <Bar
+                    dataKey="placements"
+                    name="Placements"
+                    fill="var(--primary)"
+                    radius={[5, 5, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <p className="py-12 text-center text-sm text-muted-foreground">
+              No placement records are available yet.
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* SUPERVISED STUDENTS */}
+
+      <Card className="shadow-card border-border/80">
+        <CardHeader>
+          <CardTitle className="text-base font-semibold">My Supervised Students</CardTitle>
+
+          <CardDescription>
+            Students assigned to you through their attachment placements.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          {students.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b text-left">
+                    <th className="p-3">Student Name</th>
+                    <th className="p-3">Student Number</th>
+                    <th className="p-3">Program</th>
+                    <th className="p-3">Department</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {students.map((student) => (
+                    <tr key={student.id} className="border-b">
+                      <td className="p-3 font-medium">{student.user?.name ?? "Unknown"}</td>
+
+                      <td className="p-3">{student.student_number}</td>
+
+                      <td className="p-3">{student.program?.name ?? "—"}</td>
+
+                      <td className="p-3">{student.program?.department?.name ?? "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="py-8 text-center text-sm text-muted-foreground">
+              No students have been assigned to you yet.
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* SUPERVISED PLACEMENTS */}
+
+      <Card className="shadow-card border-border/80">
+        <CardHeader>
+          <CardTitle className="text-base font-semibold">Supervised Placements</CardTitle>
+
+          <CardDescription>Placement details for your assigned students.</CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          {placements.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b text-left">
+                    <th className="p-3">Student</th>
+                    <th className="p-3">Organization</th>
+                    <th className="p-3">Start Date</th>
+                    <th className="p-3">End Date</th>
+                    <th className="p-3">Status</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {placements.map((placement) => (
+                    <tr key={placement.id} className="border-b">
+                      <td className="p-3 font-medium">
+                        {placement.student?.user?.name ?? "Unknown"}
+                      </td>
+
+                      <td className="p-3">{placement.organization?.name ?? "—"}</td>
+
+                      <td className="p-3">{formatDate(placement.start_date)}</td>
+
+                      <td className="p-3">{formatDate(placement.end_date)}</td>
+
+                      <td className="p-3">
+                        <Badge
+                          variant={placement.status === "active" ? "default" : "secondary"}
+                          className="capitalize"
+                        >
+                          {placement.status}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="py-8 text-center text-sm text-muted-foreground">
+              No placements have been assigned to you yet.
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* RECENT LOGBOOK SUBMISSIONS */}
+
+      <Card className="shadow-card border-border/80">
+        <CardHeader>
+          <CardTitle className="text-base font-semibold">Recent Logbook Submissions</CardTitle>
+
+          <CardDescription>Latest logbook entries from your supervised placements.</CardDescription>
+        </CardHeader>
+
+        <CardContent className="space-y-3">
+          {recentLogbooks.length > 0 ? (
+            recentLogbooks.map((log) => (
+              <div key={log.id} className="rounded-xl border border-border bg-card p-4 space-y-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <p className="font-semibold text-sm">{log.activities}</p>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">
+                      {formatDate(log.log_date)}
+                    </span>
+
+                    <Badge
+                      variant={log.status === "approved" ? "default" : "secondary"}
+                      className="capitalize"
+                    >
+                      {log.status === "submitted" ? "Pending Review" : log.status}
+                    </Badge>
+                  </div>
+                </div>
+
+                {log.skills_learned && (
+                  <p className="text-xs text-muted-foreground">
+                    <span className="font-semibold">Skills learned:</span> {log.skills_learned}
+                  </p>
+                )}
+
+                <div className="flex justify-between border-t border-border/50 pt-2">
+                  <span className="text-xs text-muted-foreground">Hours worked</span>
+
+                  <span className="text-xs font-semibold">
+                    {Number(log.hours_worked).toFixed(2)} hrs
+                  </span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="py-8 text-center text-sm text-muted-foreground">
+              No logbook submissions are available yet.
+            </p>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

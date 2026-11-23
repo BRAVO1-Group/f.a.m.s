@@ -96,4 +96,16 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/assignments/{id}', [AssignmentController::class, 'destroy'])
         ->name('assignments.destroy');
 
+         // review routes
+    Route::get('/review', [ReviewController::class, 'index'])
+        ->name('reviews.index');
+
+    Route::get('/review/{logbook}', [ReviewController::class, 'show'])
+        ->name('reviews.show');
+
+    Route::patch('/review/{logbook}/approve', [ReviewController::class, 'approve'])
+        ->name('reviews.approve');
+
+    Route::patch('/review/{logbook}/return', [ReviewController::class, 'returnForCorrection'])
+        ->name('reviews.return');
 });

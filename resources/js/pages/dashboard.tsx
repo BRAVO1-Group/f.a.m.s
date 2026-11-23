@@ -3,14 +3,33 @@ import { useAppUser } from "@/lib/app-user";
 
 import {
   StudentDashboard,
+  SupervisorDashboard,
   type StudentDashboardData,
+  type SupervisorDashboardData,
 } from "@/components/dashboard/supervisor-dashboard";
 
-import { OrgAdminDashboard } from "@/components/dashboard/org-admin-dashboard";
-import { UniversityAdminDashboard } from "@/components/dashboard/university-admin-dashboard";
+import {
+  OrgAdminDashboard,
+  type OrgAdminDashboardData,
+} from "@/components/dashboard/org-admin-dashboard";
+
+import {
+  UniversityAdminDashboard,
+  type UniversityAdminDashboardData,
+} from "@/components/dashboard/university-admin-dashboard";
+
+import {
+  SystemAdminDashboard,
+  type SystemAdminDashboardData,
+} from "@/components/dashboard/system-admin-dashboard";
 
 type DashboardPageProps = {
-  dashboardData: StudentDashboardData;
+  dashboardData:
+    | StudentDashboardData
+    | SupervisorDashboardData
+    | OrgAdminDashboardData
+    | UniversityAdminDashboardData
+    | SystemAdminDashboardData;
 };
 
 export default function DashboardPage() {
@@ -20,12 +39,38 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {role === "student" && <StudentDashboard name={name} dashboardData={props.dashboardData} />}
+      {role === "org_admin" && (
+        <OrgAdminDashboard
+          userId={userId}
+          name={name}
+          dashboardData={props.dashboardData as OrgAdminDashboardData}
+        />
+      )}
 
-      {role === "org_admin" && <OrgAdminDashboard userId={userId} name={name} />}
+      {role === "system_admin" && (
+        <SystemAdminDashboard
+          name={name}
+          dashboardData={props.dashboardData as SystemAdminDashboardData}
+        />
+      )}
+      {role === "uni_admin" && (
+        <UniversityAdminDashboard
+          userId={userId}
+          name={name}
+          role={role}
+          dashboardData={props.dashboardData as UniversityAdminDashboardData}
+        />
+      )}
 
-      {(role === "uni_admin" || role === "system_admin") && (
-        <UniversityAdminDashboard userId={userId} name={name} role={role} />
+      {role === "student" && (
+        <StudentDashboard name={name} dashboardData={props.dashboardData as StudentDashboardData} />
+      )}
+
+      {role === "supervisor" && (
+        <SupervisorDashboard
+          name={name}
+          dashboardData={props.dashboardData as SupervisorDashboardData}
+        />
       )}
     </div>
   );

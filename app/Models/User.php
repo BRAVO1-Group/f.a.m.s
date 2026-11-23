@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Organization;
 
 #[Fillable([
     'name',
@@ -52,5 +53,9 @@ class User extends Authenticatable
     public function university(): BelongsTo
     {
         return $this->belongsTo(University::class);
+    }
+    public function organization(): BelongsTo
+   {
+    return $this->belongsTo(Organization::class);
     }
 }

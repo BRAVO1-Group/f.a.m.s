@@ -40,6 +40,12 @@ class DemoUsersSeeder extends Seeder
                 'roles' => ['uni_admin', 'system_admin'],
                 'password' => 'InternTrack@2026!',
             ],
+            [
+                'name' => 'System Administrator',
+                'email' => 'system@admin.com',
+                'roles' => ['system_admin'],
+                'password' => 'InternTrack@2026!',
+            ],
             
         ];
 

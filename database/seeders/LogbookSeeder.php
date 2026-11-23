@@ -116,16 +116,20 @@ class LogbookSeeder extends Seeder
                     $studentLogs['student_number']
                 );
             })->firstOrFail();
-
             foreach ($studentLogs['entries'] as $entry) {
-                Logbook::updateOrCreate(
-                    [
-                        'placement_id' => $placement->id,
-                        'log_date' => $entry['log_date'],
-                    ],
-                    $entry
-                );
-            }
+        $logbook = Logbook::where('placement_id', $placement->id)
+            ->whereDate('log_date', $entry['log_date'])
+            ->first();
+
+        if ($logbook) {
+            $logbook->update($entry);
+        } else {
+            Logbook::create([
+                'placement_id' => $placement->id,
+                ...$entry,
+            ]);
+        }
+        }
         }
     }
 }

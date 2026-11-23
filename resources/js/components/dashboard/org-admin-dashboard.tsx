@@ -1,430 +1,517 @@
-import { useEffect, useState } from "react";
 import { Link } from "@inertiajs/react";
 import {
-  Activity,
-  AlertTriangle,
-  Award,
-  BookOpen,
-  Briefcase,
   Building2,
-  CalendarCheck,
-  Check,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
-  ExternalLink,
-  FileBarChart,
-  FileCheck,
-  Filter,
-  GraduationCap,
-  Info,
-  Key,
-  Laptop,
-  Layers,
-  Lock,
-  Mail,
-  MapPin,
-  MessageSquareCheck,
-  Milestone,
-  Phone,
-  Plus,
-  RefreshCw,
-  RotateCcw,
-  Search,
-  Settings2,
-  Shield,
-  ShieldAlert,
-  ShieldCheck,
-  Sliders,
-  Sparkles,
-  TrendingUp,
-  UserCheck,
-  UserPlus,
   Users,
-  FileText,
+  Briefcase,
+  BookOpen,
+  CheckCircle2,
+  Clock,
+  GraduationCap,
 } from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-  Area,
-  AreaChart,
-} from "recharts";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
-import { useAppUser } from "@/lib/app-user";
-import {
-  ROLE_LABELS,
-  ROLE_TIERS,
-  setDemoUser,
-  hasPermission,
-  usePermissions,
-  type AppRole,
-} from "@/lib/auth";
-import {
-  activities as initialActivities,
-  attendance as initialAttendance,
-  internships as initialInternships,
-  milestones,
-  evaluations,
-  organizations,
-  DEMO_USERS,
-  profiles,
-  SYSTEM_PERMISSIONS,
-  DEFAULT_ROLE_PERMISSIONS,
-  getStoredSupervisors,
-  addSupervisor,
-  getStoredRBAC,
-  saveStoredRBAC,
-  getStoredInternships,
-  assignSupervisors,
-  getStoredActivities,
-  saveStoredActivities,
-  approveOrCorrectActivity,
-  type MockActivity,
-  type MockSupervisor,
-  type MockInternship,
-  type RolePermissionsMap,
-  type SupervisorType,
-} from "@/lib/mock-data";
+import { Progress } from "@/components/ui/progress";
 
 import { getGreeting } from "./get-greeting";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 3. ORGANIZATION / COMPANY ROLE DASHBOARD (Received Logins Tied to Assigned Students)
-// ─────────────────────────────────────────────────────────────────────────────
-export function OrgAdminDashboard({ userId, name }: { userId: string; name: string }) {
-  const greeting = getGreeting();
-  const company = organizations[0]!; // TechCorp Kenya Ltd
-  const [activitiesList, setActivitiesList] = useState<MockActivity[]>(getStoredActivities);
+// ------------------------------------------------------
+// TYPES
+// ------------------------------------------------------
 
-  useEffect(() => {
-    const handler = () => {
-      setActivitiesList(getStoredActivities());
-    };
-    window.addEventListener("internflow-activities-change", handler);
-    return () => window.removeEventListener("internflow-activities-change", handler);
-  }, []);
+type OrganizationStudent = {
+  id: number;
+  student_number: string;
+  year_of_study: number;
+  status: string;
+  phone: string | null;
+  user: {
+    name: string;
+    email: string;
+  } | null;
+  program: {
+    name: string;
+    department: {
+      name: string;
+    } | null;
+  } | null;
+};
 
-  // Assigned students at TechCorp Kenya Ltd (bound to this company login)
-  const assignedStudents = [
-    {
-      id: "student-1",
-      name: "Alice Wanjiku",
-      regNo: "CS/2021/0042",
-      role: "Software Engineering Intern",
-      department: "Product Engineering",
-      institution: "University of Nairobi",
-      degree: "BSc. Computer Science",
-      email: "alice@university.ac.ke",
-      phone: "+254 712 345 678",
-      mentor: "James Otieno",
-      academicSupervisor: "Dr. Agnes Kimani",
-      daysLogged: 42,
-      requiredDays: 60,
-      attendanceRate: "97.5%",
-      status: "Active • On Track",
-    },
-    {
-      id: "student-4",
-      name: "Kevin Kiprono",
-      regNo: "CS/2021/0104",
-      role: "Cybersecurity Analyst Intern",
-      department: "InfoSec Operations",
-      institution: "University of Nairobi",
-      degree: "BSc. Computer Science (Cybersecurity)",
-      email: "kevin.kiprono@university.ac.ke",
-      phone: "+254 701 445 566",
-      mentor: "James Otieno",
-      academicSupervisor: "Dr. Agnes Kimani",
-      daysLogged: 18,
-      requiredDays: 60,
-      attendanceRate: "95.0%",
-      status: "Active • In Progress",
-    },
-  ];
+type OrganizationSupervisor = {
+  id: number;
+  job_title: string | null;
+  department: string | null;
+  phone: string | null;
+  status: string;
+  user: {
+    name: string;
+    email: string;
+  } | null;
+};
 
-  const assignedStudentIds = assignedStudents.map((s) => s.id);
-  const myAssignedActivities = activitiesList.filter((a) =>
-    assignedStudentIds.includes(a.student_id),
-  );
-  const pendingActivities = myAssignedActivities.filter((a) => a.status === "submitted");
-  const approvedActivities = myAssignedActivities.filter((a) => a.status === "approved");
+type OrganizationPlacement = {
+  id: number;
+  start_date: string;
+  end_date: string;
+  status: string;
+  description: string | null;
 
-  const handleQuickApprove = (act: MockActivity) => {
-    const student = assignedStudents.find((s) => s.id === act.student_id);
-    approveOrCorrectActivity(
-      act.id,
-      "approved",
-      userId,
-      "Verified and approved by Host Organization Field Mentor (TechCorp Kenya Ltd).",
-    );
-    setActivitiesList(getStoredActivities());
-    toast.success("Submission Approved", {
-      description: `"${act.title}" for ${student?.name ?? "Intern"} has been verified and signed off.`,
-    });
+  student: OrganizationStudent | null;
+
+  supervisor: {
+    job_title: string | null;
+    department: string | null;
+    user: {
+      name: string;
+      email: string;
+    } | null;
+  } | null;
+
+  logbooks: {
+    id: number;
+    log_date: string;
+    activities: string;
+    hours_worked: number | string;
+    status: string;
+  }[];
+};
+
+export type OrgAdminDashboardData = {
+  organization: {
+    id: number;
+    name: string;
+    industry: string | null;
+    email: string;
+    phone: string;
+    address: string;
+    status: string;
+  } | null;
+
+  supervisors: OrganizationSupervisor[];
+  students: OrganizationStudent[];
+  placements: OrganizationPlacement[];
+
+  statistics: {
+    totalSupervisors: number;
+    totalPlacements: number;
+    activePlacements: number;
+    pendingPlacements: number;
+    totalStudents: number;
+    totalLogbooks: number;
+    submittedLogbooks: number;
+    approvedLogbooks: number;
   };
+
+  recentPlacements: OrganizationPlacement[];
+};
+
+// ------------------------------------------------------
+// ORGANIZATION ADMIN DASHBOARD
+// ------------------------------------------------------
+
+export function OrgAdminDashboard({
+  name,
+  dashboardData,
+}: {
+  userId: string;
+  name: string;
+  dashboardData: OrgAdminDashboardData;
+}) {
+  const greeting = getGreeting();
+
+  const { organization, supervisors, students, placements, statistics, recentPlacements } =
+    dashboardData;
+
+  const getInitials = (studentName: string) =>
+    studentName
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase();
+
+  const getStatusVariant = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "active":
+      case "approved":
+        return "default";
+
+      case "pending":
+      case "submitted":
+        return "secondary";
+
+      case "rejected":
+      case "declined":
+        return "destructive";
+
+      default:
+        return "outline";
+    }
+  };
+
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString("en-UG", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
 
   return (
     <div className="dashboard-page space-y-6 antialiased">
-      {/* ── Header ── */}
+      {/* HEADER */}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
           <h1 className="font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
             {greeting}, {name}
           </h1>
+
           <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
-            {company.name} · Westlands HQ · Supervising {assignedStudents.length} assigned interns
+            {organization?.name ?? "Organization Dashboard"}
+            {" · "}
+            Managing {statistics.totalStudents} assigned students
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button asChild size="sm" className="rounded-xl text-xs font-semibold h-9">
-            <Link href="/review">Review Queue ({pendingActivities.length})</Link>
+          <Button asChild size="sm" className="rounded-xl text-xs font-semibold">
+            <Link href="/placements">View Placements</Link>
           </Button>
-          <Button asChild size="sm" variant="outline" className="rounded-xl text-xs font-semibold h-9">
-            <Link href="/students">Assigned Interns ({assignedStudents.length})</Link>
+
+          <Button asChild size="sm" variant="outline" className="rounded-xl text-xs font-semibold">
+            <Link href="/students">View Students</Link>
           </Button>
         </div>
       </div>
 
-      {/* ── KPI Cards ── */}
+      {/* ORGANIZATION INFORMATION */}
+
+      {organization && (
+        <Card className="shadow-card border-border/80">
+          <CardContent className="flex flex-col sm:flex-row sm:items-center gap-4 p-4">
+            <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Building2 className="size-6" />
+            </div>
+
+            <div className="flex-1">
+              <h2 className="font-semibold text-base">{organization.name}</h2>
+
+              <p className="text-xs text-muted-foreground">
+                {organization.industry ?? "Industry not specified"}
+              </p>
+
+              <p className="text-xs text-muted-foreground mt-1">{organization.email}</p>
+            </div>
+
+            <Badge variant={getStatusVariant(organization.status)}>{organization.status}</Badge>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* KPI CARDS */}
+
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard
-          label="Assigned Interns"
-          value={assignedStudents.length}
-          meta="Alice Wanjiku & Kevin Kiprono"
+          label="Assigned Students"
+          value={statistics.totalStudents}
+          meta="Students attached to your organization"
         />
+
         <KpiCard
-          label="Pending Approvals"
-          value={pendingActivities.length}
-          meta="Awaiting sign-off"
+          label="Active Placements"
+          value={statistics.activePlacements}
+          meta="Currently ongoing attachments"
         />
+
         <KpiCard
-          label="Approved Deliverables"
-          value={approvedActivities.length}
-          meta="Signed off by host org"
+          label="Pending Placements"
+          value={statistics.pendingPlacements}
+          meta="Awaiting placement progress"
         />
+
         <KpiCard
-          label="University MOU"
-          value="Accredited"
-          meta="University of Nairobi"
+          label="Field Supervisors"
+          value={statistics.totalSupervisors}
+          meta="Registered organization supervisors"
         />
       </div>
 
-      {/* ── Assigned Student Details (Candidate Profile & Placement Cards) ── */}
+      {/* LOGBOOK STATISTICS */}
+
+      <div className="grid gap-3 sm:grid-cols-3">
+        <KpiCard
+          label="Total Logbooks"
+          value={statistics.totalLogbooks}
+          meta="Entries submitted by students"
+        />
+
+        <KpiCard
+          label="Pending Logbooks"
+          value={statistics.submittedLogbooks}
+          meta="Awaiting supervisor review"
+        />
+
+        <KpiCard
+          label="Approved Logbooks"
+          value={statistics.approvedLogbooks}
+          meta="Entries approved"
+        />
+      </div>
+
+      {/* ASSIGNED STUDENTS */}
+
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-foreground flex items-center gap-2">
               <Users className="size-5 text-primary" />
-              Interns Assigned to TechCorp Kenya Ltd
+              Assigned Students
             </h2>
+
             <p className="text-xs text-muted-foreground">
-              Assigned candidates placed under your company's field supervision by the University
+              Students undertaking attachment at your organization
             </p>
           </div>
-          <Button asChild size="sm" variant="outline" className="text-xs font-semibold">
-            <Link href="/students">View Candidate Roster</Link>
+
+          <Button asChild size="sm" variant="outline">
+            <Link href="/students">View Student Records</Link>
           </Button>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          {assignedStudents.map((student) => {
-            const progressPct = Math.round((student.daysLogged / student.requiredDays) * 100);
-            return (
-              <Card
-                key={student.id}
-                className="shadow-card border-border/80 hover:border-primary/40 transition"
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="size-11 border border-border">
-                        <AvatarFallback className="bg-primary/10 text-primary font-bold text-sm">
-                          {student.name
-                            .split(" ")
-                            .map((p) => p[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
+        {students.length === 0 ? (
+          <Card>
+            <CardContent className="py-10 text-center">
+              <GraduationCap className="mx-auto size-9 text-muted-foreground mb-2" />
+
+              <p className="font-medium text-sm">No students assigned yet</p>
+
+              <p className="text-xs text-muted-foreground mt-1">
+                Students assigned to your organization will appear here.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2">
+            {students.map((student) => {
+              const studentPlacements = placements.filter(
+                (placement) => placement.student?.id === student.id,
+              );
+
+              const activePlacement = studentPlacements.find(
+                (placement) => placement.status === "active",
+              );
+
+              const loggedDays = activePlacement?.logbooks.length ?? 0;
+
+              return (
+                <Card
+                  key={student.id}
+                  className="shadow-card border-border/80 hover:border-primary/40 transition"
+                >
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="size-11 border border-border">
+                          <AvatarFallback className="bg-primary/10 text-primary font-bold text-sm">
+                            {getInitials(student.user?.name ?? "Student")}
+                          </AvatarFallback>
+                        </Avatar>
+
+                        <div>
+                          <CardTitle className="text-base font-semibold">
+                            {student.user?.name ?? "Unnamed Student"}
+                          </CardTitle>
+
+                          <CardDescription className="font-mono text-xs">
+                            {student.student_number}
+                          </CardDescription>
+                        </div>
+                      </div>
+
+                      <Badge variant={getStatusVariant(student.status)}>{student.status}</Badge>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="space-y-4 text-xs">
+                    <div className="grid grid-cols-2 gap-3 rounded-lg bg-muted/50 p-3">
                       <div>
-                        <CardTitle className="text-base font-semibold">{student.name}</CardTitle>
-                        <CardDescription className="font-mono text-xs text-muted-foreground">
-                          {student.regNo} • {student.degree}
-                        </CardDescription>
+                        <span className="text-[11px] text-muted-foreground block font-medium">
+                          Academic Program
+                        </span>
+
+                        <span className="font-semibold text-foreground">
+                          {student.program?.name ?? "Not specified"}
+                        </span>
+
+                        <span className="text-[11px] text-muted-foreground block">
+                          {student.program?.department?.name ?? "No department"}
+                        </span>
+                      </div>
+
+                      <div>
+                        <span className="text-[11px] text-muted-foreground block font-medium">
+                          Year of Study
+                        </span>
+
+                        <span className="font-semibold text-foreground">
+                          Year {student.year_of_study}
+                        </span>
+
+                        <span className="text-[11px] text-muted-foreground block">
+                          {student.user?.email}
+                        </span>
                       </div>
                     </div>
-                    <Badge
-                      variant="outline"
-                      className="text-xs font-medium border-success/40 bg-success/10 text-success"
-                    >
-                      {student.status}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4 text-xs">
-                  <div className="grid grid-cols-2 gap-2 rounded-lg bg-muted/50 p-3">
-                    <div>
-                      <span className="text-[11px] text-muted-foreground block font-medium">
-                        Placement Role
-                      </span>
-                      <span className="font-semibold text-foreground">{student.role}</span>
-                      <span className="text-[11px] text-muted-foreground block">
-                        {student.department}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-[11px] text-muted-foreground block font-medium">
-                        Designated Field Mentor
-                      </span>
-                      <span className="font-semibold text-foreground">{student.mentor}</span>
-                      <span className="text-[11px] text-muted-foreground block">
-                        Academic: {student.academicSupervisor}
-                      </span>
-                    </div>
-                  </div>
 
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs font-medium">
-                      <span className="text-muted-foreground">Attachment Attendance Pace</span>
-                      <span className="font-mono font-semibold text-foreground">
-                        {student.daysLogged} / {student.requiredDays} Days ({progressPct}%)
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground">Active Placement</span>
+
+                        <span className="font-semibold">
+                          {activePlacement ? "Ongoing" : "No active placement"}
+                        </span>
+                      </div>
+
+                      <Progress value={activePlacement ? 100 : 0} className="h-2" />
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1 border-t border-border/60">
+                      <span className="text-[11px] text-muted-foreground">
+                        Placements: <strong>{studentPlacements.length}</strong>
+                      </span>
+
+                      <span className="text-[11px] text-muted-foreground">
+                        Logbook entries: <strong>{loggedDays}</strong>
                       </span>
                     </div>
-                    <Progress value={progressPct} className="h-2" />
-                  </div>
-
-                  <div className="flex items-center justify-between pt-1 border-t border-border/60">
-                    <span className="text-[11px] text-muted-foreground">
-                      Attendance Rate: <strong>{student.attendanceRate}</strong>
-                    </span>
-                    <Button
-                      asChild
-                      size="sm"
-                      variant="ghost"
-                      className="text-xs text-primary font-semibold h-7"
-                    >
-                      <Link href="/review">Review Submissions →</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        )}
       </div>
 
-      {/* ── Submissions Requiring Host Organization Approval ── */}
+      {/* FIELD SUPERVISORS */}
+
+      <Card className="shadow-card border-border/80">
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <Users className="size-5 text-primary" />
+            Organization Supervisors
+          </CardTitle>
+
+          <CardDescription>Supervisors registered under your organization</CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          {supervisors.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-6">
+              No supervisors registered yet.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {supervisors.map((supervisor) => (
+                <div
+                  key={supervisor.id}
+                  className="flex items-center justify-between gap-3 rounded-xl border border-border p-3"
+                >
+                  <div className="flex items-center gap-3">
+                    <Avatar className="size-10">
+                      <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                        {getInitials(supervisor.user?.name ?? "Supervisor")}
+                      </AvatarFallback>
+                    </Avatar>
+
+                    <div>
+                      <p className="text-sm font-semibold">
+                        {supervisor.user?.name ?? "Unnamed Supervisor"}
+                      </p>
+
+                      <p className="text-xs text-muted-foreground">
+                        {supervisor.job_title ?? "Field Supervisor"}
+                        {supervisor.department ? ` · ${supervisor.department}` : ""}
+                      </p>
+
+                      <p className="text-xs text-muted-foreground">{supervisor.user?.email}</p>
+                    </div>
+                  </div>
+
+                  <Badge variant={getStatusVariant(supervisor.status)}>{supervisor.status}</Badge>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* RECENT PLACEMENTS */}
+
       <Card className="shadow-card border-border/80">
         <CardHeader className="flex flex-col items-start justify-between gap-3 pb-3 sm:flex-row sm:items-center">
           <div>
-            <CardTitle className="text-base font-semibold">
-              Submissions Requiring Host Org Sign-Off
+            <CardTitle className="text-base flex items-center gap-2">
+              <Briefcase className="size-5 text-primary" />
+              Recent Placements
             </CardTitle>
-            <CardDescription>
-              Review technical deliverables submitted by your assigned mentees
-            </CardDescription>
+
+            <CardDescription>Latest student placement records at your organization</CardDescription>
           </div>
-          <Button asChild size="sm" variant="outline" className="text-xs font-semibold">
-            <Link href="/review">Open Full Review Queue</Link>
+
+          <Button asChild size="sm" variant="outline">
+            <Link href="/placements">View All Placements</Link>
           </Button>
         </CardHeader>
+
         <CardContent className="space-y-3">
-          {pendingActivities.length === 0 ? (
+          {recentPlacements.length === 0 ? (
             <div className="py-8 text-center text-sm text-muted-foreground border border-dashed rounded-xl">
-              <CheckCircle2 className="mx-auto size-8 text-success mb-2" />
-              All submissions from Alice and Kevin have been verified and signed off.
+              <Briefcase className="mx-auto size-8 mb-2" />
+              No placement records available yet.
             </div>
           ) : (
-            pendingActivities.map((act) => {
-              const student = assignedStudents.find((s) => s.id === act.student_id);
-              return (
-                <div
-                  key={act.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-primary/30"
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm text-foreground">{act.title}</span>
-                      <Badge variant="outline" className="text-xs border-primary/30 text-primary">
-                        {student?.name ?? "Intern"}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        Date: {act.activity_date}
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground line-clamp-1">{act.description}</p>
-                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                      {act.tools_used.map((t) => (
-                        <Badge key={t} variant="secondary" className="text-[10px] py-0">
-                          {t}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
+            recentPlacements.map((placement) => (
+              <div
+                key={placement.id}
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-border bg-card p-4"
+              >
+                <div className="space-y-1">
+                  <p className="font-semibold text-sm">
+                    {placement.student?.user?.name ?? "Student"}
+                  </p>
 
-                  <div className="flex items-center gap-2 shrink-0">
-                    <Button
-                      size="sm"
-                      onClick={() => handleQuickApprove(act)}
-                      className="h-8 rounded-lg bg-primary text-primary-foreground text-xs font-semibold"
-                    >
-                      <Check className="mr-1 size-3.5" /> Quick Approve
-                    </Button>
-                    <Button
-                      asChild
-                      size="sm"
-                      variant="outline"
-                      className="h-8 rounded-lg text-xs font-semibold"
-                    >
-                      <Link href="/review">Review Details →</Link>
-                    </Button>
+                  <p className="text-xs text-muted-foreground">
+                    {placement.student?.student_number ?? "No registration number"}
+                  </p>
+
+                  <p className="text-xs text-muted-foreground">
+                    Supervisor: {placement.supervisor?.user?.name ?? "Not assigned"}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-muted-foreground">
+                    <span>
+                      <Clock className="inline size-3 mr-1" />
+                      {formatDate(placement.start_date)}
+                    </span>
+
+                    <span>
+                      <CheckCircle2 className="inline size-3 mr-1" />
+                      {formatDate(placement.end_date)}
+                    </span>
+
+                    <span>
+                      <BookOpen className="inline size-3 mr-1" />
+                      {placement.logbooks.length} logbook entries
+                    </span>
                   </div>
                 </div>
-              );
-            })
+
+                <Badge variant={getStatusVariant(placement.status)}>{placement.status}</Badge>
+              </div>
+            ))
           )}
         </CardContent>
       </Card>
