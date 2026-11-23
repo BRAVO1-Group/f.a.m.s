@@ -62,14 +62,44 @@ export default function SupervisorsPage() {
     null,
   );
 
-  // Form state
-  const [supType, setSupType] = useState<SupervisorType>("organization");
+  // Form state (Academic Supervisors only create Field Mentor accounts for the organization where the student is placed)
+  const [assignedStudentKey, setAssignedStudentKey] = useState("student-1");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("Senior Lead Architect & Field Mentor");
   const [orgOrUni, setOrgOrUni] = useState("TechCorp Kenya Ltd");
   const [deptOrFaculty, setDeptOrFaculty] = useState("Product Engineering");
+
+  const STUDENT_PLACEMENT_ORGS: Record<
+    string,
+    { studentName: string; regNo: string; company: string; department: string }
+  > = {
+    "student-1": {
+      studentName: "Alice Wanjiku",
+      regNo: "CS/2021/0042",
+      company: "TechCorp Kenya Ltd",
+      department: "Product Engineering",
+    },
+    "student-2": {
+      studentName: "Brian Mwangi",
+      regNo: "CS/2021/0088",
+      company: "Safaricom PLC",
+      department: "Infrastructure & Cloud",
+    },
+    "student-3": {
+      studentName: "Carol Achieng",
+      regNo: "CS/2021/0015",
+      company: "Kenya Commercial Bank",
+      department: "Business Intelligence",
+    },
+    "student-4": {
+      studentName: "Kevin Kiprono",
+      regNo: "CS/2021/0104",
+      company: "TechCorp Kenya Ltd",
+      department: "InfoSec Operations",
+    },
+  };
 
   useEffect(() => {
     const handler = () => setSupervisorsList(getStoredSupervisors());
@@ -79,7 +109,6 @@ export default function SupervisorsPage() {
 
   const openEditSupervisor = (sup: MockSupervisor) => {
     setEditingSupervisorId(sup.id);
-    setSupType(sup.type);
     setFullName(sup.full_name);
     setEmail(sup.email);
     setPhone(sup.phone);
@@ -92,7 +121,9 @@ export default function SupervisorsPage() {
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !email.trim() || !title.trim()) {
-      toast.error("Please fill in required fields (Name, Email, Title)");
+      toast.warning("Empty Form Warning", {
+        description: "Please fill in the Field Mentor's Full Name, Official Email, and Job Title.",
+      });
       return;
     }
 
@@ -101,47 +132,41 @@ export default function SupervisorsPage() {
         full_name: fullName.trim(),
         email: email.trim(),
         phone: phone.trim() || "+254 700 000 000",
-        type: supType,
+        type: "organization",
         title: title.trim(),
-        organization_name: supType === "organization" ? orgOrUni : "University of Nairobi",
-        faculty_department:
-          deptOrFaculty.trim() ||
-          (supType === "organization" ? "Engineering" : "School of Computing"),
+        organization_name: orgOrUni,
+        faculty_department: deptOrFaculty.trim() || "Engineering",
       });
       setSupervisorsList(getStoredSupervisors());
       setCreateOpen(false);
       setEditingSupervisorId(null);
-      toast.success("Supervisor record updated");
+      toast.success("Field Mentor account updated");
     } else {
       addSupervisor({
         full_name: fullName.trim(),
         email: email.trim(),
         phone: phone.trim() || "+254 700 000 000",
-        type: supType,
+        type: "organization",
         title: title.trim(),
-        organization_name: supType === "organization" ? orgOrUni : "University of Nairobi",
-        faculty_department:
-          deptOrFaculty.trim() ||
-          (supType === "organization" ? "Engineering" : "School of Computing"),
+        organization_name: orgOrUni,
+        faculty_department: deptOrFaculty.trim() || "Engineering",
       });
 
       setSupervisorsList(getStoredSupervisors());
       setCreateOpen(false);
 
-      toast.success(
-        supType === "organization"
-          ? "Host Organization Mentor created!"
-          : "University Academic Supervisor created!",
-        {
-          description: `${fullName} is now registered in the institutional supervisor directory.`,
-        },
-      );
+      const boundStudent = STUDENT_PLACEMENT_ORGS[assignedStudentKey];
+      toast.success("Field Mentor Account Created!", {
+        description: `${fullName} has been provisioned as a Field Mentor at ${orgOrUni}${
+          boundStudent ? ` for ${boundStudent.studentName}` : ""
+        }.`,
+      });
     }
 
     setFullName("");
     setEmail("");
     setPhone("");
-    setTitle("");
+    setTitle("Senior Lead Architect & Field Mentor");
   };
 
   const filtered = supervisorsList.filter((s) => {
@@ -205,28 +230,30 @@ export default function SupervisorsPage() {
         <div>
           <div className="flex items-center gap-2.5">
             <h1 className="font-display text-2xl font-bold sm:text-3xl tracking-tight text-foreground">
-              Supervisor Accounts
+              Field Mentor Accounts
             </h1>
             <Badge
               variant="outline"
               className="text-xs border-primary/30 text-primary bg-primary/5 font-semibold"
             >
-              Roster Management
+              Student Host Organizations
             </Badge>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Create and maintain accounts for Host Organization Mentors (field supervisors) and
-            University Academic Supervisors.
+            Academic Supervisors provision Field Mentor accounts strictly for the host organizations where students are placed (peer Academic Supervisor accounts are not created here).
           </p>
         </div>
 
         <Button
-          onClick={() => setCreateOpen(true)}
+          onClick={() => {
+            setEditingSupervisorId(null);
+            setCreateOpen(true);
+          }}
           size="sm"
           className="rounded-xl font-semibold text-xs h-9 shrink-0 shadow-xs"
         >
           <UserPlus className="mr-1.5 size-4" />
-          Create Supervisor Account
+          Create Field Mentor Account
         </Button>
       </div>
 
@@ -596,57 +623,78 @@ export default function SupervisorsPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ── Create Supervisor Dialog ── */}
+      {/* ── Create Field Mentor Dialog (Strictly for the Host Organization Where the Student Is Placed) ── */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <UserPlus className="size-5 text-primary" />
-              Create Supervisor Account
+              {editingSupervisorId ? "Update Field Mentor Account" : "Create Field Mentor Account"}
             </DialogTitle>
-            <DialogDescription>
-              Register an Organization Mentor (field mentor) or University Academic Supervisor
-              (faculty lecturer).
+            <DialogDescription className="text-xs leading-relaxed">
+              Academic Supervisors do not create accounts for peer Academic Supervisors. Provision a Field Mentor account strictly for the host organization where the student is placed.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleCreate} className="space-y-4 py-2">
+            {/* Select Student & Auto-Bind Their Host Organization */}
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">Supervisor Role Type *</Label>
-              <div className="grid grid-cols-2 gap-2">
-                <Button
-                  type="button"
-                  variant={supType === "organization" ? "default" : "outline"}
-                  onClick={() => {
-                    setSupType("organization");
-                    setTitle("Senior Lead Architect & Field Mentor");
-                  }}
-                  className="h-10 text-xs flex items-center justify-center gap-1.5"
-                >
-                  <Building2 className="size-4" />
-                  Host Org Mentor
-                </Button>
-                <Button
-                  type="button"
-                  variant={supType === "university" ? "default" : "outline"}
-                  onClick={() => {
-                    setSupType("university");
-                    setTitle("Senior Lecturer & Academic Assessor");
-                  }}
-                  className="h-10 text-xs flex items-center justify-center gap-1.5"
-                >
-                  <GraduationCap className="size-4" />
-                  Academic Supervisor
-                </Button>
+              <Label className="text-xs font-semibold">Placed Student Intern *</Label>
+              <Select
+                value={assignedStudentKey}
+                onValueChange={(val) => {
+                  setAssignedStudentKey(val);
+                  const info = STUDENT_PLACEMENT_ORGS[val];
+                  if (info) {
+                    setOrgOrUni(info.company);
+                    setDeptOrFaculty(info.department);
+                  }
+                }}
+              >
+                <SelectTrigger className="h-9 text-xs">
+                  <SelectValue placeholder="Select placed student" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(STUDENT_PLACEMENT_ORGS).map(([id, info]) => (
+                    <SelectItem key={id} value={id}>
+                      {info.studentName} ({info.regNo}) · {info.company}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Student&apos;s Host Organization *</Label>
+                <Select value={orgOrUni} onValueChange={setOrgOrUni}>
+                  <SelectTrigger className="h-9 text-xs">
+                    <SelectValue placeholder="Select Organization" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="TechCorp Kenya Ltd">TechCorp Kenya Ltd</SelectItem>
+                    <SelectItem value="Safaricom PLC">Safaricom PLC</SelectItem>
+                    <SelectItem value="Kenya Commercial Bank">Kenya Commercial Bank</SelectItem>
+                    <SelectItem value="Apex Telecom Solutions">Apex Telecom Solutions</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Host Department *</Label>
+                <Input
+                  placeholder="e.g. Product Engineering"
+                  value={deptOrFaculty}
+                  onChange={(e) => setDeptOrFaculty(e.target.value)}
+                  className="h-9 text-xs"
+                />
               </div>
             </div>
 
             <div className="space-y-1">
-              <Label className="text-xs font-semibold">Full Name *</Label>
+              <Label className="text-xs font-semibold">Field Mentor Full Name *</Label>
               <Input
-                placeholder={
-                  supType === "organization" ? "e.g. Eng. Kevin Otieno" : "e.g. Dr. Joyce Chelangat"
-                }
+                placeholder="e.g. Eng. Kevin Otieno"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
@@ -656,10 +704,10 @@ export default function SupervisorsPage() {
 
             <div className="grid grid-cols-2 gap-2">
               <div className="space-y-1">
-                <Label className="text-xs font-semibold">Official Email *</Label>
+                <Label className="text-xs font-semibold">Field Mentor Official Email *</Label>
                 <Input
                   type="email"
-                  placeholder="name@domain.com"
+                  placeholder="mentor@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -678,50 +726,12 @@ export default function SupervisorsPage() {
             </div>
 
             <div className="space-y-1">
-              <Label className="text-xs font-semibold">Designation / Title *</Label>
+              <Label className="text-xs font-semibold">Workplace Designation / Title *</Label>
               <Input
-                placeholder="e.g. Lead Software Architect / Senior Lecturer"
+                placeholder="e.g. Senior Lead Architect & Field Mentor"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="h-9 text-xs"
-              />
-            </div>
-
-            {supType === "organization" ? (
-              <div className="space-y-1">
-                <Label className="text-xs font-semibold">Host Organization *</Label>
-                <Select value={orgOrUni} onValueChange={setOrgOrUni}>
-                  <SelectTrigger className="h-9 text-xs">
-                    <SelectValue placeholder="Select Organization" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="TechCorp Kenya Ltd">TechCorp Kenya Ltd</SelectItem>
-                    <SelectItem value="Safaricom PLC">Safaricom PLC</SelectItem>
-                    <SelectItem value="Kenya Commercial Bank">Kenya Commercial Bank</SelectItem>
-                    <SelectItem value="Apex Telecom Solutions">Apex Telecom Solutions</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            ) : (
-              <div className="space-y-1">
-                <Label className="text-xs font-semibold">Institution / University</Label>
-                <Input value="University of Nairobi" disabled className="h-9 text-xs bg-muted/60" />
-              </div>
-            )}
-
-            <div className="space-y-1">
-              <Label className="text-xs font-semibold">
-                {supType === "organization" ? "Host Department" : "Faculty / Academic Department"}
-              </Label>
-              <Input
-                placeholder={
-                  supType === "organization"
-                    ? "e.g. Product Engineering"
-                    : "e.g. School of Computing & Informatics"
-                }
-                value={deptOrFaculty}
-                onChange={(e) => setDeptOrFaculty(e.target.value)}
                 className="h-9 text-xs"
               />
             </div>
@@ -736,7 +746,7 @@ export default function SupervisorsPage() {
                 Cancel
               </Button>
               <Button type="submit" size="sm">
-                Create & Activate Supervisor
+                {editingSupervisorId ? "Save Field Mentor" : "Create Field Mentor Account"}
               </Button>
             </DialogFooter>
           </form>

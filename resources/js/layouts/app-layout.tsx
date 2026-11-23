@@ -147,7 +147,7 @@ const NAV: NavItem[] = [
   },
   {
     to: "/supervisors",
-    label: "Supervisor Accounts",
+    label: "Field Mentor Accounts",
     icon: UserPlus,
     roles: ["uni_admin", "org_admin", "system_admin"],
     category: "governance",

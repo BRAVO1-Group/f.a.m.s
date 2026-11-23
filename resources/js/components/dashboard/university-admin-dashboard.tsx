@@ -269,7 +269,9 @@ export function UniversityAdminDashboard({
   const handleCreateSupervisor = (e: React.FormEvent) => {
     e.preventDefault();
     if (!supFormName.trim() || !supFormEmail.trim() || !supFormTitle.trim()) {
-      toast.error("Please fill in required fields (Name, Email, Title)");
+      toast.warning("Empty Form Warning", {
+        description: "Please fill in the Field Mentor's Full Name, Official Email, and Job Title.",
+      });
       return;
     }
 
@@ -277,25 +279,18 @@ export function UniversityAdminDashboard({
       full_name: supFormName.trim(),
       email: supFormEmail.trim(),
       phone: supFormPhone.trim() || "+254 700 000 000",
-      type: supFormType,
+      type: "organization",
       title: supFormTitle.trim(),
-      organization_name: supFormType === "organization" ? supFormOrgOrUni : "University of Nairobi",
-      faculty_department:
-        supFormDept.trim() ||
-        (supFormType === "organization" ? "Engineering" : "School of Computing"),
+      organization_name: supFormOrgOrUni,
+      faculty_department: supFormDept.trim() || "Engineering",
     });
 
     setSupervisorsList(getStoredSupervisors());
     setCreateSupervisorOpen(false);
 
-    toast.success(
-      supFormType === "organization"
-        ? "Host Organization Mentor created!"
-        : "University Academic Supervisor created!",
-      {
-        description: `${supFormName} is now registered in the institutional supervisor directory.`,
-      },
-    );
+    toast.success("Field Mentor Account Created!", {
+      description: `${supFormName} is now provisioned as a Field Mentor for ${supFormOrgOrUni}.`,
+    });
 
     // Reset form
     setSupFormName("");
@@ -389,7 +384,7 @@ export function UniversityAdminDashboard({
             size="sm"
             className="rounded-xl font-semibold text-xs h-9"
           >
-            Create Supervisor
+            Create Field Mentor
           </Button>
           <Button
             onClick={() => handleOpenAssignModal("student-4")}
@@ -577,11 +572,10 @@ export function UniversityAdminDashboard({
             <CardHeader className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <CardTitle className="text-base font-semibold">
-                  Institutional Supervisor Directory & Account Management
+                  Field Mentor Accounts (Student Host Organizations)
                 </CardTitle>
                 <CardDescription>
-                  Create and manage both Organization Mentors (field) and University Academic
-                  Supervisors (faculty)
+                  Academic Supervisors provision Field Mentor accounts strictly for the host organizations where students are placed (peer Academic Supervisor accounts are not created here)
                 </CardDescription>
               </div>
               <Button
@@ -590,7 +584,7 @@ export function UniversityAdminDashboard({
                 className="text-xs h-8.5 shrink-0"
               >
                 <Plus className="mr-1.5 size-3.5" />
-                Create Supervisor Account
+                Create Field Mentor Account
               </Button>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -1066,62 +1060,79 @@ export function UniversityAdminDashboard({
       </Tabs>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          MODAL: CREATE SUPERVISOR ACCOUNT (ORG & UNIVERSITY)
+          MODAL: CREATE FIELD MENTOR ACCOUNT (FOR STUDENT'S HOST ORGANIZATION ONLY)
       ═══════════════════════════════════════════════════════════════════ */}
       <Dialog open={createSupervisorOpen} onOpenChange={setCreateSupervisorOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <UserPlus className="size-5 text-primary" />
-              Create Supervisor Account
+              Create Field Mentor Account
             </DialogTitle>
-            <DialogDescription>
-              Register an Organization Mentor (field supervisor) or University Academic Supervisor
-              (faculty lecturer).
+            <DialogDescription className="text-xs leading-relaxed">
+              Academic Supervisors do not create accounts for peer Academic Supervisors. Provision a Field Mentor account strictly for the host organization where a student is placed.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleCreateSupervisor} className="space-y-4 py-2">
-            {/* Supervisor Type Selector */}
+            {/* Select Student to Auto-Bind Their Host Organization */}
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">Supervisor Role Type *</Label>
-              <div className="grid grid-cols-2 gap-2">
-                <Button
-                  type="button"
-                  variant={supFormType === "organization" ? "default" : "outline"}
-                  onClick={() => {
-                    setSupFormType("organization");
-                    setSupFormTitle("Senior Lead Architect & Field Mentor");
-                  }}
-                  className="h-10 text-xs flex items-center justify-center gap-1.5"
-                >
-                  <Building2 className="size-4" />
-                  Host Org Mentor
-                </Button>
-                <Button
-                  type="button"
-                  variant={supFormType === "university" ? "default" : "outline"}
-                  onClick={() => {
-                    setSupFormType("university");
-                    setSupFormTitle("Senior Lecturer & Academic Assessor");
-                  }}
-                  className="h-10 text-xs flex items-center justify-center gap-1.5"
-                >
-                  <GraduationCap className="size-4" />
-                  Academic Supervisor
-                </Button>
+              <Label className="text-xs font-semibold">Placed Student Intern *</Label>
+              <Select
+                value={assignStudentId}
+                onValueChange={(val) => {
+                  setAssignStudentId(val);
+                  const st = universityCohort.find((c) => c.studentId === val);
+                  if (st) {
+                    setSupFormOrgOrUni(st.company);
+                  }
+                }}
+              >
+                <SelectTrigger className="h-9 text-xs">
+                  <SelectValue placeholder="Select placed student" />
+                </SelectTrigger>
+                <SelectContent>
+                  {universityCohort.map((s) => (
+                    <SelectItem key={s.studentId} value={s.studentId}>
+                      {s.name} ({s.regNo}) · {s.company}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Student&apos;s Host Organization *</Label>
+                <Select value={supFormOrgOrUni} onValueChange={setSupFormOrgOrUni}>
+                  <SelectTrigger className="h-9 text-xs">
+                    <SelectValue placeholder="Select Organization" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="TechCorp Kenya Ltd">TechCorp Kenya Ltd</SelectItem>
+                    <SelectItem value="Safaricom PLC">Safaricom PLC</SelectItem>
+                    <SelectItem value="Kenya Commercial Bank">Kenya Commercial Bank</SelectItem>
+                    <SelectItem value="Apex Telecom Solutions">Apex Telecom Solutions</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Host Department *</Label>
+                <Input
+                  placeholder="e.g. Product Engineering"
+                  value={supFormDept}
+                  onChange={(e) => setSupFormDept(e.target.value)}
+                  className="h-9 text-xs"
+                />
               </div>
             </div>
 
             {/* Name */}
             <div className="space-y-1">
-              <Label className="text-xs font-semibold">Full Name *</Label>
+              <Label className="text-xs font-semibold">Field Mentor Full Name *</Label>
               <Input
-                placeholder={
-                  supFormType === "organization"
-                    ? "e.g. Eng. Kevin Otieno"
-                    : "e.g. Dr. Joyce Chelangat"
-                }
+                placeholder="e.g. Eng. Kevin Otieno"
                 value={supFormName}
                 onChange={(e) => setSupFormName(e.target.value)}
                 required
@@ -1132,10 +1143,10 @@ export function UniversityAdminDashboard({
             {/* Email & Phone */}
             <div className="grid grid-cols-2 gap-2">
               <div className="space-y-1">
-                <Label className="text-xs font-semibold">Official Email *</Label>
+                <Label className="text-xs font-semibold">Field Mentor Official Email *</Label>
                 <Input
                   type="email"
-                  placeholder="name@domain.com"
+                  placeholder="mentor@company.com"
                   value={supFormEmail}
                   onChange={(e) => setSupFormEmail(e.target.value)}
                   required
@@ -1155,54 +1166,12 @@ export function UniversityAdminDashboard({
 
             {/* Title */}
             <div className="space-y-1">
-              <Label className="text-xs font-semibold">Designation / Title *</Label>
+              <Label className="text-xs font-semibold">Workplace Designation / Title *</Label>
               <Input
-                placeholder="e.g. Lead Software Architect / Senior Lecturer"
+                placeholder="e.g. Lead Software Architect & Field Mentor"
                 value={supFormTitle}
                 onChange={(e) => setSupFormTitle(e.target.value)}
                 required
-                className="h-9 text-xs"
-              />
-            </div>
-
-            {/* Organization or University Name */}
-            {supFormType === "organization" ? (
-              <div className="space-y-1">
-                <Label className="text-xs font-semibold">Host Organization *</Label>
-                <Select value={supFormOrgOrUni} onValueChange={setSupFormOrgOrUni}>
-                  <SelectTrigger className="h-9 text-xs">
-                    <SelectValue placeholder="Select Organization" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="TechCorp Kenya Ltd">TechCorp Kenya Ltd</SelectItem>
-                    <SelectItem value="Safaricom PLC">Safaricom PLC</SelectItem>
-                    <SelectItem value="Kenya Commercial Bank">Kenya Commercial Bank</SelectItem>
-                    <SelectItem value="Apex Telecom Solutions">Apex Telecom Solutions</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            ) : (
-              <div className="space-y-1">
-                <Label className="text-xs font-semibold">Institution / University</Label>
-                <Input value="University of Nairobi" disabled className="h-9 text-xs bg-muted/60" />
-              </div>
-            )}
-
-            {/* Department / Faculty */}
-            <div className="space-y-1">
-              <Label className="text-xs font-semibold">
-                {supFormType === "organization"
-                  ? "Host Department"
-                  : "Academic Faculty / Department"}
-              </Label>
-              <Input
-                placeholder={
-                  supFormType === "organization"
-                    ? "e.g. Product Engineering / Cloud Infrastructure"
-                    : "e.g. School of Computing & Informatics"
-                }
-                value={supFormDept}
-                onChange={(e) => setSupFormDept(e.target.value)}
                 className="h-9 text-xs"
               />
             </div>
@@ -1217,7 +1186,7 @@ export function UniversityAdminDashboard({
                 Cancel
               </Button>
               <Button type="submit" size="sm">
-                Create & Activate Supervisor
+                Create Field Mentor Account
               </Button>
             </DialogFooter>
           </form>
