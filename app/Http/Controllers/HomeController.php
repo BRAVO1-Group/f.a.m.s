@@ -18,6 +18,16 @@ class HomeController extends Controller
         return Inertia::render('auth/login');
     }
 
+    public function walkthrough()
+    {
+        return Inertia::render('walkthrough');
+    }
+
+    public function mentorOnboard()
+    {
+        return Inertia::render('auth/mentor-onboard');
+    }
+
     // Main application pages
 
     public function dashboard()
@@ -27,12 +37,34 @@ class HomeController extends Controller
 
     public function profile()
     {
-        return Inertia::render('profile');
+        $user = auth()->user();
+        $student = $user?->student;
+        $activePlacement = null;
+
+        if ($student) {
+            $student->loadMissing(['university', 'department', 'program']);
+            $activePlacement = $student->placements()
+                ->with(['organization', 'supervisor.user'])
+                ->latest()
+                ->first();
+        }
+
+        return Inertia::render('profile', [
+            'studentProfile' => $student,
+            'activePlacement' => $activePlacement,
+        ]);
     }
 
     public function students()
     {
         return Inertia::render('admin/students');
+    }
+
+    public function studentDetail(string $id)
+    {
+        return Inertia::render('admin/student-detail', [
+            'studentId' => $id,
+        ]);
     }
 
     public function supervisors()

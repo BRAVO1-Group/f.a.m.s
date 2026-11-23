@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="favBg" x1="2" y1="2" x2="62" y2="62" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1D2E22" />
+      <stop offset="55%" stop-color="#131E16" />
+      <stop offset="100%" stop-color="#0C140E" />
+    </linearGradient>
+    <linearGradient id="favRim" x1="2" y1="2" x2="62" y2="62" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#B4FF52" stop-opacity="0.7" />
+      <stop offset="50%" stop-color="#9CE840" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#388E18" stop-opacity="0.55" />
+    </linearGradient>
+    <linearGradient id="favLime" x1="12" y1="10" x2="52" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#C8FF68" />
+      <stop offset="45%" stop-color="#9CE840" />
+      <stop offset="100%" stop-color="#6AC21C" />
+    </linearGradient>
+    <linearGradient id="favDepth" x1="16" y1="24" x2="54" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3CB02A" />
+      <stop offset="100%" stop-color="#16761E" />
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#favBg)" />
+  <rect x="2.75" y="2.75" width="58.5" height="58.5" rx="15.25" stroke="url(#favRim)" stroke-width="1.5" />
+  <path d="M32 12L50 20.5L32 29L14 20.5L32 12Z" fill="url(#favLime)" />
+  <path d="M17.5 22V31.5" stroke="#A6F244" stroke-width="2.5" stroke-linecap="round" />
+  <circle cx="17.5" cy="32.2" r="1.9" fill="#C8FF68" />
+  <path d="M22.5 26L32 30.5V38C29 35 25.8 33.5 22.5 32.8V26Z" fill="#98E63B" />
+  <path d="M41.5 26L32 30.5V38L41.5 29.5V26Z" fill="url(#favDepth)" />
+  <path d="M22 38L32 48L46 34L49 37L52.2 26L41.2 29.2L44.2 32.2L32 44.5L26.2 38.8L22 38Z" fill="url(#favDepth)" transform="translate(0, 3.4)" />
+  <path d="M22 38H27L32 43L43.6 31.4L40.4 28.2L52.2 25.8L49.8 37.6L46.6 34.4L32 49L22 38Z" fill="url(#favLime)" />
+</svg>

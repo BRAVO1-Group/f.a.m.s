@@ -52,7 +52,7 @@ export function BentoGrid() {
                 </div>
                 <Badge
                   variant="outline"
-                  className="text-xs font-mono text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                  className="text-xs font-mono text-lime-600 dark:text-lime-400 border-lime-500/30"
                 >
                   Tamper-Evident SHA-256
                 </Badge>
@@ -73,7 +73,7 @@ export function BentoGrid() {
                 <span className="font-mono text-foreground font-semibold">
                   ENTRY #042 • Thursday, Week 8
                 </span>
-                <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium">
+                <span className="flex items-center gap-1 text-lime-600 dark:text-lime-400 font-medium">
                   <CheckCircle2 className="size-3.5" /> Mentor Verified
                 </span>
               </div>
@@ -122,7 +122,7 @@ export function BentoGrid() {
             <div className="mt-6 rounded-2xl border border-border/60 bg-background/80 p-4 space-y-2.5 relative z-10">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-muted-foreground">Location Status</span>
-                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
+                <span className="text-lime-600 dark:text-lime-400 font-semibold">
                   Inside Perimeter
                 </span>
               </div>
@@ -143,12 +143,12 @@ export function BentoGrid() {
           <div className="rounded-3xl border border-border/80 bg-card/80 p-7 sm:p-9 shadow-card hover:border-primary/40 transition-all hover:shadow-elevated relative overflow-hidden flex flex-col justify-between group">
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
-                <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                <div className="flex size-11 items-center justify-center rounded-2xl bg-lime-500/10 text-lime-600 dark:text-lime-400">
                   <ShieldCheck className="size-5" />
                 </div>
                 <Badge
                   variant="outline"
-                  className="text-xs border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
+                  className="text-xs border-lime-500/30 text-lime-600 dark:text-lime-400"
                 >
                   Synchronous Review
                 </Badge>
@@ -166,7 +166,7 @@ export function BentoGrid() {
             <div className="mt-6 space-y-2.5 relative z-10">
               <div className="rounded-xl border border-border/60 bg-background/80 p-3 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <span className="size-2 rounded-full bg-emerald-500" />
+                  <span className="size-2 rounded-full bg-lime-500" />
                   <span className="font-medium text-foreground">Industry Mentor</span>
                 </div>
                 <span className="text-muted-foreground">Weekly Technical Sign-Off</span>
@@ -180,7 +180,7 @@ export function BentoGrid() {
               </div>
             </div>
 
-            <div className="pointer-events-none absolute -bottom-12 -right-12 size-40 rounded-full bg-emerald-500/10 blur-2xl" />
+            <div className="pointer-events-none absolute -bottom-12 -right-12 size-40 rounded-full bg-lime-500/10 blur-2xl" />
           </div>
 
           {/* ── 4. Defense-Ready Dossier Compiler ── */}
@@ -249,7 +249,7 @@ export function BentoGrid() {
                   Active Cohort Placement
                 </span>
                 <p className="text-xl font-bold text-foreground">412 Students</p>
-                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
+                <span className="text-[10px] text-lime-600 dark:text-lime-400 font-medium">
                   Across 86 Host Orgs
                 </span>
               </div>

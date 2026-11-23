@@ -54,12 +54,12 @@ export function HeroPreview() {
   return (
     <div id="preview-sandbox" className="relative mx-auto mt-12 sm:mt-16 max-w-5xl">
       {/* ── Ambient Multi-Color Radial Glow ── */}
-      <div className="pointer-events-none absolute -inset-4 sm:-inset-10 rounded-[3rem] bg-gradient-to-r from-primary/30 via-emerald-500/20 to-accent/25 blur-3xl opacity-80 -z-10" />
+      <div className="pointer-events-none absolute -inset-4 sm:-inset-10 rounded-[3rem] bg-gradient-to-r from-primary/30 via-lime-500/20 to-accent/25 blur-3xl opacity-80 -z-10" />
 
       {/* ── Perspective Selector Header ── */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-2">
         <div className="flex items-center gap-2">
-          <span className="flex size-2 rounded-full bg-emerald-500 animate-ping" />
+          <span className="flex size-2 rounded-full bg-lime-500 animate-ping" />
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Interactive Product Sandbox
           </span>
@@ -103,7 +103,7 @@ export function HeroPreview() {
                 : "text-muted-foreground hover:text-foreground",
             )}
           >
-            <Award className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+            <Award className="size-3.5 text-lime-600 dark:text-lime-400" />
             <span>Faculty Dean</span>
           </button>
         </div>
@@ -111,13 +111,13 @@ export function HeroPreview() {
 
       {/* ── Floating Badge 1: Top Right (Dual Cryptographic Sign-Off) ── */}
       <div className="hidden lg:flex absolute -top-5 -right-6 z-20 items-center gap-3 rounded-2xl border border-border/80 bg-card/90 px-4 py-2.5 shadow-elevated backdrop-blur-md transition-transform hover:-translate-y-1">
-        <div className="flex size-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+        <div className="flex size-9 items-center justify-center rounded-xl bg-lime-500/10 text-lime-600 dark:text-lime-400">
           <ShieldCheck className="size-5" />
         </div>
         <div>
           <div className="flex items-center gap-1.5">
             <span className="text-xs font-bold text-foreground">Dual Sign-Off Sealed</span>
-            <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="size-1.5 rounded-full bg-lime-500 animate-pulse" />
           </div>
           <p className="text-[11px] font-mono text-muted-foreground">SHA-256: 0x9f4a...e12b</p>
         </div>
@@ -133,7 +133,7 @@ export function HeroPreview() {
             <span className="text-xs font-bold text-foreground">50m Geofence Validated</span>
             <Badge
               variant="outline"
-              className="text-[10px] py-0 px-1 font-mono text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+              className="text-[10px] py-0 px-1 font-mono text-lime-600 dark:text-lime-400 border-lime-500/30"
             >
               Nairobi HQ
             </Badge>
@@ -164,10 +164,10 @@ export function HeroPreview() {
             <div className="flex gap-1.5">
               <span className="size-3 rounded-full bg-[#ef4444]/80 inline-block" />
               <span className="size-3 rounded-full bg-[#f59e0b]/80 inline-block" />
-              <span className="size-3 rounded-full bg-[#10b981]/80 inline-block" />
+              <span className="size-3 rounded-full bg-[#9CE840]/80 inline-block" />
             </div>
             <div className="ml-3 hidden sm:flex items-center gap-1.5 rounded-lg border border-border/60 bg-background/80 px-2.5 py-1 text-[11px] font-mono text-muted-foreground">
-              <Lock className="size-3 text-emerald-500" />
+              <Lock className="size-3 text-lime-500" />
               <span>
                 {rolePerspective === "student" && "app.interntrack.pro/student/alice-wanjiku"}
                 {rolePerspective === "supervisor" && "app.interntrack.pro/mentor/james-otieno"}
@@ -224,11 +224,11 @@ export function HeroPreview() {
                 className={cn(
                   "flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition border",
                   showLiveScreenshot
-                    ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/40 shadow-xs"
+                    ? "bg-lime-500/20 text-lime-600 dark:text-lime-400 border-lime-500/40 shadow-xs"
                     : "bg-background/80 text-muted-foreground border-border/60 hover:text-foreground",
                 )}
               >
-                <Sparkles className="size-3 text-emerald-500" />
+                <Sparkles className="size-3 text-lime-500" />
                 <span>{showLiveScreenshot ? "Screenshot Active" : "Live Dashboard View"}</span>
               </button>
             </div>
@@ -240,11 +240,11 @@ export function HeroPreview() {
                 className={cn(
                   "flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition border",
                   showLiveScreenshot
-                    ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/40 shadow-xs"
+                    ? "bg-lime-500/20 text-lime-600 dark:text-lime-400 border-lime-500/40 shadow-xs"
                     : "bg-background/80 text-muted-foreground border-border/60 hover:text-foreground",
                 )}
               >
-                <Sparkles className="size-3 text-emerald-500" />
+                <Sparkles className="size-3 text-lime-500" />
                 <span>{showLiveScreenshot ? "Screenshot Active" : "Live Dashboard View"}</span>
               </button>
               <Badge
@@ -262,10 +262,10 @@ export function HeroPreview() {
           <div className="p-5 sm:p-7 space-y-4 border-b border-border/60 bg-muted/20">
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
-                <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="size-2 rounded-full bg-lime-500 animate-pulse" />
                 <span className="font-semibold text-foreground">{getCurrentScreenshot().label}</span>
               </div>
-              <Badge variant="outline" className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
+              <Badge variant="outline" className="font-mono text-[10px] text-lime-600 dark:text-lime-400 border-lime-500/30">
                 Pixel-Perfect App Capture
               </Badge>
             </div>
@@ -321,7 +321,7 @@ export function HeroPreview() {
                   <div className="h-8 w-px bg-border/60 hidden sm:block" />
                   <div className="flex flex-col items-start sm:items-end">
                     <span className="text-[11px] text-muted-foreground">Clearance Status</span>
-                    <span className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <span className="font-semibold text-lime-600 dark:text-lime-400 flex items-center gap-1">
                       <CheckCircle2 className="size-3.5" /> Defense On Track
                     </span>
                   </div>
@@ -337,7 +337,7 @@ export function HeroPreview() {
                   <div className="lg:col-span-2 space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="size-2 rounded-full bg-emerald-500 animate-ping inline-block" />
+                        <span className="size-2 rounded-full bg-lime-500 animate-ping inline-block" />
                         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                           Today's Verified Log Entry • Week 8, Day 4
                         </span>
@@ -347,7 +347,7 @@ export function HeroPreview() {
                           "text-xs transition-colors",
                           entrySubmitted
                             ? "bg-primary text-primary-foreground"
-                            : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+                            : "bg-lime-500/10 text-lime-600 dark:text-lime-400 border-lime-500/20",
                         )}
                       >
                         {entrySubmitted ? "Queued for Mentor Sign-Off" : "Field Signed"}
@@ -399,7 +399,7 @@ export function HeroPreview() {
                         <Sparkles className="size-4 text-primary shrink-0" />
                         <span className="text-foreground">
                           {entrySubmitted
-                            ? "✓ Entry timestamped & synced to host supervisor's review queue."
+                            ? "Entry timestamped & synced to host supervisor's review queue."
                             : "Students draft daily technical activities and dispatch with 1-click."}
                         </span>
                       </div>
@@ -433,7 +433,7 @@ export function HeroPreview() {
                         </div>
                         <Progress
                           value={100}
-                          className="h-2 bg-emerald-500/20 [&>div]:bg-emerald-500"
+                          className="h-2 bg-lime-500/20 [&>div]:bg-lime-500"
                         />
                       </div>
                     </div>
@@ -477,7 +477,7 @@ export function HeroPreview() {
                   </div>
                   <Badge
                     variant="outline"
-                    className="w-fit text-xs border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
+                    className="w-fit text-xs border-lime-500/30 text-lime-600 dark:text-lime-400"
                   >
                     Institutional Standard Enforced
                   </Badge>
@@ -498,7 +498,7 @@ export function HeroPreview() {
                           </p>
                         </div>
                       </div>
-                      <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-xs">
+                      <Badge className="bg-lime-500/10 text-lime-600 dark:text-lime-400 border-lime-500/20 text-xs">
                         Industry Mentor
                       </Badge>
                     </div>
@@ -506,11 +506,11 @@ export function HeroPreview() {
                     <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5 space-y-2 text-xs">
                       <div className="flex justify-between text-muted-foreground">
                         <span>Task Accuracy & Autonomy</span>
-                        <span className="font-bold text-foreground">5 / 5 ★★★★★</span>
+                        <span className="font-bold text-foreground">5 / 5 </span>
                       </div>
                       <div className="flex justify-between text-muted-foreground">
                         <span>Punctuality & Workplace Ethics</span>
-                        <span className="font-bold text-foreground">5 / 5 ★★★★★</span>
+                        <span className="font-bold text-foreground">5 / 5 </span>
                       </div>
                       <div className="flex justify-between text-muted-foreground">
                         <span>Field Verification Hash</span>
@@ -520,7 +520,7 @@ export function HeroPreview() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                    <div className="flex items-center gap-2 text-xs text-lime-600 dark:text-lime-400 font-medium">
                       <CheckCircle2 className="size-4 shrink-0" />
                       <span>Approved & Signed for Week 8 Tasks</span>
                     </div>
@@ -562,7 +562,7 @@ export function HeroPreview() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                    <div className="flex items-center gap-2 text-xs text-lime-600 dark:text-lime-400 font-medium">
                       <CheckCircle2 className="size-4 shrink-0" />
                       <span>Accreditation Audit Confirmed</span>
                     </div>
@@ -584,11 +584,11 @@ export function HeroPreview() {
                     className={cn(
                       "rounded-lg px-3 py-1.5 text-xs font-semibold transition shrink-0",
                       hasApproved
-                        ? "bg-emerald-600 text-white"
+                        ? "bg-lime-600 text-white"
                         : "bg-primary text-primary-foreground hover:bg-primary/90",
                     )}
                   >
-                    {hasApproved ? "✓ Digital Signature Sealed" : "Simulate Instant Sign-off"}
+                    {hasApproved ? "Digital Signature Sealed" : "Simulate Instant Sign-off"}
                   </button>
                 </div>
               </div>
@@ -605,7 +605,7 @@ export function HeroPreview() {
                       </h4>
                       <Badge
                         variant="outline"
-                        className="text-xs font-mono text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                        className="text-xs font-mono text-lime-600 dark:text-lime-400 border-lime-500/30"
                       >
                         Radius: 50m • Precision: 99.8%
                       </Badge>
@@ -630,7 +630,7 @@ export function HeroPreview() {
                             Latitude: -1.2612 • Longitude: 36.8044 (Westlands, Nairobi)
                           </p>
                         </div>
-                        <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-xs">
+                        <Badge className="bg-lime-500/10 text-lime-600 dark:text-lime-400 border-lime-500/20 text-xs">
                           Device Inside Designated Internship Perimeter
                         </Badge>
                       </div>
@@ -669,7 +669,7 @@ export function HeroPreview() {
                         </div>
                         <div className="flex justify-between text-xs">
                           <span className="text-muted-foreground">Unexcused Absences</span>
-                          <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                          <span className="font-bold text-lime-600 dark:text-lime-400">
                             0 Days
                           </span>
                         </div>
@@ -766,9 +766,9 @@ export function HeroPreview() {
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 text-xs font-semibold transition"
+                          className="rounded-lg bg-lime-600 hover:bg-lime-700 text-white px-2.5 py-1 text-xs font-semibold transition"
                         >
-                          ✓ Sign Off
+                          Sign Off
                         </button>
                       </div>
                     </div>
@@ -785,19 +785,19 @@ export function HeroPreview() {
                   <div className="space-y-2 text-xs">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Technical Aptitude</span>
-                      <span className="font-bold text-foreground">5 / 5 ★★★★★</span>
+                      <span className="font-bold text-foreground">5 / 5 </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Initiative & Teamwork</span>
-                      <span className="font-bold text-foreground">5 / 5 ★★★★★</span>
+                      <span className="font-bold text-foreground">5 / 5 </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Code Quality</span>
-                      <span className="font-bold text-foreground">4.8 / 5 ★★★★★</span>
+                      <span className="font-bold text-foreground">4.8 / 5 </span>
                     </div>
                   </div>
-                  <div className="pt-2 border-t border-border/40 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
-                    ✓ All ratings synchronized with University Assessor
+                  <div className="pt-2 border-t border-border/40 text-[11px] text-lime-600 dark:text-lime-400 font-medium">
+                    All ratings synchronized with University Assessor
                   </div>
                 </div>
 
@@ -844,7 +844,7 @@ export function HeroPreview() {
               <div className="rounded-xl border border-border/60 bg-background/60 p-4 space-y-1">
                 <span className="text-[11px] text-muted-foreground">Placed Interns</span>
                 <p className="text-2xl font-bold text-foreground">412 Students</p>
-                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
+                <span className="text-[10px] text-lime-600 dark:text-lime-400 font-medium">
                   Across 86 Host Orgs
                 </span>
               </div>
@@ -856,7 +856,7 @@ export function HeroPreview() {
               <div className="rounded-xl border border-border/60 bg-background/60 p-4 space-y-1">
                 <span className="text-[11px] text-muted-foreground">Audit Flags</span>
                 <p className="text-2xl font-bold text-foreground">0 Critical</p>
-                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
+                <span className="text-[10px] text-lime-600 dark:text-lime-400 font-medium">
                   CUE & TVETA Compliant
                 </span>
               </div>
@@ -906,7 +906,7 @@ export function HeroPreview() {
                     </div>
                     <div className="text-right">
                       <p className="font-mono font-bold text-foreground">{row.hours}</p>
-                      <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+                      <span className="text-[10px] font-semibold text-lime-600 dark:text-lime-400">
                         {row.grade} • {row.status}
                       </span>
                     </div>

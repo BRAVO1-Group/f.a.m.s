@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -158,40 +159,34 @@ export default function AssignmentsPage() {
   return (
     <div className="space-y-6 antialiased">
       {/* ── Organization Assignment as Field Supervision Explainer Banner ── */}
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-start gap-3">
-          <div className="rounded-lg bg-primary/10 p-2 text-primary shrink-0">
-            <Building2 className="size-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-semibold text-sm text-foreground">
-                Organization Assignment as Field Supervision
-              </span>
-              <Badge
-                variant="outline"
-                className="text-[11px] font-medium border-primary/30 text-primary"
-              >
-                Pre-Provisioned University Credentials
-              </Badge>
-              <Badge variant="secondary" className="text-[11px] font-medium">
-                Student-Bound Logins
-              </Badge>
+      <Card className="rounded-xl border border-border/60 bg-card shadow-none">
+        <CardContent className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted p-2 text-foreground shrink-0">
+              <Building2 className="size-4.5" />
             </div>
-            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-              In this system, assigning a student to a host organization is fundamentally{" "}
-              <strong>assigning the company's designated Field Supervisor</strong>. The University
-              Administrator provisions corporate credentials dispatched directly to the employer
-              mentor, strictly tying their login access to that student's logbook.
-            </p>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-semibold text-sm text-foreground">
+                  Organization Assignment as Field Supervision
+                </span>
+                <Badge variant="secondary" className="text-[11px] font-medium">
+                  Pre-Provisioned University Credentials
+                </Badge>
+                <Badge variant="outline" className="text-[11px] font-medium">
+                  Student-Bound Logins
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                Assigning a student to a host organization pairs the company&apos;s designated Field Supervisor and issues a pre-provisioned university login strictly bound to that student&apos;s logbook.
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="text-right shrink-0">
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+          <Badge variant="secondary" className="gap-1.5 text-xs font-medium shrink-0">
             <ShieldCheck className="size-3.5" /> Direct University Dispatch
-          </span>
-        </div>
-      </div>
+          </Badge>
+        </CardContent>
+      </Card>
 
       {/* ── Page Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
@@ -200,10 +195,7 @@ export default function AssignmentsPage() {
             <h1 className="font-display text-2xl font-bold sm:text-3xl tracking-tight text-foreground">
               Supervisor &amp; Organization Pairing
             </h1>
-            <Badge
-              variant="outline"
-              className="text-xs border-primary/30 text-primary bg-primary/5 font-semibold"
-            >
+            <Badge variant="secondary" className="text-xs font-medium">
               Dual Mentorship
             </Badge>
           </div>
@@ -216,7 +208,7 @@ export default function AssignmentsPage() {
         <Button
           onClick={() => openAssignModal("student-4")}
           size="sm"
-          className="rounded-xl font-semibold text-xs h-9 shrink-0 shadow-xs"
+          className="rounded-lg font-semibold text-xs h-9 shrink-0"
         >
           <Plus className="mr-1.5 size-4" />
           Assign Student Pair
@@ -225,77 +217,26 @@ export default function AssignmentsPage() {
 
       {/* ── Summary Metrics ── */}
       <div className="grid gap-4 sm:grid-cols-4">
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Total Placed Candidates
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <GraduationCap className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {universityCohort.length}
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">Enrolled attachment cohort</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Dual-Supervised Rate
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-success/10 text-success">
-                <CheckCircle2 className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {Math.round((dualAssignedCount / universityCohort.length) * 100)}%
-            </p>
-            <p className="mt-2 text-xs text-success font-medium">
-              {dualAssignedCount} of {universityCohort.length} fully paired
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Missing Academic Assessor
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600">
-                <AlertTriangle className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {missingAcademicCount}
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">Requires faculty allocation</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Available Supervisors
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600">
-                <Users className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {supervisorsList.length}
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">
-              {orgSupervisors.length} Org • {uniSupervisors.length} Faculty
-            </p>
-          </CardContent>
-        </Card>
+        <KpiCard
+          label="Total Placed Candidates"
+          value={universityCohort.length}
+          meta="Enrolled attachment cohort"
+        />
+        <KpiCard
+          label="Dual-Supervised Rate"
+          value={`${Math.round((dualAssignedCount / universityCohort.length) * 100)}%`}
+          meta={`${dualAssignedCount} of ${universityCohort.length} fully paired`}
+        />
+        <KpiCard
+          label="Missing Academic Assessor"
+          value={missingAcademicCount}
+          meta="Requires faculty allocation"
+        />
+        <KpiCard
+          label="Available Supervisors"
+          value={supervisorsList.length}
+          meta={`${orgSupervisors.length} Org · ${uniSupervisors.length} Faculty`}
+        />
       </div>
 
       {/* ── Candidate Pairing Table ── */}
@@ -353,15 +294,12 @@ export default function AssignmentsPage() {
                           <p className="text-[11px] font-mono text-muted-foreground truncate max-w-[200px]">
                             {orgSup.email}
                           </p>
-                          <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                          <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border/60">
                             <Lock className="size-2.5" /> Bound to {student.name.split(" ")[0]}
                           </span>
                         </div>
                       ) : (
-                        <Badge
-                          variant="outline"
-                          className="text-[10px] text-amber-700 border-amber-300"
-                        >
+                        <Badge variant="outline" className="text-[10px] text-muted-foreground">
                           Unassigned
                         </Badge>
                       )}
@@ -373,19 +311,15 @@ export default function AssignmentsPage() {
                           <p className="text-[11px] text-muted-foreground">{academicSup.title}</p>
                         </div>
                       ) : (
-                        <Badge variant="destructive" className="text-[10px]">
+                        <Badge variant="outline" className="text-[10px] text-muted-foreground">
                           Unassigned
                         </Badge>
                       )}
                     </TableCell>
                     <TableCell>
                       <Badge
-                        variant={isComplete ? "default" : "secondary"}
-                        className={`text-xs ${
-                          isComplete
-                            ? "bg-success/10 text-success border-success/30"
-                            : "bg-amber-500/10 text-amber-700 border-amber-300"
-                        }`}
+                        variant={isComplete ? "secondary" : "outline"}
+                        className="text-xs"
                       >
                         {isComplete ? "Dual-Supervised" : "Needs Allocation"}
                       </Badge>
@@ -398,7 +332,7 @@ export default function AssignmentsPage() {
                           onClick={() =>
                             setCredentialModalStudent({ student, orgSup, academicSup })
                           }
-                          className="text-xs h-7.5 text-primary hover:bg-primary/10"
+                          className="text-xs h-7.5"
                         >
                           <KeyRound className="mr-1 size-3" /> Credentials
                         </Button>

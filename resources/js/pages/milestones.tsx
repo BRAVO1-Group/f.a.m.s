@@ -303,23 +303,23 @@ export default function MilestonesPage() {
       </div>
 
       {/* Progress Metric Card */}
-      <Card className="border-border/60 bg-gradient-to-br from-card via-card to-accent/5 shadow-xs">
+      <Card className="border-border/60 bg-card shadow-none">
         <CardContent className="p-6">
           <div className="grid gap-6 md:grid-cols-4 md:items-center">
             <div className="md:col-span-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-semibold text-foreground">Curriculum Completion</span>
-                <span className="font-bold text-primary">{progressPercent}%</span>
+                <span className="font-mono font-bold text-foreground">{progressPercent}%</span>
               </div>
-              <Progress value={progressPercent} className="mt-2.5 h-3" />
+              <Progress value={progressPercent} className="mt-2.5 h-2" />
               <p className="mt-2 text-xs text-muted-foreground">
                 {completedTasks} of {totalTasks} checklist deliverables validated across all phases.
               </p>
             </div>
 
             <div className="flex items-center gap-3 border-border/40 pl-0 md:border-l md:pl-6">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Target className="size-5" />
+              <div className="flex size-10 items-center justify-center rounded-xl border border-border/60 bg-muted text-foreground">
+                <Target className="size-4.5" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Phases Active</p>
@@ -330,8 +330,8 @@ export default function MilestonesPage() {
             </div>
 
             <div className="flex items-center gap-3 border-border/40 pl-0 md:border-l md:pl-6">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                <CheckCircle2 className="size-5" />
+              <div className="flex size-10 items-center justify-center rounded-xl border border-border/60 bg-muted text-foreground">
+                <CheckCircle2 className="size-4.5" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">Completed Milestones</p>
@@ -421,13 +421,7 @@ export default function MilestonesPage() {
   return (
             <Card
               key={item.id}
-              className={`flex flex-col border transition-all shadow-xs ${
-                isCompleted
-                  ? "border-emerald-500/30 bg-emerald-500/5 dark:bg-emerald-950/10"
-                  : isInProgress
-                    ? "border-primary/40 ring-1 ring-primary/20"
-                    : "border-border/60"
-              }`}
+              className="flex flex-col border border-border/60 bg-card shadow-none"
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-3">
@@ -438,14 +432,7 @@ export default function MilestonesPage() {
                     <CardTitle className="mt-1 text-lg font-semibold">{item.title}</CardTitle>
                   </div>
                   <Badge
-                    variant={isCompleted ? "default" : isInProgress ? "secondary" : "outline"}
-                    className={
-                      isCompleted
-                        ? "bg-emerald-600 text-white hover:bg-emerald-600"
-                        : isInProgress
-                          ? "bg-primary text-primary-foreground"
-                          : ""
-                    }
+                    variant={isCompleted ? "secondary" : isInProgress ? "default" : "outline"}
                   >
                     {isCompleted ? "Completed" : isInProgress ? "Active Sprint" : "Upcoming"}
                   </Badge>
@@ -487,7 +474,7 @@ export default function MilestonesPage() {
                           <div
                             className={`mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border transition-colors ${
                               task.completed
-                                ? "border-emerald-600 bg-emerald-600 text-white"
+                                ? "border-foreground bg-foreground text-background"
                                 : "border-muted-foreground/40 bg-background"
                             }`}
                           >
@@ -525,13 +512,13 @@ export default function MilestonesPage() {
 
                 {/* Supervisor Feedback */}
                 {item.supervisor_feedback && (
-                  <div className="rounded-lg border border-border/80 bg-accent/20 p-3 text-xs">
+                  <div className="rounded-lg border border-border/60 bg-muted/30 p-3 text-xs">
                     <div className="flex items-center gap-1.5 font-semibold text-foreground">
-                      <Sparkles className="size-3.5 text-amber-500" />
+                      <Sparkles className="size-3.5 text-muted-foreground" />
                       <span>Mentor Feedback</span>
                     </div>
-                    <p className="mt-1 text-muted-foreground italic leading-relaxed">
-                      "{item.supervisor_feedback}"
+                    <p className="mt-1 text-muted-foreground leading-relaxed">
+                      &ldquo;{item.supervisor_feedback}&rdquo;
                     </p>
                   </div>
                 )}

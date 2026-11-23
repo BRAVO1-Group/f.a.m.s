@@ -13,13 +13,12 @@ export function FieldSupervisorView({ focusedCard, approved, onApprove }: FieldS
       <div className="z-layer-mid rounded-xl border border-indigo-200 bg-indigo-50/70 p-3.5 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="size-9 rounded-xl bg-indigo-600/15 text-indigo-700 flex items-center justify-center text-base font-bold shrink-0">
-            🏢
-          </div>
+            </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-xs text-zinc-900">Host Organization Review Queue</span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-200 text-indigo-700 bg-white">
-                🏢 TechCorp Kenya Ltd
+                TechCorp Kenya Ltd
               </span>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-500">
                 Received Enterprise Logins
@@ -31,8 +30,8 @@ export function FieldSupervisorView({ focusedCard, approved, onApprove }: FieldS
             </p>
           </div>
         </div>
-        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-700 border border-emerald-500/30 shrink-0">
-          🛡️ Direct Sign-off Authority
+        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-lime-500/15 text-lime-700 border border-lime-500/30 shrink-0">
+          ️ Direct Sign-off Authority
         </span>
       </div>
 
@@ -83,7 +82,7 @@ export function FieldSupervisorView({ focusedCard, approved, onApprove }: FieldS
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-200 text-indigo-700 bg-indigo-50">
                     Kevin Kiprono
                   </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/30 text-emerald-700 bg-emerald-50">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-lime-500/30 text-lime-700 bg-lime-50">
                     + Alice Wanjiku
                   </span>
                 </div>
@@ -95,11 +94,11 @@ export function FieldSupervisorView({ focusedCard, approved, onApprove }: FieldS
                 className={cn(
                   "text-[10px] font-bold px-2.5 py-0.5 rounded-full border",
                   approved
-                    ? "bg-emerald-100 text-emerald-800 border-emerald-400"
+                    ? "bg-lime-100 text-lime-800 border-lime-400"
                     : "bg-indigo-100 text-indigo-800 border-indigo-300",
                 )}
               >
-                {approved ? "✓ Approved by Host Org" : "Submitted"}
+                {approved ? "Approved by Host Org" : "Submitted"}
               </span>
             </div>
 
@@ -118,7 +117,7 @@ export function FieldSupervisorView({ focusedCard, approved, onApprove }: FieldS
 
             <div className="mt-3 space-y-1">
               <label className="text-[11px] font-bold text-zinc-900 flex items-center gap-1">
-                <span>💬</span> Mentor Guidance / Engineering Sign-Off Note
+                <span></span> Mentor Guidance / Engineering Sign-Off Note
               </label>
               <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-2.5 text-xs text-zinc-900 min-h-[48px]">
                 <span>
@@ -134,10 +133,10 @@ export function FieldSupervisorView({ focusedCard, approved, onApprove }: FieldS
               <button
                 type="button"
                 onClick={onApprove}
-                className="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5"
+                className="px-4 py-1.5 rounded-xl bg-lime-600 hover:bg-lime-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5"
               >
-                <span>✓</span>
-                <span>{approved ? "✓ Signed Off & Logged" : "Sign Off & Approve"}</span>
+                <span></span>
+                <span>{approved ? "Signed Off & Logged" : "Sign Off & Approve"}</span>
               </button>
               <button
                 type="button"
@@ -159,7 +158,7 @@ export function FieldSupervisorView({ focusedCard, approved, onApprove }: FieldS
             <div className="p-2.5 rounded-xl bg-zinc-50 border border-zinc-200 space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-zinc-900">Alice Wanjiku</span>
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">
+                <span className="text-[10px] font-bold text-lime-700 bg-lime-50 px-1.5 py-0.5 rounded">
                   42/60d
                 </span>
               </div>
@@ -176,9 +175,9 @@ export function FieldSupervisorView({ focusedCard, approved, onApprove }: FieldS
 
           <div className="p-2.5 rounded-xl bg-amber-50/70 border border-amber-200 text-[10px] font-mono space-y-1">
             <div className="font-bold text-amber-900">TIER 2 HOST ORG PERMISSIONS:</div>
-            <div className="text-emerald-600 font-bold">✓ logs:approve (Sign off logs)</div>
-            <div className="text-emerald-600 font-bold">✓ attendance:audit (Verify hours)</div>
-            <div className="text-rose-500">🔒 supervisors:assign (Uni Admin only)</div>
+            <div className="text-lime-600 font-bold">logs:approve (Sign off logs)</div>
+            <div className="text-lime-600 font-bold">attendance:audit (Verify hours)</div>
+            <div className="text-rose-500">supervisors:assign (Uni Admin only)</div>
           </div>
         </div>
       </div>

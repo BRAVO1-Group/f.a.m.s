@@ -7,7 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { BarChart3, BookOpen } from "lucide-react";
 import { getGreeting } from "./get-greeting";
+import { StudentPlacementJourney } from "./student-placement-journey";
+import { AuditTrailPanel } from "./audit-trail-panel";
 
 // --------------------------------------------------
 // TYPES RECEIVED FROM LARAVEL
@@ -198,14 +202,17 @@ export function StudentDashboard({ name, dashboardData }: StudentDashboardProps)
         </div>
       </div>
 
+      {/* 4-STAGE PLACEMENT APPLICATION, TESTIMONIAL, ACCEPTANCE LETTER & MENTOR OTP JOURNEY */}
+      <StudentPlacementJourney studentName={name} />
+
       {/* PLACEMENT AND SUPERVISOR */}
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <Card className="border-border/60 shadow-none">
-          <CardContent className="p-4 space-y-2">
-            <p className="text-xs text-muted-foreground">Current Host Organization</p>
+          <CardContent className="p-5 space-y-2">
+            <p className="text-xs font-medium text-muted-foreground">Current Host Organization</p>
 
-            <p className="font-semibold text-sm text-foreground">{organizationName}</p>
+            <p className="font-semibold text-base text-foreground">{organizationName}</p>
 
             {activePlacement && (
               <>
@@ -222,21 +229,21 @@ export function StudentDashboard({ name, dashboardData }: StudentDashboardProps)
         </Card>
 
         <Card className="border-border/60 shadow-none">
-          <CardContent className="p-4 space-y-2">
-            <p className="text-xs text-muted-foreground">Workplace Supervisor</p>
+          <CardContent className="p-5 space-y-2">
+            <p className="text-xs font-medium text-muted-foreground">Workplace Supervisor</p>
 
-            <p className="font-semibold text-sm text-foreground">{supervisorName}</p>
+            <p className="font-semibold text-base text-foreground">{supervisorName}</p>
 
             <p className="text-xs text-muted-foreground">{supervisorPosition}</p>
 
-            <p className="text-xs text-primary break-all">{supervisorEmail}</p>
+            <p className="text-xs text-muted-foreground break-all">{supervisorEmail}</p>
           </CardContent>
         </Card>
       </div>
 
       {/* DASHBOARD STATISTICS */}
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KpiCard
           label="Logged Days"
           value={dashboardData.statistics.loggedDays}
@@ -345,9 +352,16 @@ export function StudentDashboard({ name, dashboardData }: StudentDashboardProps)
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="py-12 text-center text-sm text-muted-foreground">
-              No logbook activity has been recorded yet.
-            </div>
+            <EmptyState
+              icon={BarChart3}
+              title="No Working Hours Chart Data Yet"
+              description="Once you record your daily logbook activities and hours worked, your time-series activity chart will appear here."
+              secondaryAction={
+                <Button asChild size="sm" className="h-8 text-xs font-semibold">
+                  <Link href="/logbook">Record First Logbook Entry</Link>
+                </Button>
+              }
+            />
           )}
         </CardContent>
       </Card>
@@ -412,12 +426,22 @@ export function StudentDashboard({ name, dashboardData }: StudentDashboardProps)
               </div>
             ))
           ) : (
-            <p className="py-8 text-center text-sm text-muted-foreground">
-              You haven't recorded any logbook entries yet.
-            </p>
+            <EmptyState
+              icon={BookOpen}
+              title="No Logbook Entries Recorded Yet"
+              description="Start documenting your daily internship tasks, tools utilized, and skills learned so your Field Mentor can comment and sign off."
+              secondaryAction={
+                <Button asChild size="sm" className="h-8 text-xs font-semibold">
+                  <Link href="/logbook">Add First Logbook Entry</Link>
+                </Button>
+              }
+            />
           )}
         </CardContent>
       </Card>
+
+      {/* ACTIVITY & COMPLIANCE AUDIT TRAIL */}
+      <AuditTrailPanel role="student" />
     </div>
   );
 }

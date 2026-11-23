@@ -73,7 +73,7 @@ export function ComplianceSecurity() {
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-border/60 flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+              <div className="mt-6 pt-4 border-t border-border/60 flex items-center gap-1.5 text-xs text-lime-600 dark:text-lime-400 font-semibold">
                 <CheckCircle2 className="size-4 shrink-0" />
                 <span>Audited & Verified</span>
               </div>

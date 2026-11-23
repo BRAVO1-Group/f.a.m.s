@@ -1,21 +1,28 @@
 import { useState, useEffect } from "react";
+import { Link } from "@inertiajs/react";
 import {
   Building2,
   Copy,
+  ExternalLink,
   GraduationCap,
   KeyRound,
   Lock,
   Mail,
+  Pencil,
   Phone,
   Plus,
   Search,
   ShieldCheck,
+  Trash2,
   UserCheck,
   UserPlus,
   Users,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { EmptyState } from "@/components/ui/empty-state";
+import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +46,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   getStoredSupervisors,
   addSupervisor,
+  updateSupervisor,
+  deleteSupervisor,
   type MockSupervisor,
   type SupervisorType,
 } from "@/lib/mock-data";
@@ -48,18 +57,50 @@ export default function SupervisorsPage() {
   const [filter, setFilter] = useState<"all" | "organization" | "university">("all");
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
+  const [editingSupervisorId, setEditingSupervisorId] = useState<string | null>(null);
+  const [deletingSupervisor, setDeletingSupervisor] = useState<MockSupervisor | null>(null);
   const [selectedSupervisorCreds, setSelectedSupervisorCreds] = useState<MockSupervisor | null>(
     null,
   );
 
-  // Form state
-  const [supType, setSupType] = useState<SupervisorType>("organization");
+  // Form state (Academic Supervisors only create Field Mentor accounts for the organization where the student is placed)
+  const [assignedStudentKey, setAssignedStudentKey] = useState("student-1");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("Senior Lead Architect & Field Mentor");
   const [orgOrUni, setOrgOrUni] = useState("TechCorp Kenya Ltd");
   const [deptOrFaculty, setDeptOrFaculty] = useState("Product Engineering");
+
+  const STUDENT_PLACEMENT_ORGS: Record<
+    string,
+    { studentName: string; regNo: string; company: string; department: string }
+  > = {
+    "student-1": {
+      studentName: "Alice Wanjiku",
+      regNo: "CS/2021/0042",
+      company: "TechCorp Kenya Ltd",
+      department: "Product Engineering",
+    },
+    "student-2": {
+      studentName: "Brian Mwangi",
+      regNo: "CS/2021/0088",
+      company: "Safaricom PLC",
+      department: "Infrastructure & Cloud",
+    },
+    "student-3": {
+      studentName: "Carol Achieng",
+      regNo: "CS/2021/0015",
+      company: "Kenya Commercial Bank",
+      department: "Business Intelligence",
+    },
+    "student-4": {
+      studentName: "Kevin Kiprono",
+      regNo: "CS/2021/0104",
+      company: "TechCorp Kenya Ltd",
+      department: "InfoSec Operations",
+    },
+  };
 
   useEffect(() => {
     const handler = () => setSupervisorsList(getStoredSupervisors());
@@ -67,41 +108,66 @@ export default function SupervisorsPage() {
     return () => window.removeEventListener("internflow-data-change", handler);
   }, []);
 
+  const openEditSupervisor = (sup: MockSupervisor) => {
+    setEditingSupervisorId(sup.id);
+    setFullName(sup.full_name);
+    setEmail(sup.email);
+    setPhone(sup.phone);
+    setTitle(sup.title);
+    setOrgOrUni(sup.organization_name || "TechCorp Kenya Ltd");
+    setDeptOrFaculty(sup.faculty_department || "Engineering");
+    setCreateOpen(true);
+  };
+
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !email.trim() || !title.trim()) {
-      toast.error("Please fill in required fields (Name, Email, Title)");
+      toast.warning("Empty Form Warning", {
+        description: "Please fill in the Field Mentor's Full Name, Official Email, and Job Title.",
+      });
       return;
     }
 
-    addSupervisor({
-      full_name: fullName.trim(),
-      email: email.trim(),
-      phone: phone.trim() || "+254 700 000 000",
-      type: supType,
-      title: title.trim(),
-      organization_name: supType === "organization" ? orgOrUni : "University of Nairobi",
-      faculty_department:
-        deptOrFaculty.trim() ||
-        (supType === "organization" ? "Engineering" : "School of Computing"),
-    });
+    if (editingSupervisorId) {
+      updateSupervisor(editingSupervisorId, {
+        full_name: fullName.trim(),
+        email: email.trim(),
+        phone: phone.trim() || "+254 700 000 000",
+        type: "organization",
+        title: title.trim(),
+        organization_name: orgOrUni,
+        faculty_department: deptOrFaculty.trim() || "Engineering",
+      });
+      setSupervisorsList(getStoredSupervisors());
+      setCreateOpen(false);
+      setEditingSupervisorId(null);
+      toast.success("Field Mentor account updated");
+    } else {
+      addSupervisor({
+        full_name: fullName.trim(),
+        email: email.trim(),
+        phone: phone.trim() || "+254 700 000 000",
+        type: "organization",
+        title: title.trim(),
+        organization_name: orgOrUni,
+        faculty_department: deptOrFaculty.trim() || "Engineering",
+      });
 
-    setSupervisorsList(getStoredSupervisors());
-    setCreateOpen(false);
+      setSupervisorsList(getStoredSupervisors());
+      setCreateOpen(false);
 
-    toast.success(
-      supType === "organization"
-        ? "Host Organization Mentor created!"
-        : "University Academic Supervisor created!",
-      {
-        description: `${fullName} is now registered in the institutional supervisor directory.`,
-      },
-    );
+      const boundStudent = STUDENT_PLACEMENT_ORGS[assignedStudentKey];
+      toast.success("Field Mentor Account Created!", {
+        description: `${fullName} has been provisioned as a Field Mentor at ${orgOrUni}${
+          boundStudent ? ` for ${boundStudent.studentName}` : ""
+        }.`,
+      });
+    }
 
     setFullName("");
     setEmail("");
     setPhone("");
-    setTitle("");
+    setTitle("Senior Lead Architect & Field Mentor");
   };
 
   const filtered = supervisorsList.filter((s) => {
@@ -125,119 +191,83 @@ export default function SupervisorsPage() {
   return (
     <div className="space-y-6 antialiased">
       {/* ── Host Organization Supervision Model Banner ── */}
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-start gap-3">
-          <div className="rounded-lg bg-primary/10 p-2 text-primary shrink-0">
-            <Building2 className="size-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-semibold text-sm text-foreground">
-                Host Organization Field Supervision & University Credentials
-              </span>
-              <Badge
-                variant="outline"
-                className="text-[11px] font-medium border-primary/30 text-primary"
-              >
-                Pre-Provisioned Logins
-              </Badge>
-              <Badge variant="secondary" className="text-[11px] font-medium">
-                Student-Bound Access
-              </Badge>
+      <Card className="rounded-xl border border-border/60 bg-card shadow-none">
+        <CardContent className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className="rounded-lg border border-border/60 bg-muted p-2 text-foreground shrink-0">
+              <Building2 className="size-4.5" />
             </div>
-            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-              Host Organization Field Supervisors receive login credentials directly from the
-              university. When an organization is assigned to an intern, the field supervisor's
-              login is automatically linked strictly to that student. Supervisors cannot
-              self-register.
-            </p>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-semibold text-sm text-foreground">
+                  Host Organization Field Supervision &amp; University Credentials
+                </span>
+                <Badge variant="secondary" className="text-[11px] font-medium">
+                  Pre-Provisioned Logins
+                </Badge>
+                <Badge variant="outline" className="text-[11px] font-medium">
+                  Student-Bound Access
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                Host Organization Field Supervisors receive login credentials directly from the
+                university. When an organization is assigned to an intern, the field supervisor&apos;s
+                login is automatically linked strictly to that student.
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="text-right shrink-0">
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+          <Badge variant="secondary" className="gap-1.5 text-xs font-medium shrink-0">
             <ShieldCheck className="size-3.5" /> University Provisioned
-          </span>
-        </div>
-      </div>
+          </Badge>
+        </CardContent>
+      </Card>
 
       {/* ── Page Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
           <div className="flex items-center gap-2.5">
             <h1 className="font-display text-2xl font-bold sm:text-3xl tracking-tight text-foreground">
-              Supervisor Accounts
+              Field Mentor Accounts
             </h1>
-            <Badge
-              variant="outline"
-              className="text-xs border-primary/30 text-primary bg-primary/5 font-semibold"
-            >
-              Roster Management
+            <Badge variant="secondary" className="text-xs font-medium">
+              Student Host Organizations
             </Badge>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Create and maintain accounts for Host Organization Mentors (field supervisors) and
-            University Academic Supervisors.
+            Academic Supervisors provision Field Mentor accounts strictly for the host organizations where students are placed (peer Academic Supervisor accounts are not created here).
           </p>
         </div>
 
         <Button
-          onClick={() => setCreateOpen(true)}
+          onClick={() => {
+            setEditingSupervisorId(null);
+            setCreateOpen(true);
+          }}
           size="sm"
-          className="rounded-xl font-semibold text-xs h-9 shrink-0 shadow-xs"
+          className="rounded-lg font-semibold text-xs h-9 shrink-0"
         >
           <UserPlus className="mr-1.5 size-4" />
-          Create Supervisor Account
+          Create Field Mentor Account
         </Button>
       </div>
 
       {/* ── Summary Metrics ── */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Total Supervisors
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Users className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">
-              {supervisorsList.length}
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">Registered mentors & faculty</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Host Org Mentors
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600">
-                <Building2 className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">{orgCount}</p>
-            <p className="mt-2 text-xs text-muted-foreground">Field mentors across partner firms</p>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-card border-border/80">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                University Academic Assessors
-              </span>
-              <span className="flex size-9 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600">
-                <GraduationCap className="size-4.5" />
-              </span>
-            </div>
-            <p className="mt-3 font-display text-3xl font-bold tracking-tight">{uniCount}</p>
-            <p className="mt-2 text-xs text-muted-foreground">Departmental faculty lecturers</p>
-          </CardContent>
-        </Card>
+        <KpiCard
+          label="Total Supervisors"
+          value={supervisorsList.length}
+          meta="Registered mentors & faculty"
+        />
+        <KpiCard
+          label="Host Org Mentors"
+          value={orgCount}
+          meta="Field mentors across partner firms"
+        />
+        <KpiCard
+          label="University Academic Assessors"
+          value={uniCount}
+          meta="Departmental faculty lecturers"
+        />
       </div>
 
       {/* ── Search & Filter Controls ── */}
@@ -292,19 +322,13 @@ export default function SupervisorsPage() {
               return (
                 <Card
                   key={sup.id}
-                  className="border-border/80 shadow-xs hover:border-primary/40 transition-all flex flex-col justify-between"
+                  className="border-border/60 shadow-none transition-colors flex flex-col justify-between"
                 >
                   <CardContent className="p-4 space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2.5">
-                        <Avatar className="size-9.5 border">
-                          <AvatarFallback
-                            className={`text-xs font-semibold ${
-                              isOrg
-                                ? "bg-amber-500/10 text-amber-700"
-                                : "bg-indigo-500/10 text-indigo-700"
-                            }`}
-                          >
+                        <Avatar className="size-9.5 rounded-lg">
+                          <AvatarFallback className="rounded-lg bg-muted text-foreground text-xs font-semibold">
                             {sup.full_name
                               .split(" ")
                               .map((p) => p[0])
@@ -322,14 +346,7 @@ export default function SupervisorsPage() {
                         </div>
                       </div>
 
-                      <Badge
-                        variant="outline"
-                        className={`text-[10px] font-semibold shrink-0 ${
-                          isOrg
-                            ? "border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"
-                            : "border-indigo-300 bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300"
-                        }`}
-                      >
+                      <Badge variant="secondary" className="text-[10px] font-medium shrink-0">
                         {isOrg ? "Host Org" : "University"}
                       </Badge>
                     </div>
@@ -345,11 +362,11 @@ export default function SupervisorsPage() {
 
                     <div className="space-y-1 text-[11px] font-mono text-muted-foreground">
                       <p className="flex items-center gap-1.5">
-                        <Mail className="size-3 text-primary shrink-0" />
+                        <Mail className="size-3 text-muted-foreground shrink-0" />
                         <span className="truncate">{sup.email}</span>
                       </p>
                       <p className="flex items-center gap-1.5">
-                        <Phone className="size-3 text-primary shrink-0" />
+                        <Phone className="size-3 text-muted-foreground shrink-0" />
                         <span>{sup.phone}</span>
                       </p>
                     </div>
@@ -366,24 +383,87 @@ export default function SupervisorsPage() {
                         </Badge>
                       </div>
 
-                      {isOrg && (
+                      <div className="flex items-center gap-1">
+                        {isOrg && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setSelectedSupervisorCreds(sup)}
+                            className="h-7 text-[11px] px-2"
+                          >
+                            <KeyRound className="mr-1 size-3" /> OTP Link
+                          </Button>
+                        )}
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => setSelectedSupervisorCreds(sup)}
-                          className="h-7 text-[11px] px-2 text-primary hover:bg-primary/10"
+                          onClick={() => openEditSupervisor(sup)}
+                          title="Edit Supervisor"
+                          className="h-7 w-7 p-0"
                         >
-                          <KeyRound className="mr-1 size-3" /> Credentials
+                          <Pencil className="size-3.5" />
                         </Button>
-                      )}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setDeletingSupervisor(sup)}
+                          title="Delete Supervisor"
+                          className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="size-3.5" />
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               );
             })}
           </div>
+          {filtered.length === 0 && (
+            <EmptyState
+              icon={Users}
+              title="No Supervisors Found"
+              description="No supervisors match your current filter. Click 'Create Supervisor Account' to provision a Field Mentor or Academic Assessor."
+              actionLabel="Create Supervisor Account"
+              onAction={() => {
+                setEditingSupervisorId(null);
+                setCreateOpen(true);
+              }}
+            />
+          )}
         </CardContent>
       </Card>
+
+      {/* Yes / No Confirmation Dialog for Deleting a Supervisor */}
+      <ConfirmDialog
+        open={Boolean(deletingSupervisor)}
+        onOpenChange={(open) => {
+          if (!open) setDeletingSupervisor(null);
+        }}
+        title="Delete Supervisor Account?"
+        description={
+          deletingSupervisor ? (
+            <>
+              Are you sure you want to permanently remove{" "}
+              <strong>{deletingSupervisor.full_name}</strong> ({deletingSupervisor.email}) from the
+              institutional supervisor directory?
+            </>
+          ) : (
+            ""
+          )
+        }
+        confirmLabel="Yes, Delete Supervisor"
+        cancelLabel="No, Keep Account"
+        variant="destructive"
+        onConfirm={() => {
+          if (deletingSupervisor) {
+            deleteSupervisor(deletingSupervisor.id);
+            setSupervisorsList(getStoredSupervisors());
+            toast.success(`Removed ${deletingSupervisor.full_name}`);
+            setDeletingSupervisor(null);
+          }
+        }}
+      />
 
       {/* ── View Supervisor Credentials Modal ── */}
       <Dialog
@@ -465,18 +545,27 @@ export default function SupervisorsPage() {
                 </span>
               </div>
 
-              <DialogFooter className="pt-2">
+              <DialogFooter className="pt-2 flex-col sm:flex-row gap-2">
                 <Button
                   size="sm"
+                  variant="outline"
                   onClick={() => {
-                    const text = `InternTrack Field Supervisor Login\nSupervisor: ${selectedSupervisorCreds.full_name}\nOrganization: ${selectedSupervisorCreds.organization_name}\nEmail: ${selectedSupervisorCreds.email}\nScope: Bound strictly to assigned candidates.`;
-                    navigator.clipboard?.writeText(text);
-                    toast.success("Dispatched credentials copied to clipboard!");
+                    const otpLink = `${window.location.origin}/mentor-onboard?student=Alice+Wanjiku&reg=CS/2021/0042&company=${encodeURIComponent(selectedSupervisorCreds.organization_name || "TechCorp Solutions")}&mentor=${encodeURIComponent(selectedSupervisorCreds.full_name)}&email=${encodeURIComponent(selectedSupervisorCreds.email)}&otp=OTP-849201`;
+                    navigator.clipboard?.writeText(otpLink);
+                    toast.success("Special Field Mentor OTP Onboarding Link copied!");
                   }}
-                  className="w-full text-xs font-semibold"
+                  className="flex-1 text-xs font-semibold"
                 >
                   <Copy className="mr-1.5 size-3.5" />
-                  Copy Login Details
+                  Copy OTP Link
+                </Button>
+                <Button asChild size="sm" className="flex-1 text-xs font-semibold">
+                  <Link
+                    href={`/mentor-onboard?student=Alice+Wanjiku&reg=CS/2021/0042&company=${encodeURIComponent(selectedSupervisorCreds.organization_name || "TechCorp Solutions")}&mentor=${encodeURIComponent(selectedSupervisorCreds.full_name)}&email=${encodeURIComponent(selectedSupervisorCreds.email)}&otp=OTP-849201`}
+                  >
+                    <span>Open Mentor OTP Link</span>
+                    <ExternalLink className="ml-1.5 size-3.5" />
+                  </Link>
                 </Button>
               </DialogFooter>
             </div>
@@ -484,57 +573,78 @@ export default function SupervisorsPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ── Create Supervisor Dialog ── */}
+      {/* ── Create Field Mentor Dialog (Strictly for the Host Organization Where the Student Is Placed) ── */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <UserPlus className="size-5 text-primary" />
-              Create Supervisor Account
+              {editingSupervisorId ? "Update Field Mentor Account" : "Create Field Mentor Account"}
             </DialogTitle>
-            <DialogDescription>
-              Register an Organization Mentor (field mentor) or University Academic Supervisor
-              (faculty lecturer).
+            <DialogDescription className="text-xs leading-relaxed">
+              Academic Supervisors do not create accounts for peer Academic Supervisors. Provision a Field Mentor account strictly for the host organization where the student is placed.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleCreate} className="space-y-4 py-2">
+            {/* Select Student & Auto-Bind Their Host Organization */}
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">Supervisor Role Type *</Label>
-              <div className="grid grid-cols-2 gap-2">
-                <Button
-                  type="button"
-                  variant={supType === "organization" ? "default" : "outline"}
-                  onClick={() => {
-                    setSupType("organization");
-                    setTitle("Senior Lead Architect & Field Mentor");
-                  }}
-                  className="h-10 text-xs flex items-center justify-center gap-1.5"
-                >
-                  <Building2 className="size-4" />
-                  Host Org Mentor
-                </Button>
-                <Button
-                  type="button"
-                  variant={supType === "university" ? "default" : "outline"}
-                  onClick={() => {
-                    setSupType("university");
-                    setTitle("Senior Lecturer & Academic Assessor");
-                  }}
-                  className="h-10 text-xs flex items-center justify-center gap-1.5"
-                >
-                  <GraduationCap className="size-4" />
-                  Academic Supervisor
-                </Button>
+              <Label className="text-xs font-semibold">Placed Student Intern *</Label>
+              <Select
+                value={assignedStudentKey}
+                onValueChange={(val) => {
+                  setAssignedStudentKey(val);
+                  const info = STUDENT_PLACEMENT_ORGS[val];
+                  if (info) {
+                    setOrgOrUni(info.company);
+                    setDeptOrFaculty(info.department);
+                  }
+                }}
+              >
+                <SelectTrigger className="h-9 text-xs">
+                  <SelectValue placeholder="Select placed student" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(STUDENT_PLACEMENT_ORGS).map(([id, info]) => (
+                    <SelectItem key={id} value={id}>
+                      {info.studentName} ({info.regNo}) · {info.company}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Student&apos;s Host Organization *</Label>
+                <Select value={orgOrUni} onValueChange={setOrgOrUni}>
+                  <SelectTrigger className="h-9 text-xs">
+                    <SelectValue placeholder="Select Organization" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="TechCorp Kenya Ltd">TechCorp Kenya Ltd</SelectItem>
+                    <SelectItem value="Safaricom PLC">Safaricom PLC</SelectItem>
+                    <SelectItem value="Kenya Commercial Bank">Kenya Commercial Bank</SelectItem>
+                    <SelectItem value="Apex Telecom Solutions">Apex Telecom Solutions</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Host Department *</Label>
+                <Input
+                  placeholder="e.g. Product Engineering"
+                  value={deptOrFaculty}
+                  onChange={(e) => setDeptOrFaculty(e.target.value)}
+                  className="h-9 text-xs"
+                />
               </div>
             </div>
 
             <div className="space-y-1">
-              <Label className="text-xs font-semibold">Full Name *</Label>
+              <Label className="text-xs font-semibold">Field Mentor Full Name *</Label>
               <Input
-                placeholder={
-                  supType === "organization" ? "e.g. Eng. Kevin Otieno" : "e.g. Dr. Joyce Chelangat"
-                }
+                placeholder="e.g. Eng. Kevin Otieno"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
@@ -544,10 +654,10 @@ export default function SupervisorsPage() {
 
             <div className="grid grid-cols-2 gap-2">
               <div className="space-y-1">
-                <Label className="text-xs font-semibold">Official Email *</Label>
+                <Label className="text-xs font-semibold">Field Mentor Official Email *</Label>
                 <Input
                   type="email"
-                  placeholder="name@domain.com"
+                  placeholder="mentor@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -566,50 +676,12 @@ export default function SupervisorsPage() {
             </div>
 
             <div className="space-y-1">
-              <Label className="text-xs font-semibold">Designation / Title *</Label>
+              <Label className="text-xs font-semibold">Workplace Designation / Title *</Label>
               <Input
-                placeholder="e.g. Lead Software Architect / Senior Lecturer"
+                placeholder="e.g. Senior Lead Architect & Field Mentor"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="h-9 text-xs"
-              />
-            </div>
-
-            {supType === "organization" ? (
-              <div className="space-y-1">
-                <Label className="text-xs font-semibold">Host Organization *</Label>
-                <Select value={orgOrUni} onValueChange={setOrgOrUni}>
-                  <SelectTrigger className="h-9 text-xs">
-                    <SelectValue placeholder="Select Organization" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="TechCorp Kenya Ltd">TechCorp Kenya Ltd</SelectItem>
-                    <SelectItem value="Safaricom PLC">Safaricom PLC</SelectItem>
-                    <SelectItem value="Kenya Commercial Bank">Kenya Commercial Bank</SelectItem>
-                    <SelectItem value="Apex Telecom Solutions">Apex Telecom Solutions</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            ) : (
-              <div className="space-y-1">
-                <Label className="text-xs font-semibold">Institution / University</Label>
-                <Input value="University of Nairobi" disabled className="h-9 text-xs bg-muted/60" />
-              </div>
-            )}
-
-            <div className="space-y-1">
-              <Label className="text-xs font-semibold">
-                {supType === "organization" ? "Host Department" : "Faculty / Academic Department"}
-              </Label>
-              <Input
-                placeholder={
-                  supType === "organization"
-                    ? "e.g. Product Engineering"
-                    : "e.g. School of Computing & Informatics"
-                }
-                value={deptOrFaculty}
-                onChange={(e) => setDeptOrFaculty(e.target.value)}
                 className="h-9 text-xs"
               />
             </div>
@@ -624,7 +696,7 @@ export default function SupervisorsPage() {
                 Cancel
               </Button>
               <Button type="submit" size="sm">
-                Create & Activate Supervisor
+                {editingSupervisorId ? "Save Field Mentor" : "Create Field Mentor Account"}
               </Button>
             </DialogFooter>
           </form>

@@ -24,15 +24,17 @@ use App\Http\Controllers\RoleController;
 Route::get('/', [HomeController::class, 'welcome'])->name('welcome');
 Route::get('/login', [HomeController::class, 'login'])->name('login');
 Route::get('/auth', [HomeController::class, 'login'])->name('auth');
+Route::get('/walkthrough', [HomeController::class, 'walkthrough'])->name('walkthrough');
+Route::get('/mentor-onboard', [HomeController::class, 'mentorOnboard'])->name('mentor.onboard');
 
 // AUTHENTICATED PAGE ROUTES
 
 Route::middleware(['auth'])->group(function () {
 
-    
-    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
     Route::get('/students', [HomeController::class, 'students'])->name('students');
+    Route::get('/students/{id}', [HomeController::class, 'studentDetail'])->name('students.show');
     Route::get('/supervisors', [HomeController::class, 'supervisors'])->name('supervisors');
     Route::get('/placements', [HomeController::class, 'placements'])->name('placements');
     Route::get('/assignments', [HomeController::class, 'assignments'])->name('assignments');
@@ -46,8 +48,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [HomeController::class, 'placements'])->name('admin');
 
     // BUSINESS LOGIC ROUTES
-
-    Route::get('/dashboard', [DashboardController::class, 'index'])-> name('dashboard.index');
 
     // Profile operations
     Route::put('/profile', [ProfileController::class, 'update'])
@@ -95,6 +95,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::delete('/assignments/{id}', [AssignmentController::class, 'destroy'])
         ->name('assignments.destroy');
+
+    // Logbook CRUD operations
+    Route::post('/logbooks', [LogbookController::class, 'store'])
+        ->name('logbooks.store');
+
+    Route::put('/logbooks/{id}', [LogbookController::class, 'update'])
+        ->name('logbooks.update');
+
+    Route::delete('/logbooks/{id}', [LogbookController::class, 'destroy'])
+        ->name('logbooks.destroy');
 
          // review routes
     Route::get('/review', [ReviewController::class, 'index'])

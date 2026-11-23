@@ -76,7 +76,7 @@ export function StakeholderShowcase() {
                   : "text-muted-foreground hover:text-foreground",
               )}
             >
-              <Laptop className="size-4 text-emerald-600 dark:text-emerald-400" />
+              <Laptop className="size-4 text-lime-600 dark:text-lime-400" />
               <span>Student Interns</span>
             </button>
           </div>
@@ -106,7 +106,7 @@ export function StakeholderShowcase() {
                   "Permanent digital archiving for accreditation audits",
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-2.5 text-xs sm:text-sm">
-                    <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="size-4 text-lime-600 dark:text-lime-400 shrink-0 mt-0.5" />
                     <span className="text-foreground/90 font-medium">{item}</span>
                   </div>
                 ))}
@@ -146,7 +146,7 @@ export function StakeholderShowcase() {
                         className={cn(
                           "text-[10px] font-semibold",
                           row.status === "Compliant"
-                            ? "text-emerald-600 dark:text-emerald-400"
+                            ? "text-lime-600 dark:text-lime-400"
                             : "text-amber-600 dark:text-amber-400",
                         )}
                       >
@@ -189,7 +189,7 @@ export function StakeholderShowcase() {
                   "Verified time records ready for corporate HR stipends",
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-2.5 text-xs sm:text-sm">
-                    <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="size-4 text-lime-600 dark:text-lime-400 shrink-0 mt-0.5" />
                     <span className="text-foreground/90 font-medium">{item}</span>
                   </div>
                 ))}
@@ -214,8 +214,8 @@ export function StakeholderShowcase() {
                   tuning, and Trivy security hooks."
                 </p>
                 <div className="flex items-center gap-2 pt-2 border-t border-border/40">
-                  <span className="rounded-lg bg-emerald-600 text-white px-3 py-1 text-xs font-semibold">
-                    ✓ Sign & Approve
+                  <span className="rounded-lg bg-lime-600 text-white px-3 py-1 text-xs font-semibold">
+                    Sign & Approve
                   </span>
                   <span className="rounded-lg border border-border px-3 py-1 text-xs text-muted-foreground">
                     Request Revision
@@ -230,7 +230,7 @@ export function StakeholderShowcase() {
         {active === "students" && (
           <div className="rounded-3xl border border-border/80 bg-card p-7 sm:p-10 shadow-elevated grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-6">
-              <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-xs">
+              <Badge className="bg-lime-500/10 text-lime-600 dark:text-lime-400 border-lime-500/20 text-xs">
                 Student-Centric Career Growth
               </Badge>
               <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-foreground leading-tight">
@@ -250,7 +250,7 @@ export function StakeholderShowcase() {
                   "Zero lost signatures or last-minute panic before defense",
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-2.5 text-xs sm:text-sm">
-                    <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="size-4 text-lime-600 dark:text-lime-400 shrink-0 mt-0.5" />
                     <span className="text-foreground/90 font-medium">{item}</span>
                   </div>
                 ))}
@@ -260,7 +260,7 @@ export function StakeholderShowcase() {
             <div className="lg:col-span-5 rounded-2xl border border-border/70 bg-muted/40 p-5 space-y-4">
               <div className="flex items-center justify-between text-xs border-b border-border/60 pb-3">
                 <span className="font-semibold text-foreground">Student Defense Readiness</span>
-                <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-xs">
+                <Badge className="bg-lime-500/10 text-lime-600 dark:text-lime-400 border-lime-500/20 text-xs">
                   Defense Ready
                 </Badge>
               </div>
@@ -279,7 +279,7 @@ export function StakeholderShowcase() {
                     <p className="font-semibold text-foreground">Field Supervisor Approval</p>
                     <p className="text-[11px] text-muted-foreground">Weeks 1 through 8</p>
                   </div>
-                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                  <span className="font-bold text-lime-600 dark:text-lime-400">
                     100% Signed
                   </span>
                 </div>

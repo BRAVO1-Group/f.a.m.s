@@ -15,16 +15,16 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
       <div
         className={cn(
           "z-layer-mid rounded-xl border px-4 py-2.5 flex items-center justify-between gap-3 transition-all",
-          paired ? "border-emerald-300 bg-emerald-50/95" : "border-rose-300 bg-rose-50/95",
+          paired ? "border-lime-300 bg-lime-50/95" : "border-rose-300 bg-rose-50/95",
         )}
       >
         <div className="flex items-center gap-2.5">
-          <span className="text-base">{paired ? "✅" : "⚠️"}</span>
+          <span className="text-base">{paired ? "" : "️"}</span>
           <div>
-            <div className={cn("text-xs font-extrabold", paired ? "text-emerald-950" : "text-rose-950")}>
+            <div className={cn("text-xs font-extrabold", paired ? "text-lime-950" : "text-rose-950")}>
               Pending Faculty Assessor Allocation &amp; Attendance Risk Alert
             </div>
-            <p className={cn("text-[11px]", paired ? "text-emerald-800" : "text-rose-800")}>
+            <p className={cn("text-[11px]", paired ? "text-lime-800" : "text-rose-800")}>
               {paired ? (
                 <>
                   All 4 placement candidates are now <strong>100% Dual-Supervised</strong> with pre-provisioned
@@ -44,10 +44,10 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
           onClick={onPair}
           className={cn(
             "px-3 py-1.5 rounded-lg text-white text-xs font-bold shrink-0 shadow-sm transition",
-            paired ? "bg-emerald-600 hover:bg-emerald-700" : "bg-rose-700 hover:bg-rose-800",
+            paired ? "bg-lime-600 hover:bg-lime-700" : "bg-rose-700 hover:bg-rose-800",
           )}
         >
-          {paired ? "✓ 100% Paired" : "Pair Kevin Kiprono Now →"}
+          {paired ? "100% Paired" : "Pair Kevin Kiprono Now →"}
         </button>
       </div>
 
@@ -60,11 +60,11 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
         </div>
         <div className="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
           <div className="text-[10px] font-bold uppercase text-zinc-500">Dual-Supervised Rate</div>
-          <div className={cn("text-2xl font-extrabold mt-1", paired ? "text-emerald-600" : "text-amber-600")}>
+          <div className={cn("text-2xl font-extrabold mt-1", paired ? "text-lime-600" : "text-amber-600")}>
             {paired ? "100%" : "75%"}
           </div>
-          <div className={cn("text-[10px] font-semibold", paired ? "text-emerald-700" : "text-amber-700")}>
-            {paired ? "4 of 4 fully paired ✓" : "3 of 4 fully paired"}
+          <div className={cn("text-[10px] font-semibold", paired ? "text-lime-700" : "text-amber-700")}>
+            {paired ? "4 of 4 fully paired " : "3 of 4 fully paired"}
           </div>
         </div>
         <div className="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
@@ -75,7 +75,7 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
         <div className="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm">
           <div className="text-[10px] font-bold uppercase text-zinc-500">RBAC Governance</div>
           <div className="text-2xl font-extrabold text-indigo-600 mt-1">Tier 4</div>
-          <div className="text-[10px] text-emerald-600 font-semibold">13 System Permissions</div>
+          <div className="text-[10px] text-lime-600 font-semibold">13 System Permissions</div>
         </div>
       </div>
 
@@ -110,11 +110,11 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
                 </div>
                 <div className="text-[10px]">
                   <div>
-                    🏢 James Otieno <span className="text-emerald-600 font-mono">[🔒 Bound]</span>
+                    James Otieno <span className="text-lime-600 font-mono">[Bound]</span>
                   </div>
-                  <div>🏛️ Dr. Peter Kamau</div>
+                  <div>️ Dr. Peter Kamau</div>
                 </div>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">
+                <span className="px-2 py-0.5 rounded-full bg-lime-100 text-lime-800 font-bold text-[10px]">
                   Dual-Supervised
                 </span>
               </div>
@@ -128,11 +128,11 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
                 </div>
                 <div className="text-[10px]">
                   <div>
-                    🏢 Grace Muthoni <span className="text-emerald-600 font-mono">[🔒 Bound]</span>
+                    Grace Muthoni <span className="text-lime-600 font-mono">[Bound]</span>
                   </div>
-                  <div>🏛️ Dr. Joyce Chelangat</div>
+                  <div>️ Dr. Joyce Chelangat</div>
                 </div>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">
+                <span className="px-2 py-0.5 rounded-full bg-lime-100 text-lime-800 font-bold text-[10px]">
                   Dual-Supervised
                 </span>
               </div>
@@ -140,7 +140,7 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
               <div
                 className={cn(
                   "py-2 px-2 rounded-xl border flex items-center justify-between transition-all",
-                  paired ? "bg-emerald-50/80 border-emerald-400" : "bg-amber-50/70 border-amber-300",
+                  paired ? "bg-lime-50/80 border-lime-400" : "bg-amber-50/70 border-amber-300",
                 )}
               >
                 <div>
@@ -151,16 +151,16 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
                 </div>
                 <div className="text-[10px]">
                   <div>
-                    🏢 James Otieno <span className="text-emerald-600 font-mono">[🔒 Bound]</span>
+                    James Otieno <span className="text-lime-600 font-mono">[Bound]</span>
                   </div>
-                  <div className={cn("font-bold", paired ? "text-emerald-700" : "text-rose-500")}>
-                    {paired ? "🏛️ Dr. Joyce Chelangat (Paired)" : "⚠️ Missing Academic Assessor"}
+                  <div className={cn("font-bold", paired ? "text-lime-700" : "text-rose-500")}>
+                    {paired ? "️ Dr. Joyce Chelangat (Paired)" : "️ Missing Academic Assessor"}
                   </div>
                 </div>
                 <span
                   className={cn(
                     "px-2 py-0.5 rounded-full font-bold text-[10px]",
-                    paired ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-900",
+                    paired ? "bg-lime-100 text-lime-800" : "bg-amber-100 text-amber-900",
                   )}
                 >
                   {paired ? "Dual-Supervised" : "Needs Allocation"}
@@ -171,14 +171,14 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
 
           <div className="flex items-center justify-between pt-2 border-t border-zinc-200">
             <span className="text-[10px] font-mono text-zinc-500">
-              🔑 Pre-provisioned logins dispatched automatically
+              Pre-provisioned logins dispatched automatically
             </span>
             <button
               type="button"
               onClick={onPair}
               className="px-3 py-1 rounded-xl bg-indigo-600 text-white font-bold text-xs shadow-sm hover:bg-indigo-700 transition"
             >
-              <span>{paired ? "✓ Paired & Credentials Dispatched" : "+ Pair Mentors & Dispatch Login"}</span>
+              <span>{paired ? "Paired & Credentials Dispatched" : "+ Pair Mentors & Dispatch Login"}</span>
             </button>
           </div>
         </div>
@@ -203,7 +203,7 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
                   <div className="font-bold text-zinc-900">Administrative Log Override</div>
                   <div className="text-[9px] font-mono text-zinc-500">logs:override • Arbitrate locked entries</div>
                 </div>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-bold">ENABLED</span>
+                <span className="px-2 py-0.5 rounded-full bg-lime-500 text-white text-[9px] font-bold">ENABLED</span>
               </div>
 
               <div className="flex items-center justify-between p-1.5 rounded-lg bg-zinc-50 border border-zinc-200">
@@ -211,7 +211,7 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
                   <div className="font-bold text-zinc-900">Assign Dual Supervisors</div>
                   <div className="text-[9px] font-mono text-zinc-500">supervisors:assign • Pair Host + Faculty</div>
                 </div>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-bold">ENABLED</span>
+                <span className="px-2 py-0.5 rounded-full bg-lime-500 text-white text-[9px] font-bold">ENABLED</span>
               </div>
 
               <div className="flex items-center justify-between p-1.5 rounded-lg bg-zinc-50 border border-zinc-200 transition-all">
@@ -220,7 +220,7 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
                   <div className="text-[9px] font-mono text-zinc-500">accreditation:export • Senate PDF</div>
                 </div>
                 <span className="px-2 py-0.5 rounded-full bg-indigo-600 text-white text-[9px] font-bold">
-                  {exported ? "EXPORTED ✓" : "READY"}
+                  {exported ? "EXPORTED " : "READY"}
                 </span>
               </div>
             </div>
@@ -231,8 +231,8 @@ export function UniAdminView({ focusedCard, paired, exported, onPair, onExport }
             onClick={onExport}
             className="w-full py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-1.5"
           >
-            <span>📄</span>
-            <span>{exported ? "✓ Graduation Board Dossier Exported (PDF)" : "Export Certified Graduation Dossier (PDF)"}</span>
+            <span></span>
+            <span>{exported ? "Graduation Board Dossier Exported (PDF)" : "Export Certified Graduation Dossier (PDF)"}</span>
           </button>
         </div>
       </div>

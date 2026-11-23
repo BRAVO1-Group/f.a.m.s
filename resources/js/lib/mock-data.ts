@@ -1117,6 +1117,67 @@ export function addSupervisor(
   return newSupervisor;
 }
 
+export function updateSupervisor(
+  id: string,
+  patch: Partial<Omit<MockSupervisor, "id">>,
+) {
+  const all = getStoredSupervisors();
+  const updated = all.map((s) => (s.id === id ? { ...s, ...patch } : s));
+  saveStoredSupervisors(updated);
+}
+
+export function deleteSupervisor(id: string) {
+  const all = getStoredSupervisors();
+  const updated = all.filter((s) => s.id !== id);
+  saveStoredSupervisors(updated);
+}
+
+const ORGS_STORAGE_KEY = "internflow_organizations_v1";
+
+export function getStoredOrganizations(): MockOrganization[] {
+  if (typeof window === "undefined") return organizations;
+  try {
+    const raw = localStorage.getItem(ORGS_STORAGE_KEY);
+    if (raw) return JSON.parse(raw) as MockOrganization[];
+  } catch {
+    // fallback
+  }
+  return organizations;
+}
+
+export function saveStoredOrganizations(data: MockOrganization[]) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(ORGS_STORAGE_KEY, JSON.stringify(data));
+    window.dispatchEvent(new Event("internflow-data-change"));
+  } catch {
+    // fallback
+  }
+}
+
+const EVALS_STORAGE_KEY = "internflow_evaluations_v1";
+
+export function getStoredEvaluations(): MockEvaluation[] {
+  if (typeof window === "undefined") return evaluations;
+  try {
+    const raw = localStorage.getItem(EVALS_STORAGE_KEY);
+    if (raw) return JSON.parse(raw) as MockEvaluation[];
+  } catch {
+    // fallback
+  }
+  return evaluations;
+}
+
+export function saveStoredEvaluations(data: MockEvaluation[]) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(EVALS_STORAGE_KEY, JSON.stringify(data));
+    window.dispatchEvent(new Event("internflow-data-change"));
+  } catch {
+    // fallback
+  }
+}
+
 export function getStoredRBAC(): RolePermissionsMap {
   if (typeof window === "undefined") return DEFAULT_ROLE_PERMISSIONS;
   try {

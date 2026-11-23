@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>FAMS — Field Attachment Management System</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -23,13 +25,13 @@
   <style>
     /* ── Colour Tokens & Variables ── */
     :root {
-      --green-950: #051910;
-      --green-900: #0b2f20;
-      --green-800: #11402c;
-      --green-700: #1a5a40;
-      --emerald: #10b981;
-      --emerald-glow: rgba(16, 185, 129, 0.4);
-      --mint: #cfeee0;
+      --green-950: #0c140e;
+      --green-900: #142217;
+      --green-800: #1d3320;
+      --green-700: #2d5424;
+      --emerald: #9CE840;
+      --lime-glow: rgba(156, 232, 64, 0.4);
+      --mint: #d8f39b;
       --ink: #0d0f0e;
       --n: 1px;
       --mbs: 1;
@@ -122,7 +124,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: linear-gradient(180deg, #0c3523 0%, #14503a 45%, #9fd8bf 100%);
+      background: linear-gradient(180deg, #132216 0%, #244720 45%, #b8e67e 100%);
     }
 
     /* ── The 1440x810 Frame ── */
@@ -150,7 +152,7 @@
       pointer-events: none;
       --o: 73.125px;
       --ob: 73.125px;
-      will-change: transform, filter;
+      will-change: transform, filter; filter: hue-rotate(-32deg) saturate(1.08);
     }
 
     .caseplate {
@@ -164,7 +166,7 @@
       --o: 105.47px;
       --ob: 40.78px;
       z-index: 7;
-      will-change: opacity, filter;
+      will-change: opacity, filter; filter: hue-rotate(-32deg) saturate(1.08);
     }
 
     .trans {
@@ -411,10 +413,10 @@
       --it-border: #e4e4e7;
       --it-ink: #18181b;
       --it-muted: #71717a;
-      --it-primary: #4f46e5;
-      --it-emerald: #10b981;
+      --it-primary: #589E10;
+      --it-emerald: #9CE840;
       --it-amber: #f59e0b;
-      --it-indigo: #4f46e5;
+      --it-indigo: #589E10;
       position: fixed;
       inset: 0;
       z-index: 40;
@@ -529,7 +531,7 @@
     }
 
     .it-accent-gradient {
-      background: linear-gradient(120deg, #4f46e5 0%, #10b981 100%);
+      background: linear-gradient(120deg, #9CE840 0%, #468C12 100%);
     }
 
     /* Dynamic Light/Dark Overrides inside #app-screen-shell */
@@ -568,8 +570,8 @@
       color: #a1a1aa !important;
     }
 
-    #app-screen-shell.dark-theme [class~="text-indigo-700"]:not(.it-hero-btn),
-    #app-screen-shell.dark-theme [class~="text-indigo-600"]:not(.it-hero-btn) {
+    #app-screen-shell.dark-theme [class~="text-lime-700"]:not(.it-hero-btn),
+    #app-screen-shell.dark-theme [class~="text-lime-600"]:not(.it-hero-btn) {
       color: #818cf8 !important;
     }
 
@@ -579,20 +581,20 @@
     }
 
     #app-screen-shell.dark-theme [class*="bg-amber-50"],
-    #app-screen-shell.dark-theme [class*="bg-emerald-50"],
-    #app-screen-shell.dark-theme [class*="bg-indigo-50"],
+    #app-screen-shell.dark-theme [class*="bg-lime-50"],
+    #app-screen-shell.dark-theme [class*="bg-lime-50"],
     #app-screen-shell.dark-theme [class*="bg-rose-50"],
-    #app-screen-shell.dark-theme [class*="bg-emerald-100"],
+    #app-screen-shell.dark-theme [class*="bg-lime-100"],
     #app-screen-shell.dark-theme [class*="bg-amber-100"],
-    #app-screen-shell.dark-theme [class*="bg-indigo-100"] {
+    #app-screen-shell.dark-theme [class*="bg-lime-100"] {
       background-color: rgba(39, 39, 42, 0.85) !important;
       border-color: rgba(255, 255, 255, 0.14) !important;
       color: #e4e4e7 !important;
     }
 
-    #app-screen-shell.dark-theme [class*="text-emerald-7"],
-    #app-screen-shell.dark-theme [class*="text-emerald-8"] {
-      color: #34d399 !important;
+    #app-screen-shell.dark-theme [class*="text-lime-7"],
+    #app-screen-shell.dark-theme [class*="text-lime-8"] {
+      color: #9CE840 !important;
     }
 
     #app-screen-shell.dark-theme [class*="text-amber-7"],
@@ -601,8 +603,8 @@
       color: #fcd34d !important;
     }
 
-    #app-screen-shell.dark-theme [class*="text-indigo-8"],
-    #app-screen-shell.dark-theme [class*="text-indigo-9"] {
+    #app-screen-shell.dark-theme [class*="text-lime-8"],
+    #app-screen-shell.dark-theme [class*="text-lime-9"] {
       color: #a5b4fc !important;
     }
 
@@ -709,7 +711,7 @@
       width: 7px;
       height: 7px;
       border-radius: 9999px;
-      background: #34d399;
+      background: #9CE840;
       box-shadow: 0 0 10px rgba(52, 211, 153, 0.75);
     }
 
@@ -747,7 +749,7 @@
       font-size: 13px;
       font-weight: 700;
       letter-spacing: -0.01em;
-      color: #062116;
+      color: #141E17;
       background: #ffffff;
       border: 1px solid rgba(255, 255, 255, 0.8);
       text-decoration: none;
@@ -758,7 +760,7 @@
     }
 
     .s1-cta:hover {
-      background: #ecfdf5;
+      background: #f1f9e4;
       transform: translateY(-1px);
       box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
     }
@@ -806,7 +808,7 @@
     .hint-bead {
       width: 100%;
       height: 45%;
-      background: #34d399;
+      background: #9CE840;
       position: absolute;
       top: -45%;
       animation: drip 1.6s cubic-bezier(.6, 0, .4, 1) infinite;
@@ -858,14 +860,14 @@
       }
 
       .stage {
-        background: #0b3b2a;
+        background: #142417;
       }
 
       .stage::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, #1b4a34 0%, #1b4a34 55%, #2f6a50 80%, #7fb79d 100%);
+        background: linear-gradient(180deg, #1b361e 0%, #1b361e 55%, #376328 80%, #9fd166 100%);
         opacity: 0;
         transition: opacity 1.6s ease;
         pointer-events: none;
@@ -981,7 +983,7 @@
           <linearGradient id="wm-grad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#ffffff" stop-opacity="1" />
             <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9" />
-            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.28" />
+            <stop offset="1" stop-color="#ddf2b8" stop-opacity="0.28" />
           </linearGradient>
         </defs>
         <text x="14" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400"
@@ -1057,7 +1059,7 @@
           <linearGradient id="m-wm-grad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#ffffff" stop-opacity="1" />
             <stop offset="0.5" stop-color="#f1f5f3" stop-opacity="0.9" />
-            <stop offset="1" stop-color="#d7e6de" stop-opacity="0.3" />
+            <stop offset="1" stop-color="#ddf2b8" stop-opacity="0.3" />
           </linearGradient>
         </defs>
         <text x="10" y="310" font-family="'Inter Tight', sans-serif" font-weight="900" font-size="400"
@@ -1094,11 +1096,11 @@
       <nav aria-label="Role perspectives" class="inline-flex items-center gap-1 p-1 rounded-full bg-zinc-900/90 border border-white/10 backdrop-blur-xl shadow-lg">
         <button id="role-btn-0" type="button" onclick="selectRole(0, true)" class="role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 bg-white text-zinc-950 shadow-sm">
           <span>Student</span>
-          <span id="role-prog-0" class="absolute bottom-0 left-0 h-[2px] bg-indigo-500 transition-all duration-100" style="width: 0%"></span>
+          <span id="role-prog-0" class="absolute bottom-0 left-0 h-[2px] bg-lime-500 transition-all duration-100" style="width: 0%"></span>
         </button>
         <button id="role-btn-1" type="button" onclick="selectRole(1, true)" class="role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-zinc-400 hover:text-white">
           <span>Field Mentor</span>
-          <span id="role-prog-1" class="absolute bottom-0 left-0 h-[2px] bg-emerald-400 transition-all duration-100" style="width: 0%"></span>
+          <span id="role-prog-1" class="absolute bottom-0 left-0 h-[2px] bg-lime-400 transition-all duration-100" style="width: 0%"></span>
         </button>
         <button id="role-btn-2" type="button" onclick="selectRole(2, true)" class="role-pill relative overflow-hidden px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 text-zinc-400 hover:text-white">
           <span>Faculty</span>
@@ -1118,7 +1120,7 @@
           class="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium text-zinc-300 hover:text-white transition backdrop-blur-md"
           title="Toggle auto-play tour"
         >
-          <span id="automotion-icon">⏸</span>
+          <span id="automotion-icon" class="size-2 rounded-full bg-lime-400 inline-block"></span>
           <span id="automotion-text" class="hidden sm:inline">Auto-play</span>
         </button>
 
@@ -1128,7 +1130,7 @@
           class="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-medium text-zinc-300 hover:text-white transition backdrop-blur-md"
           title="Toggle workspace preview theme"
         >
-          <span id="theme-mode-icon">☀</span>
+          <span id="theme-mode-icon" class="size-2 rounded-full bg-lime-400 inline-block"></span>
           <span id="theme-mode-text" class="hidden md:inline">Light</span>
         </button>
 
@@ -1161,12 +1163,12 @@
               <span class="size-2.5 rounded-full bg-zinc-700"></span>
               <span class="size-2.5 rounded-full bg-zinc-700"></span>
               <div class="ml-3 flex items-center gap-1.5 bg-zinc-900/90 border border-white/8 px-2.5 py-0.5 rounded-md text-[11px] font-mono text-zinc-400">
-                <svg class="size-3 text-emerald-400/80 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <svg class="size-3 text-lime-400/80 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 <span id="browser-url">interntrack.app/logbook</span>
               </div>
             </div>
             <div class="flex items-center gap-2 text-[11px] font-mono text-zinc-500">
-              <span class="size-1.5 rounded-full bg-emerald-400"></span>
+              <span class="size-1.5 rounded-full bg-lime-400"></span>
               <span id="window-rbac-tier">STUDENT WORKSPACE</span>
             </div>
           </div>
@@ -1180,7 +1182,7 @@
                 <svg class="size-5 drop-shadow-[0_4px_10px_rgba(0,0,0,0.4)]" viewBox="0 0 24 24" fill="#18181b" stroke="#ffffff" stroke-width="2">
                   <path d="M4 4l7.07 17 2.51-7.39L21 11.07z"/>
                 </svg>
-                <div id="pointer-ripple" class="absolute -top-2 -left-2 size-8 rounded-full border-2 border-indigo-500 opacity-0"></div>
+                <div id="pointer-ripple" class="absolute -top-2 -left-2 size-8 rounded-full border-2 border-lime-500 opacity-0"></div>
               </div>
               <div id="pointer-label" class="ml-1.5 mt-3 px-2.5 py-1 rounded-full bg-zinc-950/95 text-white text-[10px] font-medium shadow-xl border border-white/15 whitespace-nowrap">
                 Navigating workspace
@@ -1189,7 +1191,7 @@
 
             <!-- In-App Toast Notification (mirrors Sonner in real app) -->
             <div id="inapp-toast" class="toast-hidden absolute bottom-4 right-4 z-40 flex items-center gap-2.5 rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 shadow-xl max-w-xs">
-              <span class="flex size-5 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 text-[10px] font-bold shrink-0">✓</span>
+              <span class="flex size-5 items-center justify-center rounded-full bg-lime-500/15 text-lime-600 text-[10px] font-bold shrink-0"></span>
               <div class="min-w-0">
                 <p id="inapp-toast-title" class="text-[11px] font-semibold text-zinc-900 truncate">Action completed</p>
                 <p id="inapp-toast-desc" class="text-[10px] text-zinc-500 truncate">Synced with workspace</p>
@@ -1245,11 +1247,11 @@
                   <!-- In-App Notification Bell -->
                   <div id="inapp-notif-bell" class="relative flex size-7 items-center justify-center rounded-lg text-zinc-500 border border-zinc-200 bg-zinc-50">
                     <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-                    <span id="inapp-notif-count" class="absolute -top-1 -right-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-indigo-600 px-1 text-[9px] font-bold text-white">1</span>
+                    <span id="inapp-notif-count" class="absolute -top-1 -right-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-lime-600 px-1 text-[9px] font-bold text-white">1</span>
                   </div>
 
                   <div class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-2.5 py-1 shrink-0">
-                    <span id="top-avatar" class="size-5 rounded-full bg-indigo-600/15 text-indigo-700 font-bold text-[10px] flex items-center justify-center">AW</span>
+                    <span id="top-avatar" class="size-5 rounded-full bg-lime-600/15 text-lime-700 font-bold text-[10px] flex items-center justify-center">AW</span>
                     <span id="top-user-name" class="text-[11px] font-semibold text-zinc-900">Alice Wanjiku</span>
                     <span id="top-role-badge" class="text-[10px] font-medium text-zinc-500">Student</span>
                   </div>
@@ -1286,7 +1288,7 @@
                         <span class="text-[11px] text-zinc-500">/ 60 days</span>
                       </div>
                       <div class="mt-2 w-full bg-zinc-100 h-1 rounded-full overflow-hidden">
-                        <div id="stu-days-bar" class="bg-indigo-600 h-full transition-all duration-700" style="width: 70%"></div>
+                        <div id="stu-days-bar" class="bg-lime-600 h-full transition-all duration-700" style="width: 70%"></div>
                       </div>
                     </div>
 
@@ -1328,7 +1330,7 @@
                           </div>
                           <p class="text-[10px] text-zinc-500 mt-0.5">Sept 24, 2026 · TechCorp Product Engineering</p>
                         </div>
-                        <button id="stu-btn-ai" onclick="triggerStudentAiPolish()" type="button" class="px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-[11px] font-semibold hover:bg-indigo-100 transition">
+                        <button id="stu-btn-ai" onclick="triggerStudentAiPolish()" type="button" class="px-2.5 py-1 rounded-lg bg-lime-50 border border-lime-200 text-lime-700 text-[11px] font-semibold hover:bg-lime-100 transition">
                           <span id="stu-ai-label">Refine Summary</span>
                         </button>
                       </div>
@@ -1337,7 +1339,7 @@
                         <div class="text-xs font-semibold text-zinc-900">Onboarding Flow UI &amp; REST API Validation</div>
                         <div class="bg-zinc-50 p-3 rounded-lg border border-zinc-200 min-h-[78px] text-[11px] text-zinc-700 leading-relaxed">
                           <span id="stu-log-desc">Working on the onboarding wizard UI components for new user registration using React 19 and Zod schema validation.</span>
-                          <span id="stu-cursor" class="inline-block w-1 h-3 bg-indigo-600 align-middle ml-0.5 animate-pulse"></span>
+                          <span id="stu-cursor" class="inline-block w-1 h-3 bg-lime-600 align-middle ml-0.5 animate-pulse"></span>
                         </div>
                       </div>
 
@@ -1347,7 +1349,7 @@
                           <span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700">Tailwind CSS</span>
                           <span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700">TypeScript</span>
                         </div>
-                        <button id="stu-btn-submit" onclick="triggerStudentSubmit()" type="button" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-[11px] transition">
+                        <button id="stu-btn-submit" onclick="triggerStudentSubmit()" type="button" class="px-3.5 py-1.5 rounded-lg bg-lime-600 hover:bg-lime-700 text-white font-semibold text-[11px] transition">
                           <span id="stu-submit-label">Submit for Review</span>
                         </button>
                       </div>
@@ -1357,16 +1359,16 @@
                       <div>
                         <div class="flex items-center justify-between border-b border-zinc-200 pb-2.5">
                           <span class="text-xs font-semibold text-zinc-900">Shift &amp; Milestones</span>
-                          <span id="stu-shift-pill" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">On Site</span>
+                          <span id="stu-shift-pill" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200">On Site</span>
                         </div>
 
                         <div class="mt-3 space-y-2 text-[11px]">
                           <div class="flex items-center gap-2.5 p-2 rounded-lg bg-zinc-50 border border-zinc-200">
-                            <span class="size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0">✓</span>
+                            <span class="size-4 rounded-full bg-lime-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0"></span>
                             <span class="line-through text-zinc-500">Build Radix dialog &amp; tabs in review queue</span>
                           </div>
                           <div class="flex items-center gap-2.5 p-2 rounded-lg bg-zinc-50 border border-zinc-200">
-                            <span class="size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0">✓</span>
+                            <span class="size-4 rounded-full bg-lime-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0"></span>
                             <span class="line-through text-zinc-500">Responsive KPI dashboard with Recharts</span>
                           </div>
                           <div id="stu-ms-task3" class="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-zinc-200 transition-all">
@@ -1393,7 +1395,7 @@
                     </div>
                     <div class="inline-flex items-center gap-1 bg-zinc-100 p-1 rounded-lg border border-zinc-200 text-[11px]">
                       <span class="px-2.5 py-1 rounded-md bg-white font-semibold text-zinc-900 shadow-2xs">
-                        Pending <span id="sup-pending-badge" class="ml-1 text-indigo-600">2</span>
+                        Pending <span id="sup-pending-badge" class="ml-1 text-lime-600">2</span>
                       </span>
                       <span class="px-2.5 py-1 rounded-md font-medium text-zinc-500">
                         Approved <span id="sup-approved-badge" class="ml-1">3</span>
@@ -1413,7 +1415,7 @@
                             </div>
                             <p class="text-[10px] text-zinc-500 mt-0.5">Sept 24, 2026 · 08:30 – 17:00 (8.0 hrs)</p>
                           </div>
-                          <span id="sup-sub-status" class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0">
+                          <span id="sup-sub-status" class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 shrink-0">
                             Pending Review
                           </span>
                         </div>
@@ -1432,7 +1434,7 @@
                           <label class="text-[11px] font-semibold text-zinc-900">Mentor Feedback Note</label>
                           <div class="bg-zinc-50 border border-zinc-200 rounded-lg p-2.5 text-[11px] text-zinc-700 min-h-[52px]">
                             <span id="sup-feedback-text">Verified CORS remediation and PostgreSQL index benchmarks on staging. Clear documentation.</span>
-                            <span class="inline-block w-1 h-3 bg-indigo-600 align-middle ml-0.5 animate-pulse"></span>
+                            <span class="inline-block w-1 h-3 bg-lime-600 align-middle ml-0.5 animate-pulse"></span>
                           </div>
                         </div>
                       </div>
@@ -1443,7 +1445,7 @@
                           <button type="button" class="px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-zinc-700 font-semibold text-[11px] hover:bg-zinc-50 transition">
                             Request Revision
                           </button>
-                          <button id="sup-btn-approve" onclick="triggerSupervisorApprove()" type="button" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px] transition">
+                          <button id="sup-btn-approve" onclick="triggerSupervisorApprove()" type="button" class="px-3.5 py-1.5 rounded-lg bg-lime-600 hover:bg-lime-700 text-white font-semibold text-[11px] transition">
                             <span id="sup-approve-label">Sign Off &amp; Approve</span>
                           </button>
                         </div>
@@ -1456,10 +1458,10 @@
                         <div class="p-3 rounded-lg bg-zinc-50 border border-zinc-200 space-y-1.5">
                           <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-zinc-900">Alice Wanjiku</span>
-                            <span class="text-[10px] font-mono text-emerald-700">42/60d</span>
+                            <span class="text-[10px] font-mono text-lime-700">42/60d</span>
                           </div>
                           <p class="text-[10px] text-zinc-500">Software Engineering · On Track</p>
-                          <div class="w-full bg-zinc-200 h-1 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full" style="width: 70%"></div></div>
+                          <div class="w-full bg-zinc-200 h-1 rounded-full overflow-hidden"><div class="bg-lime-500 h-full" style="width: 70%"></div></div>
                         </div>
                         <div class="p-3 rounded-lg bg-zinc-50 border border-zinc-200 space-y-1.5">
                           <div class="flex items-center justify-between">
@@ -1498,7 +1500,7 @@
                     <div class="bg-white border border-zinc-200 rounded-xl p-3">
                       <span class="text-[11px] text-zinc-500">Average Score</span>
                       <div id="uni-eval-avg" class="text-xl font-bold text-zinc-900 mt-1">4.8 / 5.0</div>
-                      <p class="text-[10px] text-emerald-600 font-medium mt-1">Distinction tier</p>
+                      <p class="text-[10px] text-lime-600 font-medium mt-1">Distinction tier</p>
                     </div>
                     <div class="bg-white border border-zinc-200 rounded-xl p-3">
                       <span class="text-[11px] text-zinc-500">Offer Endorsements</span>
@@ -1519,7 +1521,7 @@
                           <span class="text-xs font-semibold text-zinc-900">Final Assessment Rubric</span>
                           <p class="text-[10px] text-zinc-500 mt-0.5">Alice Wanjiku (CS/2021/0042) · TechCorp Kenya</p>
                         </div>
-                        <span id="uni-grade-pill" class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold">
+                        <span id="uni-grade-pill" class="px-2.5 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 text-[11px] font-semibold">
                           Grade A · 4.8/5.0
                         </span>
                       </div>
@@ -1531,7 +1533,7 @@
                             <span class="font-mono font-semibold text-zinc-900">5.0</span>
                           </div>
                           <div class="w-full h-1.5 rounded-full bg-zinc-100 overflow-hidden">
-                            <div id="uni-bar-1" class="h-full bg-indigo-600 transition-all duration-700" style="width: 100%"></div>
+                            <div id="uni-bar-1" class="h-full bg-lime-600 transition-all duration-700" style="width: 100%"></div>
                           </div>
                         </div>
 
@@ -1541,7 +1543,7 @@
                             <span class="font-mono font-semibold text-zinc-900">5.0</span>
                           </div>
                           <div class="w-full h-1.5 rounded-full bg-zinc-100 overflow-hidden">
-                            <div id="uni-bar-2" class="h-full bg-indigo-600 transition-all duration-700" style="width: 100%"></div>
+                            <div id="uni-bar-2" class="h-full bg-lime-600 transition-all duration-700" style="width: 100%"></div>
                           </div>
                         </div>
 
@@ -1551,7 +1553,7 @@
                             <span class="font-mono font-semibold text-zinc-900">4.5</span>
                           </div>
                           <div class="w-full h-1.5 rounded-full bg-zinc-100 overflow-hidden">
-                            <div id="uni-bar-3" class="h-full bg-emerald-500 transition-all duration-700" style="width: 90%"></div>
+                            <div id="uni-bar-3" class="h-full bg-lime-500 transition-all duration-700" style="width: 90%"></div>
                           </div>
                         </div>
 
@@ -1561,14 +1563,14 @@
                             <span class="font-mono font-semibold text-zinc-900">5.0</span>
                           </div>
                           <div class="w-full h-1.5 rounded-full bg-zinc-100 overflow-hidden">
-                            <div id="uni-bar-4" class="h-full bg-indigo-600 transition-all duration-700" style="width: 100%"></div>
+                            <div id="uni-bar-4" class="h-full bg-lime-600 transition-all duration-700" style="width: 100%"></div>
                           </div>
                         </div>
                       </div>
 
                       <div class="flex items-center justify-between pt-2.5 border-t border-zinc-200">
-                        <span class="text-[11px] text-zinc-500">Endorsement: <strong class="text-emerald-700">Full-Time Offer</strong></span>
-                        <button id="uni-btn-save-eval" onclick="triggerUniEvaluation()" type="button" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 text-white font-semibold text-[11px] hover:bg-indigo-700 transition">
+                        <span class="text-[11px] text-zinc-500">Endorsement: <strong class="text-lime-700">Full-Time Offer</strong></span>
+                        <button id="uni-btn-save-eval" onclick="triggerUniEvaluation()" type="button" class="px-3.5 py-1.5 rounded-lg bg-lime-600 text-white font-semibold text-[11px] hover:bg-lime-700 transition">
                           <span id="uni-save-eval-label">Certify &amp; Record Grade</span>
                         </button>
                       </div>
@@ -1580,14 +1582,14 @@
                         <div class="p-3 rounded-lg bg-zinc-50 border border-zinc-200 text-xs space-y-1">
                           <div class="flex items-center justify-between">
                             <span class="font-semibold text-zinc-900">Phase 1: Orientation</span>
-                            <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">Certified</span>
+                            <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-lime-50 text-lime-700 border border-lime-200">Certified</span>
                           </div>
                           <p class="text-[10px] text-zinc-500">Weeks 1–2 · Git, Docker, Architecture</p>
                         </div>
                         <div id="uni-ms-phase2" class="p-3 rounded-lg bg-zinc-50 border border-zinc-200 text-xs space-y-1 transition-all">
                           <div class="flex items-center justify-between">
                             <span class="font-semibold text-zinc-900">Phase 2: Core Modules</span>
-                            <span id="uni-ms-badge2" class="text-[10px] font-medium px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">Ready</span>
+                            <span id="uni-ms-badge2" class="text-[10px] font-medium px-2 py-0.5 rounded bg-lime-50 text-lime-700 border border-lime-200">Ready</span>
                           </div>
                           <p class="text-[10px] text-zinc-500">Weeks 3–6 · React 19, Tailwind, APIs</p>
                         </div>
@@ -1654,7 +1656,7 @@
                               <div class="text-[10px] text-zinc-500">TechCorp Kenya · 42/60d</div>
                             </div>
                             <div class="text-[10px] text-zinc-600">James Otieno / Dr. Peter Kamau</div>
-                            <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium text-[10px]">Dual-Supervised</span>
+                            <span class="px-2 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 font-medium text-[10px]">Dual-Supervised</span>
                           </div>
 
                           <div class="py-2 flex items-center justify-between">
@@ -1663,7 +1665,7 @@
                               <div class="text-[10px] text-zinc-500">Safaricom PLC · 39/60d</div>
                             </div>
                             <div class="text-[10px] text-zinc-600">Grace Muthoni / Dr. Joyce Chelangat</div>
-                            <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium text-[10px]">Dual-Supervised</span>
+                            <span class="px-2 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 font-medium text-[10px]">Dual-Supervised</span>
                           </div>
 
                           <div id="admin-row-kevin" class="py-2 px-2.5 mt-1 rounded-lg bg-amber-50/70 border border-amber-200 flex items-center justify-between transition-all">
@@ -1688,15 +1690,15 @@
                         <div class="mt-2.5 space-y-2 text-[11px]">
                           <div class="flex items-center justify-between py-1">
                             <span class="text-zinc-700">Log Override</span>
-                            <span class="text-[10px] font-medium text-emerald-700">Enabled</span>
+                            <span class="text-[10px] font-medium text-lime-700">Enabled</span>
                           </div>
                           <div class="flex items-center justify-between py-1 border-t border-zinc-100">
                             <span class="text-zinc-700">Supervisor Pairing</span>
-                            <span class="text-[10px] font-medium text-emerald-700">Enabled</span>
+                            <span class="text-[10px] font-medium text-lime-700">Enabled</span>
                           </div>
                           <div class="flex items-center justify-between py-1 border-t border-zinc-100">
                             <span class="text-zinc-700">Dossier Export</span>
-                            <span class="text-[10px] font-medium text-emerald-700">Enabled</span>
+                            <span class="text-[10px] font-medium text-lime-700">Enabled</span>
                           </div>
                         </div>
                       </div>
@@ -1717,7 +1719,7 @@
     <!-- 4. GUIDED WALKTHROUGH BAR -->
     <footer class="relative z-30 w-full max-w-[1160px] mx-auto pb-4 px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3 text-xs">
       <div class="flex items-center gap-2.5 min-w-0">
-        <span id="walkthrough-step-badge" class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/10 px-2.5 py-1 text-[10px] font-semibold text-emerald-300 shrink-0">
+        <span id="walkthrough-step-badge" class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/10 px-2.5 py-1 text-[10px] font-semibold text-lime-300 shrink-0">
           Step 1 of 4
         </span>
         <p id="s2-role-summary" class="truncate text-zinc-300 text-xs">
@@ -2048,10 +2050,10 @@
         if (daysBar) daysBar.style.width = '72%';
         if (hoursVal) hoursVal.textContent = '344.0';
         if (msCheck3) {
-          msCheck3.className = 'size-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0';
-          msCheck3.textContent = '✓';
+          msCheck3.className = 'size-4 rounded-full bg-lime-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0';
+          msCheck3.textContent = '';
         }
-        if (msTask3) msTask3.className = 'flex items-center gap-2.5 p-2 rounded-lg bg-emerald-50/70 border border-emerald-200 transition-all';
+        if (msTask3) msTask3.className = 'flex items-center gap-2.5 p-2 rounded-lg bg-lime-50/70 border border-lime-200 transition-all';
         if (msPct) msPct.textContent = '100%';
         showInAppToast('Clocked in at 08:30 AM', 'Attendance recorded · TechCorp Westlands');
         spawnPacket3D(0, 1);
@@ -2067,7 +2069,7 @@
         }
         if (tags && tags.children.length < 4) {
           const extra = document.createElement('span');
-          extra.className = 'text-[10px] font-medium px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200';
+          extra.className = 'text-[10px] font-medium px-2 py-0.5 rounded-md bg-lime-50 text-lime-700 border border-lime-200';
           extra.textContent = 'Zod & Jest';
           tags.appendChild(extra);
         }
@@ -2081,12 +2083,12 @@
         const count = document.getElementById('stu-logs-count');
         if (badge) {
           badge.textContent = 'Submitted';
-          badge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200';
+          badge.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200';
         }
         if (subLbl) subLbl.textContent = 'Sent to Mentor';
         if (qPill) {
           qPill.textContent = 'In mentor review';
-          qPill.className = 'mt-1.5 text-[10px] text-emerald-700 font-medium';
+          qPill.className = 'mt-1.5 text-[10px] text-lime-700 font-medium';
         }
         if (count) count.textContent = '5';
         setNotifBadge(0);
@@ -2106,7 +2108,7 @@
         const btnLbl = document.getElementById('sup-approve-label');
         if (status) {
           status.textContent = 'Approved';
-          status.className = 'text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0';
+          status.className = 'text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 shrink-0';
         }
         if (pending) pending.textContent = '1';
         if (approved) approved.textContent = '4';
@@ -2128,7 +2130,7 @@
         if (btnLbl) btnLbl.textContent = 'Grade Recorded';
         if (msBadge) {
           msBadge.textContent = 'Certified';
-          msBadge.className = 'text-[10px] font-medium px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200';
+          msBadge.className = 'text-[10px] font-medium px-2 py-0.5 rounded bg-lime-50 text-lime-700 border border-lime-200';
         }
         setNotifBadge(0);
         showInAppToast('Grade A recorded', 'Phase 2 certified for Alice Wanjiku');
@@ -2145,22 +2147,22 @@
 
         if (rate) {
           rate.textContent = '100%';
-          rate.className = 'text-xl font-bold text-emerald-600 mt-1';
+          rate.className = 'text-xl font-bold text-lime-600 mt-1';
         }
         if (sub) {
           sub.textContent = '4 of 4 paired';
-          sub.className = 'text-[10px] text-emerald-700 font-medium mt-1';
+          sub.className = 'text-[10px] text-lime-700 font-medium mt-1';
         }
         if (kevinRow) {
-          kevinRow.className = 'py-2 px-2.5 mt-1 rounded-lg bg-emerald-50/70 border border-emerald-200 flex items-center justify-between transition-all';
+          kevinRow.className = 'py-2 px-2.5 mt-1 rounded-lg bg-lime-50/70 border border-lime-200 flex items-center justify-between transition-all';
         }
         if (kevinSup) {
           kevinSup.textContent = 'James Otieno / Dr. Joyce Chelangat';
-          kevinSup.className = 'text-[10px] text-emerald-700 font-medium';
+          kevinSup.className = 'text-[10px] text-lime-700 font-medium';
         }
         if (kevinStatus) {
           kevinStatus.textContent = 'Dual-Supervised';
-          kevinStatus.className = 'px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium text-[10px]';
+          kevinStatus.className = 'px-2 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 font-medium text-[10px]';
         }
         if (assignLbl) assignLbl.textContent = 'Paired';
         setNotifBadge(1);
@@ -2174,7 +2176,7 @@
         if (lbl) lbl.textContent = 'Exported PDF';
         if (pill) {
           pill.textContent = 'Exported';
-          pill.className = 'text-xl font-bold text-emerald-600 mt-1';
+          pill.className = 'text-xl font-bold text-lime-600 mt-1';
         }
         setNotifBadge(0);
         showInAppToast('Accreditation dossier exported', 'Certified Senate PDF ready for download');
@@ -2253,7 +2255,7 @@
           const sLbl = document.getElementById('sup-approve-label');
           if (sSt) {
             sSt.textContent = 'Pending Review';
-            sSt.className = 'text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0';
+            sSt.className = 'text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-lime-50 text-lime-700 border border-lime-200 shrink-0';
           }
           if (sPend) sPend.textContent = '2';
           if (sApp) sApp.textContent = '3';
@@ -2287,7 +2289,7 @@
           if (uLbl) uLbl.textContent = 'Certify & Record Grade';
           if (uMs2) {
             uMs2.textContent = 'Ready';
-            uMs2.className = 'text-[10px] font-medium px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200';
+            uMs2.className = 'text-[10px] font-medium px-2 py-0.5 rounded bg-lime-50 text-lime-700 border border-lime-200';
           }
           if (b1) b1.style.width = '30%';
           if (b2) b2.style.width = '30%';
@@ -2443,7 +2445,7 @@
             btn.className = 'px-2.5 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-zinc-950 transition flex items-center gap-1 shadow-sm';
             setCameraTransform(14, -18, 1.5, 0.9);
           } else {
-            btn.className = 'px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-indigo-200 border border-white/10 transition flex items-center gap-1';
+            btn.className = 'px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-lime-200 border border-white/10 transition flex items-center gap-1';
             const r = ROLES[activeRole].baseCamera;
             setCameraTransform(r.rx, r.ry, r.rz, r.scale);
           }
@@ -2454,7 +2456,7 @@
         exploded = false;
         if (rigEl) rigEl.classList.remove('exploded');
         const btn = document.getElementById('btn-explode');
-        if (btn) btn.className = 'px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-indigo-200 border border-white/10 transition flex items-center gap-1';
+        if (btn) btn.className = 'px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-lime-200 border border-white/10 transition flex items-center gap-1';
         clearFocusCards();
         const r = ROLES[activeRole].baseCamera;
         setCameraTransform(r.rx, r.ry, r.rz, r.scale);
@@ -2600,7 +2602,7 @@
         const icon = document.getElementById('theme-mode-icon');
         const text = document.getElementById('theme-mode-text');
         if (shell) shell.classList.toggle('dark-theme', currentThemeMode === 'dark');
-        if (icon) icon.textContent = currentThemeMode === 'dark' ? '🌙' : '☀️';
+        if (icon) icon.textContent = '';
         if (text) text.textContent = currentThemeMode === 'dark' ? 'Dark' : 'Light';
         if (persist) {
           try {

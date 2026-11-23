@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { EmptyState } from "@/components/ui/empty-state";
+import { enqueueOfflineAction, isAppOffline } from "@/components/ui/network-banner";
 import { KpiCard } from "@/components/dashboard/kpi-card";
 import {
   Table,
@@ -38,6 +41,8 @@ function hours(a: string | null, b: string | null) {
 export default function AttendancePage() {
   const { userId } = useAppUser();
   const [attendanceList, setAttendanceList] = useState<MockAttendance[]>(getStoredAttendance);
+  const [confirmClockIn, setConfirmClockIn] = useState(false);
+  const [confirmClockOutId, setConfirmClockOutId] = useState<string | null>(null);
 
   useEffect(() => {
     const handler = () => setAttendanceList(getStoredAttendance());
@@ -84,7 +89,11 @@ export default function AttendancePage() {
       };
       saveStoredAttendance(updated);
       setAttendanceList(updated);
-      toast.success("Checked out");
+      setConfirmClockOutId(null);
+      if (isAppOffline()) {
+        enqueueOfflineAction("attendance_checkout", `Clocked out for ${todayStr()}`);
+      }
+      toast.success("Checked out and shift recorded");
     }
   }
 
@@ -125,11 +134,16 @@ export default function AttendancePage() {
           }
         >
           {!todayRow ? (
-            <Button size="sm" className="w-full" onClick={checkIn}>
+            <Button size="sm" className="w-full" onClick={() => setConfirmClockIn(true)}>
               <LogIn className="size-4" /> Check in
             </Button>
           ) : !todayRow.check_out ? (
-            <Button size="sm" className="w-full" variant="outline" onClick={() => checkOut(todayRow.id)}>
+            <Button
+              size="sm"
+              className="w-full"
+              variant="outline"
+              onClick={() => setConfirmClockOutId(todayRow.id)}
+            >
               <LogOut className="size-4" /> Check out
             </Button>
           ) : null}
@@ -144,9 +158,13 @@ export default function AttendancePage() {
         </CardHeader>
         <CardContent>
           {rows.length === 0 ? (
-            <p className="py-6 text-center text-sm text-muted-foreground">
-              No attendance recorded yet.
-            </p>
+            <EmptyState
+              icon={CalendarCheck}
+              title="No Workplace Attendance Shifts Logged Yet"
+              description="Click 'Check in' when you arrive at your host organization so your Field Mentor can verify your daily shift."
+              actionLabel="Check In for Today's Shift"
+              onAction={() => setConfirmClockIn(true)}
+            />
           ) : (
             <div className="overflow-x-auto">
               <Table>
@@ -178,6 +196,37 @@ export default function AttendancePage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Yes / No Confirmation Dialogs for Clock In & Clock Out */}
+      <ConfirmDialog
+        open={confirmClockIn}
+        onOpenChange={setConfirmClockIn}
+        title="Confirm Daily Workplace Check-In?"
+        description={`Are you sure you want to clock in for today's shift (${todayStr()})? Your arrival timestamp will be recorded for your Field Mentor's verification.`}
+        confirmLabel="Yes, Check In Now"
+        cancelLabel="No, Cancel"
+        onConfirm={() => {
+          setConfirmClockIn(false);
+          checkIn();
+          if (isAppOffline()) {
+            enqueueOfflineAction("attendance_checkin", `Clocked in for ${todayStr()}`);
+          }
+        }}
+      />
+
+      <ConfirmDialog
+        open={Boolean(confirmClockOutId)}
+        onOpenChange={(open) => {
+          if (!open) setConfirmClockOutId(null);
+        }}
+        title="Confirm Daily Workplace Check-Out?"
+        description="Are you sure you want to clock out and close today's shift? Your total shift hours will be calculated automatically."
+        confirmLabel="Yes, Check Out"
+        cancelLabel="No, Stay Checked In"
+        onConfirm={() => {
+          if (confirmClockOutId) checkOut(confirmClockOutId);
+        }}
+      />
     </div>
   );
 }
