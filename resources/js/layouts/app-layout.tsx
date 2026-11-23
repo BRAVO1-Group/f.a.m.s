@@ -98,9 +98,9 @@ const NAV: NavItem[] = [
   },
   {
     to: "/reports",
-    label: "Reports & Dossier",
+    label: "Reports & Supervision Stats",
     icon: FileBarChart,
-    roles: ["student"],
+    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
     category: "core",
   },
   {

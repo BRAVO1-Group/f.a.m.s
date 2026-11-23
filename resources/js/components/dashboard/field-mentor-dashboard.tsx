@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   ChevronRight,
   ClipboardCheck,
+  FileBarChart,
   FileSignature,
   MessageSquareText,
   Plus,
@@ -361,6 +362,17 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
               Logbook Queue ({pendingActivities.length})
             </Link>
           </Button>
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="h-9 rounded-lg text-xs font-semibold gap-1.5"
+          >
+            <Link href="/reports">
+              <FileBarChart className="size-4" />
+              Supervision Report &amp; Stats
+            </Link>
+          </Button>
         </div>
       </div>
 
@@ -483,6 +495,10 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
           <TabsTrigger value="grading" className="gap-2 text-xs">
             <Award className="size-3.5" />
             Field Mentor Grading Forms ({evalList.length})
+          </TabsTrigger>
+          <TabsTrigger value="reports" className="gap-2 text-xs">
+            <FileBarChart className="size-3.5" />
+            Mentor Report &amp; Stats
           </TabsTrigger>
         </TabsList>
 
@@ -683,6 +699,125 @@ export function FieldMentorDashboard({ userId, name }: { userId: string; name: s
                   </div>
                 );
               })}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* TAB 3: Field Mentor Supervision Report & Stats */}
+        <TabsContent value="reports">
+          <Card className="rounded-xl border border-border/60">
+            <CardHeader className="flex flex-col items-start justify-between gap-3 p-5 pb-3 sm:flex-row sm:items-center">
+              <div>
+                <CardTitle className="text-base font-semibold">
+                  Field Mentor Supervision Report &amp; Live Statistics
+                </CardTitle>
+                <CardDescription>
+                  Summary of your logbook sign-off rate, attendance verification, and student grading metrics at {company.name}
+                </CardDescription>
+              </div>
+              <Button asChild size="sm" className="h-8 text-xs font-semibold gap-1.5">
+                <Link href="/reports">
+                  <FileBarChart className="size-3.5" />
+                  Open Full Report &amp; Export PDF
+                </Link>
+              </Button>
+            </CardHeader>
+
+            <CardContent className="p-5 pt-2 space-y-4">
+              {/* 4 Mentor Performance Stat Boxes */}
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-xs">
+                <div className="rounded-xl border border-[#589E10]/35 bg-[#9CE840]/12 dark:border-[#9CE840]/30 dark:bg-[#9CE840]/10 p-3.5 space-y-1">
+                  <span className="text-[11px] font-bold uppercase text-[#2D5408] dark:text-[#9CE840]">
+                    Approved &amp; Signed
+                  </span>
+                  <p className="font-display text-2xl font-bold text-foreground">
+                    {signedActivities.length}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    {myAssignedActivities.length > 0
+                      ? `${Math.round((signedActivities.length / myAssignedActivities.length) * 100)}% sign-off rate`
+                      : "0% sign-off rate"}
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-amber-500/35 bg-amber-500/10 p-3.5 space-y-1">
+                  <span className="text-[11px] font-bold uppercase text-amber-800 dark:text-amber-300">
+                    Submitted · Pending
+                  </span>
+                  <p className="font-display text-2xl font-bold text-foreground">
+                    {pendingActivities.length}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Awaiting mentor sign-off
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-border/60 bg-background/60 p-3.5 space-y-1">
+                  <span className="text-[11px] font-semibold uppercase text-muted-foreground">
+                    Total Days Verified
+                  </span>
+                  <p className="font-display text-2xl font-bold text-foreground">
+                    {mentees.reduce((acc, m) => acc + m.daysLogged, 0)} /{" "}
+                    {mentees.reduce((acc, m) => acc + m.requiredDays, 0)}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Cumulative intern attendance days
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-border/60 bg-background/60 p-3.5 space-y-1">
+                  <span className="text-[11px] font-semibold uppercase text-muted-foreground">
+                    Grades Submitted
+                  </span>
+                  <p className="font-display text-2xl font-bold text-foreground">
+                    {evalList.length}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Certified field mentor evaluations
+                  </p>
+                </div>
+              </div>
+
+              {/* Per-Intern Supervision Status Summary */}
+              <div className="grid gap-3 sm:grid-cols-2">
+                {mentees.map((m) => {
+                  const mLogs = myAssignedActivities.filter((a) => a.student_id === m.id);
+                  const mApproved = mLogs.filter((a) => a.status === "approved").length;
+                  const mPending = mLogs.filter((a) => a.status === "submitted").length;
+                  const pct = Math.round((m.daysLogged / m.requiredDays) * 100);
+                  return (
+                    <div
+                      key={m.id}
+                      className="rounded-xl border border-border/60 bg-background/50 p-4 space-y-2.5 text-xs"
+                    >
+                      <div className="flex items-center justify-between">
+                        <Link
+                          href={`/students/${m.id}`}
+                          className="font-semibold text-sm text-foreground hover:text-[#589E10] dark:hover:text-primary"
+                        >
+                          {m.name} ({m.regNo})
+                        </Link>
+                        <span className="font-mono text-xs font-bold text-foreground">
+                          {pct}% Attendance
+                        </span>
+                      </div>
+                      <Progress value={pct} className="h-1.5" />
+                      <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-[#589E10]/40 bg-[#9CE840]/20 px-2.5 py-0.5 text-[11px] font-bold text-[#2D5408] dark:border-[#9CE840]/40 dark:bg-[#9CE840]/15 dark:text-[#9CE840]">
+                          <CheckCircle2 className="size-3" />
+                          {mApproved} Approved
+                        </span>
+                        <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-500/15 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 dark:text-amber-300">
+                          {mPending} Submitted / Pending
+                        </span>
+                        <span className="text-muted-foreground">
+                          {m.daysLogged}/{m.requiredDays} days
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
