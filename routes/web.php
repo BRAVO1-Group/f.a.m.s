@@ -38,10 +38,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/supervisors', [HomeController::class, 'supervisors'])->name('supervisors');
     Route::get('/placements', [HomeController::class, 'placements'])->name('placements');
     Route::get('/assignments', [HomeController::class, 'assignments'])->name('assignments');
-    Route::get('/attendance', [HomeController::class, 'attendance'])->name('attendance');
-    Route::get('/logbook', [HomeController::class, 'logbook'])->name('logbook');
-    Route::get('/milestones', [HomeController::class, 'milestones'])->name('milestones');
-    Route::get('/review', [HomeController::class, 'review'])->name('review');
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance');
+    Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn'])
+        ->name('attendance.check-in');
+    Route::patch('/attendance/{attendance}/check-out', [AttendanceController::class, 'checkOut'])
+        ->name('attendance.check-out');
+    Route::get('/logbook', [LogbookController::class, 'index'])->name('logbook');
+    Route::get('/milestones', [MilestoneController::class, 'index'])->name('milestones');
+    Route::post('/milestones', [MilestoneController::class, 'store'])->name('milestones.store');
+    Route::patch('/milestones/{milestone}/tasks', [MilestoneController::class, 'updateTasks'])
+        ->name('milestones.tasks.update');
+    Route::patch('/milestones/{milestone}/feedback', [MilestoneController::class, 'updateFeedback'])
+        ->name('milestones.feedback.update');
     Route::get('/evaluations', [HomeController::class, 'evaluations'])->name('evaluations');
     Route::get('/reports', [HomeController::class, 'reports'])->name('reports');
     Route::get('/rbac', [HomeController::class, 'roles'])->name('rbac');
@@ -106,8 +114,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/logbooks/{id}', [LogbookController::class, 'destroy'])
         ->name('logbooks.destroy');
 
-         // review routes
-    Route::get('/review', [ReviewController::class, 'index'])
+         Route::get('/review', [ReviewController::class, 'index'])
         ->name('reviews.index');
 
     Route::get('/review/{logbook}', [ReviewController::class, 'show'])

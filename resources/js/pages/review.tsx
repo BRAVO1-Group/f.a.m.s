@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { useCallback, useMemo, useState } from "react";
+import { Link, router, usePage } from "@inertiajs/react";
 import {
   AlertTriangle,
   Calendar,
@@ -31,26 +31,47 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { recordAuditEvent } from "@/components/dashboard/audit-trail-panel";
 import { KpiCard } from "@/components/dashboard/kpi-card";
 import { useAppUser } from "@/lib/app-user";
-import {
-  approveOrCorrectActivity,
-  getStoredActivities,
-  getStoredSupervisors,
-  profiles,
-  type MockActivity,
-} from "@/lib/mock-data";
+
+type ReviewActivity = {
+  id: string;
+  student_id: string;
+  student: {
+    id: string;
+    full_name: string;
+    email: string;
+    course: string | null;
+  };
+  title: string;
+  description: string;
+  activity_date: string;
+  arrival_time: string | null;
+  departure_time: string | null;
+  tools_used: string[];
+  skills_gained: string[];
+  challenges: string | null;
+  solutions: string | null;
+  status: "submitted" | "approved" | "needs_correction";
+  submitted_at: string | null;
+  supervisor_feedback: string | null;
+  reviewed_at: string | null;
+};
+
+type ReviewPageProps = {
+  logbooks: ReviewActivity[];
+  students: ReviewActivity["student"][];
+};
 
 type FilterType = "submitted" | "approved" | "needs_correction";
 
-function statusLabel(status: MockActivity["status"]) {
+function statusLabel(status: ReviewActivity["status"]) {
   if (status === "approved") return "Approved & Signed Off";
   if (status === "needs_correction") return "Revision Requested";
   return "Submitted · Pending Approval";
 }
 
-function statusPillClass(status: MockActivity["status"]) {
+function statusPillClass(status: ReviewActivity["status"]) {
   if (status === "approved") {
     return "border-[#589E10]/40 bg-[#9CE840]/20 text-[#2D5408] dark:border-[#9CE840]/40 dark:bg-[#9CE840]/15 dark:text-[#9CE840]";
   }
@@ -61,8 +82,8 @@ function statusPillClass(status: MockActivity["status"]) {
 }
 
 export default function ReviewPage() {
-  const { userId, role, name } = useAppUser();
-  const { url } = usePage();
+  const { role } = useAppUser();
+  const { props, url } = usePage<ReviewPageProps>();
   const initialStudent = useMemo(() => {
     const query = url.split("?")[1] ?? "";
     return new URLSearchParams(query).get("student") || "all";
@@ -71,47 +92,27 @@ export default function ReviewPage() {
   const [filter, setFilter] = useState<FilterType>("submitted");
   const [menteeFilter, setMenteeFilter] = useState<string>(initialStudent);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activitiesList, setActivitiesList] = useState<MockActivity[]>(getStoredActivities);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<Record<string, string>>({});
   const [formWarning, setFormWarning] = useState<string | null>(null);
   const [pendingDecision, setPendingDecision] = useState<{
-    act: MockActivity;
+    act: ReviewActivity;
     status: "approved" | "needs_correction";
   } | null>(null);
 
-  useEffect(() => {
-    const handler = () => setActivitiesList(getStoredActivities());
-    window.addEventListener("internflow-activities-change", handler);
-    return () => window.removeEventListener("internflow-activities-change", handler);
-  }, []);
-
   const isSupervisor = role === "supervisor" || role === "org_admin";
-  const supervisorsList = getStoredSupervisors();
-  const currentSupervisor =
-    supervisorsList.find((s) => s.user_id === userId || s.id === userId) ||
-    supervisorsList.find((s) => s.type === "organization") ||
-    supervisorsList[0];
-
   const assignedStudentIds = useMemo(
-    () =>
-      currentSupervisor?.assigned_student_ids && currentSupervisor.assigned_student_ids.length > 0
-        ? currentSupervisor.assigned_student_ids
-        : ["student-1", "student-4"],
-    [currentSupervisor],
+    () => props.students.map((student) => student.id),
+    [props.students],
   );
-
-  const assignedStudents = useMemo(
-    () => profiles.filter((p) => assignedStudentIds.includes(p.id)),
-    [assignedStudentIds],
-  );
+  const assignedStudents = props.students;
 
   const scopedActivities = useMemo(
     () =>
       isSupervisor
-        ? activitiesList.filter((a) => assignedStudentIds.includes(a.student_id))
-        : activitiesList,
-    [activitiesList, isSupervisor, assignedStudentIds],
+        ? props.logbooks.filter((a) => assignedStudentIds.includes(a.student_id))
+        : props.logbooks,
+    [props.logbooks, isSupervisor, assignedStudentIds],
   );
 
   const studentScopedActivities = useMemo(
@@ -128,11 +129,13 @@ export default function ReviewPage() {
     (a) => a.status === "needs_correction",
   ).length;
 
-  const profileOf = (id: string) => profiles.find((s) => s.id === id);
-  const nameOf = (id: string) => {
-    const p = profileOf(id);
-    return p?.full_name || p?.email || "Intern";
-  };
+  const nameOf = useCallback(
+    (id: string) => {
+      const student = props.students.find((item) => item.id === id);
+      return student?.full_name || student?.email || "Intern";
+    },
+    [props.students],
+  );
 
   const rows = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -151,14 +154,14 @@ export default function ReviewPage() {
         return true;
       })
       .sort((a, b) => ((a.submitted_at ?? "") < (b.submitted_at ?? "") ? 1 : -1));
-  }, [studentScopedActivities, filter, searchQuery]);
+  }, [studentScopedActivities, filter, searchQuery, nameOf]);
 
   const selectedActivity = useMemo(
     () => rows.find((a) => a.id === selectedId) ?? rows[0] ?? null,
     [rows, selectedId],
   );
 
-  function handleRequestDecision(act: MockActivity, status: "approved" | "needs_correction") {
+  function handleRequestDecision(act: ReviewActivity, status: "approved" | "needs_correction") {
     const comment = (feedback[act.id] ?? "").trim();
     if (!comment) {
       const msg =
@@ -175,42 +178,42 @@ export default function ReviewPage() {
     setPendingDecision({ act, status });
   }
 
-  function executeDecision(act: MockActivity, status: "approved" | "needs_correction") {
+  function executeDecision(act: ReviewActivity, status: "approved" | "needs_correction") {
     const internName = nameOf(act.student_id);
-    const supervisorName = name || currentSupervisor?.full_name || "Field Mentor";
     const comment = (feedback[act.id] ?? "").trim();
 
-    approveOrCorrectActivity(act.id, status, userId, comment);
-    setActivitiesList(getStoredActivities());
-
-    recordAuditEvent({
-      actor: supervisorName,
-      actorRole: "Field Mentor",
-      action:
-        status === "approved"
-          ? "Signed & Commented on Logbook Entry"
-          : "Returned Logbook Entry for Student Revision",
-      target: `${internName} · ${act.title} (${act.activity_date})`,
-      category: "supervision",
-      scopes: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
-    });
-
-    setFeedback((prev) => {
-      const next = { ...prev };
-      delete next[act.id];
-      return next;
-    });
-    setFormWarning(null);
-
-    toast.success(status === "approved" ? "Logbook Signed & Approved" : "Revision Requested", {
-      description:
-        status === "approved"
-          ? `Signed off "${act.title}" for ${internName}.`
-          : `Returned "${act.title}" to ${internName} with mentor comments.`,
-    });
+    router.patch(
+      status === "approved" ? `/review/${act.id}/approve` : `/review/${act.id}/return`,
+      { feedback: comment },
+      {
+        preserveScroll: true,
+        onSuccess: () => {
+          setFeedback((previous) => {
+            const next = { ...previous };
+            delete next[act.id];
+            return next;
+          });
+          setFormWarning(null);
+          toast.success(
+            status === "approved" ? "Logbook Signed & Approved" : "Revision Requested",
+            {
+              description:
+                status === "approved"
+                  ? `Signed off "${act.title}" for ${internName}.`
+                  : `Returned "${act.title}" to ${internName} with mentor comments.`,
+            },
+          );
+        },
+        onError: (errors) => {
+          toast.error(Object.values(errors).join(" ") || "Unable to update this logbook.");
+        },
+      },
+    );
   }
 
-  const selectedStudent = selectedActivity ? profileOf(selectedActivity.student_id) : undefined;
+  const selectedStudent = selectedActivity
+    ? props.students.find((student) => student.id === selectedActivity.student_id)
+    : undefined;
   const selectedInitials = selectedActivity
     ? nameOf(selectedActivity.student_id)
         .split(" ")
@@ -237,15 +240,26 @@ export default function ReviewPage() {
               Logbook Review Queue
             </h1>
             <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl">
-              Inspect submitted student logbooks, verify shift hours and tools utilized, and write your official Field Mentor comment before signing off.
+              Inspect submitted student logbooks, verify shift hours and tools utilized, and write
+              your official Field Mentor comment before signing off.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 shrink-0">
-            <Button asChild size="sm" variant="outline" className="h-9 rounded-lg text-xs font-medium">
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="h-9 rounded-lg text-xs font-medium"
+            >
               <Link href="/students">Assigned Interns ({assignedStudents.length})</Link>
             </Button>
-            <Button asChild size="sm" variant="outline" className="h-9 rounded-lg text-xs font-medium">
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="h-9 rounded-lg text-xs font-medium"
+            >
               <Link href="/evaluations">Field Mentor Grading Form</Link>
             </Button>
           </div>
@@ -402,9 +416,7 @@ export default function ReviewPage() {
                     <Avatar className="size-8 shrink-0 rounded-lg">
                       <AvatarFallback
                         className={`rounded-lg text-[11px] font-semibold ${
-                          isSelected
-                            ? "bg-foreground text-background"
-                            : "bg-muted text-foreground"
+                          isSelected ? "bg-foreground text-background" : "bg-muted text-foreground"
                         }`}
                       >
                         {initials}
@@ -413,9 +425,7 @@ export default function ReviewPage() {
 
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-foreground">
-                          {studentName}
-                        </span>
+                        <span className="text-xs font-semibold text-foreground">{studentName}</span>
                         <span
                           className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${statusPillClass(a.status)}`}
                         >
@@ -426,9 +436,7 @@ export default function ReviewPage() {
                               : "Submitted"}
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground truncate max-w-64">
-                        {a.title}
-                      </p>
+                      <p className="text-xs text-muted-foreground truncate max-w-64">{a.title}</p>
                     </div>
                   </button>
                 );
@@ -602,7 +610,6 @@ export default function ReviewPage() {
 
                 {/* Existing Mentor Comment (if already reviewed) */}
                 {(selectedActivity.supervisor_feedback ||
-                  selectedActivity.supervisor_comment ||
                   selectedActivity.status === "approved") && (
                   <div className="rounded-xl border border-border/60 bg-muted/30 p-4 space-y-1.5">
                     <div className="flex items-center justify-between">
@@ -620,7 +627,6 @@ export default function ReviewPage() {
                     </div>
                     <p className="text-xs text-muted-foreground leading-relaxed">
                       {selectedActivity.supervisor_feedback ||
-                        selectedActivity.supervisor_comment ||
                         "Verified and approved by Field Mentor."}
                     </p>
                   </div>
@@ -677,9 +683,7 @@ export default function ReviewPage() {
                         type="button"
                         size="sm"
                         variant="outline"
-                        onClick={() =>
-                          handleRequestDecision(selectedActivity, "needs_correction")
-                        }
+                        onClick={() => handleRequestDecision(selectedActivity, "needs_correction")}
                         className="h-8 text-xs font-medium gap-1.5"
                       >
                         <RotateCcw className="size-3.5" />
@@ -689,9 +693,7 @@ export default function ReviewPage() {
                       <Button
                         type="button"
                         size="sm"
-                        onClick={() =>
-                          handleRequestDecision(selectedActivity, "approved")
-                        }
+                        onClick={() => handleRequestDecision(selectedActivity, "approved")}
                         className="h-8 text-xs font-semibold gap-1.5"
                       >
                         <Check className="size-3.5" />
@@ -727,9 +729,7 @@ export default function ReviewPage() {
             : ""
         }
         confirmLabel={
-          pendingDecision?.status === "approved"
-            ? "Yes, Sign & Approve"
-            : "Yes, Request Revision"
+          pendingDecision?.status === "approved" ? "Yes, Sign & Approve" : "Yes, Request Revision"
         }
         cancelLabel="No, Cancel"
         onConfirm={() => {

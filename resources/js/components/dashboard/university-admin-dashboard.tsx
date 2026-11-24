@@ -90,6 +90,9 @@ export type UniversityAdminDashboardData = {
     totalLogbooks: number;
     submittedLogbooks: number;
     approvedLogbooks: number;
+    attendanceShifts: number;
+    totalMilestones: number;
+    completedMilestones: number;
   };
 
   recentPlacements: UniversityPlacement[];
@@ -156,7 +159,7 @@ export function UniversityAdminDashboard({ userId, name, role, dashboardData }: 
       </div>
 
       {/* KPI CARDS */}
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         <KpiCard
           label="Departments"
           value={statistics.totalDepartments}
@@ -175,6 +178,19 @@ export function UniversityAdminDashboard({ userId, name, role, dashboardData }: 
           label="Placements"
           value={statistics.totalPlacements}
           meta={`${statistics.activePlacements} active`}
+        />
+
+        <KpiCard
+          label="Attendance Shifts"
+          value={statistics.attendanceShifts}
+          meta="Recorded by assigned students"
+        />
+
+        <KpiCard
+          label="Milestones Completed"
+          value={statistics.completedMilestones}
+          unit={`of ${statistics.totalMilestones}`}
+          meta="Student roadmap progress"
         />
       </div>
 

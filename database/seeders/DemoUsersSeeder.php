@@ -54,8 +54,11 @@ class DemoUsersSeeder extends Seeder
         ];
 
         $makUni = \App\Models\University::where('code', 'MAK')->first();
-        $demoOrg = \App\Models\Organization::first();
-        $firstProg = \App\Models\Program::first();
+        $demoOrg = \App\Models\Organization::where('registration_number', 'DEMO-ORG-001')->first();
+        $firstProg = \App\Models\Program::whereHas(
+            'department.university',
+            fn ($query) => $query->where('code', 'MAK')
+        )->first();
 
         foreach ($users as $userData) {
             $user = User::updateOrCreate(
@@ -114,6 +117,22 @@ class DemoUsersSeeder extends Seeder
                         ]
                     );
                 }
+            }
+
+            $demoStudent = \App\Models\Student::whereHas(
+                'user',
+                fn ($query) => $query->where('email', 'alice@university.ac.ug')
+            )->first();
+            $demoSupervisor = \App\Models\Supervisor::whereHas(
+                'user',
+                fn ($query) => $query->where('email', 'james.otieno@techcorp.co.ug')
+            )->first();
+
+            if ($demoOrg && $demoStudent && $demoSupervisor) {
+                \App\Models\Placement::where('student_id', $demoStudent->id)
+                    ->where('organization_id', $demoOrg->id)
+                    ->whereNull('supervisor_id')
+                    ->update(['supervisor_id' => $demoSupervisor->id]);
             }
         }
     }

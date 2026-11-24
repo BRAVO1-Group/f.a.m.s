@@ -38,11 +38,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -114,21 +110,21 @@ const NAV: NavItem[] = [
     to: "/attendance",
     label: "Attendance & Clock",
     icon: CalendarCheck,
-    roles: ["student"],
+    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
     category: "tracking",
   },
   {
     to: "/milestones",
     label: "Milestones Roadmap",
     icon: Milestone,
-    roles: ["student"],
+    roles: ["student", "supervisor", "org_admin", "uni_admin", "system_admin"],
     category: "tracking",
   },
   {
     to: "/review",
     label: "Logbook Sign-Off & Comments",
     icon: ClipboardList,
-    roles: ["supervisor", "org_admin"],
+    roles: ["supervisor", "org_admin", "uni_admin", "system_admin"],
     category: "supervision",
   },
   {
@@ -182,10 +178,7 @@ const NAV: NavItem[] = [
   },
 ];
 
-const CATEGORY_META: Record<
-  NavCategory,
-  { label: string; icon: typeof LayoutDashboard }
-> = {
+const CATEGORY_META: Record<NavCategory, { label: string; icon: typeof LayoutDashboard }> = {
   core: { label: "Overview", icon: LayoutDashboard },
   tracking: { label: "Logbook & Tracking", icon: BookOpen },
   supervision: { label: "Supervisory Controls", icon: ClipboardList },
@@ -425,10 +418,7 @@ function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem
-                onClick={() => router.visit("/profile")}
-                className="cursor-pointer"
-              >
+              <DropdownMenuItem onClick={() => router.visit("/profile")} className="cursor-pointer">
                 <BadgeCheck />
                 My Profile
               </DropdownMenuItem>

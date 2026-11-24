@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { router, usePage } from "@inertiajs/react";
 import { CalendarCheck, LogIn, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
-import { enqueueOfflineAction, isAppOffline } from "@/components/ui/network-banner";
 import { KpiCard } from "@/components/dashboard/kpi-card";
 import {
   Table,
@@ -17,16 +16,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAppUser } from "@/lib/app-user";
-import {
-  internships,
-  uid,
-  getStoredAttendance,
-  saveStoredAttendance,
-  type MockAttendance,
-} from "@/lib/mock-data";
 
-const todayStr = () => new Date().toISOString().slice(0, 10);
+type AttendanceEntry = {
+  id: number;
+  attendance_date: string;
+  check_in: string;
+  check_out: string | null;
+  placement: {
+    student: {
+      user: {
+        name: string;
+      } | null;
+    } | null;
+    organization: {
+      name: string;
+    } | null;
+  };
+};
+
+type AttendancePageProps = {
+  attendance: AttendanceEntry[];
+  canRecordAttendance: boolean;
+  today: string;
+};
 
 function fmt(ts: string | null) {
   if (!ts) return "—";
@@ -39,62 +51,46 @@ function hours(a: string | null, b: string | null) {
 }
 
 export default function AttendancePage() {
-  const { userId } = useAppUser();
-  const [attendanceList, setAttendanceList] = useState<MockAttendance[]>(getStoredAttendance);
+  const { props } = usePage<AttendancePageProps>();
   const [confirmClockIn, setConfirmClockIn] = useState(false);
-  const [confirmClockOutId, setConfirmClockOutId] = useState<string | null>(null);
+  const [confirmClockOutId, setConfirmClockOutId] = useState<number | null>(null);
+  const rows = props.attendance;
 
-  useEffect(() => {
-    const handler = () => setAttendanceList(getStoredAttendance());
-    window.addEventListener("internflow-attendance-change", handler);
-    return () => window.removeEventListener("internflow-attendance-change", handler);
-  }, []);
-
-  const myInternship = internships.find((i) => i.student_id === userId);
-  const rows = attendanceList
-    .filter((a) => a.student_id === userId)
-    .sort((a, b) => (a.attendance_date < b.attendance_date ? 1 : -1));
-
-  const todayRow = rows.find((r) => r.attendance_date === todayStr());
-  const required = myInternship?.required_days ?? 60;
-  const daysPresent = rows.filter((r) => r.check_in).length;
+  const todayRow = rows.find((r) => r.attendance_date === props.today);
+  const required = 60;
+  const daysPresent = new Set(rows.map((row) => row.attendance_date)).size;
   const rate = Math.min(100, Math.round((daysPresent / Math.max(required, 1)) * 100));
 
   function checkIn() {
     if (todayRow) return;
-    const current = getStoredAttendance();
-    const newEntry: MockAttendance = {
-      id: uid(),
-      student_id: userId,
-      internship_id: myInternship?.id ?? "intern-1",
-      attendance_date: todayStr(),
-      check_in: new Date().toISOString(),
-      check_out: null,
-    };
-    const updated = [newEntry, ...current];
-    saveStoredAttendance(updated);
-    setAttendanceList(updated);
-    toast.success("Checked in");
+    router.post(
+      "/attendance/check-in",
+      {},
+      {
+        preserveScroll: true,
+        onSuccess: () => toast.success("Checked in"),
+        onError: (errors) => {
+          toast.error(Object.values(errors).join(" ") || "Unable to check in.");
+        },
+      },
+    );
   }
 
-  function checkOut(id: string) {
-    const current = getStoredAttendance();
-    const idx = current.findIndex((a) => a.id === id);
-    if (idx >= 0) {
-      const rec = current[idx]!;
-      const updated = [...current];
-      updated[idx] = {
-        ...rec,
-        check_out: new Date().toISOString(),
-      };
-      saveStoredAttendance(updated);
-      setAttendanceList(updated);
-      setConfirmClockOutId(null);
-      if (isAppOffline()) {
-        enqueueOfflineAction("attendance_checkout", `Clocked out for ${todayStr()}`);
-      }
-      toast.success("Checked out and shift recorded");
-    }
+  function checkOut(id: number) {
+    router.patch(
+      `/attendance/${id}/check-out`,
+      {},
+      {
+        preserveScroll: true,
+        onSuccess: () => {
+          setConfirmClockOutId(null);
+          toast.success("Checked out and shift recorded");
+        },
+        onError: (errors) => {
+          toast.error(Object.values(errors).join(" ") || "Unable to check out.");
+        },
+      },
+    );
   }
 
   return (
@@ -107,37 +103,34 @@ export default function AttendancePage() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
-        <KpiCard
-          label="Days present"
-          value={daysPresent}
-          unit={`/ ${required} days`}
-        />
-        <KpiCard
-          label="Attendance rate"
-          value={`${rate}%`}
-        >
+        <KpiCard label="Days present" value={daysPresent} unit={`/ ${required} days`} />
+        <KpiCard label="Attendance rate" value={`${rate}%`}>
           <Progress value={rate} className="h-1" />
         </KpiCard>
         <KpiCard
-          label="Today"
+          label={props.canRecordAttendance ? "Today" : "Recorded Shifts"}
           value={
-            todayRow?.check_out
-              ? "Completed"
-              : todayRow?.check_in
-                ? `In ${fmt(todayRow.check_in)}`
-                : "Not checked in"
+            props.canRecordAttendance
+              ? todayRow?.check_out
+                ? "Completed"
+                : todayRow?.check_in
+                  ? `In ${fmt(todayRow.check_in)}`
+                  : "Not checked in"
+              : rows.length
           }
           meta={
-            todayRow?.check_out
+            props.canRecordAttendance && todayRow?.check_out
               ? `${fmt(todayRow.check_in)} – ${fmt(todayRow.check_out)}`
-              : undefined
+              : props.canRecordAttendance
+                ? undefined
+                : "Attendance recorded by assigned students"
           }
         >
-          {!todayRow ? (
+          {props.canRecordAttendance && !todayRow ? (
             <Button size="sm" className="w-full" onClick={() => setConfirmClockIn(true)}>
               <LogIn className="size-4" /> Check in
             </Button>
-          ) : !todayRow.check_out ? (
+          ) : props.canRecordAttendance && todayRow && !todayRow.check_out ? (
             <Button
               size="sm"
               className="w-full"
@@ -161,15 +154,24 @@ export default function AttendancePage() {
             <EmptyState
               icon={CalendarCheck}
               title="No Workplace Attendance Shifts Logged Yet"
-              description="Click 'Check in' when you arrive at your host organization so your Field Mentor can verify your daily shift."
-              actionLabel="Check In for Today's Shift"
-              onAction={() => setConfirmClockIn(true)}
+              description={
+                props.canRecordAttendance
+                  ? "Click 'Check in' when you arrive at your host organization so your Field Mentor can verify your daily shift."
+                  : "Attendance records from students assigned to you will appear here."
+              }
+              {...(props.canRecordAttendance
+                ? {
+                    actionLabel: "Check In for Today's Shift",
+                    onAction: () => setConfirmClockIn(true),
+                  }
+                : {})}
             />
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
+                    {!props.canRecordAttendance && <TableHead>Student</TableHead>}
                     <TableHead className="text-success">Date</TableHead>
                     <TableHead className="text-success">Check in</TableHead>
                     <TableHead className="text-success">Check out</TableHead>
@@ -181,6 +183,14 @@ export default function AttendancePage() {
                     const h = hours(r.check_in, r.check_out);
                     return (
                       <TableRow key={r.id}>
+                        {!props.canRecordAttendance && (
+                          <TableCell>
+                            {r.placement.student?.user?.name ?? "Student"}
+                            <span className="block text-xs text-muted-foreground">
+                              {r.placement.organization?.name ?? "Placement"}
+                            </span>
+                          </TableCell>
+                        )}
                         <TableCell className="font-medium">{r.attendance_date}</TableCell>
                         <TableCell>{fmt(r.check_in)}</TableCell>
                         <TableCell>{fmt(r.check_out)}</TableCell>
@@ -198,35 +208,36 @@ export default function AttendancePage() {
       </Card>
 
       {/* Yes / No Confirmation Dialogs for Clock In & Clock Out */}
-      <ConfirmDialog
-        open={confirmClockIn}
-        onOpenChange={setConfirmClockIn}
-        title="Confirm Daily Workplace Check-In?"
-        description={`Are you sure you want to clock in for today's shift (${todayStr()})? Your arrival timestamp will be recorded for your Field Mentor's verification.`}
-        confirmLabel="Yes, Check In Now"
-        cancelLabel="No, Cancel"
-        onConfirm={() => {
-          setConfirmClockIn(false);
-          checkIn();
-          if (isAppOffline()) {
-            enqueueOfflineAction("attendance_checkin", `Clocked in for ${todayStr()}`);
-          }
-        }}
-      />
+      {props.canRecordAttendance && (
+        <ConfirmDialog
+          open={confirmClockIn}
+          onOpenChange={setConfirmClockIn}
+          title="Confirm Daily Workplace Check-In?"
+          description={`Are you sure you want to clock in for today's shift (${props.today})? Your arrival timestamp will be recorded for your Field Mentor's verification.`}
+          confirmLabel="Yes, Check In Now"
+          cancelLabel="No, Cancel"
+          onConfirm={() => {
+            setConfirmClockIn(false);
+            checkIn();
+          }}
+        />
+      )}
 
-      <ConfirmDialog
-        open={Boolean(confirmClockOutId)}
-        onOpenChange={(open) => {
-          if (!open) setConfirmClockOutId(null);
-        }}
-        title="Confirm Daily Workplace Check-Out?"
-        description="Are you sure you want to clock out and close today's shift? Your total shift hours will be calculated automatically."
-        confirmLabel="Yes, Check Out"
-        cancelLabel="No, Stay Checked In"
-        onConfirm={() => {
-          if (confirmClockOutId) checkOut(confirmClockOutId);
-        }}
-      />
+      {props.canRecordAttendance && (
+        <ConfirmDialog
+          open={Boolean(confirmClockOutId)}
+          onOpenChange={(open) => {
+            if (!open) setConfirmClockOutId(null);
+          }}
+          title="Confirm Daily Workplace Check-Out?"
+          description="Are you sure you want to clock out and close today's shift? Your total shift hours will be calculated automatically."
+          confirmLabel="Yes, Check Out"
+          cancelLabel="No, Stay Checked In"
+          onConfirm={() => {
+            if (confirmClockOutId) checkOut(confirmClockOutId);
+          }}
+        />
+      )}
     </div>
   );
 }

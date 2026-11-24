@@ -8,7 +8,10 @@ use App\Models\Placement;
 use App\Models\Logbook;
 use App\Models\Department;
 use App\Models\Organization;
+use App\Models\Attendance;
+use App\Models\Milestone;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -70,7 +73,6 @@ class DashboardController extends Controller
         $logbooks = $placements->flatMap(
             fn ($placement) => $placement->logbooks
         );
-
         return [
             'student' => $student,
 
@@ -101,6 +103,8 @@ class DashboardController extends Controller
                     ->pluck('log_date')
                     ->unique()
                     ->count(),
+
+                ...$this->placementActivityStats($placements),
             ],
 
             'recentLogbooks' => $logbooks
@@ -130,7 +134,6 @@ class DashboardController extends Controller
         $logbooks = $placements->flatMap(
             fn ($placement) => $placement->logbooks
         );
-
         return [
             'supervisor' => $supervisor,
 
@@ -169,6 +172,8 @@ class DashboardController extends Controller
                     ->count(),
 
                 'totalHours' => $logbooks->sum('hours_worked'),
+
+                ...$this->placementActivityStats($placements),
             ],
 
             'recentLogbooks' => $logbooks
@@ -198,7 +203,6 @@ class DashboardController extends Controller
         $logbooks = $placements->flatMap(
             fn ($placement) => $placement->logbooks
         );
-
         return [
             'organization' => $organization,
 
@@ -239,6 +243,8 @@ class DashboardController extends Controller
                 'approvedLogbooks' => $logbooks
                     ->where('status', 'approved')
                     ->count(),
+
+                ...$this->placementActivityStats($placements),
             ],
 
             'recentPlacements' => $placements
@@ -286,7 +292,6 @@ class DashboardController extends Controller
         $logbooks = $placements->flatMap(
             fn ($placement) => $placement->logbooks
         );
-
         return [
             'university' => $university,
 
@@ -324,12 +329,27 @@ class DashboardController extends Controller
                 'approvedLogbooks' => $logbooks
                     ->where('status', 'approved')
                     ->count(),
+
+                ...$this->placementActivityStats($placements),
             ],
 
             'recentPlacements' => $placements
                 ->sortByDesc('created_at')
                 ->take(5)
                 ->values(),
+        ];
+    }
+
+    private function placementActivityStats(Collection $placements): array
+    {
+        $placementIds = $placements->pluck('id');
+
+        return [
+            'attendanceShifts' => Attendance::whereIn('placement_id', $placementIds)->count(),
+            'totalMilestones' => Milestone::whereIn('placement_id', $placementIds)->count(),
+            'completedMilestones' => Milestone::whereIn('placement_id', $placementIds)
+                ->where('status', 'completed')
+                ->count(),
         ];
     }
 

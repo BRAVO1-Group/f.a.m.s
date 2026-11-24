@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Logbook;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,13 +19,31 @@ class ReviewController extends Controller
 
         $this->authorizeReview($user);
 
-        $logbooks = $this->visibleLogbooks($user)
-            ->latest('log_date')
-            ->paginate(10)
-            ->withQueryString();
+        $visibleLogbooks = $this->visibleLogbooks($user)
+            ->whereIn('status', ['submitted', 'approved', 'needs_correction']);
 
-        return Inertia::render('Review/Index', [
+        $logbooks = (clone $visibleLogbooks)
+            ->latest('log_date')
+            ->get()
+            ->map(fn (Logbook $logbook) => $this->formatLogbook($logbook));
+
+        $students = $visibleLogbooks
+            ->with('placement.student.user', 'placement.student.program')
+            ->get()
+            ->pluck('placement.student')
+            ->filter()
+            ->unique('id')
+            ->values()
+            ->map(fn ($student) => [
+                'id' => (string) $student->id,
+                'full_name' => $student->user->name,
+                'email' => $student->user->email,
+                'course' => $student->program?->name,
+            ]);
+
+        return Inertia::render('review', [
             'logbooks' => $logbooks,
+            'students' => $students,
         ]);
     }
 
@@ -40,11 +57,18 @@ class ReviewController extends Controller
         $this->authorizeReview($user);
 
         $logbook = $this->visibleLogbooks($user)
+            ->whereIn('status', ['submitted', 'approved', 'needs_correction'])
             ->whereKey($logbook->id)
             ->firstOrFail();
 
-        return Inertia::render('Review/Show', [
-            'logbook' => $logbook,
+        return Inertia::render('review', [
+            'logbooks' => [$this->formatLogbook($logbook)],
+            'students' => [[
+                'id' => (string) $logbook->placement->student->id,
+                'full_name' => $logbook->placement->student->user->name,
+                'email' => $logbook->placement->student->user->email,
+                'course' => $logbook->placement->student->program?->name,
+            ]],
         ]);
     }
 
@@ -67,6 +91,11 @@ class ReviewController extends Controller
 
         $logbook->update([
             'status' => 'approved',
+            'supervisor_feedback' => $request->validate([
+                'feedback' => ['required', 'string', 'max:5000'],
+            ])['feedback'],
+            'reviewed_by' => $user->id,
+            'reviewed_at' => now(),
         ]);
 
         return back()->with('success', 'Logbook approved successfully.');
@@ -90,7 +119,12 @@ class ReviewController extends Controller
         );
 
         $logbook->update([
-            'status' => 'draft',
+            'status' => 'needs_correction',
+            'supervisor_feedback' => $request->validate([
+                'feedback' => ['required', 'string', 'max:5000'],
+            ])['feedback'],
+            'reviewed_by' => $user->id,
+            'reviewed_at' => now(),
         ]);
 
         return back()->with('success', 'Logbook returned for correction.');
@@ -113,9 +147,9 @@ class ReviewController extends Controller
     /**
      * Return only logbooks within the reviewer's permitted scope.
      */
-    private function visibleLogbooks(User $user): Builder
+    private function visibleLogbooks(User $user)
     {
-        $role = $user->roles()->first()?->slug;
+        $role = DashboardController::primaryRole($user->roles()->pluck('slug'));
 
         $query = Logbook::with([
             'placement.student.user',
@@ -177,5 +211,36 @@ class ReviewController extends Controller
         }
 
         return $query;
+    }
+
+    private function formatLogbook(Logbook $logbook): array
+    {
+        $student = $logbook->placement->student;
+
+        return [
+            'id' => (string) $logbook->id,
+            'student_id' => (string) $student->id,
+            'student' => [
+                'id' => (string) $student->id,
+                'full_name' => $student->user->name,
+                'email' => $student->user->email,
+                'course' => $student->program?->name,
+            ],
+            'title' => $logbook->title ?? 'Daily activity',
+            'description' => $logbook->activities,
+            'activity_date' => $logbook->log_date->toDateString(),
+            'arrival_time' => $logbook->arrival_time,
+            'departure_time' => $logbook->departure_time,
+            'tools_used' => $logbook->tools_used ?? [],
+            'skills_gained' => $logbook->skills_learned
+                ? array_values(array_filter(array_map('trim', explode(',', $logbook->skills_learned))))
+                : [],
+            'challenges' => $logbook->challenges,
+            'solutions' => $logbook->solutions,
+            'status' => $logbook->status,
+            'submitted_at' => $logbook->submitted_at,
+            'supervisor_feedback' => $logbook->supervisor_feedback,
+            'reviewed_at' => $logbook->reviewed_at,
+        ];
     }
 }

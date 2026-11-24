@@ -104,6 +104,9 @@ export type OrgAdminDashboardData = {
     totalLogbooks: number;
     submittedLogbooks: number;
     approvedLogbooks: number;
+    attendanceShifts: number;
+    totalMilestones: number;
+    completedMilestones: number;
   };
 
   recentPlacements: OrganizationPlacement[];
@@ -241,7 +244,7 @@ export function OrgAdminDashboard({
 
       {/* LOGBOOK STATISTICS */}
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-5">
         <KpiCard
           label="Total Logbooks"
           value={statistics.totalLogbooks}
@@ -258,6 +261,19 @@ export function OrgAdminDashboard({
           label="Approved Logbooks"
           value={statistics.approvedLogbooks}
           meta="Entries approved"
+        />
+
+        <KpiCard
+          label="Attendance Shifts"
+          value={statistics.attendanceShifts}
+          meta="Student check-ins recorded"
+        />
+
+        <KpiCard
+          label="Milestones Completed"
+          value={statistics.completedMilestones}
+          unit={`of ${statistics.totalMilestones}`}
+          meta="Assigned roadmap progress"
         />
       </div>
 

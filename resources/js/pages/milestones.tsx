@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { router, usePage } from "@inertiajs/react";
 import {
   CheckCircle2,
   Clock,
@@ -36,55 +37,68 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAppUser } from "@/lib/app-user";
-import {
-  getStoredSupervisors,
-  milestones as defaultMilestones,
-  profiles,
-  uid,
-  type MockMilestone,
-} from "@/lib/mock-data";
+
+type MilestoneTask = {
+  id: string;
+  title: string;
+  completed: boolean;
+};
+
+type MilestoneItem = {
+  id: number;
+  student_id: string;
+  phase: string;
+  title: string;
+  description: string;
+  target_week: string;
+  status: string;
+  skills: string[];
+  tasks: MilestoneTask[];
+  supervisor_feedback: string | null;
+  completed_at: string | null;
+};
+
+type MilestonePageProps = {
+  milestones: MilestoneItem[];
+  students: { id: string; full_name: string; email: string; course: string | null }[];
+  role: string;
+};
 
 type Filter = "all" | "in_progress" | "completed" | "upcoming";
 
 export default function MilestonesPage() {
-  const { userId, role } = useAppUser();
+  const { props } = usePage<MilestonePageProps>();
+  const { role } = useAppUser();
   const isSupervisor = role === "supervisor" || role === "org_admin";
-  const [data, setData] = useState<MockMilestone[]>(defaultMilestones);
+  const data = props.milestones;
   const [filter, setFilter] = useState<Filter>("all");
   const [selectedStudent, setSelectedStudent] = useState<string>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [targetStudentId, setTargetStudentId] = useState("student-1");
+  const [targetStudentId, setTargetStudentId] = useState(props.students[0]?.id ?? "");
   const [newTitle, setNewTitle] = useState("");
   const [newPhase, setNewPhase] = useState("Phase 3: Integration");
   const [newWeek, setNewWeek] = useState("Weeks 7 - 9");
   const [newDescription, setNewDescription] = useState("");
   const [newSkills, setNewSkills] = useState("");
-  const [reviewMilestone, setReviewMilestone] = useState<MockMilestone | null>(null);
+  const [reviewMilestone, setReviewMilestone] = useState<MilestoneItem | null>(null);
   const [feedbackDraft, setFeedbackDraft] = useState("");
 
-  const assignedStudentIds = useMemo(() => {
-    if (!isSupervisor) return [userId];
-    const supervisors = getStoredSupervisors();
-    const current =
-      supervisors.find((s) => s.user_id === userId || s.id === userId) ||
-      supervisors.find((s) => s.type === "organization");
-    return current?.assigned_student_ids?.length ? current.assigned_student_ids : ["student-1"];
-  }, [isSupervisor, userId]);
-
-  const assignedStudents = useMemo(
-    () => profiles.filter((p) => assignedStudentIds.includes(p.id)),
-    [assignedStudentIds],
+  const assignedStudentIds = useMemo(
+    () => props.students.map((student) => student.id),
+    [props.students],
   );
+  const assignedStudents = props.students;
 
   const scopedData = useMemo(() => {
-    const base = isSupervisor
-      ? data.filter((m) => assignedStudentIds.includes(m.student_id))
-      : data.filter((m) => m.student_id === userId || m.student_id === "student-1");
+    const base =
+      role === "student"
+        ? data.filter((milestone) => milestone.student_id === assignedStudentIds[0])
+        : data;
     if (isSupervisor && selectedStudent !== "all") {
       return base.filter((m) => m.student_id === selectedStudent);
     }
     return base;
-  }, [data, isSupervisor, assignedStudentIds, userId, selectedStudent]);
+  }, [data, isSupervisor, assignedStudentIds, role, selectedStudent]);
 
   const totalTasks = useMemo(() => scopedData.flatMap((m) => m.tasks).length, [scopedData]);
   const completedTasks = useMemo(
@@ -103,31 +117,24 @@ export default function MilestonesPage() {
   }, [scopedData, filter]);
 
   function toggleTask(milestoneId: string, taskId: string) {
-    setData((prev) =>
-      prev.map((m) => {
-        if (m.id !== milestoneId) return m;
-        const nextTasks = m.tasks.map((t) =>
-          t.id === taskId ? { ...t, completed: !t.completed } : t,
-        );
-        const allDone = nextTasks.every((t) => t.completed);
-        const someDone = nextTasks.some((t) => t.completed);
-        const nextStatus = allDone
-          ? "completed"
-          : someDone
-            ? "in_progress"
-            : m.status === "completed"
-              ? "in_progress"
-              : m.status;
+    const milestone = data.find((item) => String(item.id) === milestoneId);
+    const task = milestone?.tasks.find((item) => item.id === taskId);
+    if (!task) return;
 
-        return {
-          ...m,
-          tasks: nextTasks,
-          status: nextStatus,
-          completed_at: allDone ? new Date().toISOString() : null,
-        };
-      }),
+    router.patch(
+      `/milestones/${milestoneId}/tasks`,
+      {
+        task_id: taskId,
+        completed: !task.completed,
+      },
+      {
+        preserveScroll: true,
+        onSuccess: () => toast.success("Task milestone progress updated"),
+        onError: (errors) => {
+          toast.error(Object.values(errors).join(" ") || "Unable to update milestone progress.");
+        },
+      },
     );
-    toast.success("Task milestone progress updated");
   }
 
   function handleCreateGoal(e: React.FormEvent) {
@@ -137,52 +144,64 @@ export default function MilestonesPage() {
       return;
     }
 
-    const newMilestone: MockMilestone = {
-      id: `m-${uid()}`,
-      student_id: targetStudentId || assignedStudentIds[0] || "student-1",
-      internship_id: "intern-1",
+    const milestone = {
+      student_id: targetStudentId || assignedStudentIds[0],
       phase: newPhase,
       title: newTitle.trim(),
       description: newDescription.trim() || "Internship weekly objective.",
       target_week: newWeek,
-      status: "in_progress",
       skills: newSkills
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean),
       tasks: [
-        { id: `t-${uid()}`, title: "Initial technical research & scoping", completed: false },
-        { id: `t-${uid()}`, title: "Core deliverable implementation", completed: false },
-        { id: `t-${uid()}`, title: "Supervisor verification & review", completed: false },
+        {
+          id: crypto.randomUUID(),
+          title: "Initial technical research & scoping",
+          completed: false,
+        },
+        { id: crypto.randomUUID(), title: "Core deliverable implementation", completed: false },
+        { id: crypto.randomUUID(), title: "Supervisor verification & review", completed: false },
       ],
-      supervisor_feedback: null,
-      completed_at: null,
     };
 
-    setData((prev) => [...prev, newMilestone]);
-    setNewTitle("");
-    setNewDescription("");
-    setNewSkills("");
-    setDialogOpen(false);
-    toast.success("New milestone goal added!");
+    router.post("/milestones", milestone, {
+      preserveScroll: true,
+      onSuccess: () => {
+        setNewTitle("");
+        setNewDescription("");
+        setNewSkills("");
+        setDialogOpen(false);
+        toast.success("New milestone goal added!");
+      },
+      onError: (errors) => {
+        toast.error(Object.values(errors).join(" ") || "Unable to create the milestone.");
+      },
+    });
   }
 
   function handleSaveFeedback(markCompleted: boolean) {
     if (!reviewMilestone) return;
-    setData((prev) =>
-      prev.map((m) => {
-        if (m.id !== reviewMilestone.id) return m;
-        return {
-          ...m,
-          supervisor_feedback: feedbackDraft.trim() || m.supervisor_feedback,
-          status: markCompleted ? "completed" : m.status,
-          completed_at: markCompleted ? new Date().toISOString() : m.completed_at,
-        };
-      }),
+    router.patch(
+      `/milestones/${reviewMilestone.id}/feedback`,
+      {
+        feedback: feedbackDraft.trim(),
+        complete: markCompleted,
+      },
+      {
+        preserveScroll: true,
+        onSuccess: () => {
+          toast.success(
+            markCompleted ? "Milestone signed off & completed" : "Mentor feedback saved",
+          );
+          setReviewMilestone(null);
+          setFeedbackDraft("");
+        },
+        onError: (errors) => {
+          toast.error(Object.values(errors).join(" ") || "Unable to save milestone feedback.");
+        },
+      },
     );
-    toast.success(markCompleted ? "Milestone signed off & completed" : "Mentor feedback saved");
-    setReviewMilestone(null);
-    setFeedbackDraft("");
   }
 
   return (
@@ -218,85 +237,85 @@ export default function MilestonesPage() {
                   Define a learning milestone or deliverable for the assigned intern.
                 </DialogDescription>
               </DialogHeader>
-            <form onSubmit={handleCreateGoal} className="space-y-4">
-              {assignedStudents.length > 0 && (
-                <div className="space-y-2">
-                  <Label htmlFor="m-student">Assigned Intern</Label>
-                  <Select value={targetStudentId} onValueChange={setTargetStudentId}>
-                    <SelectTrigger id="m-student">
-                      <SelectValue placeholder="Select intern" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {assignedStudents.map((s) => (
-                        <SelectItem key={s.id} value={s.id}>
-                          {s.full_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
+              <form onSubmit={handleCreateGoal} className="space-y-4">
+                {assignedStudents.length > 0 && (
+                  <div className="space-y-2">
+                    <Label htmlFor="m-student">Assigned Intern</Label>
+                    <Select value={targetStudentId} onValueChange={setTargetStudentId}>
+                      <SelectTrigger id="m-student">
+                        <SelectValue placeholder="Select intern" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {assignedStudents.map((s) => (
+                          <SelectItem key={s.id} value={s.id}>
+                            {s.full_name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
 
-              <div className="space-y-2">
-                <Label htmlFor="m-title">Milestone Title</Label>
-                <Input
-                  id="m-title"
-                  placeholder="e.g., GraphQL API Integration & Caching"
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="m-phase">Phase</Label>
+                  <Label htmlFor="m-title">Milestone Title</Label>
                   <Input
-                    id="m-phase"
-                    placeholder="Phase 3: Integration"
-                    value={newPhase}
-                    onChange={(e) => setNewPhase(e.target.value)}
+                    id="m-title"
+                    placeholder="e.g., GraphQL API Integration & Caching"
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    required
                   />
                 </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="m-phase">Phase</Label>
+                    <Input
+                      id="m-phase"
+                      placeholder="Phase 3: Integration"
+                      value={newPhase}
+                      onChange={(e) => setNewPhase(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="m-week">Target Timeline</Label>
+                    <Input
+                      id="m-week"
+                      placeholder="Weeks 7 - 9"
+                      value={newWeek}
+                      onChange={(e) => setNewWeek(e.target.value)}
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="m-week">Target Timeline</Label>
-                  <Input
-                    id="m-week"
-                    placeholder="Weeks 7 - 9"
-                    value={newWeek}
-                    onChange={(e) => setNewWeek(e.target.value)}
+                  <Label htmlFor="m-desc">Description</Label>
+                  <Textarea
+                    id="m-desc"
+                    placeholder="Summarize the core learning objectives and deliverables..."
+                    value={newDescription}
+                    onChange={(e) => setNewDescription(e.target.value)}
+                    rows={3}
                   />
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="m-desc">Description</Label>
-                <Textarea
-                  id="m-desc"
-                  placeholder="Summarize the core learning objectives and deliverables..."
-                  value={newDescription}
-                  onChange={(e) => setNewDescription(e.target.value)}
-                  rows={3}
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="m-skills">Target Skills (comma separated)</Label>
+                  <Input
+                    id="m-skills"
+                    placeholder="React 19, TypeScript, Performance Profiling"
+                    value={newSkills}
+                    onChange={(e) => setNewSkills(e.target.value)}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="m-skills">Target Skills (comma separated)</Label>
-                <Input
-                  id="m-skills"
-                  placeholder="React 19, TypeScript, Performance Profiling"
-                  value={newSkills}
-                  onChange={(e) => setNewSkills(e.target.value)}
-                />
-              </div>
-
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit">Create Milestone</Button>
-              </DialogFooter>
-            </form>
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit">Create Milestone</Button>
+                </DialogFooter>
+              </form>
             </DialogContent>
           </Dialog>
         )}
@@ -324,7 +343,8 @@ export default function MilestonesPage() {
               <div>
                 <p className="text-xs text-muted-foreground">Phases Active</p>
                 <p className="text-lg font-bold text-foreground">
-                  {scopedData.filter((m) => m.status === "in_progress").length} of {scopedData.length}
+                  {scopedData.filter((m) => m.status === "in_progress").length} of{" "}
+                  {scopedData.length}
                 </p>
               </div>
             </div>
@@ -400,25 +420,7 @@ export default function MilestonesPage() {
           const isCompleted = item.status === "completed";
           const isInProgress = item.status === "in_progress";
 
-          function handleSaveFeedback(markCompleted: boolean) {
-    if (!reviewMilestone) return;
-    setData((prev) =>
-      prev.map((m) => {
-        if (m.id !== reviewMilestone.id) return m;
-        return {
-          ...m,
-          supervisor_feedback: feedbackDraft.trim() || m.supervisor_feedback,
-          status: markCompleted ? "completed" : m.status,
-          completed_at: markCompleted ? new Date().toISOString() : m.completed_at,
-        };
-      }),
-    );
-    toast.success(markCompleted ? "Milestone signed off & completed" : "Mentor feedback saved");
-    setReviewMilestone(null);
-    setFeedbackDraft("");
-  }
-
-  return (
+          return (
             <Card
               key={item.id}
               className="flex flex-col border border-border/60 bg-card shadow-none"
@@ -431,9 +433,7 @@ export default function MilestonesPage() {
                     </span>
                     <CardTitle className="mt-1 text-lg font-semibold">{item.title}</CardTitle>
                   </div>
-                  <Badge
-                    variant={isCompleted ? "secondary" : isInProgress ? "default" : "outline"}
-                  >
+                  <Badge variant={isCompleted ? "secondary" : isInProgress ? "default" : "outline"}>
                     {isCompleted ? "Completed" : isInProgress ? "Active Sprint" : "Upcoming"}
                   </Badge>
                 </div>
@@ -492,15 +492,18 @@ export default function MilestonesPage() {
                         </>
                       );
 
-                      return isSupervisor ? (
-                        <div key={task.id} className="flex w-full items-start gap-2.5 text-left text-xs">
+                      return role !== "student" ? (
+                        <div
+                          key={task.id}
+                          className="flex w-full items-start gap-2.5 text-left text-xs"
+                        >
                           {rowContent}
                         </div>
                       ) : (
                         <button
                           key={task.id}
                           type="button"
-                          onClick={() => toggleTask(item.id, task.id)}
+                          onClick={() => toggleTask(String(item.id), task.id)}
                           className="flex w-full items-start gap-2.5 text-left text-xs transition-opacity hover:opacity-80 cursor-pointer"
                         >
                           {rowContent}
@@ -557,9 +560,7 @@ export default function MilestonesPage() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Milestone Sign-Off & Feedback</DialogTitle>
-            <DialogDescription>
-              {reviewMilestone?.title}
-            </DialogDescription>
+            <DialogDescription>{reviewMilestone?.title}</DialogDescription>
           </DialogHeader>
           <div className="space-y-3">
             <div className="space-y-2">

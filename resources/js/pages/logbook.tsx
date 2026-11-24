@@ -1,5 +1,16 @@
-import { useMemo, useState, useEffect } from "react";
-import { CheckCircle2, Clock, FilePenLine, Loader2, Plus, RotateCcw, Search, Send, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { router, usePage } from "@inertiajs/react";
+import {
+  CheckCircle2,
+  Clock,
+  FilePenLine,
+  Loader2,
+  Plus,
+  RotateCcw,
+  Search,
+  Send,
+  Trash2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +20,6 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
-import { enqueueOfflineAction, isAppOffline } from "@/components/ui/network-banner";
 import {
   Dialog,
   DialogContent,
@@ -18,18 +28,28 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useAppUser } from "@/lib/app-user";
-import {
-  activities as initialActivities,
-  internships,
-  uid,
-  getStoredActivities,
-  saveStoredActivities,
-  type MockActivity,
-} from "@/lib/mock-data";
+
+type LogbookEntry = {
+  id: number;
+  title: string;
+  log_date: string;
+  arrival_time: string | null;
+  departure_time: string | null;
+  activities: string;
+  tools_used: string[] | null;
+  skills_learned: string | null;
+  challenges: string | null;
+  solutions: string | null;
+  status: "draft" | "submitted" | "approved" | "needs_correction";
+  supervisor_feedback: string | null;
+};
+
+type LogbookPageProps = {
+  logbooks: LogbookEntry[];
+};
 
 type Draft = {
-  id?: string;
+  id?: number;
   activity_date: string;
   arrival_time: string;
   departure_time: string;
@@ -53,7 +73,7 @@ const emptyDraft = (): Draft => ({
   solutions: "",
 });
 
-function getLogStatusMeta(status: MockActivity["status"]) {
+function getLogStatusMeta(status: LogbookEntry["status"]) {
   if (status === "approved") {
     return {
       label: "Approved & Signed Off",
@@ -65,8 +85,7 @@ function getLogStatusMeta(status: MockActivity["status"]) {
   if (status === "submitted") {
     return {
       label: "Submitted · Pending Approval",
-      className:
-        "border-amber-500/40 bg-amber-500/15 text-amber-800 dark:text-amber-300",
+      className: "border-amber-500/40 bg-amber-500/15 text-amber-800 dark:text-amber-300",
       icon: Clock,
     };
   }
@@ -84,36 +103,37 @@ function getLogStatusMeta(status: MockActivity["status"]) {
   };
 }
 
+function getHoursWorked(arrival: string, departure: string): number {
+  if (!arrival || !departure) return 8;
+  const toMinutes = (time: string) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours! * 60 + minutes!;
+  };
+  const duration = (toMinutes(departure) - toMinutes(arrival) + 1440) % 1440;
+  return Math.min(duration / 60, 24);
+}
+
 export default function LogbookPage() {
-  const { userId } = useAppUser();
+  const { props } = usePage<LogbookPageProps>();
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Draft>(emptyDraft());
   const [search, setSearch] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
-  const [activitiesList, setActivitiesList] = useState<MockActivity[]>(getStoredActivities);
-  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
-  const [pendingSubmitId, setPendingSubmitId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const handler = () => setActivitiesList(getStoredActivities());
-    window.addEventListener("internflow-activities-change", handler);
-    return () => window.removeEventListener("internflow-activities-change", handler);
-  }, []);
-
-  const myInternship = internships.find((i) => i.student_id === userId);
-  const data = activitiesList.filter((a) => a.student_id === userId);
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
+  const [pendingSubmitId, setPendingSubmitId] = useState<number | null>(null);
+  const data = props.logbooks;
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return data.slice().sort((a, b) => (a.activity_date < b.activity_date ? 1 : -1));
+    if (!q) return data.slice().sort((a, b) => (a.log_date < b.log_date ? 1 : -1));
     return data
       .filter(
         (a) =>
           a.title.toLowerCase().includes(q) ||
-          a.description.toLowerCase().includes(q) ||
-          a.tools_used.join(" ").toLowerCase().includes(q),
+          a.activities.toLowerCase().includes(q) ||
+          (a.tools_used ?? []).join(" ").toLowerCase().includes(q),
       )
-      .sort((a, b) => (a.activity_date < b.activity_date ? 1 : -1));
+      .sort((a, b) => (a.log_date < b.log_date ? 1 : -1));
   }, [data, search]);
 
   function saveDraft(submit: boolean) {
@@ -131,74 +151,66 @@ export default function LogbookPage() {
     }
     if (submit && !draft.tools_used.trim()) {
       toast.warning("Empty Form Warning", {
-        description: "Please list at least one tool or technology used before submitting to your supervisor.",
+        description:
+          "Please list at least one tool or technology used before submitting to your supervisor.",
       });
       return;
     }
-    const current = getStoredActivities();
-    const idx = current.findIndex((a) => a.id === draft.id);
-    const entry: MockActivity = {
-      id: draft.id ?? uid(),
-      student_id: userId,
-      internship_id: myInternship?.id ?? "intern-1",
-      activity_date: draft.activity_date,
+    const payload = {
+      title: draft.title.trim(),
+      log_date: draft.activity_date,
       arrival_time: draft.arrival_time || null,
       departure_time: draft.departure_time || null,
-      title: draft.title.trim(),
-      description: draft.description.trim(),
       tools_used: draft.tools_used
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean),
-      skills_gained: draft.skills_gained
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
+      skills_learned: draft.skills_gained.trim(),
+      activities: draft.description.trim(),
       challenges: draft.challenges.trim() || null,
       solutions: draft.solutions.trim() || null,
       status: submit ? "submitted" : "draft",
-      submitted_at: submit ? new Date().toISOString() : null,
-      supervisor_feedback: null,
-      reviewed_by: null,
-      reviewed_at: null,
+      hours_worked: getHoursWorked(draft.arrival_time, draft.departure_time),
     };
-    let updated: MockActivity[];
-    if (idx >= 0) {
-      updated = [...current];
-      updated[idx] = entry;
+    const options = {
+      preserveScroll: true,
+      onSuccess: () => {
+        setOpen(false);
+        setDraft(emptyDraft());
+        toast.success(submit ? "Submitted for supervisor approval" : "Saved as draft");
+      },
+      onError: (errors: Record<string, string>) => {
+        toast.error(Object.values(errors).join(" ") || "Unable to save this logbook entry.");
+      },
+    };
+
+    if (draft.id) {
+      router.put(`/logbooks/${draft.id}`, payload, options);
     } else {
-      updated = [entry, ...current];
+      router.post("/logbooks", payload, options);
     }
-    saveStoredActivities(updated);
-    setActivitiesList(updated);
-    setOpen(false);
-    setDraft(emptyDraft());
-    toast.success(submit ? "Submitted for supervisor approval" : "Saved as draft");
   }
 
-  function deleteEntry(id: string) {
-    const current = getStoredActivities();
-    const updated = current.filter((a) => a.id !== id);
-    saveStoredActivities(updated);
-    setActivitiesList(updated);
-    toast.success("Entry deleted");
+  function deleteEntry(id: number) {
+    router.delete(`/logbooks/${id}`, {
+      preserveScroll: true,
+      onSuccess: () => toast.success("Entry deleted"),
+      onError: () => toast.error("Unable to delete this logbook entry."),
+    });
   }
 
-  function submitExisting(id: string) {
-    const current = getStoredActivities();
-    const idx = current.findIndex((a) => a.id === id);
-    if (idx >= 0) {
-      const a = current[idx]!;
-      const updated = [...current];
-      updated[idx] = {
-        ...a,
-        status: "submitted",
-        submitted_at: new Date().toISOString(),
-      };
-      saveStoredActivities(updated);
-      setActivitiesList(updated);
-    }
-    toast.success("Sent to your supervisor");
+  function submitExisting(id: number) {
+    router.put(
+      `/logbooks/${id}`,
+      { status: "submitted" },
+      {
+        preserveScroll: true,
+        onSuccess: () => toast.success("Sent to your supervisor"),
+        onError: (errors) => {
+          toast.error(Object.values(errors).join(" ") || "Unable to submit this entry.");
+        },
+      },
+    );
   }
 
   async function runAi() {
@@ -266,96 +278,95 @@ export default function LogbookPage() {
             const statusMeta = getLogStatusMeta(a.status);
             const StatusIcon = statusMeta.icon;
             return (
-            <Card
-              key={a.id}
-              className="shadow-none border-border/60 transition-colors"
-            >
-              <CardHeader className="pb-3">
-                <div className="flex flex-wrap items-start justify-between gap-2">
-                  <div>
-                    <CardTitle className="text-base">{a.title}</CardTitle>
-                    <CardDescription>
-                      {a.activity_date}
-                      {a.arrival_time ? ` · ${a.arrival_time.slice(0, 5)}` : ""}
-                      {a.departure_time ? `–${a.departure_time.slice(0, 5)}` : ""}
-                    </CardDescription>
-                  </div>
-                  <span
-                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${statusMeta.className}`}
-                  >
-                    <StatusIcon className="size-3.5" />
-                    {statusMeta.label}
-                  </span>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm">
-                <p className="whitespace-pre-line text-muted-foreground">{a.description}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {a.tools_used.map((t) => (
-                    <Badge key={t} variant="outline">
-                      {t}
-                    </Badge>
-                  ))}
-                  {a.skills_gained.map((s) => (
-                    <Badge key={s} variant="secondary">
-                      {s}
-                    </Badge>
-                  ))}
-                </div>
-                {a.status === "approved" || a.supervisor_feedback || a.supervisor_comment ? (
-                  <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5 text-xs space-y-1">
-                    <span className="font-bold flex items-center gap-1.5 text-foreground">
-                      <CheckCircle2 className="size-3.5 text-[#589E10] dark:text-[#9CE840]" />
-                      {a.status === "approved"
-                        ? "APPROVED — Verified & Signed Off by Field Mentor"
-                        : "Field Mentor Revision Note"}
+              <Card key={a.id} className="shadow-none border-border/60 transition-colors">
+                <CardHeader className="pb-3">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div>
+                      <CardTitle className="text-base">{a.title}</CardTitle>
+                      <CardDescription>
+                        {a.log_date}
+                        {a.arrival_time ? ` · ${a.arrival_time.slice(0, 5)}` : ""}
+                        {a.departure_time ? `–${a.departure_time.slice(0, 5)}` : ""}
+                      </CardDescription>
+                    </div>
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${statusMeta.className}`}
+                    >
+                      <StatusIcon className="size-3.5" />
+                      {statusMeta.label}
                     </span>
-                    <p className="text-muted-foreground">
-                      {a.supervisor_feedback ||
-                        a.supervisor_comment ||
-                        "Approved and signed off by Field Mentor."}
-                    </p>
                   </div>
-                ) : null}
-                {a.status === "draft" || a.status === "needs_correction" ? (
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setDraft({
-                          id: a.id,
-                          activity_date: a.activity_date,
-                          arrival_time: a.arrival_time?.slice(0, 5) ?? "",
-                          departure_time: a.departure_time?.slice(0, 5) ?? "",
-                          title: a.title,
-                          description: a.description,
-                          tools_used: a.tools_used.join(", "),
-                          skills_gained: a.skills_gained.join(", "),
-                          challenges: a.challenges ?? "",
-                          solutions: a.solutions ?? "",
-                        });
-                        setOpen(true);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button size="sm" onClick={() => setPendingSubmitId(a.id)}>
-                      <Send className="size-4" /> Submit
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-destructive"
-                      onClick={() => setPendingDeleteId(a.id)}
-                    >
-                      <Trash2 className="size-4" />
-                    </Button>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm">
+                  <p className="whitespace-pre-line text-muted-foreground">{a.activities}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {(a.tools_used ?? []).map((t) => (
+                      <Badge key={t} variant="outline">
+                        {t}
+                      </Badge>
+                    ))}
+                    {(a.skills_learned ?? "")
+                      .split(",")
+                      .map((skill) => skill.trim())
+                      .filter(Boolean)
+                      .map((s) => (
+                        <Badge key={s} variant="secondary">
+                          {s}
+                        </Badge>
+                      ))}
                   </div>
-                ) : null}
-              </CardContent>
-            </Card>
-          );
+                  {a.status === "approved" || a.supervisor_feedback ? (
+                    <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5 text-xs space-y-1">
+                      <span className="font-bold flex items-center gap-1.5 text-foreground">
+                        <CheckCircle2 className="size-3.5 text-[#589E10] dark:text-[#9CE840]" />
+                        {a.status === "approved"
+                          ? "APPROVED — Verified & Signed Off by Field Mentor"
+                          : "Field Mentor Revision Note"}
+                      </span>
+                      <p className="text-muted-foreground">
+                        {a.supervisor_feedback || "Approved and signed off by Field Mentor."}
+                      </p>
+                    </div>
+                  ) : null}
+                  {a.status === "draft" || a.status === "needs_correction" ? (
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setDraft({
+                            id: a.id,
+                            activity_date: a.log_date,
+                            arrival_time: a.arrival_time?.slice(0, 5) ?? "",
+                            departure_time: a.departure_time?.slice(0, 5) ?? "",
+                            title: a.title,
+                            description: a.activities,
+                            tools_used: (a.tools_used ?? []).join(", "),
+                            skills_gained: a.skills_learned ?? "",
+                            challenges: a.challenges ?? "",
+                            solutions: a.solutions ?? "",
+                          });
+                          setOpen(true);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                      <Button size="sm" onClick={() => setPendingSubmitId(a.id)}>
+                        <Send className="size-4" /> Submit
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-destructive"
+                        onClick={() => setPendingDeleteId(a.id)}
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </div>
+                  ) : null}
+                </CardContent>
+              </Card>
+            );
           })}
         </div>
       )}
@@ -498,9 +509,6 @@ export default function LogbookPage() {
         onConfirm={() => {
           if (pendingSubmitId) {
             submitExisting(pendingSubmitId);
-            if (isAppOffline()) {
-              enqueueOfflineAction("logbook_submit", `Submitted logbook entry ${pendingSubmitId}`);
-            }
             setPendingSubmitId(null);
           }
         }}

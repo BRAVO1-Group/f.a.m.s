@@ -64,6 +64,9 @@ export type StudentDashboardData = {
     approvedLogbooks: number;
     totalHours: number | string;
     loggedDays: number;
+    attendanceShifts: number;
+    totalMilestones: number;
+    completedMilestones: number;
   };
 
   recentLogbooks: StudentLogbook[];
@@ -243,7 +246,7 @@ export function StudentDashboard({ name, dashboardData }: StudentDashboardProps)
 
       {/* DASHBOARD STATISTICS */}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <KpiCard
           label="Logged Days"
           value={dashboardData.statistics.loggedDays}
@@ -270,6 +273,19 @@ export function StudentDashboard({ name, dashboardData }: StudentDashboardProps)
           value={uniqueSkills.length}
           unit="skills"
           meta="Skills documented in logbooks"
+        />
+
+        <KpiCard
+          label="Attendance Shifts"
+          value={dashboardData.statistics.attendanceShifts}
+          meta="Recorded check-in shifts"
+        />
+
+        <KpiCard
+          label="Milestones Completed"
+          value={dashboardData.statistics.completedMilestones}
+          unit={`of ${dashboardData.statistics.totalMilestones}`}
+          meta="Assigned roadmap progress"
         />
       </div>
 
@@ -498,6 +514,9 @@ export type SupervisorDashboardData = {
     pendingLogbooks: number;
     approvedLogbooks: number;
     totalHours: number | string;
+    attendanceShifts: number;
+    totalMilestones: number;
+    completedMilestones: number;
   };
 
   recentLogbooks: StudentLogbook[];
@@ -572,7 +591,7 @@ export function SupervisorDashboard({ name, dashboardData }: SupervisorDashboard
 
       {/* KPI STATISTICS */}
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         <KpiCard
           label="My Students"
           value={statistics.totalStudents}
@@ -599,6 +618,19 @@ export function SupervisorDashboard({ name, dashboardData }: SupervisorDashboard
           value={totalHours.toFixed(1)}
           unit="hours"
           meta="Hours recorded by your students"
+        />
+
+        <KpiCard
+          label="Attendance Shifts"
+          value={statistics.attendanceShifts}
+          meta="Student check-ins recorded"
+        />
+
+        <KpiCard
+          label="Milestones Completed"
+          value={statistics.completedMilestones}
+          unit={`of ${statistics.totalMilestones}`}
+          meta="Assigned roadmap progress"
         />
       </div>
 

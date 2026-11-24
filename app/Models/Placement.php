@@ -41,7 +41,17 @@ class Placement extends Model
         return $this->belongsTo(Supervisor::class);
     }
     public function logbooks(): HasMany
-   {
-    return $this->hasMany(Logbook::class);
-   }
+    {
+        return $this->hasMany(Logbook::class);
+    }
+
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function milestones(): HasMany
+    {
+        return $this->hasMany(Milestone::class);
+    }
 }
