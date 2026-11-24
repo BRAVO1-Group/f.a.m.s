@@ -17,8 +17,7 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
-        // Get the authenticated user's role.
-        $role = $user->roles()->first()?->slug;
+        $role = self::primaryRole($user->roles()->pluck('slug'));
 
         // Select the appropriate dashboard data.
         $dashboardData = match ($role) {
@@ -38,6 +37,16 @@ class DashboardController extends Controller
         return Inertia::render('dashboard', [
             'dashboardData' => $dashboardData,
         ]);
+    }
+
+    public static function primaryRole(iterable $roleSlugs): ?string
+    {
+        $userRoles = collect($roleSlugs);
+        $priority = ['system_admin', 'uni_admin', 'org_admin', 'supervisor', 'student'];
+
+        return collect($priority)->first(
+            fn ($slug) => $userRoles->contains($slug)
+        );
     }
 
     /**

@@ -18,6 +18,7 @@ use App\Models\Organization;
     'email',
     'password',
     'university_id',
+    'organization_id',
     'email_verified_at',
 ])]
 #[Hidden(['password', 'remember_token'])]
